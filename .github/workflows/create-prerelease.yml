@@ -1,0 +1,97 @@
+name: Create Prerelease
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Update branch version by:'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        required: true
+        default: 'patch'
+      is_draft:
+        description: 'Create a draft of the release:'
+        type: boolean
+        required: true
+        default: false
+
+env:
+  IS_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version_tag: ${{ env.version_tag }}
+      previous_version_tag: ${{ env.previous_version_tag }}
+
+    steps:
+    - name: Check For Main
+      if: env.IS_PRERELEASE == false
+      run: |
+        echo "This workflow should not be triggered on the main branch, please use development or hotfix"
+        exit 1
+
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Run Update Version
+      id: set_version
+      shell: pwsh
+      run: |
+          Import-Module ./solution-helper.psm1 -Force
+          $previousVersion, $newVersion = Update-Version -type ${{ github.event.inputs.version_type }}     
+          echo "version_tag=$newVersion" | Out-File -FilePath $env:GITHUB_ENV -Append 
+          echo "previous_version_tag=$previousVersion" | Out-File -FilePath $env:GITHUB_ENV -Append 
+
+    - name: Check for Existing Release
+      run: | 
+        # Fetch the list of releases
+        releases=$(gh release list --json createdAt,tagName --limit 100)
+
+        echo -e "$releases"
+
+        # Sort the releases by date and extract the most recent one that matches the version or version-prerelease
+        release_line=$(echo "$releases" | jq -r 'sort_by(.createdAt) | reverse | .[0] | select(.tagName | test("-prerelease$")) | .tagName')
+
+        echo -e "$release_line"
+
+        # Check if the version or version-prerelease already exists
+        if [[ -n "$release_line" ]]; then
+          echo "⛔ Prerelease for '$previous_version_tag' already exists, please remove the release or fix the version."
+          echo -e "   - Failed on version: '$release_line'"
+          exit 1
+        else
+          echo "✅ $previous_version_tag-prerelease does not exist"
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update Version Number
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git commit -am "Previous version was '${{ env.previous_version_tag }}'. Version now '${{ env.version_tag }}'."
+        git push
+  
+  create-release:
+    needs: update-version
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Create Release
+      run: |
+        TAG_NAME="${{ needs.update-version.outputs.version_tag }}-prerelease"
+        if [[ ${{ github.event.inputs.is_draft }} ]]; then
+          gh release create $TAG_NAME --target ${{ github.ref_name }} --title $TAG_NAME --generate-notes --draft --prerelease
+        else 
+          gh release create $TAG_NAME --target ${{ github.ref_name }} --title $TAG_NAME --generate-notes --prerelease
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

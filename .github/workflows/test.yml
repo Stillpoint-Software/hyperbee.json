@@ -1,0 +1,61 @@
+name: Test
+
+on: 
+  workflow_run: 
+    workflows: 
+      - Create Prerelease
+      - Create Release
+      # - Publish
+    types: [requested]
+  workflow_dispatch:
+  pull_request:
+    types: [opened,edited,synchronize,reopened]
+    branches:
+    - main
+    - develop
+
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  SOLUTION_NAME: ${{ vars.SOLUTION_NAME }}
+  DOTNET_VERSION: '8.0.x'
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Release Configuration
+      if: ${{ env.BRANCH_NAME == 'main' }}
+      run: |
+          echo "BUILD_CONFIGURATION=Release" >> $GITHUB_ENV
+    
+    - name: Debug Configuration
+      if: ${{ env.BRANCH_NAME != 'main' }}
+      run: |
+          echo "BUILD_CONFIGURATION=Debug" >> $GITHUB_ENV
+
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore Dependencies
+      run: dotnet restore ${{ env.SOLUTION_NAME }}
+
+    - name: Build
+      run: dotnet build --no-restore --configuration ${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_NAME }}
+  
+    - name: Tests
+      run: |
+        dotnet test --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --logger:trx --results-directory:./TestResults ${{ env.SOLUTION_NAME }}
+ 
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3 # upload test results
+      if: success() || failure() # run this step even if previous step failed
+      with:
+        name: test-results
+        path: ./TestResults/**/*.trx
+

@@ -2,23 +2,46 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>true</IsPackable>
+	<IsPackable>true</IsPackable>
+
+	<Authors>Stillpoint Software, Inc.</Authors>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageTags>JsonPath;NET;Json</PackageTags>
+	<PackageIcon>icon.png</PackageIcon>
+	<PackageProjectUrl>https://github.com/Stillpoint-Software/Hyperbee.Json/</PackageProjectUrl>
+	<TargetFrameworks>net8.0</TargetFrameworks>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<Copyright>Stillpoint Software, Inc.</Copyright>
+	<Title>Hyperbee Json</Title>
+	<Description>A C# implementation of JSONPath for .NET `System.Text.Json` with a plugable expression selector. </Description>
+	<RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+
   </PropertyGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>$(AssemblyName).Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.9.2" />
-  </ItemGroup>
+
   <ItemGroup>
     <None Update="$(MSBuildProjectName).csproj.DotSettings" Visible="false" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+	<None Include="..\..\assets\icon.png" Pack="true" Visible="false" PackagePath="/" />
+	<None Include="..\..\LICENSE">
+		<Pack>True</Pack>
+		<PackagePath>\</PackagePath>
+	</None>
+	<None Include="..\..\README.md">
+		<Pack>True</Pack>
+		<PackagePath>\</PackagePath>
+	</None>
+	<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+		<PrivateAssets>all</PrivateAssets>
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.9.2" />
   </ItemGroup>
 </Project>

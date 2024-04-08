@@ -2,8 +2,8 @@
   <!-- Solution version numbers -->
   <PropertyGroup>
     <MajorVersion>1</MajorVersion>
-    <MinorVersion>1</MinorVersion>
-    <PatchVersion>5</PatchVersion>
+    <MinorVersion>0</MinorVersion>
+    <PatchVersion>0</PatchVersion>
   </PropertyGroup>
   <!-- Disable automatic package publishing -->
   <PropertyGroup>

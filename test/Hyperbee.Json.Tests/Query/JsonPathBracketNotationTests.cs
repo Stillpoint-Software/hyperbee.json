@@ -11,8 +11,8 @@ namespace Hyperbee.Json.Tests.Query;
 public class JsonPathBracketNotationTests : JsonTestBase
 {
     [DataTestMethod]
-    [DataRow( "$['key']", typeof(JsonDocument))]
-    [DataRow( "$['key']", typeof(JsonNode))]
+    [DataRow( "$['key']", typeof( JsonDocument ) )]
+    [DataRow( "$['key']", typeof( JsonNode ) )]
     public void BracketNotation( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -30,8 +30,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$..[0]", typeof(JsonDocument))]
-    [DataRow( "$..[0]", typeof(JsonNode))]
+    [DataRow( "$..[0]", typeof( JsonDocument ) )]
+    [DataRow( "$..[0]", typeof( JsonNode ) )]
     public void BracketNotationAfterRecursiveDescent( string query, Type sourceType )
     {
         //consensus: ["deepest", "first nested", "first", "more", {"nested": ["deepest", "second"]}]
@@ -54,8 +54,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['missing']", typeof(JsonDocument))]
-    [DataRow( "$['missing']", typeof(JsonNode))]
+    [DataRow( "$['missing']", typeof( JsonDocument ) )]
+    [DataRow( "$['missing']", typeof( JsonNode ) )]
     public void BracketNotationOnObjectWithoutKey( string query, Type sourceType )
     {
         //consensus: []
@@ -70,8 +70,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['ü']", typeof(JsonDocument))]
-    [DataRow( "$['ü']", typeof(JsonNode))]
+    [DataRow( "$['ü']", typeof( JsonDocument ) )]
+    [DataRow( "$['ü']", typeof( JsonNode ) )]
     public void BracketNotationWithNFCPathOnNFDKey( string query, Type sourceType )
     {
         //consensus: []
@@ -86,8 +86,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['two.some']", typeof(JsonDocument))]
-    [DataRow( "$['two.some']", typeof(JsonNode))]
+    [DataRow( "$['two.some']", typeof( JsonDocument ) )]
+    [DataRow( "$['two.some']", typeof( JsonNode ) )]
     public void BracketNotationWithDot( string query, Type sourceType )
     {
         //consensus: //none
@@ -98,12 +98,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "42");
+        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "42" );
     }
 
     [DataTestMethod]
-    [DataRow( "$[\"key\"]", typeof(JsonDocument))]
-    [DataRow( "$[\"key\"]", typeof(JsonNode))]
+    [DataRow( "$[\"key\"]", typeof( JsonDocument ) )]
+    [DataRow( "$[\"key\"]", typeof( JsonNode ) )]
     public void BracketNotationWithDoubleQuotes( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -117,8 +117,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[]", typeof(JsonDocument))]
-    [DataRow( "$[]", typeof(JsonNode))]
+    [DataRow( "$[]", typeof( JsonDocument ) )]
+    [DataRow( "$[]", typeof( JsonNode ) )]
     public void BracketNotationWithEmptyPath( string query, Type sourceType )
     {
         //consensus: NOT_SUPPORTED
@@ -134,8 +134,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['']", typeof(JsonDocument))]
-    [DataRow( "$['']", typeof(JsonNode))]
+    [DataRow( "$['']", typeof( JsonDocument ) )]
+    [DataRow( "$['']", typeof( JsonNode ) )]
     public void BracketNotationWithEmptyString( string query, Type sourceType )
     {
         //consensus: [42]
@@ -149,8 +149,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[\"\"]", typeof(JsonDocument))]
-    [DataRow( "$[\"\"]", typeof(JsonNode))]
+    [DataRow( "$[\"\"]", typeof( JsonDocument ) )]
+    [DataRow( "$[\"\"]", typeof( JsonNode ) )]
     public void BracketNotationWithEmptyStringDoubleQuoted( string query, Type sourceType )
     {
         //consensus: [42]
@@ -164,8 +164,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[-2]", typeof(JsonDocument))]
-    [DataRow( "$[-2]", typeof(JsonNode))]
+    [DataRow( "$[-2]", typeof( JsonDocument ) )]
+    [DataRow( "$[-2]", typeof( JsonNode ) )]
     public void BracketNotationWithNegativeNumberOnShortArray( string query, Type sourceType )
     {
         //consensus: []
@@ -181,8 +181,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[2]", typeof(JsonDocument))]
-    [DataRow( "$[2]", typeof(JsonNode))]
+    [DataRow( "$[2]", typeof( JsonDocument ) )]
+    [DataRow( "$[2]", typeof( JsonNode ) )]
     public void BracketNotationWithNumber( string query, Type sourceType )
     {
         //consensus: ["third"]
@@ -197,8 +197,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[-1]", typeof(JsonDocument))]
-    [DataRow( "$[-1]", typeof(JsonNode))]
+    [DataRow( "$[-1]", typeof( JsonDocument ) )]
+    [DataRow( "$[-1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberNegative1( string query, Type sourceType )
     {
         //consensus: ["third"]
@@ -213,8 +213,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[-1]", typeof(JsonDocument))]
-    [DataRow( "$[-1]", typeof(JsonNode))]
+    [DataRow( "$[-1]", typeof( JsonDocument ) )]
+    [DataRow( "$[-1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberNegative1OnEmptyArray( string query, Type sourceType )
     {
         //consensus: []
@@ -229,8 +229,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[0]", typeof(JsonDocument))]
-    [DataRow( "$[0]", typeof(JsonNode))]
+    [DataRow( "$[0]", typeof( JsonDocument ) )]
+    [DataRow( "$[0]", typeof( JsonNode ) )]
     public void BracketNotationWithNumber0( string query, Type sourceType )
     {
         //consensus: ["first"]
@@ -245,8 +245,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$.*[1]", typeof(JsonDocument))]
-    [DataRow( "$.*[1]", typeof(JsonNode))]
+    [DataRow( "$.*[1]", typeof( JsonDocument ) )]
+    [DataRow( "$.*[1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberAfterDotNotationWithWildcardOnNestedArraysWithDifferentLength( string query, Type sourceType )
     {
         //consensus: [3]
@@ -264,8 +264,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[0]", typeof(JsonDocument))]
-    [DataRow( "$[0]", typeof(JsonNode))]
+    [DataRow( "$[0]", typeof( JsonDocument ) )]
+    [DataRow( "$[0]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberOnObject( string query, Type sourceType )
     {
         //consensus: []
@@ -284,8 +284,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[1]", typeof(JsonDocument))]
-    [DataRow( "$[1]", typeof(JsonNode))]
+    [DataRow( "$[1]", typeof( JsonDocument ) )]
+    [DataRow( "$[1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberOnShortArray( string query, Type sourceType )
     {
         //consensus: []
@@ -314,8 +314,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     */
 
     [DataTestMethod]
-    [DataRow( "$[':']", typeof(JsonDocument))]
-    [DataRow( "$[':']", typeof(JsonNode))]
+    [DataRow( "$[':']", typeof( JsonDocument ) )]
+    [DataRow( "$[':']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedArraySliceLiteral( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -330,8 +330,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[']']", typeof(JsonDocument))]
-    [DataRow( "$[']']", typeof(JsonNode))]
+    [DataRow( "$[']']", typeof( JsonDocument ) )]
+    [DataRow( "$[']']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedClosingBracketLiteral( string query, Type sourceType )
     {
         //consensus: [42]
@@ -346,8 +346,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['@']", typeof(JsonDocument))]
-    [DataRow( "$['@']", typeof(JsonNode))]
+    [DataRow( "$['@']", typeof( JsonDocument ) )]
+    [DataRow( "$['@']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedCurrentObjectLiteral( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -362,8 +362,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['.']", typeof(JsonDocument))]
-    [DataRow( "$['.']", typeof(JsonNode))]
+    [DataRow( "$['.']", typeof( JsonDocument ) )]
+    [DataRow( "$['.']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedDotLiteral( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -381,8 +381,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['.*']", typeof(JsonDocument))]
-    [DataRow( "$['.*']", typeof(JsonNode))]
+    [DataRow( "$['.*']", typeof( JsonDocument ) )]
+    [DataRow( "$['.*']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedDotWildcard( string query, Type sourceType )
     {
         //consensus: [1]
@@ -414,8 +414,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     */
 
     [DataTestMethod]
-    [DataRow( @"$['\\']", typeof(JsonDocument))]
-    [DataRow( @"$['\\']", typeof(JsonNode))]
+    [DataRow( @"$['\\']", typeof( JsonDocument ) )]
+    [DataRow( @"$['\\']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedEscapedBackslash( string query, Type sourceType )
     {
         //consensus: //none
@@ -434,8 +434,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['\\'']", typeof(JsonDocument))]
-    [DataRow( "$['\\'']", typeof(JsonNode))]
+    [DataRow( "$['\\'']", typeof( JsonDocument ) )]
+    [DataRow( "$['\\'']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedEscapedSingleQuote( string query, Type sourceType )
     {
         //consensus: //none
@@ -451,8 +451,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['0']", typeof(JsonDocument))]
-    [DataRow( "$['0']", typeof(JsonNode))]
+    [DataRow( "$['0']", typeof( JsonDocument ) )]
+    [DataRow( "$['0']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedNumberOnObject( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -470,8 +470,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['$']", typeof(JsonDocument))]
-    [DataRow( "$['$']", typeof(JsonNode))]
+    [DataRow( "$['$']", typeof( JsonDocument ) )]
+    [DataRow( "$['$']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedRootLiteral( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -489,8 +489,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( @"$[':@.\""$,*\'\\']", typeof(JsonDocument))] // $[':@.\"$,*'\\']
-    [DataRow( @"$[':@.\""$,*\'\\']", typeof(JsonNode))] // $[':@.\"$,*'\\']
+    [DataRow( @"$[':@.\""$,*\'\\']", typeof( JsonDocument ) )] // $[':@.\"$,*'\\']
+    [DataRow( @"$[':@.\""$,*\'\\']", typeof( JsonNode ) )] // $[':@.\"$,*'\\']
     public void BracketNotationWithQuotedSpecialCharactersCombined( string query, Type sourceType )
     {
         //consensus: //none
@@ -506,8 +506,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['single'quote']", typeof(JsonDocument))]
-    [DataRow( "$['single'quote']", typeof(JsonNode))]
+    [DataRow( "$['single'quote']", typeof( JsonDocument ) )]
+    [DataRow( "$['single'quote']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedStringAndUnescapedSingleQuote( string query, Type sourceType )
     {
         //consensus: NOT_SUPPORTED
@@ -522,8 +522,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[',']", typeof(JsonDocument))]
-    [DataRow( "$[',']", typeof(JsonNode))]
+    [DataRow( "$[',']", typeof( JsonDocument ) )]
+    [DataRow( "$[',']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedUnionLiteral( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -541,8 +541,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['*']", typeof(JsonDocument))]
-    [DataRow( "$['*']", typeof(JsonNode))]
+    [DataRow( "$['*']", typeof( JsonDocument ) )]
+    [DataRow( "$['*']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedWildcardLiteral( string query, Type sourceType )
     {
         //consensus: ["value"]
@@ -560,8 +560,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['*']", typeof(JsonDocument))]
-    [DataRow( "$['*']", typeof(JsonNode))]
+    [DataRow( "$['*']", typeof( JsonDocument ) )]
+    [DataRow( "$['*']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedWildcardLiteralOnObjectWithoutKey( string query, Type sourceType )
     {
         //consensus: []
@@ -576,8 +576,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[ 'a' ]", typeof(JsonDocument))]
-    [DataRow( "$[ 'a' ]", typeof(JsonNode))]
+    [DataRow( "$[ 'a' ]", typeof( JsonDocument ) )]
+    [DataRow( "$[ 'a' ]", typeof( JsonNode ) )]
     public void BracketNotationWithSpaces( string query, Type sourceType )
     {
         //consensus: [2]
@@ -595,8 +595,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['ni.*']", typeof(JsonDocument))]
-    [DataRow( "$['ni.*']", typeof(JsonNode))]
+    [DataRow( "$['ni.*']", typeof( JsonDocument ) )]
+    [DataRow( "$['ni.*']", typeof( JsonNode ) )]
     public void BracketNotationWithStringIncludingDotWildcard( string query, Type sourceType )
     {
         //consensus: [1]
@@ -614,8 +614,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['two'.'some']", typeof(JsonDocument))]
-    [DataRow( "$['two'.'some']", typeof(JsonNode))]
+    [DataRow( "$['two'.'some']", typeof( JsonDocument ) )]
+    [DataRow( "$['two'.'some']", typeof( JsonNode ) )]
     public void BracketNotationWithTwoLiteralsSeparatedByDot( string query, Type sourceType )
     {
         //consensus: NOT_SUPPORTED
@@ -630,8 +630,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[two.some]", typeof(JsonDocument))]
-    [DataRow( "$[two.some]", typeof(JsonNode))]
+    [DataRow( "$[two.some]", typeof( JsonDocument ) )]
+    [DataRow( "$[two.some]", typeof( JsonNode ) )]
     public void BracketNotationWithTwoLiteralsSeparatedByDotWithoutQuotes( string query, Type sourceType )
     {
         //consensus: NOT_SUPPORTED
@@ -646,8 +646,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[0:2][*]", typeof(JsonDocument))]
-    [DataRow( "$[0:2][*]", typeof(JsonNode))]
+    [DataRow( "$[0:2][*]", typeof( JsonDocument ) )]
+    [DataRow( "$[0:2][*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardAfterArraySlice( string query, Type sourceType )
     {
         //consensus: [1, 2, "a", "b"]
@@ -672,8 +672,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[*].bar[*]", typeof(JsonDocument))]
-    [DataRow( "$[*].bar[*]", typeof(JsonNode))]
+    [DataRow( "$[*].bar[*]", typeof( JsonDocument ) )]
+    [DataRow( "$[*].bar[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardAfterDotNotationAfterBracketNotationWithWildcard( string query, Type sourceType )
     {
         //consensus: [42]
@@ -691,8 +691,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$..[*]", typeof(JsonDocument))]
-    [DataRow( "$..[*]", typeof(JsonNode))]
+    [DataRow( "$..[*]", typeof( JsonDocument ) )]
+    [DataRow( "$..[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardAfterRecursiveDescent( string query, Type sourceType )
     {
         //consensus: ["string", "value", 0, 1, [0, 1], {"complex": "string", "primitives": [0, 1]}]
@@ -714,7 +714,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
         Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[1], minify: true ) == JsonValueHelper.MinifyJsonString( "{\"complex\": \"string\", \"primitives\": [0,1]}") );
+        Assert.IsTrue( JsonValueHelper.GetString( matches[1], minify: true ) == JsonValueHelper.MinifyJsonString( "{\"complex\": \"string\", \"primitives\": [0,1]}" ) );
         Assert.IsTrue( JsonValueHelper.GetString( matches[2] ) == "string" );
         Assert.IsTrue( JsonValueHelper.GetString( matches[3], minify: true ) == "[0,1]" );
         Assert.IsTrue( JsonValueHelper.GetInt32( matches[4] ) == 0 );
@@ -722,8 +722,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[*]", typeof(JsonDocument))]
-    [DataRow( "$[*]", typeof(JsonNode))]
+    [DataRow( "$[*]", typeof( JsonDocument ) )]
+    [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnArray( string query, Type sourceType )
     {
         //consensus: ["string", 42, {"key": "value"}, [0, 1]]
@@ -744,8 +744,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[*]", typeof(JsonDocument))]
-    [DataRow( "$[*]", typeof(JsonNode))]
+    [DataRow( "$[*]", typeof( JsonDocument ) )]
+    [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnEmptyArray( string query, Type sourceType )
     {
         //consensus: []
@@ -760,8 +760,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[*]", typeof(JsonDocument))]
-    [DataRow( "$[*]", typeof(JsonNode))]
+    [DataRow( "$[*]", typeof( JsonDocument ) )]
+    [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnEmptyObject( string query, Type sourceType )
     {
         //consensus: []
@@ -776,8 +776,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[*]", typeof(JsonDocument))]
-    [DataRow( "$[*]", typeof(JsonNode))]
+    [DataRow( "$[*]", typeof( JsonDocument ) )]
+    [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnNullValueArray( string query, Type sourceType )
     {
         //consensus: [40, null, 42]
@@ -797,8 +797,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[*]", typeof(JsonDocument))]
-    [DataRow( "$[*]", typeof(JsonNode))]
+    [DataRow( "$[*]", typeof( JsonDocument ) )]
+    [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnObject( string query, Type sourceType )
     {
         //consensus: ["string", 42, [0, 1], {"key": "value"}]
@@ -820,8 +820,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[key]", typeof(JsonDocument))]
-    [DataRow( "$[key]", typeof(JsonNode))]
+    [DataRow( "$[key]", typeof( JsonDocument ) )]
+    [DataRow( "$[key]", typeof( JsonNode ) )]
     public void BracketNotationWithoutQuotes( string query, Type sourceType )
     {
         //consensus: NOT_SUPPORTED

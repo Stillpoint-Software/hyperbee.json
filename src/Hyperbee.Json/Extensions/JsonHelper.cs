@@ -80,7 +80,7 @@ public static class JsonHelper
                     case SelectorKind.UnspecifiedSingular:
                     case SelectorKind.UnspecifiedGroup:
                     default:
-                        throw new NotSupportedException( $"Unsupported {nameof(SelectorKind)}." );
+                        throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
                 }
             }
 

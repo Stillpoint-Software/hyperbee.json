@@ -10,9 +10,9 @@ public class DynamicJsonNode : DynamicObject
 
     public static implicit operator double( DynamicJsonNode proxy ) => proxy.Node.GetValue<double>();
     public static implicit operator decimal( DynamicJsonNode proxy ) => proxy.Node.GetValue<decimal>();
-    public static implicit operator short( DynamicJsonNode proxy ) => proxy.Node.GetNumber<short>(); 
-    public static implicit operator int( DynamicJsonNode proxy ) => proxy.Node.GetNumber<int>(); 
-    public static implicit operator long( DynamicJsonNode proxy ) => proxy.Node.GetNumber<long>(); 
+    public static implicit operator short( DynamicJsonNode proxy ) => proxy.Node.GetNumber<short>();
+    public static implicit operator int( DynamicJsonNode proxy ) => proxy.Node.GetNumber<int>();
+    public static implicit operator long( DynamicJsonNode proxy ) => proxy.Node.GetNumber<long>();
     public static implicit operator bool( DynamicJsonNode proxy ) => proxy.Node.GetValue<bool>();
     public static implicit operator byte( DynamicJsonNode proxy ) => proxy.Node.GetValue<byte>();
     public static implicit operator sbyte( DynamicJsonNode proxy ) => proxy.Node.GetValue<sbyte>();
@@ -53,12 +53,10 @@ public class DynamicJsonNode : DynamicObject
                 result = new DynamicJsonNode( ref resultValue );
                 return true;
             case JsonArray jArray:
-            {
                 //bf not sure if this gets called
-                var resultValue = jArray[binder.Name];
-                result = new DynamicJsonNode( ref resultValue );
+                var arrayValue = jArray[binder.Name];
+                result = new DynamicJsonNode( ref arrayValue );
                 return true;
-            }
             default:
                 result = null;
                 return false;

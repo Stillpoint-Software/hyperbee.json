@@ -10,7 +10,7 @@ internal record SelectorDescriptor
     public string Value { get; init; }
 }
 
-[DebuggerTypeProxy( typeof(JsonPathTokenDebugView) )]
+[DebuggerTypeProxy( typeof( JsonPathTokenDebugView ) )]
 [DebuggerDisplay( "Singular = {Singular}, SelectorCount = {Selectors.Length}" )]
 internal record JsonPathToken
 {
@@ -27,7 +27,7 @@ internal record JsonPathToken
                    Selectors[0].SelectorKind == SelectorKind.Dot ||
                    Selectors[0].SelectorKind == SelectorKind.Index ||
                    Selectors[0].SelectorKind == SelectorKind.Name ||
-                   Selectors[0].SelectorKind == SelectorKind.Root; 
+                   Selectors[0].SelectorKind == SelectorKind.Root;
         }
     }
 
@@ -35,7 +35,7 @@ internal record JsonPathToken
     {
         Selectors =
         [
-            new SelectorDescriptor {SelectorKind = kind, Value = selector } 
+            new SelectorDescriptor { SelectorKind = kind, Value = selector }
         ];
     }
 

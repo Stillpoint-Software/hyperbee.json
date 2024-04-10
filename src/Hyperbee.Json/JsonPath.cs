@@ -69,7 +69,7 @@ public sealed partial class JsonPath
     {
         if ( tokenKind == JsonValueKind.Array )
             return $"{prefix}[{childKey}]";
-                
+
         return childKey.IndexOfAny( SpecialCharacters ) == -1 ? $"{prefix}.{childKey}" : $@"{prefix}['{childKey}']";
     }
 
@@ -93,7 +93,7 @@ public sealed partial class JsonPath
     public IEnumerable<JsonPathElement> SelectPath( in JsonElement value, string query )
     {
         if ( string.IsNullOrWhiteSpace( query ) )
-            throw new ArgumentNullException( nameof(query) );
+            throw new ArgumentNullException( nameof( query ) );
 
         // quick out
 
@@ -294,21 +294,18 @@ public sealed partial class JsonPath
         switch ( step )
         {
             case 0:
-            {
                 yield break;
-            }
+
             case > 0:
-            {
                 for ( var index = lower; index < upper; index += step )
                     yield return index;
+
                 break;
-            }
             case < 0:
-            {
                 for ( var index = upper; index > lower; index += step )
                     yield return index;
+
                 break;
-            }
         }
     }
 
@@ -341,7 +338,7 @@ public sealed partial class JsonPath
 
             default:
                 if ( !IsPathOperator( childKey ) )
-                    throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof(value) );
+                    throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
                 break;
         }
 
@@ -369,5 +366,5 @@ public sealed partial class JsonPath
             path = Path;
         }
     }
- 
+
 }

@@ -75,7 +75,6 @@ public class JsonElementEqualityComparer : IEqualityComparer<JsonElement>
                 return x.EnumerateArray().SequenceEqual( y.EnumerateArray(), this );
 
             case JsonValueKind.Object:
-            {
                 // JsonDocument fully supports duplicate property names. It is perfectly happy to parse
                 // {"Value":"a", "Value" : "b"} and will store both key value pairs in the document.
                 //
@@ -103,10 +102,10 @@ public class JsonElementEqualityComparer : IEqualityComparer<JsonElement>
                 }
 
                 return true;
-            }
+
 
             default:
-                throw new JsonException( $"Unknown {nameof(JsonValueKind)} {x.ValueKind}." );
+                throw new JsonException( $"Unknown {nameof( JsonValueKind )} {x.ValueKind}." );
         }
     }
 
@@ -164,7 +163,7 @@ public class JsonElementEqualityComparer : IEqualityComparer<JsonElement>
                 break;
 
             default:
-                throw new JsonException( $"Unknown {nameof(JsonValueKind)} {obj.ValueKind}." );
+                throw new JsonException( $"Unknown {nameof( JsonValueKind )} {obj.ValueKind}." );
         }
     }
 }

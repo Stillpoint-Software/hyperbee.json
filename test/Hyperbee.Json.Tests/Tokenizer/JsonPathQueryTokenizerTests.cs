@@ -33,7 +33,7 @@ public class JsonPathQueryTokenizerTests
     public void Should_tokenize_json_path( string jsonPath, string expected )
     {
         // arrange
-        
+
         static string TokensToString( IEnumerable<JsonPathToken> tokens )
         {
             static string TokenToString( JsonPathToken token )

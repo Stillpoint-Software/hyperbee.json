@@ -11,8 +11,8 @@ namespace Hyperbee.Json.Tests.Query;
 public class JsonPathRootOnScalarTests : JsonTestBase
 {
     [DataTestMethod]
-    [DataRow( "$", typeof(JsonDocument) )]
-    [DataRow( "$", typeof(JsonNode) )]
+    [DataRow( "$", typeof( JsonDocument ) )]
+    [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalar( string query, Type sourceType )
     {
         const string json = "42";
@@ -31,8 +31,8 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$", typeof(JsonDocument) )]
-    [DataRow( "$", typeof(JsonNode) )]
+    [DataRow( "$", typeof( JsonDocument ) )]
+    [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalarFalse( string query, Type sourceType )
     {
         const string json = "false";
@@ -49,8 +49,8 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$", typeof(JsonDocument) )]
-    [DataRow( "$", typeof(JsonNode) )]
+    [DataRow( "$", typeof( JsonDocument ) )]
+    [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalarTrue( string query, Type sourceType )
     {
         const string json = "true";

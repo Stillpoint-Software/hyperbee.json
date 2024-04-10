@@ -74,7 +74,7 @@ public sealed partial class JsonPathNode
     public IEnumerable<JsonNode> Select( in JsonNode value, string query )
     {
         if ( string.IsNullOrWhiteSpace( query ) )
-            throw new ArgumentNullException( nameof(query) );
+            throw new ArgumentNullException( nameof( query ) );
 
         // quick out
 
@@ -117,7 +117,7 @@ public sealed partial class JsonPathNode
 
             // make sure we have a container value
 
-            if ( !( current is JsonObject || current is JsonArray ) )
+            if ( !(current is JsonObject || current is JsonArray) )
                 throw new InvalidOperationException( "Object or Array expected." );
 
             // try to access object or array using KEY value
@@ -272,21 +272,21 @@ public sealed partial class JsonPathNode
         switch ( step )
         {
             case 0:
-            {
-                yield break;
-            }
+                {
+                    yield break;
+                }
             case > 0:
-            {
-                for ( var index = lower; index < upper; index += step )
-                    yield return index;
-                break;
-            }
+                {
+                    for ( var index = lower; index < upper; index += step )
+                        yield return index;
+                    break;
+                }
             case < 0:
-            {
-                for ( var index = upper; index > lower; index += step )
-                    yield return index;
-                break;
-            }
+                {
+                    for ( var index = upper; index > lower; index += step )
+                        yield return index;
+                    break;
+                }
         }
     }
 
@@ -302,29 +302,29 @@ public sealed partial class JsonPathNode
         switch ( value )
         {
             case JsonObject valueObject:
-            {
-                if ( valueObject.TryGetPropertyValue( childKey.ToString(), out childValue ) )
-                    return true;
-                break;
-            }
-            case JsonArray valueArray:
-            {
-                var index = TryParseInt( childKey ) ?? -1;
-
-                if ( index >= 0 && index < valueArray.Count )
                 {
-                    childValue = value[index];
-                    return true;
+                    if ( valueObject.TryGetPropertyValue( childKey.ToString(), out childValue ) )
+                        return true;
+                    break;
                 }
+            case JsonArray valueArray:
+                {
+                    var index = TryParseInt( childKey ) ?? -1;
 
-                break;
-            }
+                    if ( index >= 0 && index < valueArray.Count )
+                    {
+                        childValue = value[index];
+                        return true;
+                    }
+
+                    break;
+                }
             default:
-            {
-                if ( !IsPathOperator( childKey ) )
-                    throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof(value) );
-                break;
-            }
+                {
+                    if ( !IsPathOperator( childKey ) )
+                        throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
+                    break;
+                }
         }
 
         childValue = default;

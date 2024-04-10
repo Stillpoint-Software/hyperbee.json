@@ -48,7 +48,6 @@ public class DynamicJsonConverter : JsonConverter<dynamic>
         switch ( reader.TokenType )
         {
             case JsonTokenType.StartObject:
-            {
                 IDictionary<string, object> expando = new ExpandoObject();
 
                 while ( reader.Read() )
@@ -74,10 +73,9 @@ public class DynamicJsonConverter : JsonConverter<dynamic>
                 }
 
                 return expando;
-            }
+
 
             case JsonTokenType.StartArray:
-            {
                 IList<object> array = new List<object>();
 
                 var i = 0;
@@ -98,11 +96,9 @@ public class DynamicJsonConverter : JsonConverter<dynamic>
                 }
 
                 return array.Count == 0 ? null : array;
-            }
 
             case JsonTokenType.Number:
             case JsonTokenType.String:
-
                 if ( TryReadValueHandler != null && TryReadValueHandler( ref reader, reader.TokenType, options, JPath.Current, out var value ) )
                     return value;
 
@@ -137,28 +133,28 @@ public class DynamicJsonConverter : JsonConverter<dynamic>
         switch ( tokenType )
         {
             case JsonTokenType.Number:
-            {
-                if ( reader.TryGetInt64( out var number ) )
-                    value = number;
-                else
-                    value = reader.GetDouble();
+                {
+                    if ( reader.TryGetInt64( out var number ) )
+                        value = number;
+                    else
+                        value = reader.GetDouble();
 
-                return true;
-            }
+                    return true;
+                }
             case JsonTokenType.String:
-            {
-                if ( reader.TryGetDateTime( out var datetime ) )
-                    value = datetime;
-                else
-                    value = reader.GetString();
+                {
+                    if ( reader.TryGetDateTime( out var datetime ) )
+                        value = datetime;
+                    else
+                        value = reader.GetString();
 
-                return true;
-            }
+                    return true;
+                }
             default:
-            {
-                value = null;
-                return false;
-            }
+                {
+                    value = null;
+                    return false;
+                }
         }
     }
 
@@ -179,73 +175,73 @@ public class DynamicJsonConverter : JsonConverter<dynamic>
         switch ( value )
         {
             case IList<object> array:
-            {
-                if ( name != null )
-                    writer.WriteStartArray( name );
-                else
-                    writer.WriteStartArray();
-
-                foreach ( var v in array )
                 {
-                    InternalWrite( writer, null, v, options );
-                }
+                    if ( name != null )
+                        writer.WriteStartArray( name );
+                    else
+                        writer.WriteStartArray();
 
-                writer.WriteEndArray();
-                break;
-            }
+                    foreach ( var v in array )
+                    {
+                        InternalWrite( writer, null, v, options );
+                    }
+
+                    writer.WriteEndArray();
+                    break;
+                }
             case IDictionary<string, object> dictionary:
-            {
-                if ( name != null )
-                    writer.WriteStartObject( name );
-                else
-                    writer.WriteStartObject();
-
-                foreach ( var (n, v) in dictionary )
                 {
-                    InternalWrite( writer, n, v, options );
-                }
+                    if ( name != null )
+                        writer.WriteStartObject( name );
+                    else
+                        writer.WriteStartObject();
 
-                writer.WriteEndObject();
-                break;
-            }
+                    foreach ( var (n, v) in dictionary )
+                    {
+                        InternalWrite( writer, n, v, options );
+                    }
+
+                    writer.WriteEndObject();
+                    break;
+                }
             case decimal valueDecimal:
-            {
-                writer.WriteNumber( name, valueDecimal );
-                break;
-            }
+                {
+                    writer.WriteNumber( name, valueDecimal );
+                    break;
+                }
             case double valueDouble:
-            {
-                writer.WriteNumber( name, valueDouble );
-                break;
-            }
+                {
+                    writer.WriteNumber( name, valueDouble );
+                    break;
+                }
             case int valueInt:
-            {
-                writer.WriteNumber( name, valueInt );
-                break;
-            }
+                {
+                    writer.WriteNumber( name, valueInt );
+                    break;
+                }
             case long valueLong:
-            {
-                writer.WriteNumber( name, valueLong );
-                break;
-            }
+                {
+                    writer.WriteNumber( name, valueLong );
+                    break;
+                }
             case bool valueBoolean:
-            {
-                writer.WriteBoolean( name, valueBoolean );
-                break;
-            }
+                {
+                    writer.WriteBoolean( name, valueBoolean );
+                    break;
+                }
             case Enum valueEnum:
-            {
-                if ( options?.GetConverter( valueEnum.GetType() ) is JsonConverter<Enum> converter )
-                    converter.Write( writer, valueEnum, options );
-                else
-                    writer.WriteString( name, value.ToString() );
-                break;
-            }
+                {
+                    if ( options?.GetConverter( valueEnum.GetType() ) is JsonConverter<Enum> converter )
+                        converter.Write( writer, valueEnum, options );
+                    else
+                        writer.WriteString( name, value.ToString() );
+                    break;
+                }
             default:
-            {
-                writer.WriteString( name, value.ToString() );
-                break;
-            }
+                {
+                    writer.WriteString( name, value.ToString() );
+                    break;
+                }
         }
     }
 }

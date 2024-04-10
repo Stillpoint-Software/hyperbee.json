@@ -24,7 +24,7 @@ public static class JsonElementExtensions
 
     public static dynamic ToDynamic( this JsonElement value, string path = null ) => new DynamicJsonElement( ref value, path );
     public static dynamic ToDynamic( this JsonDocument value ) => ToDynamic( value.RootElement, "$" );
- 
+
     public static JsonNode ToJsonNode( this JsonDocument document )
     {
         return ToJsonNode( document.RootElement );
@@ -87,7 +87,7 @@ public static class JsonElementExtensions
 
     private static Func<JsonElement, JsonDocument> CreateParentAccessor()
     {
-        var param = Expression.Parameter( typeof(JsonElement), "target" );
+        var param = Expression.Parameter( typeof( JsonElement ), "target" );
         var field = Expression.Field( param, "_parent" );
         return Expression.Lambda<Func<JsonElement, JsonDocument>>( field, param ).Compile();
     }

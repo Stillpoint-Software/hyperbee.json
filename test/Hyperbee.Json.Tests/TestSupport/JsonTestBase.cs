@@ -40,29 +40,29 @@ public class JsonTestBase
 
     public static TType GetDocument<TType>( string filename = null )
     {
-        var type = typeof(TType);
+        var type = typeof( TType );
 
-        if ( type == typeof(JsonDocument) )
-            return (TType)(object) ReadJsonDocument( filename );
+        if ( type == typeof( JsonDocument ) )
+            return (TType) (object) ReadJsonDocument( filename );
 
         //if ( type == typeof(JsonElement) )
         //    return (TType)(object) ReadJsonDocument( filename )?.RootElement;
 
-        if ( type == typeof(JsonNode) )
-            return (TType)(object) ReadJsonNode( filename );
+        if ( type == typeof( JsonNode ) )
+            return (TType) (object) ReadJsonNode( filename );
 
         throw new NotSupportedException();
     }
 
     public static object GetDocument( Type target, string filename = null )
     {
-        if ( target == typeof(JsonDocument) )
+        if ( target == typeof( JsonDocument ) )
             return GetDocument<JsonDocument>( filename );
 
         //if ( target == typeof(JsonElement) )
         //    return GetDocument<JsonDocument>( filename )?.RootElement;
 
-        if ( target == typeof(JsonNode) )
+        if ( target == typeof( JsonNode ) )
             return GetDocument<JsonNode>( filename );
 
         throw new NotSupportedException();
@@ -76,10 +76,10 @@ public class JsonTestBase
 
     public static IJsonPathProxy GetDocumentProxyFromSource( Type target, string source )
     {
-        if ( target == typeof(JsonDocument) )
+        if ( target == typeof( JsonDocument ) )
             return new JsonDocumentProxy( source );
 
-        if ( target == typeof(JsonNode) )
+        if ( target == typeof( JsonNode ) )
             return new JsonNodeProxy( source );
 
         throw new NotSupportedException();

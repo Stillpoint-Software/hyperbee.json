@@ -5,8 +5,8 @@ namespace Hyperbee.Json.Extensions;
 
 internal static class ImmutableStackExtensions
 {
-    internal static IImmutableStack<JsonPathToken> Push(this IImmutableStack<JsonPathToken> stack, string selector, SelectorKind kind)
+    internal static IImmutableStack<JsonPathToken> Push( this IImmutableStack<JsonPathToken> stack, string selector, SelectorKind kind )
     {
-        return stack.Push(new JsonPathToken(selector, kind));
+        return stack.Push( new JsonPathToken( selector, kind ) );
     }
 }

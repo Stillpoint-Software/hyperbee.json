@@ -11,14 +11,14 @@ internal enum SelectorKind
     Undefined,
 
     // dot notation
-    Root,            
-    Dot,             
+    Root,
+    Dot,
 
     // union notation
     Name,
     Slice,
     Filter,
-    Index,           
+    Index,
 
     // 
     Wildcard,
@@ -154,7 +154,7 @@ public static partial class JsonPathQueryTokenizer
 
                             InsertToken( tokens, new SelectorDescriptor
                             {
-                                SelectorKind = selectorKind, 
+                                SelectorKind = selectorKind,
                                 Value = selectorValue
                             } );
 
@@ -175,7 +175,7 @@ public static partial class JsonPathQueryTokenizer
 
                             InsertToken( tokens, new SelectorDescriptor
                             {
-                                SelectorKind = selectorKind, 
+                                SelectorKind = selectorKind,
                                 Value = selectorValue
                             } );
 
@@ -183,7 +183,7 @@ public static partial class JsonPathQueryTokenizer
                             {
                                 InsertToken( tokens, new SelectorDescriptor
                                 {
-                                    SelectorKind = SelectorKind.Descendant, 
+                                    SelectorKind = SelectorKind.Descendant,
                                     Value = ".."
                                 } );
 
@@ -209,7 +209,7 @@ public static partial class JsonPathQueryTokenizer
                             scanner = Scanner.UnionFinal;
                             InsertToken( tokens, new SelectorDescriptor
                             {
-                                SelectorKind = SelectorKind.Wildcard, 
+                                SelectorKind = SelectorKind.Wildcard,
                                 Value = "*"
                             } );
                             break;
@@ -220,7 +220,7 @@ public static partial class JsonPathQueryTokenizer
                             scanner = Scanner.UnionFinal;
                             InsertToken( tokens, new SelectorDescriptor
                             {
-                                SelectorKind = SelectorKind.Descendant, 
+                                SelectorKind = SelectorKind.Descendant,
                                 Value = ".."
                             } );
                             i++;
@@ -305,9 +305,9 @@ public static partial class JsonPathQueryTokenizer
 
                             selectors.Insert( 0, new SelectorDescriptor
                             {
-                                SelectorKind = selectorKind, 
+                                SelectorKind = selectorKind,
                                 Value = selectorValue
-                            } ); 
+                            } );
 
                             // continue parsing the union
 

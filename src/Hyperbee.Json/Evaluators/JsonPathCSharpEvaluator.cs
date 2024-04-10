@@ -58,7 +58,7 @@ public abstract partial class JsonPathCSharpEvaluator<TType> : IJsonPathScriptEv
         {
             return null; // missing members should act falsy
         }
-        catch ( Exception ex ) 
+        catch ( Exception ex )
         {
             throw new JsonPathEvaluatorException( "Error compiling JsonPath expression.", ex );
         }

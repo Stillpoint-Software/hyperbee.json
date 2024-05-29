@@ -26,7 +26,7 @@ public abstract partial class JsonPathCSharpEvaluator<TType> : IJsonPathScriptEv
     [GeneratedRegex( "@\\.[A-Za-z_][A-Za-z0-9_]*" )]
     private static partial Regex PropertyRegex();
 
-    public object Evaluator( string script, TType current, string context )
+    public object Evaluator( string script, TType current, TType root, string context )
     {
         var compiled = Compiled.GetOrAdd( script, key =>
         {

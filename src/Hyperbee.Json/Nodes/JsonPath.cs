@@ -40,7 +40,7 @@ namespace Hyperbee.Json.Nodes;
 
 public sealed class JsonPathNode
 {
-    public static IJsonPathScriptEvaluator<JsonNode> DefaultEvaluator { get; set; } = new JsonPathCSharpNodeEvaluator();
+    public static IJsonPathScriptEvaluator<JsonNode> DefaultEvaluator { get; set; } = new JsonPathExpressionNodeEvaluator(); // new JsonPathCSharpNodeEvaluator();
     private readonly IJsonPathScriptEvaluator<JsonNode> _evaluator;
 
     private readonly JsonNodePathVisitor _visitor = new();
@@ -59,13 +59,18 @@ public sealed class JsonPathNode
 
     public IEnumerable<JsonNode> Select( in JsonNode value, string query )
     {
+        return Select( value, value, query );
+    }
+
+    internal IEnumerable<JsonNode> Select( in JsonNode value, in JsonNode root, string query )
+    {
         if ( string.IsNullOrWhiteSpace( query ) )
             throw new ArgumentNullException( nameof( query ) );
 
         // quick out
 
         if ( query == "$" )
-            return new[] { value };
+            return [value];
 
         // tokenize
 
@@ -73,10 +78,13 @@ public sealed class JsonPathNode
 
         // initiate the expression walk
 
-        if ( !tokens.IsEmpty && tokens.Peek().Selectors.First().Value == "$" )
-            tokens = tokens.Pop();
+        if ( !tokens.IsEmpty )
+        {
+            var firstToken = tokens.Peek().Selectors.First().Value;
+            if ( firstToken == "$" || firstToken == "@" )
+                tokens = tokens.Pop();
+        }
 
-        return _visitor.ExpressionVisitor( new JsonNodePathVisitor.VisitorArgs( value, tokens, "$" ), _evaluator.Evaluator );
+        return _visitor.ExpressionVisitor( new JsonNodePathVisitor.VisitorArgs( value, root, tokens, "$" ), _evaluator.Evaluator );
     }
-
 }

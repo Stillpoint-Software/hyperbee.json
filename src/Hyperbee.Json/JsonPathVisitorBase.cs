@@ -11,8 +11,10 @@ internal abstract class JsonPathVisitorBase<TElement, TResult>
 {
     internal IEnumerable<TResult> ExpressionVisitor( VisitorArgs args, JsonPathEvaluator<TElement> evaluator )
     {
+        var initialArgs = args;
+
         var nodes = new Stack<VisitorArgs>( 4 );
-        void PushNode( in TElement v, in IImmutableStack<JsonPathToken> t, string p ) => nodes.Push( new VisitorArgs( v, t, p ) );
+        void PushNode( in TElement v, in IImmutableStack<JsonPathToken> t, string p ) => nodes.Push( new VisitorArgs( v, initialArgs.Root, t, p ) );
 
         do
         {
@@ -82,7 +84,7 @@ internal abstract class JsonPathVisitorBase<TElement, TResult>
 
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
                 {
-                    if ( evaluator( childSelector, current, GetPath( current, path ) ) is not string evalSelector )
+                    if ( evaluator( childSelector, current, args.Root, GetPath( current, path ) ) is not string evalSelector )
                         continue;
 
                     var selectorKind = evalSelector != "*" && evalSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( evalSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
@@ -103,7 +105,8 @@ internal abstract class JsonPathVisitorBase<TElement, TResult>
                             continue;
 
                         var childContext = GetPath( current, path, childKey );
-                        var filter = evaluator( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, childContext );
+
+                        var filter = evaluator( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, args.Root, childContext );
 
                         // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
                         if ( filter is not null and not IConvertible || Convert.ToBoolean( filter, CultureInfo.InvariantCulture ) )
@@ -206,9 +209,10 @@ internal abstract class JsonPathVisitorBase<TElement, TResult>
     internal abstract string GetPath( TElement current, string path, string selector );
     internal abstract string GetPath( TElement current, string path );
 
-    internal sealed class VisitorArgs( in TElement value, in IImmutableStack<JsonPathToken> tokens, string path )
+    internal sealed class VisitorArgs( in TElement value, in TElement root, in IImmutableStack<JsonPathToken> tokens, string path )
     {
         public readonly TElement Value = value;
+        public readonly TElement Root = root;
         public readonly IImmutableStack<JsonPathToken> Tokens = tokens;
         public readonly string Path = path;
 

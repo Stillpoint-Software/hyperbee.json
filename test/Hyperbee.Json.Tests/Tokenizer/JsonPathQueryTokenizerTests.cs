@@ -12,11 +12,11 @@ public class JsonPathQueryTokenizerTests
     [DataRow( "$", "{$|k}" )]
     [DataRow( "$.two.some", "{$|k};{two|k};{some|k}" )]
     [DataRow( "$.thing[1:2:3]", "{$|k};{thing|k};{1:2:3|s}" )]
-    [DataRow( @"$..thing[?(@.x == 1)]", "{$|k};{..|s};{thing|k};{?(@.x == 1)|s}" )]
+    [DataRow( "$..thing[?(@.x == 1)]", "{$|k};{..|s};{thing|k};{?(@.x == 1)|s}" )]
     [DataRow( "$['two.some']", "{$|k};{two.some|k}" )]
     [DataRow( "$.two.some.thing['this.or.that']", "{$|k};{two|k};{some|k};{thing|k};{this.or.that|k}" )]
     [DataRow( "$.store.book[*].author", "{$|k};{store|k};{book|k};{*|s};{author|k}" )]
-    [DataRow( "$..author", "{$|k};{..|s};{author|k}" )]
+    [DataRow( "@..author", "{@|k};{..|s};{author|k}" )]
     [DataRow( "$.store.*", "{$|k};{store|k};{*|s}" )]
     [DataRow( "$.store..price", "{$|k};{store|k};{..|s};{price|k}" )]
     [DataRow( "$..book[2]", "{$|k};{..|s};{book|k};{2|k}" )]
@@ -33,7 +33,6 @@ public class JsonPathQueryTokenizerTests
     public void Should_tokenize_json_path( string jsonPath, string expected )
     {
         // arrange
-
         static string TokensToString( IEnumerable<JsonPathToken> tokens )
         {
             static string TokenToString( JsonPathToken token )

@@ -40,7 +40,7 @@ namespace Hyperbee.Json;
 
 public sealed class JsonPath
 {
-    public static IJsonPathScriptEvaluator<JsonElement> DefaultEvaluator { get; set; } = new JsonPathCSharpElementEvaluator();
+    public static IJsonPathScriptEvaluator<JsonElement> DefaultEvaluator { get; set; } = new JsonPathExpressionElementEvaluator(); //new JsonPathCSharpElementEvaluator();
     private readonly IJsonPathScriptEvaluator<JsonElement> _evaluator;
 
     private readonly JsonDocumentPathVisitor _visitor = new();
@@ -59,10 +59,20 @@ public sealed class JsonPath
 
     public IEnumerable<JsonElement> Select( in JsonElement value, string query )
     {
-        return SelectPath( value, query ).Select( x => x.Value );
+        return SelectPath( value, value, query ).Select( x => x.Value );
+    }
+
+    internal IEnumerable<JsonElement> Select( in JsonElement value, JsonElement root, string query )
+    {
+        return SelectPath( value, root, query ).Select( x => x.Value );
     }
 
     public IEnumerable<JsonPathElement> SelectPath( in JsonElement value, string query )
+    {
+        return SelectPath( value, value, query );
+    }
+
+    internal IEnumerable<JsonPathElement> SelectPath( in JsonElement value, in JsonElement root, string query )
     {
         if ( string.IsNullOrWhiteSpace( query ) )
             throw new ArgumentNullException( nameof( query ) );
@@ -70,7 +80,7 @@ public sealed class JsonPath
         // quick out
 
         if ( query == "$" )
-            return new[] { new JsonPathElement( value, query ) };
+            return [new JsonPathElement( value, query )];
 
         // tokenize
 
@@ -78,9 +88,13 @@ public sealed class JsonPath
 
         // initiate the expression walk
 
-        if ( !tokens.IsEmpty && tokens.Peek().Selectors.First().Value == "$" )
-            tokens = tokens.Pop();
+        if ( !tokens.IsEmpty )
+        {
+            var firstToken = tokens.Peek().Selectors.First().Value;
+            if ( firstToken == "$" || firstToken == "@" )
+                tokens = tokens.Pop();
+        }
 
-        return _visitor.ExpressionVisitor( new JsonDocumentPathVisitor.VisitorArgs( value, tokens, "$" ), _evaluator.Evaluator );
+        return _visitor.ExpressionVisitor( new JsonDocumentPathVisitor.VisitorArgs( value, root, tokens, "$" ), _evaluator.Evaluator );
     }
 }

@@ -106,6 +106,7 @@ public static partial class JsonPathQueryTokenizer
         var selectorStart = 0;
 
         var bracketDepth = 0;
+        var parenDepth = 0;
         var literalDelimiter = '\'';
         var selectors = new List<SelectorDescriptor>();
 
@@ -126,6 +127,7 @@ public static partial class JsonPathQueryTokenizer
                         case ' ':
                         case '\t':
                             break;
+                        case '@':  // Technically invalid, but allows `@` to work on sub queries without changing tokenizer 
                         case '$':
                             if ( i < n && query[i] != '.' && query[i] != '[' )
                                 throw new NotSupportedException( "Invalid character after `$`." );
@@ -277,11 +279,19 @@ public static partial class JsonPathQueryTokenizer
                         case '[': // handle nested `[` (not called for first bracket)
                             bracketDepth++;
                             break;
+                        case '(': // handle nested `(` (not called for first bracket)
+                            parenDepth++;
+                            break;
+                        case ')':
+                            parenDepth--;
+                            break;
                         case ',':
                         case ']':
                             if ( c == ']' && --bracketDepth > 0 ) // handle nested `]`
                                 break;
-
+                            if ( parenDepth > 0 )
+                                break;
+                                                                
                             // get the child item atom
 
                             selectorValue = GetSelector( scanner, query, selectorStart, i );

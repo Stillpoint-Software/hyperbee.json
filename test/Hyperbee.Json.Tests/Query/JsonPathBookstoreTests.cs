@@ -240,8 +240,8 @@ public class JsonPathBookstoreTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( @"$.store.book[?(@path != ""$.store.book[0]"")]", typeof( JsonDocument ) )]
-    [DataRow( @"$.store.book[?(@path != ""$.store.book[0]"")]", typeof( JsonNode ) )]
+    [DataRow( @"$.store.book[?(path(@.price) != ""$.store.book[0].price"")]", typeof( JsonDocument ) )]
+    [DataRow( @"$.store.book[?(path(@.price) != ""$.store.book[0].price"")]", typeof( JsonNode ) )]
     public void AllBooksBesidesThatAtThePathPointingToTheFirst( string query, Type sourceType )
     {
         var source = GetDocumentProxy( sourceType );

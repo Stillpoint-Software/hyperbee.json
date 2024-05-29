@@ -21,13 +21,13 @@ public static class JsonPathHelper<TType>
 
     static JsonPathHelper()
     {
-        var thisType = typeof(JsonPathHelper<TType>);
+        var thisType = typeof( JsonPathHelper<TType> );
 
-        GetFirstElementValueMethod = thisType.GetMethod( nameof(GetFirstElementValue), [typeof(TType), typeof(TType), typeof(string), typeof(IJsonPathScriptEvaluator<TType>)] );
-        GetFirstElementMethod = thisType.GetMethod( nameof(GetFirstElement), [typeof(TType), typeof(TType), typeof(string), typeof(IJsonPathScriptEvaluator<TType>)] );
-        SelectMethod = thisType.GetMethod( nameof(Select), [typeof(TType), typeof(TType), typeof(string), typeof(IJsonPathScriptEvaluator<TType>)] );
+        GetFirstElementValueMethod = thisType.GetMethod( nameof( GetFirstElementValue ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathScriptEvaluator<TType> )] );
+        GetFirstElementMethod = thisType.GetMethod( nameof( GetFirstElement ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathScriptEvaluator<TType> )] );
+        SelectMethod = thisType.GetMethod( nameof( Select ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathScriptEvaluator<TType> )] );
 
-        IsTruthyMethod = thisType.GetMethod( nameof(IsTruthy) );
+        IsTruthyMethod = thisType.GetMethod( nameof( IsTruthy ) );
     }
 
     public static bool IsTruthy( object obj ) => !IsFalsy( obj );

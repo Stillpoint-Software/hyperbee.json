@@ -11,14 +11,14 @@ public class JsonPathCountFunction<TType>( string methodName, string[] arguments
     private static readonly MethodInfo CountMethod;
 
     static JsonPathCountFunction()
-    { 
-        CountMethod = typeof(Enumerable)
+    {
+        CountMethod = typeof( Enumerable )
             .GetMethods( BindingFlags.Static | BindingFlags.Public )
             .First( m =>
                 m.Name == "Count" &&
                 m.GetParameters().Length == 1 &&
-                m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>) )
-            .MakeGenericMethod( typeof(TType) );
+                m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof( IEnumerable<> ) )
+            .MakeGenericMethod( typeof( TType ) );
     }
 
     public override Expression GetExpression( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context )

@@ -14,9 +14,9 @@ public class JsonPathLengthFunction<TType>( string methodName, string[] argument
 
     static JsonPathLengthFunction()
     {
-        LengthMethod = typeof(TType) == typeof(JsonElement)
-            ? typeof(JsonPathLengthFunction<TType>).GetMethod( nameof(Length), [typeof(JsonPathElement)] ) // NOTE: switching to JsonPathElement
-            : typeof(JsonPathLengthFunction<TType>).GetMethod( nameof(Length), [typeof(TType)] );
+        LengthMethod = typeof( TType ) == typeof( JsonElement )
+            ? typeof( JsonPathLengthFunction<TType> ).GetMethod( nameof( Length ), [typeof( JsonPathElement )] ) // NOTE: switching to JsonPathElement
+            : typeof( JsonPathLengthFunction<TType> ).GetMethod( nameof( Length ), [typeof( TType )] );
     }
 
     public override Expression GetExpression( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context )
@@ -43,7 +43,7 @@ public class JsonPathLengthFunction<TType>( string methodName, string[] argument
         return Expression.Call(
             LengthMethod,
             Expression.Call( JsonPathHelper<TType>.GetFirstElementMethod,
-                currentExpression, 
+                currentExpression,
                 rootExpression,
                 queryExp,
                 evaluatorExp ) );

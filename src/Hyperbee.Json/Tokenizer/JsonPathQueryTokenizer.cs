@@ -291,7 +291,7 @@ public static partial class JsonPathQueryTokenizer
                                 break;
                             if ( parenDepth > 0 )
                                 break;
-                                                                
+
                             // get the child item atom
 
                             selectorValue = GetSelector( scanner, query, selectorStart, i );

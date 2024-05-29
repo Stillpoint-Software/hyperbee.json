@@ -44,10 +44,11 @@ public class ParserFunction<TType>
         if ( item.Length > 0 && (currentPath || rootPath) )
         {
             // There is a JsonPath sub query.
-            var pathFunction = new JsonPathElementFunction<TType> { 
-                CurrentExpression = rootPath ? rootExpression : currentExpression, 
-                RootExpression = rootExpression, 
-                Evaluator = evaluator 
+            var pathFunction = new JsonPathElementFunction<TType>
+            {
+                CurrentExpression = rootPath ? rootExpression : currentExpression,
+                RootExpression = rootExpression,
+                Evaluator = evaluator
             };
 
             // Current element?

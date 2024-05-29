@@ -41,7 +41,7 @@ public class JsonPathExpression
     {
         if ( from >= filter.Length || filter[from] == to )
         {
-            throw new ArgumentException( "Invalid filter", nameof(filter) );
+            throw new ArgumentException( "Invalid filter", nameof( filter ) );
         }
 
         var tokens = new List<FilterToken>();
@@ -178,7 +178,7 @@ public class JsonPathExpression
             : to;
 
         return item.Length == 0 && ch == EndArg ||
-               !(ValidType( type ) || 
+               !(ValidType( type ) ||
                    type == FilterTokenType.OpenParen && (item.Length > 0 && ValidPathParts.Contains( item[0] ) || item.Length == 0)
                     || ch == stopCollecting);
     }

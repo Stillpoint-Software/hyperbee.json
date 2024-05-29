@@ -14,9 +14,9 @@ public class JsonPathPathFunction<TType>( string methodName, string[] arguments,
 
     static JsonPathPathFunction()
     {
-        PathMethod = typeof(TType) == typeof(JsonElement)
-            ? typeof(JsonPathPathFunction<TType>).GetMethod( nameof(Path), [typeof(JsonPathElement), typeof(string)] ) // NOTE: switching to JsonPathElement
-            : typeof(JsonPathPathFunction<TType>).GetMethod( nameof(Path), [typeof(TType)] );
+        PathMethod = typeof( TType ) == typeof( JsonElement )
+            ? typeof( JsonPathPathFunction<TType> ).GetMethod( nameof( Path ), [typeof( JsonPathElement ), typeof( string )] ) // NOTE: switching to JsonPathElement
+            : typeof( JsonPathPathFunction<TType> ).GetMethod( nameof( Path ), [typeof( TType )] );
     }
 
     public override Expression GetExpression( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context )
@@ -40,7 +40,7 @@ public class JsonPathPathFunction<TType>( string methodName, string[] arguments,
         var queryExp = Expression.Constant( arguments[0] );
         var evaluatorExp = Expression.Constant( evaluator );
 
-        if ( typeof(TType) == typeof(JsonElement) )
+        if ( typeof( TType ) == typeof( JsonElement ) )
         {
             return Expression.Call(
                 PathMethod,

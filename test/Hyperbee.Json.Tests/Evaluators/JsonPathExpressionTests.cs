@@ -126,7 +126,7 @@ public class JsonPathExpressionTests : JsonTestBase
     private static (Expression, ParameterExpression) GetExpression( string filter, Type sourceType )
     {
         var param = Expression.Parameter( sourceType );
-        var expression = sourceType == typeof(JsonElement)
+        var expression = sourceType == typeof( JsonElement )
             ? JsonPathExpression.Parse( filter, new ParseExpressionContext<JsonElement>(
                 param,
                 param,

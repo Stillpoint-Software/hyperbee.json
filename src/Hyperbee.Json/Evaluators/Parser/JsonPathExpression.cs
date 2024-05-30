@@ -168,7 +168,7 @@ public class JsonPathExpression
         }
     }
 
-    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected ) => 
+    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected ) =>
         from < data.Length && data[from] == expected;
 
     private static bool StillCollecting( ReadOnlySpan<char> item, char ch, FilterTokenType? type, char to )

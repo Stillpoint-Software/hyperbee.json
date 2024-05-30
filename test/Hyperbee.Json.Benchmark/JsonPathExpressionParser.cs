@@ -23,7 +23,7 @@ public class JsonPathExpressionParser
     public void Setup()
     {
         _nodeEvaluator = new JsonPathExpressionNodeEvaluator();
-        _jsonNodeParam = Expression.Parameter( typeof(JsonNode) );
+        _jsonNodeParam = Expression.Parameter( typeof( JsonNode ) );
 
         _elementEvaluator = new JsonPathExpressionElementEvaluator();
         _jsonElementParam = Expression.Parameter( typeof( JsonNode ) );

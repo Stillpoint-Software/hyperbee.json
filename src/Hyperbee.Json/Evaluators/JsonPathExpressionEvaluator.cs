@@ -9,16 +9,15 @@ namespace Hyperbee.Json.Evaluators;
 public abstract class JsonPathExpressionEvaluator<TType> : IJsonPathScriptEvaluator<TType>
 {
     // ReSharper disable once StaticMemberInGenericType
-    private static readonly ConcurrentDictionary<string, Func<TType, TType, bool>> Compiled = new();
+    private static readonly ConcurrentDictionary<string, Func<TType, TType, string, bool>> Compiled = new();
 
-    public object Evaluator( string script, TType current, TType root, string context )
+    public object Evaluator( string script, TType current, TType root, string basePath )
     {
-        // TODO: fix script + context!
-        var compiled = Compiled.GetOrAdd( script + context, key => JsonPathExpression.Compile( script, this, context ) );
+        var compiled = Compiled.GetOrAdd( script, _ => JsonPathExpression.Compile( script, this ) );
 
         try
         {
-            return compiled( current, root );
+            return compiled( current, root, basePath );
         }
         catch ( RuntimeBinderException )
         {

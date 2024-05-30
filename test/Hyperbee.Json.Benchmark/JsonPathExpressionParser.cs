@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using Hyperbee.Json.Evaluators;
@@ -10,34 +11,39 @@ namespace Hyperbee.Json.Benchmark;
 [ShortRunJob]
 public class JsonPathExpressionParser
 {
-    private JsonPathExpressionNodeEvaluator _nodeEvaluator;
-    private ParameterExpression _jsonNodeParam;
-
-    private JsonPathExpressionElementEvaluator _elementEvaluator;
-    private ParameterExpression _jsonElementParam;
+    private ParseExpressionContext<JsonNode> _nodeExpressionContext;
+    private ParseExpressionContext<JsonElement> _elementExpressionContext;
 
     [Params( "(\"world\" == 'world') && (true || false)" )]
     public string Filter;
 
+
     [GlobalSetup]
     public void Setup()
     {
-        _nodeEvaluator = new JsonPathExpressionNodeEvaluator();
-        _jsonNodeParam = Expression.Parameter( typeof( JsonNode ) );
+        _nodeExpressionContext = new ParseExpressionContext<JsonNode>(
+            Expression.Parameter( typeof(JsonNode) ),
+            Expression.Parameter( typeof(JsonNode) ),
+            new JsonPathExpressionNodeEvaluator(),
+            Expression.Constant( string.Empty ) );
 
-        _elementEvaluator = new JsonPathExpressionElementEvaluator();
-        _jsonElementParam = Expression.Parameter( typeof( JsonNode ) );
+
+        _elementExpressionContext = new ParseExpressionContext<JsonElement>(
+            Expression.Parameter( typeof(JsonElement) ),
+            Expression.Parameter( typeof(JsonElement) ),
+            new JsonPathExpressionElementEvaluator(),
+            Expression.Constant( string.Empty ) );
     }
 
     [Benchmark]
     public void JsonPathFilterParser_JsonElement()
     {
-        JsonPathExpression.Parse( Filter, _jsonNodeParam, _jsonNodeParam, _nodeEvaluator );
+        JsonPathExpression.Parse( Filter, _elementExpressionContext );
     }
 
     [Benchmark]
     public void JsonPathFilterParser_JsonNode()
     {
-        JsonPathExpression.Parse( Filter, _jsonElementParam, _jsonElementParam, _elementEvaluator );
+        JsonPathExpression.Parse( Filter, _nodeExpressionContext );
     }
 }

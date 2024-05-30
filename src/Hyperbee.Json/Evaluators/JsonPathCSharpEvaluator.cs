@@ -26,7 +26,7 @@ public abstract partial class JsonPathCSharpEvaluator<TType> : IJsonPathScriptEv
     [GeneratedRegex( "@\\.[A-Za-z_][A-Za-z0-9_]*" )]
     private static partial Regex PropertyRegex();
 
-    public object Evaluator( string script, TType current, TType root, string context )
+    public object Evaluator( string script, TType current, TType root, string basePath )
     {
         var compiled = Compiled.GetOrAdd( script, key =>
         {
@@ -46,7 +46,7 @@ public abstract partial class JsonPathCSharpEvaluator<TType> : IJsonPathScriptEv
 
         try
         {
-            var globals = ActivateGlobals( current, context );
+            var globals = ActivateGlobals( current, basePath );
 
             var result = AsyncCurrentThreadHelper.RunSync(
                 async () => await compiled.RunAsync( globals ).ConfigureAwait( true )

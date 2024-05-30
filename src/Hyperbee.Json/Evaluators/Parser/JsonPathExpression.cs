@@ -11,33 +11,36 @@ public class JsonPathExpression
 {
     public const char EndLine = '\n';
     public const char EndArg = ')';
-    public const char StartArg = '(';
+
+    private static readonly char[] ValidPathParts = ['.', '$', '@'];
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
-    public static Func<TType, TType, bool> Compile<TType>( ReadOnlySpan<char> filter, IJsonPathScriptEvaluator<TType> evaluator = null, string context = null )
+    public static Func<TType, TType, string, bool> Compile<TType>( ReadOnlySpan<char> filter, IJsonPathScriptEvaluator<TType> evaluator = null )
     {
         var currentParam = Expression.Parameter( typeof( TType ) );
         var rootParam = Expression.Parameter( typeof( TType ) );
-        var expression = Parse( filter, currentParam, rootParam, evaluator, context );
+        var basePathParam = Expression.Parameter( typeof( string ) );
+        var expressionContext = new ParseExpressionContext<TType>( currentParam, rootParam, evaluator, basePathParam );
+        var expression = Parse( filter, expressionContext );
 
         return Expression
-            .Lambda<Func<TType, TType, bool>>( expression, currentParam, rootParam )
+            .Lambda<Func<TType, TType, string, bool>>( expression, currentParam, rootParam, basePathParam )
             .Compile();
     }
 
-    public static Expression Parse<TType>( ReadOnlySpan<char> filter, Expression currentExpression = null, Expression rootExpression = null, IJsonPathScriptEvaluator<TType> evaluator = null, string context = null )
+    public static Expression Parse<TType>( ReadOnlySpan<char> filter, ParseExpressionContext<TType> context )
     {
         var start = 0;
         var from = 0;
-        var expression = Parse( filter, ref start, ref from, EndLine, currentExpression, rootExpression, evaluator, context );
+        var expression = Parse( filter, ref start, ref from, EndLine, context );
 
         return expression.Type == typeof( bool )
             ? expression
             : Expression.Call( JsonPathHelper<TType>.IsTruthyMethod!, expression );
     }
 
-    internal static Expression Parse<TType>( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, Expression currentExpression = null, Expression rootExpression = null, IJsonPathScriptEvaluator<TType> evaluator = null, string context = null )
+    internal static Expression Parse<TType>( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, ParseExpressionContext<TType> context = null )
     {
         if ( from >= filter.Length || filter[from] == to )
         {
@@ -76,7 +79,7 @@ public class JsonPathExpression
             start = from;
 
             // `GetExpression` may call recursively call `Parse` for nested expressions
-            var func = new ParserFunction<TType>( currentPath, type, currentExpression, rootExpression, evaluator, context );
+            var func = new ParserFunction<TType>( currentPath, type, context );
             var expression = func.GetExpression( filter, currentPath, ref start, ref from );
 
             var filterType = ValidType( type )
@@ -165,12 +168,9 @@ public class JsonPathExpression
         }
     }
 
-    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected )
-    {
-        return from < data.Length && data[from] == expected;
-    }
+    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected ) => 
+        from < data.Length && data[from] == expected;
 
-    private static readonly char[] ValidPathParts = ['.', '$', '@'];
     private static bool StillCollecting( ReadOnlySpan<char> item, char ch, FilterTokenType? type, char to )
     {
         var stopCollecting = to is EndArg or EndLine
@@ -183,12 +183,8 @@ public class JsonPathExpression
                     || ch == stopCollecting);
     }
 
-    private static bool ValidType( FilterTokenType? type )
-    {
-        if ( type == null )
-            return false;
-
-        return type switch
+    private static bool ValidType( FilterTokenType? type ) =>
+        type != null && type switch
         {
             FilterTokenType.Not => true,
             FilterTokenType.Equals => true,
@@ -201,7 +197,6 @@ public class JsonPathExpression
             FilterTokenType.And => true,
             _ => false
         };
-    }
 
     private static FilterTokenType UpdateType( ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, char to )
     {
@@ -211,6 +206,7 @@ public class JsonPathExpression
         {
             return FilterTokenType.ClosedParen;
         }
+
         var index = from;
         char? quote = null;
         while ( !ValidType( startType ) && index < item.Length )
@@ -244,41 +240,18 @@ public class JsonPathExpression
         return current.Expression;
     }
 
-    private static bool CanMergeTokens( FilterToken left, FilterToken right )
-    {
+    private static bool CanMergeTokens( FilterToken left, FilterToken right ) =>
         // "Not" can never be a right side operator
-        if ( right.Type == FilterTokenType.Not )
-            return false;
+        right.Type != FilterTokenType.Not && GetPriority( left.Type ) >= GetPriority( right.Type );
 
-        return GetPriority( left.Type ) >= GetPriority( right.Type );
-    }
-
-    private static int GetPriority( FilterTokenType type )
-    {
-        switch ( type )
+    private static int GetPriority( FilterTokenType type ) =>
+        type switch
         {
-            case FilterTokenType.Not:
-                return 1;
-
-            case FilterTokenType.And:
-            case FilterTokenType.Or:
-                return 2;
-
-            case FilterTokenType.Equals:
-            case FilterTokenType.NotEquals:
-            case FilterTokenType.GreaterThan:
-            case FilterTokenType.GreaterThanOrEqual:
-            case FilterTokenType.LessThan:
-            case FilterTokenType.LessThanOrEqual:
-                return 3;
-
-            case FilterTokenType.OpenParen:
-            case FilterTokenType.ClosedParen:
-            default:
-                return 0;
-        }
-
-    }
+            FilterTokenType.Not => 1,
+            FilterTokenType.And or FilterTokenType.Or => 2,
+            FilterTokenType.Equals or FilterTokenType.NotEquals or FilterTokenType.GreaterThan or FilterTokenType.GreaterThanOrEqual or FilterTokenType.LessThan or FilterTokenType.LessThanOrEqual => 3,
+            _ => 0,
+        };
 
     private static void MergeTokens( FilterToken left, FilterToken right )
     {

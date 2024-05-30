@@ -7,12 +7,9 @@ internal static partial class JsonPathFilterTokenizerRegex
     [GeneratedRegex( @"([a-z][a-z0-9_]*)\s*\(\s*((?:[^,()]+(?:\s*,\s*)?)*)\s*\)?" )]
     internal static partial Regex RegexFunction();
 
-    [GeneratedRegex( "^[0-9*]+$" )]
-    internal static partial Regex RegexNumber();
-
-    [GeneratedRegex( @"^""(?:[^""\\]|\\.)*""$" )]
+    [GeneratedRegex( @"^""(?:[^""\\]|\\.)*""$", RegexOptions.ExplicitCapture )]
     internal static partial Regex RegexQuotedDouble();
 
-    [GeneratedRegex( @"^'(?:[^'\\]|\\.)*'$" )]
+    [GeneratedRegex( @"^'(?:[^'\\]|\\.)*'$", RegexOptions.ExplicitCapture )]
     internal static partial Regex RegexQuoted();
 }

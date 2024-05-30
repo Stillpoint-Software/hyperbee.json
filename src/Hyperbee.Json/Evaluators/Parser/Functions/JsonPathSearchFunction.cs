@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Hyperbee.Json.Evaluators.Parser.Functions;
 
-public class JsonPathSearchFunction<TType>( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context = null ) : ParserExpressionFunction<TType>( methodName, arguments, currentExpression, rootExpression, evaluator, context )
+public class JsonPathSearchFunction<TType>( string methodName, IList<string> arguments, ParseExpressionContext<TType> context ) : ParserExpressionFunction<TType>( methodName, arguments, context )
 {
     public const string Name = "search";
 
@@ -20,7 +20,7 @@ public class JsonPathSearchFunction<TType>( string methodName, string[] argument
             : typeof( JsonPathSearchFunction<TType> ).GetMethod( nameof( Search ), [typeof( TType ), typeof( string )] );
     }
 
-    public override Expression GetExpression( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context = null )
+    public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )
     {
         if ( methodName != Name )
         {
@@ -30,7 +30,7 @@ public class JsonPathSearchFunction<TType>( string methodName, string[] argument
             );
         }
 
-        if ( arguments.Length != 2 )
+        if ( arguments.Count != 2 )
         {
             return Expression.Block(
                 Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) ),
@@ -40,13 +40,13 @@ public class JsonPathSearchFunction<TType>( string methodName, string[] argument
 
         var queryExp = Expression.Constant( arguments[0] );
         var regex = Expression.Constant( arguments[1] );
-        var evaluatorExp = Expression.Constant( evaluator );
+        var evaluatorExp = Expression.Constant( context.Evaluator );
 
         return Expression.Call(
             SearchMethod,
             Expression.Call( JsonPathHelper<TType>.GetFirstElementMethod,
-                currentExpression,
-                rootExpression,
+                context.Current,
+                context.Root,
                 queryExp,
                 evaluatorExp )
             , regex );

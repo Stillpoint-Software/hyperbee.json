@@ -9,8 +9,8 @@ public class JsonPathFuncEvaluator<TType> : IJsonPathScriptEvaluator<TType>
         _evaluator = evaluator;
     }
 
-    public object Evaluator( string script, TType current, TType root, string context )
+    public object Evaluator( string script, TType current, TType root, string basePath )
     {
-        return _evaluator?.Invoke( script, current, root, context );
+        return _evaluator?.Invoke( script, current, root, basePath );
     }
 }

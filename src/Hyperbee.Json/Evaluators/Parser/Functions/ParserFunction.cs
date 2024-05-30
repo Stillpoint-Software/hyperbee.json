@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Evaluators.Parser.Functions;
 
 public class ParserFunction<TType>
 {
-    public delegate ParserExpressionFunction<TType> FunctionCreator( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context = null );
+    public delegate ParserExpressionFunction<TType> FunctionCreator( string methodName, IList<string> arguments, ParseExpressionContext<TType> context = null );
 
     private readonly ParserFunction<TType> _implementation;
     private static readonly ConcurrentDictionary<string, FunctionCreator> ExpressionFunctions;
@@ -15,12 +15,12 @@ public class ParserFunction<TType>
     {
         ExpressionFunctions = new ConcurrentDictionary<string, FunctionCreator>(
         [
-            new KeyValuePair<string, FunctionCreator>( JsonPathCountFunction<TType>.Name, ( name, arguments, currentExpression, rootExpression, evaluator, context ) => new JsonPathCountFunction<TType>( name, arguments, currentExpression, rootExpression, evaluator, context ) ),
-            new KeyValuePair<string, FunctionCreator>( JsonPathLengthFunction<TType>.Name, ( name, arguments, currentExpression, rootExpression, evaluator, context ) => new JsonPathLengthFunction<TType>( name, arguments, currentExpression, rootExpression, evaluator, context ) ),
-            new KeyValuePair<string, FunctionCreator>( JsonPathMatchFunction<TType>.Name, ( name, arguments, currentExpression, rootExpression, evaluator, context ) => new JsonPathMatchFunction<TType>( name, arguments, currentExpression, rootExpression, evaluator, context ) ),
-            new KeyValuePair<string, FunctionCreator>( JsonPathSearchFunction<TType>.Name, ( name, arguments, currentExpression, rootExpression, evaluator, context ) => new JsonPathSearchFunction<TType>( name, arguments, currentExpression, rootExpression, evaluator, context ) ),
-            new KeyValuePair<string, FunctionCreator>( JsonPathValueFunction<TType>.Name, ( name, arguments, currentExpression, rootExpression, evaluator, context ) => new JsonPathValueFunction<TType>( name, arguments, currentExpression, rootExpression, evaluator, context ) ),
-            new KeyValuePair<string, FunctionCreator>( JsonPathPathFunction<TType>.Name, ( name, arguments, currentExpression, rootExpression, evaluator, context ) => new JsonPathPathFunction<TType>( name, arguments, currentExpression, rootExpression, evaluator, context ) ),
+            new KeyValuePair<string, FunctionCreator>( JsonPathCountFunction<TType>.Name, ( name, arguments, context ) => new JsonPathCountFunction<TType>( name, arguments, context ) ),
+            new KeyValuePair<string, FunctionCreator>( JsonPathLengthFunction<TType>.Name, ( name, arguments, context ) => new JsonPathLengthFunction<TType>( name, arguments, context ) ),
+            new KeyValuePair<string, FunctionCreator>( JsonPathMatchFunction<TType>.Name, ( name, arguments, context ) => new JsonPathMatchFunction<TType>( name, arguments, context ) ),
+            new KeyValuePair<string, FunctionCreator>( JsonPathSearchFunction<TType>.Name, ( name, arguments, context ) => new JsonPathSearchFunction<TType>( name, arguments, context ) ),
+            new KeyValuePair<string, FunctionCreator>( JsonPathValueFunction<TType>.Name, ( name, arguments, context ) => new JsonPathValueFunction<TType>( name, arguments, context ) ),
+            new KeyValuePair<string, FunctionCreator>( JsonPathPathFunction<TType>.Name, ( name, arguments, context ) => new JsonPathPathFunction<TType>( name, arguments, context ) ),
         ] );
     }
 
@@ -29,12 +29,12 @@ public class ParserFunction<TType>
         _implementation = this;
     }
 
-    internal ParserFunction( ReadOnlySpan<char> item, FilterTokenType? type, Expression currentExpression = null, Expression rootExpression = null, IJsonPathScriptEvaluator<TType> evaluator = null, string context = null )
+    internal ParserFunction( ReadOnlySpan<char> item, FilterTokenType? type, ParseExpressionContext<TType> context )
     {
         if ( item.Length == 0 && type == FilterTokenType.OpenParen )
         {
             // There is no function, just an expression in parentheses.
-            _implementation = new ParenFunction<TType> { CurrentExpression = currentExpression, RootExpression = rootExpression, Evaluator = evaluator };
+            _implementation = new ParenFunction<TType>( context );
             return;
         }
 
@@ -44,19 +44,14 @@ public class ParserFunction<TType>
         if ( item.Length > 0 && (currentPath || rootPath) )
         {
             // There is a JsonPath sub query.
-            var pathFunction = new JsonPathElementFunction<TType>
-            {
-                CurrentExpression = rootPath ? rootExpression : currentExpression,
-                RootExpression = rootExpression,
-                Evaluator = evaluator
-            };
+            _implementation = rootPath
+                ? new JsonPathElementFunction<TType>( context with { Current = context.Root } ) // Current becomes root
+                : new JsonPathElementFunction<TType>( context );
 
-            // Current element?
-            _implementation = pathFunction;
             return;
         }
 
-        if ( TryGetExpressionFunction( item, currentExpression, rootExpression, evaluator, context, out _implementation ) )
+        if ( TryGetExpressionFunction( item, context, out _implementation ) )
         {
             // Methods based on spec
             return;
@@ -83,10 +78,8 @@ public class ParserFunction<TType>
         return Expression.Throw( Expression.Constant( new NotImplementedException() ) );
     }
 
-    private static bool TryGetExpressionFunction( ReadOnlySpan<char> item, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context, out ParserFunction<TType> function )
+    private static bool TryGetExpressionFunction( ReadOnlySpan<char> item, ParseExpressionContext<TType> context, out ParserFunction<TType> function )
     {
-        // TODO: improve parsing of functions are arguments?
-        // TODO: keep span - ToString allocation
         var match = JsonPathFilterTokenizerRegex.RegexFunction().Match( item.ToString() );
 
         if ( match.Groups.Count != 3 )
@@ -100,12 +93,11 @@ public class ParserFunction<TType>
 
         if ( ExpressionFunctions.TryGetValue( method.ToLowerInvariant(), out var creator ) )
         {
-            function = creator( method, arguments, currentExpression, rootExpression, evaluator, context );
+            function = creator( method, arguments, context );
             return true;
         }
 
         function = null;
         return false;
     }
-
 }

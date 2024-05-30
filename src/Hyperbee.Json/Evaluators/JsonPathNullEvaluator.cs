@@ -2,7 +2,7 @@
 
 public class JsonPathNullEvaluator<TType> : IJsonPathScriptEvaluator<TType>
 {
-    public object Evaluator( string script, TType current, TType root, string context )
+    public object Evaluator( string script, TType current, TType root, string basePath )
     {
         return null;
     }

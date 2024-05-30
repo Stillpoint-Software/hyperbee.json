@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 
 namespace Hyperbee.Json.Evaluators.Parser.Functions;
 
-public class JsonPathLengthFunction<TType>( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context = null ) : ParserExpressionFunction<TType>( methodName, arguments, currentExpression, rootExpression, evaluator, context )
+public class JsonPathLengthFunction<TType>( string methodName, IList<string> arguments, ParseExpressionContext<TType> context ) : ParserExpressionFunction<TType>( methodName, arguments, context )
 {
     public const string Name = "length";
 
@@ -19,7 +19,7 @@ public class JsonPathLengthFunction<TType>( string methodName, string[] argument
             : typeof( JsonPathLengthFunction<TType> ).GetMethod( nameof( Length ), [typeof( TType )] );
     }
 
-    public override Expression GetExpression( string methodName, string[] arguments, Expression currentExpression, Expression rootExpression, IJsonPathScriptEvaluator<TType> evaluator, string context )
+    public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )
     {
         if ( methodName != Name )
         {
@@ -29,7 +29,7 @@ public class JsonPathLengthFunction<TType>( string methodName, string[] argument
             );
         }
 
-        if ( arguments.Length != 1 )
+        if ( arguments.Count != 1 )
         {
             return Expression.Block(
                 Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) ),
@@ -38,13 +38,13 @@ public class JsonPathLengthFunction<TType>( string methodName, string[] argument
         }
 
         var queryExp = Expression.Constant( arguments[0] );
-        var evaluatorExp = Expression.Constant( evaluator );
+        var evaluatorExp = Expression.Constant( context.Evaluator );
 
         return Expression.Call(
             LengthMethod,
             Expression.Call( JsonPathHelper<TType>.GetFirstElementMethod,
-                currentExpression,
-                rootExpression,
+                context.Current,
+                context.Root,
                 queryExp,
                 evaluatorExp ) );
     }

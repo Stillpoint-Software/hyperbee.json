@@ -40,7 +40,7 @@ namespace Hyperbee.Json.Nodes;
 
 public sealed class JsonPathNode
 {
-    public static IJsonPathScriptEvaluator<JsonNode> DefaultEvaluator { get; set; } = new JsonPathExpressionNodeEvaluator(); // new JsonPathCSharpNodeEvaluator();
+    public static IJsonPathScriptEvaluator<JsonNode> DefaultEvaluator { get; set; } = new JsonPathExpressionNodeEvaluator();
     private readonly IJsonPathScriptEvaluator<JsonNode> _evaluator;
 
     private readonly JsonNodePathVisitor _visitor = new();

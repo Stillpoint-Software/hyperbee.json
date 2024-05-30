@@ -71,14 +71,14 @@ public static class JsonPathHelper<TType>
 
         return first.Value.ValueKind switch
         {
-            JsonValueKind.Number => (object) first.Value.GetSingle(),
-            JsonValueKind.String => (object) first.Value.GetString(),
-            JsonValueKind.Object => (object) IsNotEmpty( first ),
-            JsonValueKind.Array => (object) IsNotEmpty( first ),
-            JsonValueKind.True => (object) true,
-            JsonValueKind.False => (object) false,
-            JsonValueKind.Null => (object) false,
-            JsonValueKind.Undefined => (object) false,
+            JsonValueKind.Number => first.Value.GetSingle(),
+            JsonValueKind.String => first.Value.GetString(),
+            JsonValueKind.Object => IsNotEmpty( first ),
+            JsonValueKind.Array => IsNotEmpty( first ),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Null => false,
+            JsonValueKind.Undefined => false,
             _ => false
         };
     }

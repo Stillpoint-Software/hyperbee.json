@@ -69,7 +69,7 @@ public static class JsonPathHelper<TType>
     {
         var first = GetFirstElement( current, root, query, evaluator );
 
-        var value = first.Value.ValueKind switch
+        return first.Value.ValueKind switch
         {
             JsonValueKind.Number => (object) first.Value.GetSingle(),
             JsonValueKind.String => (object) first.Value.GetString(),
@@ -81,10 +81,6 @@ public static class JsonPathHelper<TType>
             JsonValueKind.Undefined => (object) false,
             _ => false
         };
-
-        Console.WriteLine( $"{query} => {value}" );
-
-        return value;
     }
 
     public static object GetFirstElementValue( JsonNode current, JsonNode root, string query, IJsonPathScriptEvaluator<JsonNode> evaluator )

@@ -318,6 +318,8 @@ public class JsonPathExpression
 
     private static Expression CompareConvert( Func<Expression, Expression, Expression> compare, Expression left, Expression right, bool isNumerical = true )
     {
+        // TODO: clean up... I don't like that most of the time the type is an object because it's being boxed to support num/string/ etc
+
         // force numerical check for <, >, =<, =>
         if ( isNumerical && left.Type == typeof( object ) && right.Type == typeof( object ) )
             return compare( Expression.Convert( left, typeof( float ) ), Expression.Convert( right, typeof( float ) ) );

@@ -123,6 +123,31 @@ public class JsonPathExpressionTests : JsonTestBase
         Assert.AreEqual( expected, result );
     }
 
+    [DataTestMethod]
+    [DataRow( "unknown_literal", typeof(JsonElement) )]
+    [DataRow( "'unbalanced string\"", typeof( JsonElement ) )]
+    [DataRow( " \t ", typeof( JsonElement ) )]
+    [DataRow( "1 === 1", typeof(JsonElement) )]
+    [DataRow( "(1 == 1(", typeof(JsonElement) )]
+    [DataRow( "(1 == 1)(", typeof( JsonElement ) )]
+    [DataRow( "(1 == ", typeof( JsonElement ) )]
+    [DataRow( "== 1", typeof( JsonElement ) )]
+    [DataRow( "badMethod(1)", typeof( JsonElement ) )]
+    public void Should_FailToParse_WhenUsingInvalidFilters( string filter, Type sourceType )
+    {
+        try
+        {
+            GetExpression( filter, sourceType );
+        }
+        catch
+        {
+            // Most are FormatExceptions, but some are ArgumentExceptions 
+            return;
+        }
+
+        Assert.Fail( "Did not throw an exception" );
+    }
+
     private static (Expression, ParameterExpression) GetExpression( string filter, Type sourceType )
     {
         var param = Expression.Parameter( sourceType );

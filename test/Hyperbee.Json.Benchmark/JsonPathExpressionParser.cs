@@ -20,15 +20,15 @@ public class JsonPathExpressionParser
     public void Setup()
     {
         _nodeExpressionContext = new ParseExpressionContext<JsonNode>(
-            Expression.Parameter( typeof(JsonNode) ),
-            Expression.Parameter( typeof(JsonNode) ),
+            Expression.Parameter( typeof( JsonNode ) ),
+            Expression.Parameter( typeof( JsonNode ) ),
             new JsonPathExpressionNodeEvaluator(),
             Expression.Constant( string.Empty ) );
 
 
         _elementExpressionContext = new ParseExpressionContext<JsonElement>(
-            Expression.Parameter( typeof(JsonElement) ),
-            Expression.Parameter( typeof(JsonElement) ),
+            Expression.Parameter( typeof( JsonElement ) ),
+            Expression.Parameter( typeof( JsonElement ) ),
             new JsonPathExpressionElementEvaluator(),
             Expression.Constant( string.Empty ) );
     }

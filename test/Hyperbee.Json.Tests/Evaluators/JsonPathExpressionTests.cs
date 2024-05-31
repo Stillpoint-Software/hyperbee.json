@@ -124,11 +124,11 @@ public class JsonPathExpressionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "unknown_literal", typeof(JsonElement) )]
+    [DataRow( "unknown_literal", typeof( JsonElement ) )]
     [DataRow( "'unbalanced string\"", typeof( JsonElement ) )]
     [DataRow( " \t ", typeof( JsonElement ) )]
-    [DataRow( "1 === 1", typeof(JsonElement) )]
-    [DataRow( "(1 == 1(", typeof(JsonElement) )]
+    [DataRow( "1 === 1", typeof( JsonElement ) )]
+    [DataRow( "(1 == 1(", typeof( JsonElement ) )]
     [DataRow( "(1 == 1)(", typeof( JsonElement ) )]
     [DataRow( "(1 == ", typeof( JsonElement ) )]
     [DataRow( "== 1", typeof( JsonElement ) )]

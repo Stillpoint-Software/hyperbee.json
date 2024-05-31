@@ -7,8 +7,6 @@ using Hyperbee.Json.Evaluators.Parser;
 
 namespace Hyperbee.Json.Benchmark;
 
-[MemoryDiagnoser]
-[ShortRunJob]
 public class JsonPathExpressionParser
 {
     private ParseExpressionContext<JsonNode> _nodeExpressionContext;

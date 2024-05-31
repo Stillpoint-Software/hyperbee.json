@@ -3,14 +3,14 @@ using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using Hyperbee.Json.Evaluators;
 using Hyperbee.Json.Extensions;
+using Newtonsoft.Json.Linq;
 
 namespace Hyperbee.Json.Benchmark;
 
-[MemoryDiagnoser]
-[ShortRunJob]
 public class JsonPathSelectEvaluator
 {
-    [Params( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]" )] //, "$.store.book[?(match(@.title, \"Sayings*\" ))]" )]
+    //[Params( "$..book[?(@.price == 8.99 && @.category == 'fiction')]" )] //, "$.store.book[?(match(@.title, \"Sayings*\" ))]" )]
+    [Params( "$..book[?(@.price == 8.99)]" )]
     public string Filter;
 
     public JsonNode _node;
@@ -20,6 +20,7 @@ public class JsonPathSelectEvaluator
     private JsonPathCSharpNodeEvaluator _csharpNodeEvaluator;
     private JsonPathExpressionElementEvaluator _expressionElementEvaluator;
     private JsonPathExpressionNodeEvaluator _expressionNodeEvaluator;
+    private JObject _jobject;
 
     [GlobalSetup]
     public void Setup()
@@ -63,6 +64,8 @@ public class JsonPathSelectEvaluator
                                 }
                                 """;
 
+        _jobject = JObject.Parse( document );
+
         _node = JsonNode.Parse( document )!;
         _csharpNodeEvaluator = new JsonPathCSharpNodeEvaluator();
         _expressionNodeEvaluator = new JsonPathExpressionNodeEvaluator();
@@ -94,5 +97,11 @@ public class JsonPathSelectEvaluator
     public void JsonPath_ExpressionEvaluator_JsonNode()
     {
         var _ = _node.Select( Filter, _expressionNodeEvaluator ).ToArray();
+    }
+
+    [Benchmark]
+    public void JsonPath_Newtonsoft_JObject()
+    {
+        var _ = _jobject.SelectTokens( Filter ).ToArray();
     }
 }

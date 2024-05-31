@@ -8,7 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="benchmark\**" />
+    <EmbeddedResource Remove="benchmark\**" />
+    <None Remove="benchmark\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>

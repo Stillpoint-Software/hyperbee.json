@@ -11,9 +11,9 @@ public abstract class JsonPathExpressionEvaluator<TType> : IJsonPathFilterEvalua
     // ReSharper disable once StaticMemberInGenericType
     private static readonly ConcurrentDictionary<string, Func<TType, TType, bool>> Compiled = new();
 
-    public object Evaluator( string script, TType current, TType root )
+    public object Evaluator( string filter, TType current, TType root )
     {
-        var compiled = Compiled.GetOrAdd( script, _ => JsonPathExpression.Compile( script, this ) );
+        var compiled = Compiled.GetOrAdd( filter, _ => JsonPathExpression.Compile( filter, this ) );
 
         try
         {

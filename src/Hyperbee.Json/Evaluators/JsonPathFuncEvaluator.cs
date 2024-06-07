@@ -1,7 +1,6 @@
 ﻿namespace Hyperbee.Json.Evaluators;
 
-public class JsonPathFuncEvaluator<TType>( JsonPathEvaluator<TType> evaluator ) : IJsonPathFilterEvaluator<TType>
+public class JsonPathFuncEvaluator<TType>( JsonPathEvaluator<TType> func ) : IJsonPathFilterEvaluator<TType>
 {
-    public object Evaluator( string script, TType current, TType root ) =>
-        evaluator?.Invoke( script, current, root );
+    public object Evaluator( string filter, TType current, TType root ) => func?.Invoke( filter, current, root );
 }

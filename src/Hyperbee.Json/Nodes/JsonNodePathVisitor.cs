@@ -21,21 +21,21 @@ internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode, JsonNode>
         switch ( value )
         {
             case JsonArray arrayValue:
-            {
-                for ( var index = arrayValue.Count - 1; index >= 0; index-- )
                 {
-                    yield return (value[index], index.ToString());
+                    for ( var index = arrayValue.Count - 1; index >= 0; index-- )
+                    {
+                        yield return (value[index], index.ToString());
+                    }
+
+                    break;
                 }
-
-                break;
-            }
             case JsonObject objectValue:
-            {
-                foreach ( var result in ProcessProperties( objectValue.GetEnumerator() ) )
-                    yield return result;
+                {
+                    foreach ( var result in ProcessProperties( objectValue.GetEnumerator() ) )
+                        yield return result;
 
-                break;
-            }
+                    break;
+                }
         }
 
         yield break;

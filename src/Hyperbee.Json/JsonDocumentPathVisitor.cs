@@ -25,21 +25,21 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement, JsonPa
         switch ( value.ValueKind )
         {
             case JsonValueKind.Array:
-            {
-                for ( var index = value.GetArrayLength() - 1; index >= 0; index-- )
                 {
-                    yield return ( value[index], index.ToString() );
+                    for ( var index = value.GetArrayLength() - 1; index >= 0; index-- )
+                    {
+                        yield return (value[index], index.ToString());
+                    }
+
+                    break;
                 }
-
-                break;
-            }
             case JsonValueKind.Object:
-            {
-                foreach ( var result in ProcessProperties( value.EnumerateObject() ) )
-                    yield return result;
+                {
+                    foreach ( var result in ProcessProperties( value.EnumerateObject() ) )
+                        yield return result;
 
-                break;
-            }
+                    break;
+                }
         }
 
         yield break;
@@ -58,7 +58,7 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement, JsonPa
                 yield return result;
             }
 
-            yield return (property.Value,property.Name);
+            yield return (property.Value, property.Name);
         }
     }
 

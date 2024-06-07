@@ -69,7 +69,7 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         var xParent = __getParent( x );
         var yParent = __getParent( y );
 
-        if ( !ReferenceEquals( xParent, yParent ) ) 
+        if ( !ReferenceEquals( xParent, yParent ) )
             return false;
 
         // check idx values

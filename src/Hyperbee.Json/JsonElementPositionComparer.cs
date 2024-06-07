@@ -11,6 +11,18 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
 
     static JsonElementPositionComparer()
     {
+        // We want a fast comparer that will tell us if two JsonElements point to the same exact
+        // backing data in the parent JsonDocument. JsonElement is a struct, and a value comparison
+        // for equality won't give us reliable results and would be expensive.
+        //
+        // The internal JsonElement constructor takes parent and idx arguments that are saves as fields.
+        // 
+        // idx: is an index used to get the position of the JsonElement in the backing data.
+        // parent: is the owning JsonDocument (could be null in an enumeration).
+        //
+        // These arguments are stored in private fields and are not exposed. While note ideal, we
+        // will access these fields through dynamic methods to use for our comparison.
+
         // Create DynamicMethod for _idx field
 
         var idxField = typeof( JsonElement ).GetField( "_idx", BindingFlags.NonPublic | BindingFlags.Instance );
@@ -26,7 +38,7 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
 
         __getIdx = (Func<JsonElement, int>) getIdxDynamicMethod.CreateDelegate( typeof( Func<JsonElement, int> ) );
 
-        // Create DynamicMethod for _parent field
+        // Create DynamicMethod for _parent field 
 
         var parentField = typeof( JsonElement ).GetField( "_parent", BindingFlags.NonPublic | BindingFlags.Instance );
 
@@ -44,14 +56,23 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
 
     public bool Equals( JsonElement x, JsonElement y )
     {
+        // check for quick out
+
         if ( x.ValueKind != y.ValueKind )
             return false;
+
+        // check parent documents
+
+        // BF: JsonElement ctor notes that parent may be null in some enumeration conditions.
+        // This check may not be reliable. If so, should be ok to remove the parent check.
 
         var xParent = __getParent( x );
         var yParent = __getParent( y );
 
-        if ( !ReferenceEquals( xParent, yParent ) )
+        if ( !ReferenceEquals( xParent, yParent ) ) 
             return false;
+
+        // check idx values
 
         return __getIdx( x ) == __getIdx( y );
     }
@@ -62,49 +83,5 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         var idx = __getIdx( obj );
 
         return HashCode.Combine( parent, idx );
-    }
-}
-
-public class JsonPathFinder
-{
-    public static string FindJsonPath( JsonElement rootElement, JsonElement targetElement )
-    {
-        var comparer = new JsonElementPositionComparer();
-
-        var stack = new Stack<(JsonElement element, string path)>();
-        stack.Push( (rootElement, string.Empty) );
-
-        while ( stack.Count > 0 )
-        {
-            var (currentElement, currentPath) = stack.Pop();
-
-            if ( comparer.Equals( currentElement, targetElement ) )
-                return currentPath;
-
-            switch ( currentElement.ValueKind )
-            {
-                case JsonValueKind.Object:
-                    foreach ( JsonProperty property in currentElement.EnumerateObject() )
-                    {
-                        var newPath = string.IsNullOrEmpty( currentPath ) ? property.Name : $"{currentPath}.{property.Name}";
-                        stack.Push( (property.Value, newPath) );
-                    }
-
-                    break;
-
-                case JsonValueKind.Array:
-                    var index = 0;
-                    foreach ( JsonElement element in currentElement.EnumerateArray() )
-                    {
-                        var newPath = $"{currentPath}[{index}]";
-                        stack.Push( (element, newPath) );
-                        index++;
-                    }
-
-                    break;
-            }
-        }
-
-        return null; // Target element not found in the JSON document
     }
 }

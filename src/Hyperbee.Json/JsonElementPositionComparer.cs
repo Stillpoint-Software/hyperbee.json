@@ -4,12 +4,12 @@ using System.Text.Json;
 
 namespace Hyperbee.Json;
 
-internal class JsonElementReferenceComparer : IEqualityComparer<JsonElement>
+internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
 {
     static readonly Func<JsonElement, int> __getIdx;
     static readonly Func<JsonElement, JsonDocument> __getParent;
 
-    static JsonElementReferenceComparer()
+    static JsonElementPositionComparer()
     {
         // Create DynamicMethod for _idx field
 
@@ -69,7 +69,7 @@ public class JsonPathFinder
 {
     public static string FindJsonPath( JsonElement rootElement, JsonElement targetElement )
     {
-        var comparer = new JsonElementReferenceComparer();
+        var comparer = new JsonElementPositionComparer();
 
         var stack = new Stack<(JsonElement element, string path)>();
         stack.Push( (rootElement, string.Empty) );

@@ -18,10 +18,7 @@ public static class JsonPathSelectExtensions
         return new JsonPath( evaluator ).Select( element, query );
     }
 
-    public static IEnumerable<JsonElement> Select( this JsonElement element, string query, JsonPathEvaluator<JsonElement> evaluator )
-    {
-        return new JsonPath( new JsonPathFuncEvaluator<JsonElement>( evaluator ) ).Select( element, query );
-    }
+    // JsonDocument
 
     public static IEnumerable<JsonElement> Select( this JsonDocument document, string query )
     {
@@ -31,11 +28,6 @@ public static class JsonPathSelectExtensions
     public static IEnumerable<JsonElement> Select( this JsonDocument document, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
     {
         return new JsonPath( evaluator ).Select( document.RootElement, query );
-    }
-
-    public static IEnumerable<JsonElement> Select( this JsonDocument document, string query, JsonPathEvaluator<JsonElement> evaluator )
-    {
-        return new JsonPath( new JsonPathFuncEvaluator<JsonElement>( evaluator ) ).Select( document.RootElement, query );
     }
 
     // JsonNode
@@ -48,11 +40,6 @@ public static class JsonPathSelectExtensions
     public static IEnumerable<JsonNode> Select( this JsonNode node, string query, IJsonPathFilterEvaluator<JsonNode> evaluator )
     {
         return new Nodes.JsonPathNode( evaluator ).Select( node, query );
-    }
-
-    public static IEnumerable<JsonNode> Select( this JsonNode node, string query, JsonPathEvaluator<JsonNode> evaluator )
-    {
-        return new Nodes.JsonPathNode( new JsonPathFuncEvaluator<JsonNode>( evaluator ) ).Select( node, query );
     }
 }
 

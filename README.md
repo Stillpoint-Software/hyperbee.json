@@ -7,12 +7,13 @@ A C# implementation of JSONPath for .NET `System.Text.Json` with a plugable expr
 .NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to create a JSONPath library for .NET that will
 
 * Directly leverage `System.Text.Json` 
-* Align with the draft JSONPath Specification 
+* Align with the draft JSONPath Specification RFC 9535 
   * [Working Draft](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base).
   * [Editor Copy](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html)
 * Function according to the emerging consensus of use based on the majority of existing implementations; except through concious exception or deference to the RFC.
-  * [Parser Comparison](https://cburgmer.github.io/json-path-comparison)
-* Provide a plugable model for expression script handling.
+  * [Parser Comparison Results](https://cburgmer.github.io/json-path-comparison)
+  * [Parser Comparison GitHub](https://github.com/cburgmer/json-path-comparison/tree/master)
+* Provide a plugable model for expression filter handling.
 
 
 ## JSONPath Expressions
@@ -54,15 +55,15 @@ syntax elements with its XPath counterparts:
 |:----------|:-------------------|:-----------------------------------------------------------
 | `/`       | `$`                | The root object/element                                    
 | `.`       | `@`                | The current object/element                                 
-| `/`       | `.` or `[]`       | Child operator                                             
+| `/`       | `.` or `[]`        | Child operator                                             
 | `..`      | n/a                | Parent operator                                            
-| `//`      | `..`              | Recursive descent. JSONPath borrows this syntax from E4X.  
-| `*`       | `*`               | Wildcard. All objects/elements regardless their names.     
+| `//`      | `..`               | Recursive descent. JSONPath borrows this syntax from E4X.  
+| `*`       | `*`                | Wildcard. All objects/elements regardless their names.     
 | `@`       | n/a                | Attribute access. JSON structures don't have attributes.   
-| `[]`      | `[]`              | Subscript operator. XPath uses it to iterate over element collections and for [predicates][xpath-predicates]. In Javascript and JSON it is the native array operator. 
-| `\|`      | `[,]`             | Union operator in XPath results in a combination of node sets. JSONPath allows alternate names or array indices as a set.
-| n/a       | `[start:end:step]`| Array slice operator borrowed from ES4.
-| `[]`      | `?()`             | Applies a filter (script) expression.
+| `[]`      | `[]`               | Subscript operator. XPath uses it to iterate over element collections and for [predicates][xpath-predicates]. In Javascript and JSON it is the native array operator. 
+| `\|`      | `[,]`              | Union operator in XPath results in a combination of node sets. JSONPath allows alternate names or array indices as a set.
+| n/a       | `[start:end:step]` | Array slice operator borrowed from ES4.
+| `[]`      | `?()`              | Applies a filter (script) expression.
 | n/a       | `()`               | Script expression, using the underlying script engine.
 | `()`      | n/a                | Grouping in XPath
 
@@ -106,53 +107,55 @@ Given a simple JSON structure that represents a bookstore:
 
 | XPath                 | JSONPath                  | Result                                 | Notes
 |:----------------------|:--------------------------|:---------------------------------------|:------
-|`/store/book/author` | `$.store.book[*].author` | The authors of all books in the store 
-|`//author`            | `$..author`              | All authors                            
-|`/store/*`            | `$.store.*`              | All things in store, which are some books and a red bicycle 
-|`/store//price`       | `$.store..price`        | The price of everything in the store
-|`//book[3]`           | `$..book[2]`             | The third book
-|`//book[last()]`      | `$..book[(@.length-1)]<br>$..book[-1:]`  | The last book in order
-|`//book[position()<3]`| `$..book[0,1]`<br>`$..book[:2]`| The first two books
+|`/store/book/author`   | `$.store.book[*].author`  | The authors of all books in the store 
+|`//author`             | `$..author`               | All authors                            
+|`/store/*`             | `$.store.*`               | All things in store, which are some books and a red bicycle 
+|`/store//price`        | `$.store..price`          | The price of everything in the store
+|`//book[3]`            | `$..book[2]`              | The third book
+|`//book[last()]`       | `$..book[(@.length-1)]<br>$..book[-1:]`  | The last book in order
+|`//book[position()<3]` | `$..book[0,1]`<br>`$..book[:2]`| The first two books
 |`//book/*[self::category|self::author]` or `//book/(category,author)` in XPath 2.0 | `$..book[category,author]` | The categories and authors of all books 
-|`//book[isbn]`        | `$..book[?(@.isbn)]`    | Filter all books with `isbn` number
-|`//book[price<10]`   | `$..book[?(@.price<10)]` | Filter all books cheapier than 10
-|`//*[price>19]/..`   | `$..[?(@.price>19)]`    | Categories with things more expensive than 19 | Parent (caret) not present in original spec
-|`//*`                 | `$..*`                    | All elements in XML document; all members of JSON structure 
+|`//book[isbn]`         | `$..book[?(@.isbn)]`      | Filter all books with `isbn` number
+|`//book[price<10]`     | `$..book[?(@.price<10)]`  | Filter all books cheapier than 10
+|`//*[price>19]/..`     | `$..[?(@.price>19)]`      | Categories with things more expensive than 19 | Parent (caret) not present in original spec
+|`//*`                  | `$..*`                    | All elements in XML document; all members of JSON structure 
 |`/store/book/[position()!=1]` | `$.store.book[?(@path !== "$[\'store\'][\'book\'][0]")]` | All books besides that at the path pointing to the first | `@path` not present in original spec
 
-## Script Evaluators
+## Filter Evaluators
 
 `Hyperbee.Json` provides out-of-the-box expression evaluators for handling JsonPath filter selectors.
 
 | Name                    | Description |
 | ----------------------- | ----------- |
-| JsonPathCSharpEvaluator | A Roslyn based expression evaluator that supports `[(@...)]` and `[?(@...)]` expresison syntax|
+| JsonPathExpressionEvaluator\<TType>| An `Expression` based filter evaluator that supports RFC 9535 filter syntax|
 | JsonPathFuncEvaluator   | A simple `Func<>` evaluator suitable for simple, custom expression handling |
 | JsonPathNullEvaluator   | An evaluator that does nothing |
 
-You can create your own evaluator by deriving from `IJsonPathScriptEvaluator`. 
+You can create your own evaluator by deriving from `IJsonPathFilterEvaluator`. 
 
 ```csharp
-public class JsonPathFuncEvaluator : IJsonPathScriptEvaluator
-{
-    private readonly JsonPathEvaluator _evaluator;
+// A custom filter evaluator that executes a func
 
-    public JsonPathFuncEvaluator( JsonPathEvaluator evaluator )
+public class JsonPathFuncEvaluator<TType> : IJsonPathFilterEvaluator<TType>
+{
+    private readonly JsonPathEvaluator _func;
+
+    public JsonPathFuncEvaluator( JsonPathEvaluator func )
     {
-        _evaluator = evaluator;
+        _evaluator = func;
     }
 
     public object Evaluator( string script, JsonElement current, string context )
     {
-        return _evaluator?.Invoke( script, current, context );
+        return _func?.Invoke( script, current, context );
     }
 }
 ```
 
-You can set a global default for the evaluator.
+You can set a global default for an evaluator.
 
 ```csharp
-JsonPath.DefaultEvaluator = new JsonPathCSharpEvaluator();
+JsonPath.DefaultEvaluator = new JsonPathExpressionEvaluator();
 ```
 
 Or you can wire it up through dependency injection.
@@ -160,7 +163,7 @@ Or you can wire it up through dependency injection.
 ```csharp
 public static IServiceCollection AddJsonPath( this IServiceCollection services, IConfiguration config )
 {
-    services.AddTransient<IJsonPathScriptEvaluator,JsonPathCSharpEvaluator>();
+    services.AddTransient<IJsonPathFilterEvaluator,JsonPathExpressionEvaluator>();
     services.AddTransient<JsonPath>();
 
     return services;
@@ -180,13 +183,13 @@ const string json = @"
 ]";
 
 var document = JsonDocument.Parse( json );
-var match = document.SelectPath( "$[-1:]" ).Single();
+var match = document.Select( "$[-1:]" ).Single();
 
 Assert.IsTrue( match.Value.GetString() == "third" );
 ```
 
 **Example 2** Select all elemets that have a `key` property with a value less than 42. 
-This example leverages bracket expressions using the `Roslyn` jsonpath script evaluator.
+This example leverages bracket expressions using the default `Expression` jsonpath filter evaluator.
 
 ```csharp
 const string json = @"
@@ -203,7 +206,7 @@ const string json = @"
 ]";
 
 var document = JsonDocument.Parse( json );
-var matches = document.SelectPath( "$[?(@.key<42)]", JsonPathCSharpEvaluator.Evaluator );
+var matches = document.Select( "$[?(@.key<42)]" );
 
 // outputs 0 -1 41 41.9999
 

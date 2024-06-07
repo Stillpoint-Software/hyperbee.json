@@ -6,7 +6,7 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace Hyperbee.Json.Evaluators;
 
-public abstract class JsonPathExpressionEvaluator<TType> : IJsonPathScriptEvaluator<TType>
+public abstract class JsonPathExpressionEvaluator<TType> : IJsonPathFilterEvaluator<TType>
 {
     // ReSharper disable once StaticMemberInGenericType
     private static readonly ConcurrentDictionary<string, Func<TType, TType, string, bool>> Compiled = new();

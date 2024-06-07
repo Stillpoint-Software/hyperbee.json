@@ -40,8 +40,8 @@ namespace Hyperbee.Json.Nodes;
 
 public sealed class JsonPathNode
 {
-    public static IJsonPathScriptEvaluator<JsonNode> DefaultEvaluator { get; set; } = new JsonPathExpressionNodeEvaluator();
-    private readonly IJsonPathScriptEvaluator<JsonNode> _evaluator;
+    public static IJsonPathFilterEvaluator<JsonNode> DefaultEvaluator { get; set; } = new JsonPathExpressionNodeEvaluator();
+    private readonly IJsonPathFilterEvaluator<JsonNode> _evaluator;
 
     private readonly JsonNodePathVisitor _visitor = new();
 
@@ -52,9 +52,9 @@ public sealed class JsonPathNode
     {
     }
 
-    public JsonPathNode( IJsonPathScriptEvaluator<JsonNode> evaluator )
+    public JsonPathNode( IJsonPathFilterEvaluator<JsonNode> evaluator )
     {
-        _evaluator = evaluator ?? DefaultEvaluator ?? new JsonPathCSharpNodeEvaluator();
+        _evaluator = evaluator ?? DefaultEvaluator ?? new JsonPathExpressionNodeEvaluator();
     }
 
     public IEnumerable<JsonNode> Select( in JsonNode value, string query )

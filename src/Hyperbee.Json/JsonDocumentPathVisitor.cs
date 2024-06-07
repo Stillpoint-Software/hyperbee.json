@@ -19,10 +19,72 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement, JsonPa
         };
     }
 
+
+    internal override IEnumerable<(JsonElement, string)> EnumerateChildValues( JsonElement value )
+    {
+        switch ( value.ValueKind )
+        {
+            case JsonValueKind.Array:
+            {
+                for ( var index = value.GetArrayLength() - 1; index >= 0; index-- )
+                {
+                    yield return ( value[index], index.ToString() );
+                }
+
+                break;
+            }
+            case JsonValueKind.Object:
+            {
+                foreach ( var result in ProcessProperties( value.EnumerateObject() ) )
+                    yield return result;
+
+                break;
+            }
+        }
+
+        yield break;
+
+        static IEnumerable<(JsonElement, string)> ProcessProperties( JsonElement.ObjectEnumerator enumerator )
+        {
+            if ( !enumerator.MoveNext() )
+            {
+                yield break;
+            }
+
+            var property = enumerator.Current;
+
+            foreach ( var result in ProcessProperties( enumerator ) )
+            {
+                yield return result;
+            }
+
+            yield return (property.Value,property.Name);
+        }
+    }
+
     private static IEnumerable<string> EnumeratePropertyNames( JsonElement value )
     {
-        // Select() before the Reverse() to reduce size of allocation
-        return value.EnumerateObject().Select( x => x.Name ).Reverse();
+        foreach ( var result in ProcessPropertyNames( value.EnumerateObject() ) )
+            yield return result;
+
+        yield break;
+
+        static IEnumerable<string> ProcessPropertyNames( JsonElement.ObjectEnumerator enumerator )
+        {
+            if ( !enumerator.MoveNext() )
+            {
+                yield break;
+            }
+
+            var property = enumerator.Current;
+
+            foreach ( var result in ProcessPropertyNames( enumerator ) )
+            {
+                yield return result;
+            }
+
+            yield return property.Name;
+        }
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

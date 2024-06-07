@@ -1,6 +1,6 @@
 ﻿namespace Hyperbee.Json.Evaluators;
 
-public class JsonPathFuncEvaluator<TType> : IJsonPathScriptEvaluator<TType>
+public class JsonPathFuncEvaluator<TType> : IJsonPathFilterEvaluator<TType>
 {
     private readonly JsonPathEvaluator<TType> _evaluator;
 

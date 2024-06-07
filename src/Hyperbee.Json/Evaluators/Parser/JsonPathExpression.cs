@@ -16,7 +16,7 @@ public class JsonPathExpression
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
-    public static Func<TType, TType, string, bool> Compile<TType>( ReadOnlySpan<char> filter, IJsonPathScriptEvaluator<TType> evaluator = null )
+    public static Func<TType, TType, string, bool> Compile<TType>( ReadOnlySpan<char> filter, IJsonPathFilterEvaluator<TType> evaluator = null )
     {
         var currentParam = Expression.Parameter( typeof( TType ) );
         var rootParam = Expression.Parameter( typeof( TType ) );

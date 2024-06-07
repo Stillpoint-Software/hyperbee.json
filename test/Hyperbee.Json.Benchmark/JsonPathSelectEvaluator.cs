@@ -9,18 +9,30 @@ namespace Hyperbee.Json.Benchmark;
 
 public class JsonPathSelectEvaluator
 {
-    //[Params( "$..book[?(@.price == 8.99 && @.category == 'fiction')]" )] //, "$.store.book[?(match(@.title, \"Sayings*\" ))]" )]
-    [Params( "$..book[?(@.price == 8.99)]" )]
+    [Params(
+        "$",
+        "$.store.book[0]",
+        "$.store..price",
+        "$..book[0]",
+        "$.store.*",
+        "$.store.book[*].author",
+        "$.store.book[-1:]",
+        "$.store.book[0,1]",
+        "$.store.book['category','author']",
+        "$..book[?(@.isbn)]",
+        "$.store.book[?(@.price == 8.99)]",
+        "$..*",
+        //"""$.store.book[?(path(@.price) != '$.store.book[0].price')]""",
+        """$..book[?(@.price == 8.99 && @.category == 'fiction')]"""
+    )]
     public string Filter;
 
     public JsonNode _node;
     public JsonElement _element;
 
-    private JsonPathCSharpElementEvaluator _csharpElementEvaluator;
-    private JsonPathCSharpNodeEvaluator _csharpNodeEvaluator;
     private JsonPathExpressionElementEvaluator _expressionElementEvaluator;
     private JsonPathExpressionNodeEvaluator _expressionNodeEvaluator;
-    private JObject _jobject;
+    private JObject _jObject;
 
     [GlobalSetup]
     public void Setup()
@@ -64,27 +76,13 @@ public class JsonPathSelectEvaluator
                                 }
                                 """;
 
-        _jobject = JObject.Parse( document );
+        _jObject = JObject.Parse( document );
 
         _node = JsonNode.Parse( document )!;
-        _csharpNodeEvaluator = new JsonPathCSharpNodeEvaluator();
         _expressionNodeEvaluator = new JsonPathExpressionNodeEvaluator();
 
         _element = JsonDocument.Parse( document ).RootElement;
-        _csharpElementEvaluator = new JsonPathCSharpElementEvaluator();
         _expressionElementEvaluator = new JsonPathExpressionElementEvaluator();
-    }
-
-    [Benchmark]
-    public void JsonPath_CSharpEvaluator_JsonElement()
-    {
-        var _ = _element.Select( Filter, _csharpElementEvaluator ).ToArray();
-    }
-
-    [Benchmark]
-    public void JsonPath_CSharpEvaluator_JsonNode()
-    {
-        var _ = _node.Select( Filter, _csharpNodeEvaluator ).ToArray();
     }
 
     [Benchmark]
@@ -102,6 +100,6 @@ public class JsonPathSelectEvaluator
     [Benchmark]
     public void JsonPath_Newtonsoft_JObject()
     {
-        var _ = _jobject.SelectTokens( Filter ).ToArray();
+        var _ = _jObject.SelectTokens( Filter ).ToArray();
     }
 }

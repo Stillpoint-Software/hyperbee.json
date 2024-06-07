@@ -4,7 +4,6 @@ using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
-using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Validators;
 
 namespace Hyperbee.Json.Benchmark;
@@ -27,7 +26,7 @@ public class Config : ManualConfig
 
         AddDiagnoser( MemoryDiagnoser.Default );
 
-        Orderer = new DefaultOrderer( SummaryOrderPolicy.FastestToSlowest );
+        Orderer = new FastestToSlowestByParamOrderer();
         ArtifactsPath = "benchmark";
     }
 }

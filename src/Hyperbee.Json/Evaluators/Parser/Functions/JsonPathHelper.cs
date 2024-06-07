@@ -23,9 +23,9 @@ public static class JsonPathHelper<TType>
     {
         var thisType = typeof( JsonPathHelper<TType> );
 
-        GetFirstElementValueMethod = thisType.GetMethod( nameof( GetFirstElementValue ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathScriptEvaluator<TType> )] );
-        GetFirstElementMethod = thisType.GetMethod( nameof( GetFirstElement ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathScriptEvaluator<TType> )] );
-        SelectMethod = thisType.GetMethod( nameof( Select ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathScriptEvaluator<TType> )] );
+        GetFirstElementValueMethod = thisType.GetMethod( nameof( GetFirstElementValue ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathFilterEvaluator<TType> )] );
+        GetFirstElementMethod = thisType.GetMethod( nameof( GetFirstElement ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathFilterEvaluator<TType> )] );
+        SelectMethod = thisType.GetMethod( nameof( Select ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathFilterEvaluator<TType> )] );
 
         IsTruthyMethod = thisType.GetMethod( nameof( IsTruthy ) );
     }
@@ -65,7 +65,7 @@ public static class JsonPathHelper<TType>
         };
     }
 
-    public static object GetFirstElementValue( JsonElement current, JsonElement root, string query, IJsonPathScriptEvaluator<JsonElement> evaluator )
+    public static object GetFirstElementValue( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
     {
         var first = GetFirstElement( current, root, query, evaluator );
 
@@ -83,7 +83,7 @@ public static class JsonPathHelper<TType>
         };
     }
 
-    public static object GetFirstElementValue( JsonNode current, JsonNode root, string query, IJsonPathScriptEvaluator<JsonNode> evaluator )
+    public static object GetFirstElementValue( JsonNode current, JsonNode root, string query, IJsonPathFilterEvaluator<JsonNode> evaluator )
     {
         var first = GetFirstElement( current, root, query, evaluator );
 
@@ -101,27 +101,27 @@ public static class JsonPathHelper<TType>
         };
     }
 
-    public static JsonPathElement GetFirstElement( JsonElement current, JsonElement root, string query, IJsonPathScriptEvaluator<JsonElement> evaluator )
+    public static JsonPathElement GetFirstElement( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
     {
         return new JsonPath( evaluator )
             .SelectPath( current, root, query )
             .FirstOrDefault();
     }
 
-    public static JsonNode GetFirstElement( JsonNode current, JsonNode root, string query, IJsonPathScriptEvaluator<JsonNode> evaluator )
+    public static JsonNode GetFirstElement( JsonNode current, JsonNode root, string query, IJsonPathFilterEvaluator<JsonNode> evaluator )
     {
         return new Nodes.JsonPathNode( evaluator )
             .Select( current, root, query )
             .FirstOrDefault();
     }
 
-    public static IEnumerable<JsonElement> Select( JsonElement current, JsonElement root, string query, IJsonPathScriptEvaluator<JsonElement> evaluator )
+    public static IEnumerable<JsonElement> Select( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
     {
         return new JsonPath( evaluator )
             .Select( current, root, query );
     }
 
-    public static IEnumerable<JsonNode> Select( JsonNode current, JsonNode root, string query, IJsonPathScriptEvaluator<JsonNode> evaluator )
+    public static IEnumerable<JsonNode> Select( JsonNode current, JsonNode root, string query, IJsonPathFilterEvaluator<JsonNode> evaluator )
     {
         return new Nodes.JsonPathNode( evaluator )
             .Select( current, root, query );

@@ -63,14 +63,21 @@ internal abstract class JsonPathVisitorBase<TElement, TResult>
 
             if ( selector == ".." )
             {
-                foreach ( var childKey in EnumerateKeys( current ) )
+                foreach ( var (childValue, childKey) in EnumerateChildValues( current ) )
                 {
-                    if ( !TryGetChildValue( current, childKey, out var childValue ) )
-                        continue;
-
                     if ( IsObjectOrArray( childValue ) )
                         PushNode( childValue, tokens.Push( "..", SelectorKind.UnspecifiedGroup ), GetPath( current, path, childKey ) ); // Descendant
                 }
+
+
+                // foreach ( var childKey in EnumerateKeys( current ) )
+                // {
+                //     if ( !TryGetChildValue( current, childKey, out var childValue ) )
+                //         continue;
+                //
+                //     if ( IsObjectOrArray( childValue ) )
+                //         PushNode( childValue, tokens.Push( "..", SelectorKind.UnspecifiedGroup ), GetPath( current, path, childKey ) ); // Descendant
+                // }
 
                 PushNode( current, tokens, path );
                 continue;
@@ -99,11 +106,8 @@ internal abstract class JsonPathVisitorBase<TElement, TResult>
 
                 if ( childSelector.Length > 3 && childSelector[0] == '?' && childSelector[1] == '(' && childSelector[^1] == ')' )
                 {
-                    foreach ( var childKey in EnumerateKeys( current ) )
+                    foreach ( var (childValue, childKey) in EnumerateChildValues( current ) )
                     {
-                        if ( !TryGetChildValue( current, childKey, out var childValue ) )
-                            continue;
-
                         var childContext = GetPath( current, path, childKey );
 
                         var filter = evaluator( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, args.Root, childContext );
@@ -167,6 +171,8 @@ internal abstract class JsonPathVisitorBase<TElement, TResult>
     }
 
     internal abstract IEnumerable<string> EnumerateKeys( TElement value );
+
+    internal abstract IEnumerable<(TElement, string)> EnumerateChildValues( TElement value );
 
     internal IEnumerable<int> EnumerateSlice( TElement value, string sliceExpr )
     {

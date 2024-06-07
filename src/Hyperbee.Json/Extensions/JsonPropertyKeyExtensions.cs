@@ -18,11 +18,6 @@ namespace Hyperbee.Json.Extensions;
 
 public static class JsonPropertyKeyExtensions
 {
-    public static JsonElement GetPropertyFromKey( this JsonDocument document, ReadOnlySpan<char> propertyPath )
-    {
-        return document.RootElement.GetPropertyFromKey( propertyPath );
-    }
-
     public static JsonElement GetPropertyFromKey( this JsonElement jsonElement, ReadOnlySpan<char> propertyPath )
     {
         if ( jsonElement.IsNullOrUndefined() || propertyPath.IsEmpty )

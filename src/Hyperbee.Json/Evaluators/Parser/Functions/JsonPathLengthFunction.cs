@@ -14,7 +14,7 @@ public class JsonPathLengthFunction<TType>( string methodName, IList<string> arg
 
     static JsonPathLengthFunction()
     {
-        LengthMethod = typeof(JsonPathLengthFunction<TType>).GetMethod( nameof(Length), [typeof(TType)] );
+        LengthMethod = typeof( JsonPathLengthFunction<TType> ).GetMethod( nameof( Length ), [typeof( TType )] );
     }
 
     public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )

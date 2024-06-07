@@ -24,7 +24,7 @@ public class JsonPathExpression
         var expression = Parse( filter, expressionContext );
 
         return Expression
-            .Lambda<Func<TType, TType, bool>>( expression, currentParam, rootParam)
+            .Lambda<Func<TType, TType, bool>>( expression, currentParam, rootParam )
             .Compile();
     }
 

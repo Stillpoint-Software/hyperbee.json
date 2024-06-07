@@ -155,11 +155,11 @@ public class JsonPathExpressionTests : JsonTestBase
             ? JsonPathExpression.Parse( filter, new ParseExpressionContext<JsonElement>(
                 param,
                 param,
-                new JsonPathExpressionElementEvaluator()  ) )
+                new JsonPathExpressionElementEvaluator() ) )
             : JsonPathExpression.Parse( filter, new ParseExpressionContext<JsonNode>(
                 param,
                 param,
-                new JsonPathExpressionNodeEvaluator()  ) );
+                new JsonPathExpressionNodeEvaluator() ) );
 
         return (expression, param);
     }
@@ -204,7 +204,7 @@ public class JsonPathExpressionTests : JsonTestBase
             var func = JsonPathExpression.Compile( filter, new JsonPathExpressionNodeEvaluator() );
 
             // act
-            return func( source, source  );
+            return func( source, source );
         }
     }
 

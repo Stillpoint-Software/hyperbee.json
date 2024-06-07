@@ -65,7 +65,7 @@ public sealed class JsonPath
     internal IEnumerable<JsonElement> Select( in JsonElement value, JsonElement root, string query )
     {
         if ( string.IsNullOrWhiteSpace( query ) )
-            throw new ArgumentNullException( nameof(query) );
+            throw new ArgumentNullException( nameof( query ) );
 
         // quick out
 

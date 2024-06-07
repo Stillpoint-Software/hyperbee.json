@@ -76,7 +76,7 @@ public class DynamicJsonConverter : JsonConverter<dynamic>
 
 
             case JsonTokenType.StartArray:
-                IList<object> array = new List<object>();
+                IList<object> array = [];
 
                 var i = 0;
                 while ( reader.Read() )

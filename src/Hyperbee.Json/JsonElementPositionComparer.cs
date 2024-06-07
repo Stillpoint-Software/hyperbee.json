@@ -12,34 +12,34 @@ internal class JsonElementReferenceComparer : IEqualityComparer<JsonElement>
     static JsonElementReferenceComparer()
     {
         // Create DynamicMethod for _idx field
-        
-        var idxField = typeof(JsonElement).GetField( "_idx", BindingFlags.NonPublic | BindingFlags.Instance );
+
+        var idxField = typeof( JsonElement ).GetField( "_idx", BindingFlags.NonPublic | BindingFlags.Instance );
 
         if ( idxField == null )
-            throw new MissingFieldException( nameof(JsonElement), "_idx" );
+            throw new MissingFieldException( nameof( JsonElement ), "_idx" );
 
-        var getIdxDynamicMethod = new DynamicMethod( "GetIdx", typeof(int), [typeof(JsonElement)], typeof(JsonElement) );
+        var getIdxDynamicMethod = new DynamicMethod( "GetIdx", typeof( int ), [typeof( JsonElement )], typeof( JsonElement ) );
         var ilIdx = getIdxDynamicMethod.GetILGenerator();
         ilIdx.Emit( OpCodes.Ldarg_0 );
         ilIdx.Emit( OpCodes.Ldfld, idxField );
         ilIdx.Emit( OpCodes.Ret );
 
-        __getIdx = (Func<JsonElement, int>) getIdxDynamicMethod.CreateDelegate( typeof(Func<JsonElement, int>) );
+        __getIdx = (Func<JsonElement, int>) getIdxDynamicMethod.CreateDelegate( typeof( Func<JsonElement, int> ) );
 
         // Create DynamicMethod for _parent field
 
-        var parentField = typeof(JsonElement).GetField( "_parent", BindingFlags.NonPublic | BindingFlags.Instance );
+        var parentField = typeof( JsonElement ).GetField( "_parent", BindingFlags.NonPublic | BindingFlags.Instance );
 
         if ( parentField == null )
-            throw new MissingFieldException( nameof(JsonElement), "_parent" );
+            throw new MissingFieldException( nameof( JsonElement ), "_parent" );
 
-        var getParentDynamicMethod = new DynamicMethod( "GetParent", typeof(JsonDocument), [typeof(JsonElement)], typeof(JsonElement) );
+        var getParentDynamicMethod = new DynamicMethod( "GetParent", typeof( JsonDocument ), [typeof( JsonElement )], typeof( JsonElement ) );
         var ilParent = getParentDynamicMethod.GetILGenerator();
         ilParent.Emit( OpCodes.Ldarg_0 );
         ilParent.Emit( OpCodes.Ldfld, parentField );
         ilParent.Emit( OpCodes.Ret );
 
-        __getParent = (Func<JsonElement, JsonDocument>) getParentDynamicMethod.CreateDelegate( typeof(Func<JsonElement, JsonDocument>) );
+        __getParent = (Func<JsonElement, JsonDocument>) getParentDynamicMethod.CreateDelegate( typeof( Func<JsonElement, JsonDocument> ) );
     }
 
     public bool Equals( JsonElement x, JsonElement y )

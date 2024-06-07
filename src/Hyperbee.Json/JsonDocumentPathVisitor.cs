@@ -5,21 +5,8 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json;
 
-internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement, JsonPathElement>
+internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement>
 {
-    protected readonly char[] SpecialCharacters = ['.', ' ', '\'', '/', '"', '[', ']', '(', ')', '\t', '\n', '\r', '\f', '\b', '\\', '\u0085', '\u2028', '\u2029'];
-
-    internal override IEnumerable<string> EnumerateKeys( JsonElement value )
-    {
-        return value.ValueKind switch
-        {
-            JsonValueKind.Array => EnumerateArrayIndices( value.GetArrayLength() ).Select( x => x.ToString() ),
-            JsonValueKind.Object => EnumeratePropertyNames( value ),
-            _ => throw new NotSupportedException()
-        };
-    }
-
-
     internal override IEnumerable<(JsonElement, string)> EnumerateChildValues( JsonElement value )
     {
         switch ( value.ValueKind )
@@ -62,31 +49,6 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement, JsonPa
         }
     }
 
-    private static IEnumerable<string> EnumeratePropertyNames( JsonElement value )
-    {
-        foreach ( var result in ProcessPropertyNames( value.EnumerateObject() ) )
-            yield return result;
-
-        yield break;
-
-        static IEnumerable<string> ProcessPropertyNames( JsonElement.ObjectEnumerator enumerator )
-        {
-            if ( !enumerator.MoveNext() )
-            {
-                yield break;
-            }
-
-            var property = enumerator.Current;
-
-            foreach ( var result in ProcessPropertyNames( enumerator ) )
-            {
-                yield return result;
-            }
-
-            yield return property.Name;
-        }
-    }
-
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     internal override JsonElement GetElementAt( JsonElement value, int index )
     {
@@ -115,12 +77,6 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement, JsonPa
     internal override bool IsObject( JsonElement value )
     {
         return value.ValueKind is JsonValueKind.Object;
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override JsonPathElement CreateResult( JsonElement value, string path )
-    {
-        return new JsonPathElement( value, path );
     }
 
     internal override bool TryGetChildValue( in JsonElement value, ReadOnlySpan<char> childKey, out JsonElement childValue )
@@ -158,19 +114,5 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement, JsonPa
 
         childValue = default;
         return false;
-    }
-
-    internal override string GetPath( JsonElement value, string prefix, string childKey )
-    {
-        if ( value.ValueKind == JsonValueKind.Array )
-            return $"{prefix}[{childKey}]";
-
-        return childKey.IndexOfAny( SpecialCharacters ) == -1 ? $"{prefix}.{childKey}" : $@"{prefix}['{childKey}']";
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override string GetPath( JsonElement value, string path )
-    {
-        return path[(path.LastIndexOf( ';' ) + 1)..];
     }
 }

@@ -85,6 +85,6 @@ public sealed class JsonPathNode
                 tokens = tokens.Pop();
         }
 
-        return _visitor.ExpressionVisitor( new JsonNodePathVisitor.VisitorArgs( value, root, tokens, "$" ), _evaluator.Evaluator );
+        return _visitor.ExpressionVisitor( new JsonNodePathVisitor.VisitorArgs( value, root, tokens ), _evaluator.Evaluator );
     }
 }

@@ -59,34 +59,22 @@ public sealed class JsonPath
 
     public IEnumerable<JsonElement> Select( in JsonElement value, string query )
     {
-        return SelectPath( value, value, query ).Select( x => x.Value );
+        return Select( value, value, query );
     }
 
     internal IEnumerable<JsonElement> Select( in JsonElement value, JsonElement root, string query )
     {
-        return SelectPath( value, root, query ).Select( x => x.Value );
-    }
-
-    public IEnumerable<JsonPathElement> SelectPath( in JsonElement value, string query )
-    {
-        return SelectPath( value, value, query );
-    }
-
-    internal IEnumerable<JsonPathElement> SelectPath( in JsonElement value, in JsonElement root, string query )
-    {
         if ( string.IsNullOrWhiteSpace( query ) )
-            throw new ArgumentNullException( nameof( query ) );
+            throw new ArgumentNullException( nameof(query) );
 
         // quick out
 
         if ( query == "$" )
-            return [new JsonPathElement( value, query )];
+            return [value];
 
         // tokenize
 
         var tokens = JsonPathQueryTokenizer.Tokenize( query );
-
-        // initiate the expression walk
 
         if ( !tokens.IsEmpty )
         {
@@ -95,6 +83,6 @@ public sealed class JsonPath
                 tokens = tokens.Pop();
         }
 
-        return _visitor.ExpressionVisitor( new JsonDocumentPathVisitor.VisitorArgs( value, root, tokens, "$" ), _evaluator.Evaluator );
+        return _visitor.ExpressionVisitor( new JsonDocumentPathVisitor.VisitorArgs( value, root, tokens ), _evaluator.Evaluator );
     }
 }

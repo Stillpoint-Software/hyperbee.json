@@ -2,5 +2,4 @@
 
 namespace Hyperbee.Json.Evaluators.Parser;
 
-//public record ParseExpressionContext<TType>( Expression Current, Expression Root, IJsonPathScriptEvaluator<TType> Evaluator, string BasePath = "" );
-public record ParseExpressionContext<TType>( Expression Current, Expression Root, IJsonPathFilterEvaluator<TType> Evaluator, Expression BasePath );
+public record ParseExpressionContext<TType>( Expression Current, Expression Root, IJsonPathFilterEvaluator<TType> Evaluator );

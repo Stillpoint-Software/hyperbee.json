@@ -4,38 +4,24 @@ using System.Text.Json.Nodes;
 
 namespace Hyperbee.Json.Nodes;
 
-internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode, JsonNode>
+internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode>
 {
-    internal override IEnumerable<string> EnumerateKeys( JsonNode value )
-    {
-        return value switch
-        {
-            JsonArray valueArray => EnumerateArrayIndices( valueArray.Count ).Select( x => x.ToString() ),
-            JsonObject valueObject => EnumeratePropertyNames( valueObject ),
-            _ => throw new NotSupportedException()
-        };
-    }
-
     internal override IEnumerable<(JsonNode, string)> EnumerateChildValues( JsonNode value )
     {
         switch ( value )
         {
             case JsonArray arrayValue:
+                for ( var index = arrayValue.Count - 1; index >= 0; index-- )
                 {
-                    for ( var index = arrayValue.Count - 1; index >= 0; index-- )
-                    {
-                        yield return (value[index], index.ToString());
-                    }
-
-                    break;
+                    yield return (value[index], index.ToString());
                 }
+
+                break;
             case JsonObject objectValue:
-                {
-                    foreach ( var result in ProcessProperties( objectValue.GetEnumerator() ) )
-                        yield return result;
+                foreach ( var result in ProcessProperties( objectValue.GetEnumerator() ) )
+                    yield return result;
 
-                    break;
-                }
+                break;
         }
 
         yield break;
@@ -55,31 +41,6 @@ internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode, JsonNode>
             }
 
             yield return (property.Value, property.Key);
-        }
-    }
-
-    private static IEnumerable<string> EnumeratePropertyNames( JsonNode value )
-    {
-        foreach ( var result in ProcessProperties( (value as JsonObject).GetEnumerator() ) )
-            yield return result;
-
-        yield break;
-
-        static IEnumerable<string> ProcessProperties( IEnumerator<KeyValuePair<string, JsonNode>> enumerator )
-        {
-            if ( !enumerator.MoveNext() )
-            {
-                yield break;
-            }
-
-            var property = enumerator.Current;
-
-            foreach ( var result in ProcessProperties( enumerator ) )
-            {
-                yield return result;
-            }
-
-            yield return property.Key;
         }
     }
 
@@ -111,12 +72,6 @@ internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode, JsonNode>
     internal override bool IsObject( JsonNode value )
     {
         return value is JsonObject;
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override JsonNode CreateResult( JsonNode value, string path )
-    {
-        return value;
     }
 
     internal override bool TryGetChildValue( in JsonNode value, ReadOnlySpan<char> childKey, out JsonNode childValue )
@@ -158,17 +113,5 @@ internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode, JsonNode>
 
         childValue = default;
         return false;
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override string GetPath( JsonNode value, string path, string selector )
-    {
-        return value.GetPath();
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override string GetPath( JsonNode value, string path )
-    {
-        return value.GetPath();
     }
 }

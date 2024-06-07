@@ -33,13 +33,13 @@ namespace Hyperbee.Json;
 //
 // var result = JsonHelper.Compare( referenceJson, resultJson );
 
-public class JsonElementEqualityComparer : IEqualityComparer<JsonElement>
+public class JsonElementEqualityDeepComparer : IEqualityComparer<JsonElement>
 {
-    public JsonElementEqualityComparer()
+    public JsonElementEqualityDeepComparer()
     {
     }
 
-    public JsonElementEqualityComparer( int maxHashDepth ) => MaxHashDepth = maxHashDepth;
+    public JsonElementEqualityDeepComparer( int maxHashDepth ) => MaxHashDepth = maxHashDepth;
 
     private int MaxHashDepth { get; }
 

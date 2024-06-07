@@ -20,7 +20,6 @@ public class ParserFunction<TType>
             new KeyValuePair<string, FunctionCreator>( JsonPathMatchFunction<TType>.Name, ( name, arguments, context ) => new JsonPathMatchFunction<TType>( name, arguments, context ) ),
             new KeyValuePair<string, FunctionCreator>( JsonPathSearchFunction<TType>.Name, ( name, arguments, context ) => new JsonPathSearchFunction<TType>( name, arguments, context ) ),
             new KeyValuePair<string, FunctionCreator>( JsonPathValueFunction<TType>.Name, ( name, arguments, context ) => new JsonPathValueFunction<TType>( name, arguments, context ) ),
-            new KeyValuePair<string, FunctionCreator>( JsonPathPathFunction<TType>.Name, ( name, arguments, context ) => new JsonPathPathFunction<TType>( name, arguments, context ) ),
         ] );
     }
 

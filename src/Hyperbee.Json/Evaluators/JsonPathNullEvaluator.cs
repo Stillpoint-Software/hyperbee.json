@@ -2,8 +2,5 @@
 
 public class JsonPathNullEvaluator<TType> : IJsonPathFilterEvaluator<TType>
 {
-    public object Evaluator( string script, TType current, TType root, string basePath )
-    {
-        return null;
-    }
+    public object Evaluator( string script, TType current, TType root) => null;
 }

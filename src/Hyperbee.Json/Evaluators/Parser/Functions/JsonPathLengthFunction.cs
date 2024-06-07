@@ -14,25 +14,15 @@ public class JsonPathLengthFunction<TType>( string methodName, IList<string> arg
 
     static JsonPathLengthFunction()
     {
-        LengthMethod = typeof( TType ) == typeof( JsonElement )
-            ? typeof( JsonPathLengthFunction<TType> ).GetMethod( nameof( Length ), [typeof( JsonPathElement )] ) // NOTE: switching to JsonPathElement
-            : typeof( JsonPathLengthFunction<TType> ).GetMethod( nameof( Length ), [typeof( TType )] );
+        LengthMethod = typeof(JsonPathLengthFunction<TType>).GetMethod( nameof(Length), [typeof(TType)] );
     }
 
     public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )
     {
-        if ( methodName != Name )
-        {
-            return Expression.Block(
-                Expression.Throw( Expression.Constant( new Exception( $"Invalid function name {methodName} for {Name}" ) ) ),
-                Expression.Constant( 0F )
-            );
-        }
-
         if ( arguments.Count != 1 )
         {
             return Expression.Block(
-                Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) ),
+                Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) ),
                 Expression.Constant( 0F )
             );
         }
@@ -50,13 +40,13 @@ public class JsonPathLengthFunction<TType>( string methodName, IList<string> arg
     }
 
 
-    public static float Length( JsonPathElement element )
+    public static float Length( JsonElement element )
     {
-        return element.Value.ValueKind switch
+        return element.ValueKind switch
         {
-            JsonValueKind.String => element.Value.GetString()?.Length ?? 0,
-            JsonValueKind.Array => element.Value.GetArrayLength(),
-            JsonValueKind.Object => element.Value.EnumerateObject().Count(),
+            JsonValueKind.String => element.GetString()?.Length ?? 0,
+            JsonValueKind.Array => element.GetArrayLength(),
+            JsonValueKind.Object => element.EnumerateObject().Count(),
             _ => 0
         };
     }

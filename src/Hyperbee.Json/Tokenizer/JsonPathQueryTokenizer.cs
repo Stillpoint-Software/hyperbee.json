@@ -94,7 +94,7 @@ public static partial class JsonPathQueryTokenizer
         return TokenFactory( query );
     }
 
-    private static IImmutableStack<JsonPathToken> TokenFactory( ReadOnlySpan<char> query )
+    private static ImmutableStack<JsonPathToken> TokenFactory( ReadOnlySpan<char> query )
     {
         // transform jsonpath patterns like "$.store.book[*]..author" to an array of tokens [ $, store, book, *, .., author ]
 
@@ -328,7 +328,7 @@ public static partial class JsonPathQueryTokenizer
                                     break;
                                 case ']':
                                     scanner = Scanner.DotChild;
-                                    InsertToken( tokens, selectors.ToArray() );
+                                    InsertToken( tokens, [.. selectors] );
                                     selectors.Clear();
                                     break;
                             }

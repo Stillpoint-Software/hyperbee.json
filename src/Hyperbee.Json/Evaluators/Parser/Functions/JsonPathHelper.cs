@@ -59,8 +59,8 @@ public static class JsonPathHelper<TType>
     {
         return node.GetValueKind() switch
         {
-            JsonValueKind.Array => node.AsArray().Any(),
-            JsonValueKind.Object => node.AsObject().Any(),
+            JsonValueKind.Array => node.AsArray().Count != 0,
+            JsonValueKind.Object => node.AsObject().Count != 0,
             _ => false
         };
     }
@@ -69,10 +69,10 @@ public static class JsonPathHelper<TType>
     {
         var first = GetFirstElement( current, root, query, evaluator );
 
-        return first.Value.ValueKind switch
+        return first.ValueKind switch
         {
-            JsonValueKind.Number => first.Value.GetSingle(),
-            JsonValueKind.String => first.Value.GetString(),
+            JsonValueKind.Number => first.GetSingle(),
+            JsonValueKind.String => first.GetString(),
             JsonValueKind.Object => IsNotEmpty( first ),
             JsonValueKind.Array => IsNotEmpty( first ),
             JsonValueKind.True => true,
@@ -101,10 +101,10 @@ public static class JsonPathHelper<TType>
         };
     }
 
-    public static JsonPathElement GetFirstElement( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
+    public static JsonElement GetFirstElement( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
     {
         return new JsonPath( evaluator )
-            .SelectPath( current, root, query )
+            .Select( current, root, query )
             .FirstOrDefault();
     }
 

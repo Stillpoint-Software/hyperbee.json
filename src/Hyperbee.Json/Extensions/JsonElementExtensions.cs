@@ -1,5 +1,4 @@
 ﻿using System.Buffers;
-using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Dynamic;
@@ -39,6 +38,7 @@ public static class JsonElementExtensions
             _ => JsonValue.Create( element )
         };
     }
+
     public static T ToObject<T>( this JsonElement value, JsonSerializerOptions options = null )
         where T : new()
     {
@@ -50,6 +50,25 @@ public static class JsonElementExtensions
 
         var reader = new Utf8JsonReader( bufferWriter.WrittenSpan );
         return JsonSerializer.Deserialize<T>( ref reader, options );
+    }
+
+    // Deep Equals/Compare extensions
+
+    public static bool DeepEquals( this JsonElement elmA, string strB, JsonDocumentOptions options = default )
+    {
+        if ( strB == null )
+            return false;
+
+        var comparer = new JsonElementEqualityDeepComparer( options.MaxDepth );
+        using var docB = JsonDocument.Parse( strB, options );
+
+        return comparer.Equals( elmA, docB.RootElement );
+    }
+
+    public static bool DeepEquals( this JsonElement elmA, JsonElement elmB, JsonDocumentOptions options = default )
+    {
+        var comparer = new JsonElementEqualityDeepComparer( options.MaxDepth );
+        return comparer.Equals( elmA, elmB );
     }
 
     // Value extensions
@@ -77,20 +96,4 @@ public static class JsonElementExtensions
 
         return (long) value.GetDouble(); // for cases where the number contains fractional digits
     }
-
-    // GetDocument()
-    //
-    // As of net 6, JsonElement._parent is private. Provide a way to get to the parent document. 
-    // Use an expression over reflection. The first-time cost is higher but additional calls are faster.
-
-    private static readonly Func<JsonElement, JsonDocument> ParentAccessor = CreateParentAccessor();
-
-    private static Func<JsonElement, JsonDocument> CreateParentAccessor()
-    {
-        var param = Expression.Parameter( typeof( JsonElement ), "target" );
-        var field = Expression.Field( param, "_parent" );
-        return Expression.Lambda<Func<JsonElement, JsonDocument>>( field, param ).Compile();
-    }
-
-    public static JsonDocument GetDocument( this JsonElement value ) => ParentAccessor( value );
 }

@@ -8,18 +8,10 @@ public class JsonPathValueFunction<TType>( string methodName, IList<string> argu
 
     public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )
     {
-        if ( methodName != Name )
-        {
-            return Expression.Block(
-                Expression.Throw( Expression.Constant( new Exception( $"Invalid function name {methodName} for {Name}" ) ) ),
-                Expression.Constant( 0F )
-            );
-        }
-
         if ( arguments.Count != 1 )
         {
             return Expression.Block(
-                Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) ),
+                Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) ),
                 Expression.Constant( 0F )
             );
         }

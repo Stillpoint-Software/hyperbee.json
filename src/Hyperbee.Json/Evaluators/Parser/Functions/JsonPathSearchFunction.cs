@@ -15,25 +15,15 @@ public class JsonPathSearchFunction<TType>( string methodName, IList<string> arg
 
     static JsonPathSearchFunction()
     {
-        SearchMethod = typeof( TType ) == typeof( JsonElement )
-            ? typeof( JsonPathSearchFunction<TType> ).GetMethod( nameof( Search ), [typeof( JsonPathElement ), typeof( string )] ) // NOTE: switching to JsonPathElement
-            : typeof( JsonPathSearchFunction<TType> ).GetMethod( nameof( Search ), [typeof( TType ), typeof( string )] );
+        SearchMethod = typeof( JsonPathSearchFunction<TType> ).GetMethod( nameof( Search ), [typeof( TType ), typeof( string )] );
     }
 
     public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )
     {
-        if ( methodName != Name )
-        {
-            return Expression.Block(
-                Expression.Throw( Expression.Constant( new Exception( $"Invalid function name {methodName} for {Name}" ) ) ),
-                Expression.Constant( 0F )
-            );
-        }
-
         if ( arguments.Count != 2 )
         {
             return Expression.Block(
-                Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) ),
+                Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) ),
                 Expression.Constant( 0F )
             );
         }
@@ -53,10 +43,10 @@ public class JsonPathSearchFunction<TType>( string methodName, IList<string> arg
     }
 
 
-    public static bool Search( JsonPathElement element, string regex )
+    public static bool Search( JsonElement element, string regex )
     {
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        var value = element.Value.GetString();
+        var value = element.GetString();
 
         // TODO: Talk to BF about how search is different from match
         return value != null && regexPattern.IsMatch( value );

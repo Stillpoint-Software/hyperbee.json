@@ -1,4 +1,4 @@
-﻿#define USE_OPTIMIZED
+﻿//#define USE_OPTIMIZED
 
 using System.Text.Json;
 
@@ -8,26 +8,106 @@ public class JsonPathBuilder
 {
     private readonly JsonElement _rootElement;
     private readonly JsonElementPositionComparer _comparer = new();
+    private readonly Dictionary<int, (int parentId, string segment)> _parentMap = [];
 
     public JsonPathBuilder( JsonDocument rootDocument )
+        : this( rootDocument.RootElement )
     {
-        _rootElement = rootDocument.RootElement;
     }
 
     public JsonPathBuilder( JsonElement rootElement )
     {
         _rootElement = rootElement;
+
+        // avoid allocating full paths for every node by building a
+        // dictionary cache of (parentIdx, segment) pairs.
+
+        _parentMap[GetIdx( _rootElement )] = (-1, "$"); // seed parent map with root
     }
 
+    // OPTIMIZED TO USE SEGMENT DICTIONARY CACHE
+    
+    public string GetPath( JsonElement targetElement )
+    {
+        // quick out
+        
+        var targetId = GetIdx( targetElement );
+        
+        if ( _parentMap.ContainsKey( targetId ) )
+            return BuildPath( targetId, _parentMap );
+        
+        // take a walk
+        
+        var stack = new Stack<JsonElement>( [_rootElement] );
+
+        while ( stack.Count > 0 )
+        {
+            var currentElement = stack.Pop();
+            var elementId = GetIdx( currentElement );
+            
+            if ( _comparer.Equals( currentElement, targetElement ) )
+                return BuildPath( elementId, _parentMap );
+
+            switch ( currentElement.ValueKind )
+            {
+                case JsonValueKind.Object:
+                    foreach ( var property in currentElement.EnumerateObject() )
+                    {
+                        var childElementId = GetIdx( property.Value );
+                        
+                        if ( !_parentMap.ContainsKey( childElementId ) )
+                            _parentMap[childElementId] = (elementId, $".{property.Name}");
+                        
+                        stack.Push( property.Value );
+                    }
+                    break;
+
+                case JsonValueKind.Array:
+                    var arrayIdx = 0;
+                    foreach ( var element in currentElement.EnumerateArray() )
+                    {
+                        var childElementId = GetIdx( element );
+
+                        if ( !_parentMap.ContainsKey( childElementId ) )
+                            _parentMap[childElementId] = (elementId, $"[{arrayIdx}]");
+                        
+                        stack.Push( element );
+                        arrayIdx++;
+                    }
+                    break;
+            }
+        }
+
+        return null; // Target not found
+    }
+
+    private static int GetIdx( JsonElement element )
+    {
+        return JsonElementPositionComparer.GetIdx( element ); // Not ideal, but neither is creating multiple dynamic methods. Discuss how to handle.
+    }
+
+    private static string BuildPath( int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
+    {
+        var pathSegments = new Stack<string>();
+        var currentId = elementId;
+
+        while ( currentId != -1 )
+        {
+            var (parentId, segment) = parentMap[currentId];
+            pathSegments.Push( segment );
+            currentId = parentId;
+        }
+
+        return string.Join( string.Empty, pathSegments );
+    }
+    
+/*
 #if USE_OPTIMIZED
+
+    // OPTIMIZED TO USE SEGMENT DICTIONARY
 
     // avoid allocating full paths for every node by building a dictionary
     // of (parentId, segment) pairs.
-    //
-    // if we switch parentId to _idx from a simple int counter then we should
-    // be able to build a fast path that only walks until it finds an _idx
-    // match in the dictionary. this would allow us to move the parentMap
-    // to a member and would give us an effective cache mechanism.
 
     public string GetPath( JsonElement targetElement )
     {
@@ -90,7 +170,8 @@ public class JsonPathBuilder
 
 #else
     
-    // simple implementation
+    // NAIVE IMPLEMENTATION
+
     public string GetPath( JsonElement targetElement )
     {
         var stack = new Stack<(JsonElement element, string path)>( 4 );
@@ -130,4 +211,5 @@ public class JsonPathBuilder
     }
 
 #endif
+*/
 }

@@ -6,8 +6,8 @@ namespace Hyperbee.Json;
 
 internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
 {
-    static readonly Func<JsonElement, int> __getIdx;
-    static readonly Func<JsonElement, JsonDocument> __getParent;
+    internal static readonly Func<JsonElement, int> GetIdx;
+    internal static readonly Func<JsonElement, JsonDocument> GetParent;
 
     static JsonElementPositionComparer()
     {
@@ -36,7 +36,7 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         ilIdx.Emit( OpCodes.Ldfld, idxField );
         ilIdx.Emit( OpCodes.Ret );
 
-        __getIdx = (Func<JsonElement, int>) getIdxDynamicMethod.CreateDelegate( typeof( Func<JsonElement, int> ) );
+        GetIdx = (Func<JsonElement, int>) getIdxDynamicMethod.CreateDelegate( typeof( Func<JsonElement, int> ) );
 
         // Create DynamicMethod for _parent field 
 
@@ -51,7 +51,7 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         ilParent.Emit( OpCodes.Ldfld, parentField );
         ilParent.Emit( OpCodes.Ret );
 
-        __getParent = (Func<JsonElement, JsonDocument>) getParentDynamicMethod.CreateDelegate( typeof( Func<JsonElement, JsonDocument> ) );
+        GetParent = (Func<JsonElement, JsonDocument>) getParentDynamicMethod.CreateDelegate( typeof( Func<JsonElement, JsonDocument> ) );
     }
 
     public bool Equals( JsonElement x, JsonElement y )
@@ -66,21 +66,21 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         // BF: JsonElement ctor notes that parent may be null in some enumeration conditions.
         // This check may not be reliable. If so, should be ok to remove the parent check.
 
-        var xParent = __getParent( x );
-        var yParent = __getParent( y );
+        var xParent = GetParent( x );
+        var yParent = GetParent( y );
 
         if ( !ReferenceEquals( xParent, yParent ) )
             return false;
 
         // check idx values
 
-        return __getIdx( x ) == __getIdx( y );
+        return GetIdx( x ) == GetIdx( y );
     }
 
     public int GetHashCode( JsonElement obj )
     {
-        var parent = __getParent( obj );
-        var idx = __getIdx( obj );
+        var parent = GetParent( obj );
+        var idx = GetIdx( obj );
 
         return HashCode.Combine( parent, idx );
     }

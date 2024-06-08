@@ -19,7 +19,7 @@ public class JsonPathBuilder
         _rootElement = rootElement;
     }
 
-    #if USE_OPTIMIZED
+#if USE_OPTIMIZED
 
     // avoid allocating full paths for every node by building a dictionary
     // of (parentId, segment) pairs.
@@ -28,7 +28,7 @@ public class JsonPathBuilder
     // be able to build a fast path that only walks until it finds an _idx
     // match in the dictionary. this would allow us to move the parentMap
     // to a member and would give us an effective cache mechanism.
-    
+
     public string GetPath( JsonElement targetElement )
     {
         var stack = new Stack<(int elementId, JsonElement element)>();
@@ -88,7 +88,7 @@ public class JsonPathBuilder
         return string.Join( string.Empty, pathSegments );
     }
 
-    #else
+#else
     
     // simple implementation
     public string GetPath( JsonElement targetElement )
@@ -129,5 +129,5 @@ public class JsonPathBuilder
         return null; // Target no
     }
 
-    #endif
+#endif
 }

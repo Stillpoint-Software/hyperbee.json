@@ -186,7 +186,7 @@ public abstract class JsonPathVisitorBase<TElement>
     }
 
     // abstract methods
-    
+
     internal abstract IEnumerable<(TElement, string)> EnumerateChildValues( TElement value );
 
     internal abstract TElement GetElementAt( TElement value, int index );
@@ -198,7 +198,7 @@ public abstract class JsonPathVisitorBase<TElement>
     internal abstract bool TryGetChildValue( in TElement current, ReadOnlySpan<char> childKey, out TElement childValue );
 
     // visitor context
-    
+
     internal sealed class VisitorArgs( in TElement value, in TElement root, in IImmutableStack<JsonPathToken> tokens )
     {
         public readonly TElement Value = value;

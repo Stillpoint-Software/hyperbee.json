@@ -28,8 +28,8 @@ public class JsonPathQueryTokenizerTests
     [DataRow( "$..book[?(@.isbn)]", "{$|k};{..|s};{book|k};{?(@.isbn)|s}" )]
     [DataRow( "$..book[?(@.price<10)]", "{$|k};{..|s};{book|k};{?(@.price<10)|s}" )]
     [DataRow( "$..*", "{$|k};{..|s};{*|s}" )]
-    [DataRow( @"$.store.book[?(@path !== ""$['store']['book'][0]"")]", @"{$|k};{store|k};{book|k};{?(@path !== ""$['store']['book'][0]"")|s}" )]
-    [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]", @"{$|k};{..|s};{book|k};{?(@.price == 8.99 && @.category == ""fiction"")|s}" )]
+    [DataRow( """$.store.book[?(@path !== "$['store']['book'][0]")]""", """{$|k};{store|k};{book|k};{?(@path !== "$['store']['book'][0]")|s}""" )]
+    [DataRow( """$..book[?(@.price == 8.99 && @.category == "fiction")]""", """{$|k};{..|s};{book|k};{?(@.price == 8.99 && @.category == "fiction")|s}""" )]
     public void Should_tokenize_json_path( string jsonPath, string expected )
     {
         // arrange

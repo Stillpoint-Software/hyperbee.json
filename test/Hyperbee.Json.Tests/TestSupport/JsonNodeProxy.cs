@@ -4,11 +4,9 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Tests.TestSupport;
 
-public class JsonNodeProxy : IJsonPathProxy
+public class JsonNodeProxy( string source ) : IJsonPathProxy
 {
-    public JsonNodeProxy( string source ) => Internal = JsonNode.Parse( source );
-
-    protected JsonNode Internal { get; set; }
+    protected JsonNode Internal { get; set; } = JsonNode.Parse( source );
     public object Source => Internal;
     public IEnumerable<dynamic> Select( string query ) => Internal.Select( query );
 

@@ -6,7 +6,7 @@ using Hyperbee.Json.Tokenizer;
 
 namespace Hyperbee.Json;
 
-internal abstract class JsonPathVisitorBase<TElement>
+public abstract class JsonPathVisitorBase<TElement>
 {
     internal IEnumerable<TElement> ExpressionVisitor( VisitorArgs args, JsonPathEvaluator<TElement> evaluator )
     {
@@ -151,15 +151,13 @@ internal abstract class JsonPathVisitorBase<TElement>
         } while ( nodes.TryPop( out args ) );
     }
 
-    internal static IEnumerable<int> EnumerateArrayIndices( int length )
+    private static IEnumerable<int> EnumerateArrayIndices( int length )
     {
         for ( var index = length - 1; index >= 0; index-- )
             yield return index;
     }
 
-    internal abstract IEnumerable<(TElement, string)> EnumerateChildValues( TElement value );
-
-    internal IEnumerable<int> EnumerateSlice( TElement value, string sliceExpr )
+    private IEnumerable<int> EnumerateSlice( TElement value, string sliceExpr )
     {
         if ( !IsArray( value, out var length ) )
             yield break;
@@ -187,6 +185,10 @@ internal abstract class JsonPathVisitorBase<TElement>
         }
     }
 
+    // abstract methods
+    
+    internal abstract IEnumerable<(TElement, string)> EnumerateChildValues( TElement value );
+
     internal abstract TElement GetElementAt( TElement value, int index );
 
     internal abstract bool IsObjectOrArray( TElement current );
@@ -195,6 +197,8 @@ internal abstract class JsonPathVisitorBase<TElement>
 
     internal abstract bool TryGetChildValue( in TElement current, ReadOnlySpan<char> childKey, out TElement childValue );
 
+    // visitor context
+    
     internal sealed class VisitorArgs( in TElement value, in TElement root, in IImmutableStack<JsonPathToken> tokens )
     {
         public readonly TElement Value = value;

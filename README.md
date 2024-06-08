@@ -1,10 +1,10 @@
 ﻿# JSONPath
 
-A C# implementation of JSONPath for .NET `System.Text.Json` with a plugable expression selector. 
+A C# implementation of JSONPath for .NET `System.Text.Json` and `System.Text.Json.Nodes`. 
 
 ## Why
 
-.NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to create a JSONPath library for .NET that will
+.NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to provide a JSONPath library for .NET that will
 
 * Directly leverage `System.Text.Json` 
 * Align with the draft JSONPath Specification RFC 9535 
@@ -13,8 +13,6 @@ A C# implementation of JSONPath for .NET `System.Text.Json` with a plugable expr
 * Function according to the emerging consensus of use based on the majority of existing implementations; except through concious exception or deference to the RFC.
   * [Parser Comparison Results](https://cburgmer.github.io/json-path-comparison)
   * [Parser Comparison GitHub](https://github.com/cburgmer/json-path-comparison/tree/master)
-* Provide a plugable model for expression filter handling.
-
 
 ## JSONPath Expressions
 
@@ -121,55 +119,6 @@ Given a simple JSON structure that represents a bookstore:
 |`//*`                  | `$..*`                    | All elements in XML document; all members of JSON structure 
 |`/store/book/[position()!=1]` | `$.store.book[?(@path !== "$[\'store\'][\'book\'][0]")]` | All books besides that at the path pointing to the first | `@path` not present in original spec
 
-## Filter Evaluators
-
-`Hyperbee.Json` provides out-of-the-box expression evaluators for handling JsonPath filter selectors.
-
-| Name                    | Description |
-| ----------------------- | ----------- |
-| JsonPathExpressionEvaluator\<TType>| An `Expression` based filter evaluator that supports RFC 9535 filter syntax|
-| JsonPathFuncEvaluator   | A simple `Func<>` evaluator suitable for simple, custom expression handling |
-| JsonPathNullEvaluator   | An evaluator that does nothing |
-
-You can create your own evaluator by deriving from `IJsonPathFilterEvaluator`. 
-
-```csharp
-// A custom filter evaluator that executes a func
-
-public class JsonPathFuncEvaluator<TType> : IJsonPathFilterEvaluator<TType>
-{
-    private readonly JsonPathEvaluator _func;
-
-    public JsonPathFuncEvaluator( JsonPathEvaluator func )
-    {
-        _evaluator = func;
-    }
-
-    public object Evaluator( string script, JsonElement current, string context )
-    {
-        return _func?.Invoke( script, current, context );
-    }
-}
-```
-
-You can set a global default for an evaluator.
-
-```csharp
-JsonPath.DefaultEvaluator = new JsonPathExpressionEvaluator();
-```
-
-Or you can wire it up through dependency injection.
-
-```csharp
-public static IServiceCollection AddJsonPath( this IServiceCollection services, IConfiguration config )
-{
-    services.AddTransient<IJsonPathFilterEvaluator,JsonPathExpressionEvaluator>();
-    services.AddTransient<JsonPath>();
-
-    return services;
-}
-```
-
 ## Code examples
 A couple of trivial code examples. Review the tests for detailed examples.
 
@@ -216,13 +165,14 @@ foreach( var element in matches )
 };
 
 ```
+## Helper Classes
 
-## Dynamic Object Serialization
+### Dynamic Object Serialization
 
 Basic support is provided for serializing to and from dynamic objects through the use of a custom `JsonConverter`.
 The `DynamicJsonConverter` converter class is useful for simple scenareos. It is intended as a simple helper for basic use cases only.
 
-### DynamicJsonConverter
+#### DynamicJsonConverter
 
 ```csharp
 var serializerOptions = new JsonSerializerOptions
@@ -240,11 +190,19 @@ var jsonOutput = JsonSerializer.Serialize<dynamic>( jobject, serializerOptions )
 Assert.IsTrue( jsonInput == jsonOutput );
 ```
 
-#### Enum handling
+##### Enum handling
 
 When deserializing, the converter will treat enumerations as strings. You can override this behavior by setting 
 the `TryReadValueHandler` on the converter. This handler will allow you to intercept and convert string and
 numeric values during the deserialization process.
+
+### Equality Helpers
+* `JsonElement.DeepEquals` 
+* `JsonElementEqualityDeepComparer`
+* `JsonElementPositionComparer`
+
+### Property Diving
+* `JsonElement.GetPropertyFromKey` 
 
 ## Acknowlegements
 

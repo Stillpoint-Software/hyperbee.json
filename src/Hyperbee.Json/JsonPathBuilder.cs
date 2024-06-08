@@ -97,6 +97,7 @@ public class JsonPathBuilder
         return string.Join( string.Empty, pathSegments );
     }
 
+/*
     public string GetPath( JsonElement targetElement )
     {
         var stack = new Stack<(JsonElement element, string path)>( 4 );

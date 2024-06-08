@@ -26,25 +26,25 @@ public class JsonPathBuilder
     }
 
     // OPTIMIZED TO USE SEGMENT DICTIONARY CACHE
-    
+
     public string GetPath( JsonElement targetElement )
     {
         // quick out
-        
+
         var targetId = GetIdx( targetElement );
-        
+
         if ( _parentMap.ContainsKey( targetId ) )
             return BuildPath( targetId, _parentMap );
-        
+
         // take a walk
-        
+
         var stack = new Stack<JsonElement>( [_rootElement] );
 
         while ( stack.Count > 0 )
         {
             var currentElement = stack.Pop();
             var elementId = GetIdx( currentElement );
-            
+
             if ( _comparer.Equals( currentElement, targetElement ) )
                 return BuildPath( elementId, _parentMap );
 
@@ -54,10 +54,10 @@ public class JsonPathBuilder
                     foreach ( var property in currentElement.EnumerateObject() )
                     {
                         var childElementId = GetIdx( property.Value );
-                        
+
                         if ( !_parentMap.ContainsKey( childElementId ) )
                             _parentMap[childElementId] = (elementId, $".{property.Name}");
-                        
+
                         stack.Push( property.Value );
                     }
                     break;
@@ -70,7 +70,7 @@ public class JsonPathBuilder
 
                         if ( !_parentMap.ContainsKey( childElementId ) )
                             _parentMap[childElementId] = (elementId, $"[{arrayIdx}]");
-                        
+
                         stack.Push( element );
                         arrayIdx++;
                     }
@@ -100,116 +100,116 @@ public class JsonPathBuilder
 
         return string.Join( string.Empty, pathSegments );
     }
-    
-/*
-#if USE_OPTIMIZED
 
-    // OPTIMIZED TO USE SEGMENT DICTIONARY
+    /*
+    #if USE_OPTIMIZED
 
-    // avoid allocating full paths for every node by building a dictionary
-    // of (parentId, segment) pairs.
+        // OPTIMIZED TO USE SEGMENT DICTIONARY
 
-    public string GetPath( JsonElement targetElement )
-    {
-        var stack = new Stack<(int elementId, JsonElement element)>();
-        var parentMap = new Dictionary<int, (int parentId, string segment)>();
-        var currentId = 0;
+        // avoid allocating full paths for every node by building a dictionary
+        // of (parentId, segment) pairs.
 
-        stack.Push( (currentId, _rootElement) );
-        parentMap[currentId] = (-1, "$");
-        currentId++;
-
-        while ( stack.Count > 0 )
+        public string GetPath( JsonElement targetElement )
         {
-            var (elementId, currentElement) = stack.Pop();
+            var stack = new Stack<(int elementId, JsonElement element)>();
+            var parentMap = new Dictionary<int, (int parentId, string segment)>();
+            var currentId = 0;
 
-            if ( _comparer.Equals( currentElement, targetElement ) )
-                return BuildPath( elementId, parentMap );
+            stack.Push( (currentId, _rootElement) );
+            parentMap[currentId] = (-1, "$");
+            currentId++;
 
-            switch ( currentElement.ValueKind )
+            while ( stack.Count > 0 )
             {
-                case JsonValueKind.Object:
-                    foreach ( var property in currentElement.EnumerateObject() )
-                    {
-                        var childElementId = currentId++;
-                        parentMap[childElementId] = (elementId, $".{property.Name}");
-                        stack.Push( (childElementId, property.Value) );
-                    }
-                    break;
+                var (elementId, currentElement) = stack.Pop();
 
-                case JsonValueKind.Array:
-                    var arrayIdx = 0;
-                    foreach ( var element in currentElement.EnumerateArray() )
-                    {
-                        var childElementId = currentId++;
-                        parentMap[childElementId] = (elementId, $"[{arrayIdx}]");
-                        stack.Push( (childElementId, element) );
-                        arrayIdx++;
-                    }
-                    break;
+                if ( _comparer.Equals( currentElement, targetElement ) )
+                    return BuildPath( elementId, parentMap );
+
+                switch ( currentElement.ValueKind )
+                {
+                    case JsonValueKind.Object:
+                        foreach ( var property in currentElement.EnumerateObject() )
+                        {
+                            var childElementId = currentId++;
+                            parentMap[childElementId] = (elementId, $".{property.Name}");
+                            stack.Push( (childElementId, property.Value) );
+                        }
+                        break;
+
+                    case JsonValueKind.Array:
+                        var arrayIdx = 0;
+                        foreach ( var element in currentElement.EnumerateArray() )
+                        {
+                            var childElementId = currentId++;
+                            parentMap[childElementId] = (elementId, $"[{arrayIdx}]");
+                            stack.Push( (childElementId, element) );
+                            arrayIdx++;
+                        }
+                        break;
+                }
             }
+
+            return null; // Target not found
         }
 
-        return null; // Target not found
-    }
-
-    private static string BuildPath( int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
-    {
-        var pathSegments = new Stack<string>();
-        var currentId = elementId;
-
-        while ( currentId != -1 )
+        private static string BuildPath( int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
         {
-            var (parentId, segment) = parentMap[currentId];
-            pathSegments.Push( segment );
-            currentId = parentId;
-        }
+            var pathSegments = new Stack<string>();
+            var currentId = elementId;
 
-        return string.Join( string.Empty, pathSegments );
-    }
-
-#else
-    
-    // NAIVE IMPLEMENTATION
-
-    public string GetPath( JsonElement targetElement )
-    {
-        var stack = new Stack<(JsonElement element, string path)>( 4 );
-        stack.Push( (_rootElement, "$") );
-
-        while ( stack.Count > 0 )
-        {
-            var (currentElement, currentPath) = stack.Pop();
-
-            if ( _comparer.Equals( currentElement, targetElement ) )
-                return currentPath;
-
-            switch ( currentElement.ValueKind )
+            while ( currentId != -1 )
             {
-                case JsonValueKind.Object:
-                    foreach ( var property in currentElement.EnumerateObject() )
-                    {
-                        var newPath = $"{currentPath}.{property.Name}";
-                        stack.Push( (property.Value, newPath) );
-                    }
-
-                    break;
-
-                case JsonValueKind.Array:
-                    var index = 0;
-                    foreach ( var element in currentElement.EnumerateArray() )
-                    {
-                        var newPath = $"{currentPath}[{index++}]";
-                        stack.Push( (element, newPath) );
-                    }
-
-                    break;
+                var (parentId, segment) = parentMap[currentId];
+                pathSegments.Push( segment );
+                currentId = parentId;
             }
+
+            return string.Join( string.Empty, pathSegments );
         }
 
-        return null; // Target no
-    }
+    #else
 
-#endif
-*/
+        // NAIVE IMPLEMENTATION
+
+        public string GetPath( JsonElement targetElement )
+        {
+            var stack = new Stack<(JsonElement element, string path)>( 4 );
+            stack.Push( (_rootElement, "$") );
+
+            while ( stack.Count > 0 )
+            {
+                var (currentElement, currentPath) = stack.Pop();
+
+                if ( _comparer.Equals( currentElement, targetElement ) )
+                    return currentPath;
+
+                switch ( currentElement.ValueKind )
+                {
+                    case JsonValueKind.Object:
+                        foreach ( var property in currentElement.EnumerateObject() )
+                        {
+                            var newPath = $"{currentPath}.{property.Name}";
+                            stack.Push( (property.Value, newPath) );
+                        }
+
+                        break;
+
+                    case JsonValueKind.Array:
+                        var index = 0;
+                        foreach ( var element in currentElement.EnumerateArray() )
+                        {
+                            var newPath = $"{currentPath}[{index++}]";
+                            stack.Push( (element, newPath) );
+                        }
+
+                        break;
+                }
+            }
+
+            return null; // Target no
+        }
+
+    #endif
+    */
 }

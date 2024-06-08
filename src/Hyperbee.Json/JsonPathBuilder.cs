@@ -1,6 +1,4 @@
-﻿//#define USE_OPTIMIZED
-
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Hyperbee.Json;
 
@@ -102,74 +100,6 @@ public class JsonPathBuilder
     }
     
 /*
-#if USE_OPTIMIZED
-
-    // OPTIMIZED TO USE SEGMENT DICTIONARY
-
-    // avoid allocating full paths for every node by building a dictionary
-    // of (parentId, segment) pairs.
-
-    public string GetPath( JsonElement targetElement )
-    {
-        var stack = new Stack<(int elementId, JsonElement element)>();
-        var parentMap = new Dictionary<int, (int parentId, string segment)>();
-        var currentId = 0;
-
-        stack.Push( (currentId, _rootElement) );
-        parentMap[currentId] = (-1, "$");
-        currentId++;
-
-        while ( stack.Count > 0 )
-        {
-            var (elementId, currentElement) = stack.Pop();
-
-            if ( _comparer.Equals( currentElement, targetElement ) )
-                return BuildPath( elementId, parentMap );
-
-            switch ( currentElement.ValueKind )
-            {
-                case JsonValueKind.Object:
-                    foreach ( var property in currentElement.EnumerateObject() )
-                    {
-                        var childElementId = currentId++;
-                        parentMap[childElementId] = (elementId, $".{property.Name}");
-                        stack.Push( (childElementId, property.Value) );
-                    }
-                    break;
-
-                case JsonValueKind.Array:
-                    var arrayIdx = 0;
-                    foreach ( var element in currentElement.EnumerateArray() )
-                    {
-                        var childElementId = currentId++;
-                        parentMap[childElementId] = (elementId, $"[{arrayIdx}]");
-                        stack.Push( (childElementId, element) );
-                        arrayIdx++;
-                    }
-                    break;
-            }
-        }
-
-        return null; // Target not found
-    }
-
-    private static string BuildPath( int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
-    {
-        var pathSegments = new Stack<string>();
-        var currentId = elementId;
-
-        while ( currentId != -1 )
-        {
-            var (parentId, segment) = parentMap[currentId];
-            pathSegments.Push( segment );
-            currentId = parentId;
-        }
-
-        return string.Join( string.Empty, pathSegments );
-    }
-
-#else
-    
     // NAIVE IMPLEMENTATION
 
     public string GetPath( JsonElement targetElement )
@@ -209,7 +139,5 @@ public class JsonPathBuilder
 
         return null; // Target no
     }
-
-#endif
 */
 }

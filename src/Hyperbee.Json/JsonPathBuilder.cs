@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Hyperbee.Json;
 
@@ -98,49 +98,49 @@ public class JsonPathBuilder
 
         return string.Join( string.Empty, pathSegments );
     }
-    
-/*
-    // NAIVE IMPLEMENTATION
 
-        public string GetPath( JsonElement targetElement )
-        {
-            var stack = new Stack<(JsonElement element, string path)>( 4 );
-            stack.Push( (_rootElement, "$") );
+    /*
+        // NAIVE IMPLEMENTATION
 
-            while ( stack.Count > 0 )
+            public string GetPath( JsonElement targetElement )
             {
-                var (currentElement, currentPath) = stack.Pop();
+                var stack = new Stack<(JsonElement element, string path)>( 4 );
+                stack.Push( (_rootElement, "$") );
 
-                if ( _comparer.Equals( currentElement, targetElement ) )
-                    return currentPath;
-
-                switch ( currentElement.ValueKind )
+                while ( stack.Count > 0 )
                 {
-                    case JsonValueKind.Object:
-                        foreach ( var property in currentElement.EnumerateObject() )
-                        {
-                            var newPath = $"{currentPath}.{property.Name}";
-                            stack.Push( (property.Value, newPath) );
-                        }
+                    var (currentElement, currentPath) = stack.Pop();
 
-                        break;
+                    if ( _comparer.Equals( currentElement, targetElement ) )
+                        return currentPath;
 
-                    case JsonValueKind.Array:
-                        var index = 0;
-                        foreach ( var element in currentElement.EnumerateArray() )
-                        {
-                            var newPath = $"{currentPath}[{index++}]";
-                            stack.Push( (element, newPath) );
-                        }
+                    switch ( currentElement.ValueKind )
+                    {
+                        case JsonValueKind.Object:
+                            foreach ( var property in currentElement.EnumerateObject() )
+                            {
+                                var newPath = $"{currentPath}.{property.Name}";
+                                stack.Push( (property.Value, newPath) );
+                            }
 
-                        break;
+                            break;
+
+                        case JsonValueKind.Array:
+                            var index = 0;
+                            foreach ( var element in currentElement.EnumerateArray() )
+                            {
+                                var newPath = $"{currentPath}[{index++}]";
+                                stack.Push( (element, newPath) );
+                            }
+
+                            break;
+                    }
                 }
+
+                return null; // Target no
             }
 
             return null; // Target no
         }
-
-        return null; // Target no
-    }
-*/
+    */
 }

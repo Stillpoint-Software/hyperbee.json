@@ -21,10 +21,10 @@ public class JsonPathLengthFunction<TType>( string methodName, IList<string> arg
     {
         if ( arguments.Count != 1 )
         {
-            return Expression.Block(
-                Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) ),
-                Expression.Constant( 0F )
-            );
+            return //Expression.Block(
+                Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );//,
+                //Expression.Constant( 0F )
+            //);
         }
 
         var queryExp = Expression.Constant( arguments[0] );

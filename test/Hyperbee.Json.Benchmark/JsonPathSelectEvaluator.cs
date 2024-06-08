@@ -22,16 +22,13 @@ public class JsonPathSelectEvaluator
         "$..book[?(@.isbn)]",
         "$.store.book[?(@.price == 8.99)]",
         "$..*",
-        //"""$.store.book[?(path(@.price) != '$.store.book[0].price')]""",
-        """$..book[?(@.price == 8.99 && @.category == 'fiction')]"""
+        "$..book[?(@.price == 8.99 && @.category == 'fiction')]"
     )]
     public string Filter;
 
     public JsonNode _node;
     public JsonElement _element;
 
-    private JsonPathExpressionElementEvaluator _expressionElementEvaluator;
-    private JsonPathExpressionNodeEvaluator _expressionNodeEvaluator;
     private JObject _jObject;
 
     [GlobalSetup]
@@ -79,22 +76,19 @@ public class JsonPathSelectEvaluator
         _jObject = JObject.Parse( document );
 
         _node = JsonNode.Parse( document )!;
-        _expressionNodeEvaluator = new JsonPathExpressionNodeEvaluator();
-
         _element = JsonDocument.Parse( document ).RootElement;
-        _expressionElementEvaluator = new JsonPathExpressionElementEvaluator();
     }
 
     [Benchmark]
     public void JsonPath_ExpressionEvaluator_JsonElement()
     {
-        var _ = _element.Select( Filter, _expressionElementEvaluator ).ToArray();
+        var _ = _element.Select( Filter ).ToArray();
     }
 
     [Benchmark]
     public void JsonPath_ExpressionEvaluator_JsonNode()
     {
-        var _ = _node.Select( Filter, _expressionNodeEvaluator ).ToArray();
+        var _ = _node.Select( Filter ).ToArray();
     }
 
     [Benchmark]

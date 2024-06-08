@@ -216,7 +216,7 @@ public class JsonPathExpressionTests : JsonTestBase
             var source = GetDocument<JsonDocument>();
 
             // act
-            return source.Select( filter, new JsonPathExpressionElementEvaluator() ).First().GetSingle();
+            return source.Select( filter ).First().GetSingle();
         }
         else
         {
@@ -224,7 +224,7 @@ public class JsonPathExpressionTests : JsonTestBase
             var source = GetDocument<JsonNode>();
 
             // act
-            return source.Select( filter, new JsonPathExpressionNodeEvaluator() ).First().GetValue<float>();
+            return source.Select( filter ).First().GetValue<float>();
         }
     }
 }

@@ -58,28 +58,18 @@ public class JsonPathParseAndSelect
     )]
     public string Document;
 
-    private JsonPathExpressionElementEvaluator _expressionElementEvaluator;
-    private JsonPathExpressionNodeEvaluator _expressionNodeEvaluator;
-
-    [GlobalSetup]
-    public void Setup()
-    {
-        _expressionNodeEvaluator = new JsonPathExpressionNodeEvaluator();
-        _expressionElementEvaluator = new JsonPathExpressionElementEvaluator();
-    }
-
     [Benchmark]
     public void JsonPath_ExpressionEvaluator_JsonElement()
     {
         var element = JsonDocument.Parse( Document ).RootElement;
-        var _ = element.Select( Filter, _expressionElementEvaluator ).ToArray();
+        var _ = element.Select( Filter ).ToArray();
     }
 
     [Benchmark]
     public void JsonPath_ExpressionEvaluator_JsonNode()
     {
         var node = JsonNode.Parse( Document )!;
-        var _ = node.Select( Filter, _expressionNodeEvaluator ).ToArray();
+        var _ = node.Select( Filter ).ToArray();
     }
 
     [Benchmark]

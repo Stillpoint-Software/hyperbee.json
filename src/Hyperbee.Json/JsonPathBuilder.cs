@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 
 namespace Hyperbee.Json;
 
@@ -24,25 +24,25 @@ public class JsonPathBuilder
     }
 
     // OPTIMIZED TO USE SEGMENT DICTIONARY CACHE
-    
+
     public string GetPath( JsonElement targetElement )
     {
         // quick out
-        
+
         var targetId = GetIdx( targetElement );
-        
+
         if ( _parentMap.ContainsKey( targetId ) )
             return BuildPath( targetId, _parentMap );
-        
+
         // take a walk
-        
+
         var stack = new Stack<JsonElement>( [_rootElement] );
 
         while ( stack.Count > 0 )
         {
             var currentElement = stack.Pop();
             var elementId = GetIdx( currentElement );
-            
+
             if ( _comparer.Equals( currentElement, targetElement ) )
                 return BuildPath( elementId, _parentMap );
 
@@ -52,10 +52,10 @@ public class JsonPathBuilder
                     foreach ( var property in currentElement.EnumerateObject() )
                     {
                         var childElementId = GetIdx( property.Value );
-                        
+
                         if ( !_parentMap.ContainsKey( childElementId ) )
                             _parentMap[childElementId] = (elementId, $".{property.Name}");
-                        
+
                         stack.Push( property.Value );
                     }
                     break;
@@ -68,7 +68,7 @@ public class JsonPathBuilder
 
                         if ( !_parentMap.ContainsKey( childElementId ) )
                             _parentMap[childElementId] = (elementId, $"[{arrayIdx}]");
-                        
+
                         stack.Push( element );
                         arrayIdx++;
                     }
@@ -102,39 +102,42 @@ public class JsonPathBuilder
 /*
     // NAIVE IMPLEMENTATION
 
-    public string GetPath( JsonElement targetElement )
-    {
-        var stack = new Stack<(JsonElement element, string path)>( 4 );
-        stack.Push( (_rootElement, "$") );
-
-        while ( stack.Count > 0 )
+        public string GetPath( JsonElement targetElement )
         {
-            var (currentElement, currentPath) = stack.Pop();
+            var stack = new Stack<(JsonElement element, string path)>( 4 );
+            stack.Push( (_rootElement, "$") );
 
-            if ( _comparer.Equals( currentElement, targetElement ) )
-                return currentPath;
-
-            switch ( currentElement.ValueKind )
+            while ( stack.Count > 0 )
             {
-                case JsonValueKind.Object:
-                    foreach ( var property in currentElement.EnumerateObject() )
-                    {
-                        var newPath = $"{currentPath}.{property.Name}";
-                        stack.Push( (property.Value, newPath) );
-                    }
+                var (currentElement, currentPath) = stack.Pop();
 
-                    break;
+                if ( _comparer.Equals( currentElement, targetElement ) )
+                    return currentPath;
 
-                case JsonValueKind.Array:
-                    var index = 0;
-                    foreach ( var element in currentElement.EnumerateArray() )
-                    {
-                        var newPath = $"{currentPath}[{index++}]";
-                        stack.Push( (element, newPath) );
-                    }
+                switch ( currentElement.ValueKind )
+                {
+                    case JsonValueKind.Object:
+                        foreach ( var property in currentElement.EnumerateObject() )
+                        {
+                            var newPath = $"{currentPath}.{property.Name}";
+                            stack.Push( (property.Value, newPath) );
+                        }
 
-                    break;
+                        break;
+
+                    case JsonValueKind.Array:
+                        var index = 0;
+                        foreach ( var element in currentElement.EnumerateArray() )
+                        {
+                            var newPath = $"{currentPath}[{index++}]";
+                            stack.Push( (element, newPath) );
+                        }
+
+                        break;
+                }
             }
+
+            return null; // Target no
         }
 
         return null; // Target no

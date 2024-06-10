@@ -28,7 +28,7 @@ internal record JsonPathToken
                 return false;
 
             var selectorKind = Selectors[0].SelectorKind;
-            
+
             return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
                    selectorKind == SelectorKind.Dot ||
                    selectorKind == SelectorKind.Index ||

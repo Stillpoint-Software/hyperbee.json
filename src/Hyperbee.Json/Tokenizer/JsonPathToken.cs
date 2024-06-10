@@ -1,5 +1,6 @@
 ﻿
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Hyperbee.Json.Tokenizer;
 
@@ -20,16 +21,19 @@ internal record JsonPathToken
 
     public bool Singular
     {
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         get
         {
             if ( Selectors.Length != 1 )
                 return false;
 
-            return Selectors[0].SelectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
-                   Selectors[0].SelectorKind == SelectorKind.Dot ||
-                   Selectors[0].SelectorKind == SelectorKind.Index ||
-                   Selectors[0].SelectorKind == SelectorKind.Name ||
-                   Selectors[0].SelectorKind == SelectorKind.Root;
+            var selectorKind = Selectors[0].SelectorKind;
+            
+            return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
+                   selectorKind == SelectorKind.Dot ||
+                   selectorKind == SelectorKind.Index ||
+                   selectorKind == SelectorKind.Name ||
+                   selectorKind == SelectorKind.Root;
         }
     }
 

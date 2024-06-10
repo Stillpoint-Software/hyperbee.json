@@ -17,13 +17,13 @@ public class JsonPathBuilder
     {
         _rootElement = rootElement;
 
-        // we will avoid allocating full paths for every node by
-        // building a dictionary cache of (parentId, segment) pairs.
+        // avoid allocating full paths for every node by building
+        // a dictionary of (parentId, segment) pairs.
 
         _parentMap[GetUniqueId( _rootElement )] = (-1, "$"); // seed parent map with root
     }
 
-    public string GetPath( JsonElement targetElement )
+    public string GetPath( in JsonElement targetElement )
     {
         // quick out
 
@@ -77,12 +77,12 @@ public class JsonPathBuilder
         return null; // target not found
     }
 
-    private static int GetUniqueId( JsonElement element )
+    private static int GetUniqueId( in JsonElement element )
     {
         return JsonElementInternal.GetIdx( element );
     }
 
-    private static string BuildPath( int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
+    private static string BuildPath( in int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
     {
         var pathSegments = new Stack<string>();
         var currentId = elementId;

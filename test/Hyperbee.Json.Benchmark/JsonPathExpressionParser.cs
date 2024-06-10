@@ -2,7 +2,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
-using Hyperbee.Json.Evaluators;
 using Hyperbee.Json.Evaluators.Parser;
 
 namespace Hyperbee.Json.Benchmark;
@@ -21,14 +20,11 @@ public class JsonPathExpressionParser
     {
         _nodeExpressionContext = new ParseExpressionContext<JsonNode>(
             Expression.Parameter( typeof( JsonNode ) ),
-            Expression.Parameter( typeof( JsonNode ) ),
-            new JsonPathExpressionNodeEvaluator() );
-
+            Expression.Parameter( typeof( JsonNode ) ) ); 
 
         _elementExpressionContext = new ParseExpressionContext<JsonElement>(
             Expression.Parameter( typeof( JsonElement ) ),
-            Expression.Parameter( typeof( JsonElement ) ),
-            new JsonPathExpressionElementEvaluator() );
+            Expression.Parameter( typeof( JsonElement ) ) ); 
     }
 
     [Benchmark]

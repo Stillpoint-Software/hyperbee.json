@@ -16,6 +16,8 @@ internal record JsonPathToken
 {
     public SelectorDescriptor[] Selectors { get; init; }
 
+    public string FirstSelector => Selectors[0].Value;
+
     public bool Singular
     {
         get

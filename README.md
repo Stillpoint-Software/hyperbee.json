@@ -6,7 +6,7 @@ A C# implementation of JSONPath for .NET `System.Text.Json` and `System.Text.Jso
 
 .NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to provide a JSONPath library for .NET that will
 
-* Directly leverage `System.Text.Json` 
+* Directly leverage `System.Text.Json` and `System.Text.Json.Nodes`
 * Align with the draft JSONPath Specification RFC 9535 
   * [Working Draft](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base).
   * [Editor Copy](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html)
@@ -36,8 +36,7 @@ JSONPath allows the wildcard symbol `*` for member names and array indices. It
 borrows the descendant operator `..` from [E4X][e4x] and the array slice
 syntax proposal `[start:end:step]` from ECMASCRIPT 4.
 
-Expressions of the underlying scripting language (`<expr>`) can be used as an
-alternative to explicit names or indices, as in:
+Expressions can be used as an alternative to explicit names or indices, as in:
 
     $.store.book[(@.length-1)].title
 
@@ -197,12 +196,24 @@ the `TryReadValueHandler` on the converter. This handler will allow you to inter
 numeric values during the deserialization process.
 
 ### Equality Helpers
-* `JsonElement.DeepEquals` 
-* `JsonElementEqualityDeepComparer`
-* `JsonElementPositionComparer`
+
+| Method                             | Description
+|:-----------------------------------|:-----------
+| `JsonElement.DeepEquals`           | Performs a deep equals comparison 
+| `JsonElementEqualityDeepComparer`  | A deep equals equality comparer
+| `JsonElementPositionComparer`      | A position comparer that compares position in the backing stream
 
 ### Property Diving
-* `JsonElement.GetPropertyFromKey` 
+
+| Method                             | Description
+|:-----------------------------------|:-----------
+| `JsonElement.GetPropertyFromKey`   | Dives for properties using absolute keys like `$['store']['book'][2]['author']`
+
+### JsonElement Helpers
+
+| Method                             | Description
+|:-----------------------------------|:-----------
+| `JsonPathBuilder`                  | Returns the absolute JsonPath string for a given element
 
 ## Acknowlegements
 

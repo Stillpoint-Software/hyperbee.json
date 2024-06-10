@@ -7,18 +7,6 @@ namespace Hyperbee.Json.Extensions;
 
 public static class JsonElementExtensions
 {
-    // Is operations
-
-    public static bool IsNullOrUndefined( this JsonElement value )
-    {
-        return value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined;
-    }
-
-    public static bool IsObjectOrArray( this JsonElement value )
-    {
-        return value.ValueKind is JsonValueKind.Array or JsonValueKind.Object;
-    }
-
     // To operations
 
     public static dynamic ToDynamic( this JsonElement value, string path = null ) => new DynamicJsonElement( ref value, path );

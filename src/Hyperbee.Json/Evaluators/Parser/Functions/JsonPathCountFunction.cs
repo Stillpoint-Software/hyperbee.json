@@ -25,21 +25,16 @@ public class JsonPathCountFunction<TType>( string methodName, IList<string> argu
     {
         if ( arguments.Count != 1 )
         {
-            return Expression.Block(
-                Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) ),
-                Expression.Constant( 0F )
-            );
+            return Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) );
         }
 
         var queryExp = Expression.Constant( arguments[0] );
-        var evaluatorExp = Expression.Constant( context.Evaluator );
 
         return Expression.Convert( Expression.Call(
             CountMethod,
             Expression.Call( JsonPathHelper<TType>.SelectMethod,
                 context.Current,
                 context.Root,
-                queryExp,
-                evaluatorExp ) ), typeof( float ) );
+                queryExp ) ), typeof( float ) );
     }
 }

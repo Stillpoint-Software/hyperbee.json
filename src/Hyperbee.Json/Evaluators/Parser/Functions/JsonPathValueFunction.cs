@@ -10,20 +10,15 @@ public class JsonPathValueFunction<TType>( string methodName, IList<string> argu
     {
         if ( arguments.Count != 1 )
         {
-            return Expression.Block(
-                Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) ),
-                Expression.Constant( 0F )
-            );
+            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
         }
 
         var queryExp = Expression.Constant( arguments[0] );
-        var evaluatorExp = Expression.Constant( context.Evaluator );
 
         return Expression.Call(
             JsonPathHelper<TType>.GetFirstElementValueMethod,
             context.Current,
             context.Root,
-            queryExp,
-            evaluatorExp );
+            queryExp );
     }
 }

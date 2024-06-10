@@ -7,9 +7,8 @@ public class JsonPathElementFunction<TType>( ParseExpressionContext<TType> conte
     protected override Expression Evaluate( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {
         var queryExp = Expression.Constant( item.ToString() );
-        var evaluatorExp = Expression.Constant( context.Evaluator );
-
+        
         // Create a call expression for the extension method
-        return Expression.Call( JsonPathHelper<TType>.GetFirstElementValueMethod, context.Current, context.Root, queryExp, evaluatorExp );
+        return Expression.Call( JsonPathHelper<TType>.GetFirstElementValueMethod, context.Current, context.Root, queryExp );
     }
 }

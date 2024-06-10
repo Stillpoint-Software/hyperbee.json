@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Evaluators;
 using Hyperbee.Json.Evaluators.Parser;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Tests.TestSupport;
@@ -154,12 +153,10 @@ public class JsonPathExpressionTests : JsonTestBase
         var expression = sourceType == typeof( JsonElement )
             ? JsonPathExpression.Parse( filter, new ParseExpressionContext<JsonElement>(
                 param,
-                param,
-                new JsonPathExpressionElementEvaluator() ) )
+                param ) )
             : JsonPathExpression.Parse( filter, new ParseExpressionContext<JsonNode>(
                 param,
-                param,
-                new JsonPathExpressionNodeEvaluator() ) );
+                param ) );
 
         return (expression, param);
     }
@@ -193,7 +190,7 @@ public class JsonPathExpressionTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var source = GetDocument<JsonDocument>();
-            var func = JsonPathExpression.Compile( filter, new JsonPathExpressionElementEvaluator() );
+            var func = JsonPathExpression.Compile<JsonElement>( filter );
 
             return func( source.RootElement, source.RootElement );
         }
@@ -201,7 +198,7 @@ public class JsonPathExpressionTests : JsonTestBase
         {
             // arrange 
             var source = GetDocument<JsonNode>();
-            var func = JsonPathExpression.Compile( filter, new JsonPathExpressionNodeEvaluator() );
+            var func = JsonPathExpression.Compile<JsonNode>( filter );
 
             // act
             return func( source, source );

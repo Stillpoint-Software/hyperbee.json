@@ -2,4 +2,4 @@
 
 namespace Hyperbee.Json.Evaluators.Parser;
 
-public record ParseExpressionContext<TType>( Expression Current, Expression Root, IJsonPathFilterEvaluator<TType> Evaluator );
+public record ParseExpressionContext<TType>( Expression Current, Expression Root );

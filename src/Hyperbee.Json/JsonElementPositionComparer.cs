@@ -1,16 +1,16 @@
-﻿using System.Reflection;
-using System.Reflection.Emit;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Hyperbee.Json;
 
 internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
 {
-    internal static readonly Func<JsonElement, int> GetIdx;
-    internal static readonly Func<JsonElement, JsonDocument> GetParent;
-
-    static JsonElementPositionComparer()
+    public bool Equals( JsonElement x, JsonElement y )
     {
+        // check for quick out
+
+        if ( x.ValueKind != y.ValueKind )
+            return false;
+
         // We want a fast comparer that will tell us if two JsonElements point to the same exact
         // backing data in the parent JsonDocument. JsonElement is a struct, and a value comparison
         // for equality won't give us reliable results and would be expensive.
@@ -22,65 +22,27 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         //
         // These arguments are stored in private fields and are not exposed. While note ideal, we
         // will access these fields through dynamic methods to use for our comparison.
-
-        // Create DynamicMethod for _idx field
-
-        var idxField = typeof( JsonElement ).GetField( "_idx", BindingFlags.NonPublic | BindingFlags.Instance );
-
-        if ( idxField == null )
-            throw new MissingFieldException( nameof( JsonElement ), "_idx" );
-
-        var getIdxDynamicMethod = new DynamicMethod( "GetIdx", typeof( int ), [typeof( JsonElement )], typeof( JsonElement ) );
-        var ilIdx = getIdxDynamicMethod.GetILGenerator();
-        ilIdx.Emit( OpCodes.Ldarg_0 );
-        ilIdx.Emit( OpCodes.Ldfld, idxField );
-        ilIdx.Emit( OpCodes.Ret );
-
-        GetIdx = (Func<JsonElement, int>) getIdxDynamicMethod.CreateDelegate( typeof( Func<JsonElement, int> ) );
-
-        // Create DynamicMethod for _parent field 
-
-        var parentField = typeof( JsonElement ).GetField( "_parent", BindingFlags.NonPublic | BindingFlags.Instance );
-
-        if ( parentField == null )
-            throw new MissingFieldException( nameof( JsonElement ), "_parent" );
-
-        var getParentDynamicMethod = new DynamicMethod( "GetParent", typeof( JsonDocument ), [typeof( JsonElement )], typeof( JsonElement ) );
-        var ilParent = getParentDynamicMethod.GetILGenerator();
-        ilParent.Emit( OpCodes.Ldarg_0 );
-        ilParent.Emit( OpCodes.Ldfld, parentField );
-        ilParent.Emit( OpCodes.Ret );
-
-        GetParent = (Func<JsonElement, JsonDocument>) getParentDynamicMethod.CreateDelegate( typeof( Func<JsonElement, JsonDocument> ) );
-    }
-
-    public bool Equals( JsonElement x, JsonElement y )
-    {
-        // check for quick out
-
-        if ( x.ValueKind != y.ValueKind )
-            return false;
-
+        
         // check parent documents
 
         // BF: JsonElement ctor notes that parent may be null in some enumeration conditions.
         // This check may not be reliable. If so, should be ok to remove the parent check.
 
-        var xParent = GetParent( x );
-        var yParent = GetParent( y );
+        var xParent = JsonElementInternal.GetParent( x );
+        var yParent = JsonElementInternal.GetParent( y );
 
         if ( !ReferenceEquals( xParent, yParent ) )
             return false;
 
         // check idx values
 
-        return GetIdx( x ) == GetIdx( y );
+        return JsonElementInternal.GetIdx( x ) == JsonElementInternal.GetIdx( y );
     }
 
     public int GetHashCode( JsonElement obj )
     {
-        var parent = GetParent( obj );
-        var idx = GetIdx( obj );
+        var parent = JsonElementInternal.GetParent( obj );
+        var idx = JsonElementInternal.GetIdx( obj );
 
         return HashCode.Combine( parent, idx );
     }

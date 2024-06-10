@@ -5,7 +5,7 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json;
 
-internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement>
+public class JsonPathElementVisitor : JsonPathVisitorBase<JsonElement>
 {
     internal override IEnumerable<(JsonElement, string)> EnumerateChildValues( JsonElement value )
     {
@@ -22,7 +22,7 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement>
                 }
             case JsonValueKind.Object:
                 {
-                    foreach ( var result in ProcessProperties( value.EnumerateObject() ) )
+                    foreach ( var result in ReverseProperties( value.EnumerateObject() ) )
                         yield return result;
 
                     break;
@@ -31,7 +31,7 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement>
 
         yield break;
 
-        static IEnumerable<(JsonElement, string)> ProcessProperties( JsonElement.ObjectEnumerator enumerator )
+        static IEnumerable<(JsonElement, string)> ReverseProperties( JsonElement.ObjectEnumerator enumerator )
         {
             if ( !enumerator.MoveNext() )
             {
@@ -40,7 +40,7 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement>
 
             var property = enumerator.Current;
 
-            foreach ( var result in ProcessProperties( enumerator ) )
+            foreach ( var result in ReverseProperties( enumerator ) )
             {
                 yield return result;
             }
@@ -58,9 +58,10 @@ internal class JsonDocumentPathVisitor : JsonPathVisitorBase<JsonElement>
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     internal override bool IsObjectOrArray( JsonElement value )
     {
-        return value.IsObjectOrArray();
+        return value.ValueKind is JsonValueKind.Array or JsonValueKind.Object;
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     internal override bool IsArray( JsonElement value, out int length )
     {
         if ( value.ValueKind == JsonValueKind.Array )

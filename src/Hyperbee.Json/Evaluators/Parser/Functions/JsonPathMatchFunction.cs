@@ -22,23 +22,18 @@ public class JsonPathMatchFunction<TType>( string methodName, IList<string> argu
     {
         if ( arguments.Count != 2 )
         {
-            return Expression.Block(
-                Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) ),
-                Expression.Constant( 0F )
-            );
+            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
         }
 
         var queryExp = Expression.Constant( arguments[0] );
         var regex = Expression.Constant( arguments[1] );
-        var evaluatorExp = Expression.Constant( context.Evaluator );
 
         return Expression.Call(
             MatchMethod,
             Expression.Call( JsonPathHelper<TType>.GetFirstElementMethod,
                 context.Current,
                 context.Root,
-                queryExp,
-                evaluatorExp )
+                queryExp )
             , regex );
     }
 

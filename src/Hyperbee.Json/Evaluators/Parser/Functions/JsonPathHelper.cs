@@ -5,7 +5,7 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Evaluators.Parser.Functions;
 
-public static class JsonPathHelper<TType>
+public static class JsonPathHelper<TType> //BF: Is this the right name? JsonPathFilterHelper ?
 {
     // ReSharper disable once StaticMemberInGenericType
     public static readonly MethodInfo GetFirstElementValueMethod;
@@ -23,9 +23,9 @@ public static class JsonPathHelper<TType>
     {
         var thisType = typeof( JsonPathHelper<TType> );
 
-        GetFirstElementValueMethod = thisType.GetMethod( nameof( GetFirstElementValue ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathFilterEvaluator<TType> )] );
-        GetFirstElementMethod = thisType.GetMethod( nameof( GetFirstElement ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathFilterEvaluator<TType> )] );
-        SelectMethod = thisType.GetMethod( nameof( Select ), [typeof( TType ), typeof( TType ), typeof( string ), typeof( IJsonPathFilterEvaluator<TType> )] );
+        GetFirstElementValueMethod = thisType.GetMethod( nameof( GetFirstElementValue ), [typeof( TType ), typeof( TType ), typeof( string ) ] );
+        GetFirstElementMethod = thisType.GetMethod( nameof( GetFirstElement ), [typeof( TType ), typeof( TType ), typeof( string ) ] );
+        SelectMethod = thisType.GetMethod( nameof( Select ), [typeof( TType ), typeof( TType ), typeof( string ) ] );
 
         IsTruthyMethod = thisType.GetMethod( nameof( IsTruthy ) );
     }
@@ -65,9 +65,9 @@ public static class JsonPathHelper<TType>
         };
     }
 
-    public static object GetFirstElementValue( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
+    public static object GetFirstElementValue( JsonElement current, JsonElement root, string query )
     {
-        var first = GetFirstElement( current, root, query, evaluator );
+        var first = GetFirstElement( current, root, query );
 
         return first.ValueKind switch
         {
@@ -83,9 +83,9 @@ public static class JsonPathHelper<TType>
         };
     }
 
-    public static object GetFirstElementValue( JsonNode current, JsonNode root, string query, IJsonPathFilterEvaluator<JsonNode> evaluator )
+    public static object GetFirstElementValue( JsonNode current, JsonNode root, string query )
     {
-        var first = GetFirstElement( current, root, query, evaluator );
+        var first = GetFirstElement( current, root, query );
 
         return first?.GetValueKind() switch
         {
@@ -101,30 +101,31 @@ public static class JsonPathHelper<TType>
         };
     }
 
-    public static JsonElement GetFirstElement( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
+    //BF: SelectFirst ?  Is visitor optimized for first ? Could these be moved out to just use the extensions ?
+    
+    public static JsonElement GetFirstElement( JsonElement current, JsonElement root, string query )
     {
-        return new JsonPath( evaluator )
+        return new JsonPath()
             .Select( current, root, query )
             .FirstOrDefault();
     }
 
-    public static JsonNode GetFirstElement( JsonNode current, JsonNode root, string query, IJsonPathFilterEvaluator<JsonNode> evaluator )
+    public static JsonNode GetFirstElement( JsonNode current, JsonNode root, string query )
     {
-        return new Nodes.JsonPathNode( evaluator )
+        return new Nodes.JsonPathNode()
             .Select( current, root, query )
             .FirstOrDefault();
     }
 
-    public static IEnumerable<JsonElement> Select( JsonElement current, JsonElement root, string query, IJsonPathFilterEvaluator<JsonElement> evaluator )
+    public static IEnumerable<JsonElement> Select( JsonElement current, JsonElement root, string query )
     {
-        return new JsonPath( evaluator )
+        return new JsonPath()
             .Select( current, root, query );
     }
 
-    public static IEnumerable<JsonNode> Select( JsonNode current, JsonNode root, string query, IJsonPathFilterEvaluator<JsonNode> evaluator )
+    public static IEnumerable<JsonNode> Select( JsonNode current, JsonNode root, string query )
     {
-        return new Nodes.JsonPathNode( evaluator )
+        return new Nodes.JsonPathNode()
             .Select( current, root, query );
     }
-
 }

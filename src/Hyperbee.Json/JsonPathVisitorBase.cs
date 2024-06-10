@@ -1,4 +1,38 @@
-﻿using System.Collections.Immutable;
+﻿#region License
+
+// C# Implementation of JSONPath[1]
+//
+// [1] http://goessner.net/articles/JsonPath/
+// [2] https://github.com/atifaziz/JSONPath
+//
+// The MIT License
+//
+// Copyright (c) 2019 Brenton Farmer. All rights reserved.
+// Portions Copyright (c) 2007 Atif Aziz. All rights reserved.
+// Portions Copyright (c) 2007 Stefan Goessner (goessner.net)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+
+#endregion
+
+using System.Collections.Immutable;
 using System.Globalization;
 using Hyperbee.Json.Evaluators;
 using Hyperbee.Json.Memory;
@@ -6,14 +40,42 @@ using Hyperbee.Json.Tokenizer;
 
 namespace Hyperbee.Json;
 
+// https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
+// https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
+
 public abstract class JsonPathVisitorBase<TElement>
 {
-    internal IEnumerable<TElement> ExpressionVisitor( VisitorArgs args, JsonPathEvaluator<TElement> evaluator )
+    internal IEnumerable<TElement> ExpressionVisitor( in TElement value, in TElement root, string query, IJsonPathFilterEvaluator<TElement> filterEvaluator )
     {
-        var initialArgs = args;
+        if ( string.IsNullOrWhiteSpace( query ) )
+            throw new ArgumentNullException( nameof(query) );
 
-        var nodes = new Stack<VisitorArgs>( 4 );
-        void PushNode( in TElement v, in IImmutableStack<JsonPathToken> t ) => nodes.Push( new VisitorArgs( v, initialArgs.Root, t ) );
+        if ( filterEvaluator == null )
+            throw new ArgumentNullException( nameof(filterEvaluator) );
+        
+        // quick out
+
+        if ( query == "$" )
+            return [value];
+
+        // tokenize
+
+        var tokens = JsonPathQueryTokenizer.Tokenize( query );
+
+        if ( !tokens.IsEmpty )
+        {
+            var selector = tokens.Peek().FirstSelector;
+            
+            if ( selector == "$" || selector == "@" )
+                tokens = tokens.Pop();
+        }
+
+        return ExpressionVisitor( root, new VisitorArgs( value, tokens ), filterEvaluator );
+    }
+    
+    private IEnumerable<TElement> ExpressionVisitor( TElement root, VisitorArgs args, IJsonPathFilterEvaluator<TElement> filterEvaluator )
+    {
+        var stack = new Stack<VisitorArgs>( 4 );
 
         do
         {
@@ -24,16 +86,15 @@ public abstract class JsonPathVisitorBase<TElement>
             if ( tokens.IsEmpty )
             {
                 yield return current;
-
                 continue;
             }
 
             // pop the next token from the stack
 
             tokens = tokens.Pop( out var token );
-            var selector = token.Selectors.First().Value;
+            var selector = token.FirstSelector;
 
-            // make sure we have a container value
+            // make sure we have a complex value
 
             if ( !IsObjectOrArray( current ) )
                 throw new InvalidOperationException( "Object or Array expected." );
@@ -43,7 +104,7 @@ public abstract class JsonPathVisitorBase<TElement>
             if ( token.Singular )
             {
                 if ( TryGetChildValue( current, selector, out var childValue ) )
-                    PushNode( childValue, tokens );
+                    Push( stack, childValue, tokens );
 
                 continue;
             }
@@ -54,7 +115,7 @@ public abstract class JsonPathVisitorBase<TElement>
             {
                 foreach ( var (_, childKey) in EnumerateChildValues( current ) )
                 {
-                    PushNode( current, tokens.Push( new JsonPathToken( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Dot | Index)
+                    Push( stack, current, tokens.Push( new ( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Dot | Index)
                 }
 
                 continue;
@@ -67,29 +128,31 @@ public abstract class JsonPathVisitorBase<TElement>
                 foreach ( var (childValue, _) in EnumerateChildValues( current ) )
                 {
                     if ( IsObjectOrArray( childValue ) )
-                        PushNode( childValue, tokens.Push( new JsonPathToken( "..", SelectorKind.UnspecifiedGroup ) ) ); // Descendant
+                        Push( stack, childValue, tokens.Push( new ( "..", SelectorKind.UnspecifiedGroup ) ) ); // Descendant
                 }
 
-                PushNode( current, tokens );
+                Push( stack, current, tokens );
                 continue;
             }
 
             // union
-
-            foreach ( var childSelector in token.Selectors.Select( x => x.Value ) )
+            
+            for ( var i = 0; i < token.Selectors.Length; i++ ) // using 'for' for performance
             {
+                var childSelector = token.Selectors[i].Value;
+                
                 // [(exp)]
 
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
                 {
-                    if ( evaluator( childSelector, current, args.Root ) is not string evalSelector )
+                    if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string evalSelector )
                         continue;
 
                     var selectorKind = evalSelector != "*" && evalSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( evalSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
-                    PushNode( current, tokens.Push( new JsonPathToken( evalSelector, selectorKind ) ) );
+                    Push( stack, current, tokens.Push( new ( evalSelector, selectorKind ) ) );
                     continue;
                 }
 
@@ -99,11 +162,11 @@ public abstract class JsonPathVisitorBase<TElement>
                 {
                     foreach ( var (childValue, childKey) in EnumerateChildValues( current ) )
                     {
-                        var filter = evaluator( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, args.Root );
+                        var filter = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
 
                         // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
                         if ( filter is not null and not IConvertible || Convert.ToBoolean( filter, CultureInfo.InvariantCulture ) )
-                            PushNode( current, tokens.Push( new JsonPathToken( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Name | Index)
+                            Push( stack, current, tokens.Push( new ( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Name | Index)
                     }
 
                     continue;
@@ -116,7 +179,7 @@ public abstract class JsonPathVisitorBase<TElement>
                     if ( JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
                     {
                         // [#,#,...] 
-                        PushNode( GetElementAt( current, int.Parse( childSelector ) ), tokens );
+                        Push( stack, GetElementAt( current, int.Parse( childSelector ) ), tokens );
                         continue;
                     }
 
@@ -124,13 +187,13 @@ public abstract class JsonPathVisitorBase<TElement>
                     if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) )
                     {
                         foreach ( var index in EnumerateSlice( current, childSelector ) )
-                            PushNode( GetElementAt( current, index ), tokens );
+                            Push( stack, GetElementAt( current, index ), tokens );
                         continue;
                     }
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        PushNode( GetElementAt( current, index ), tokens.Push( new JsonPathToken( childSelector, SelectorKind.UnspecifiedSingular ) ) ); // Name
+                        Push( stack, GetElementAt( current, index ), tokens.Push( new ( childSelector, SelectorKind.UnspecifiedSingular ) ) ); // Name
 
                     continue;
                 }
@@ -144,11 +207,15 @@ public abstract class JsonPathVisitorBase<TElement>
 
                     // [name1,name2,...]
                     if ( TryGetChildValue( current, childSelector, out var childValue ) )
-                        PushNode( childValue, tokens );
+                        Push( stack, childValue, tokens );
                 }
             }
 
-        } while ( nodes.TryPop( out args ) );
+        } while ( stack.TryPop( out args ) );
+
+        yield break;
+
+        static void Push( Stack<VisitorArgs> s, in TElement v, in IImmutableStack<JsonPathToken> t ) => s.Push( new VisitorArgs( v, t ) );
     }
 
     private static IEnumerable<int> EnumerateArrayIndices( int length )
@@ -188,21 +255,17 @@ public abstract class JsonPathVisitorBase<TElement>
     // abstract methods
 
     internal abstract IEnumerable<(TElement, string)> EnumerateChildValues( TElement value );
-
     internal abstract TElement GetElementAt( TElement value, int index );
-
     internal abstract bool IsObjectOrArray( TElement current );
     internal abstract bool IsArray( TElement current, out int length );
     internal abstract bool IsObject( TElement current );
-
     internal abstract bool TryGetChildValue( in TElement current, ReadOnlySpan<char> childKey, out TElement childValue );
 
     // visitor context
 
-    internal sealed class VisitorArgs( in TElement value, in TElement root, in IImmutableStack<JsonPathToken> tokens )
+    private sealed class VisitorArgs( in TElement value, in IImmutableStack<JsonPathToken> tokens )
     {
         public readonly TElement Value = value;
-        public readonly TElement Root = root;
         public readonly IImmutableStack<JsonPathToken> Tokens = tokens;
 
         public void Deconstruct( out TElement value, out IImmutableStack<JsonPathToken> tokens )

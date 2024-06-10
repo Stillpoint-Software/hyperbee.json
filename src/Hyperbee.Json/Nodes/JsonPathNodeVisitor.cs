@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 
 namespace Hyperbee.Json.Nodes;
 
-internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode>
+internal class JsonPathNodeVisitor : JsonPathVisitorBase<JsonNode>
 {
     internal override IEnumerable<(JsonNode, string)> EnumerateChildValues( JsonNode value )
     {
@@ -56,6 +56,7 @@ internal class JsonNodePathVisitor : JsonPathVisitorBase<JsonNode>
         return value is JsonObject or JsonArray;
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     internal override bool IsArray( JsonNode value, out int length )
     {
         if ( value is JsonArray jsonArray )

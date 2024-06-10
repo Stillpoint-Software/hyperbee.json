@@ -6,7 +6,7 @@ namespace Hyperbee.Json;
 
 internal static class JsonElementInternal
 {
-    internal static readonly Func<JsonElement, int> GetIdx; 
+    internal static readonly Func<JsonElement, int> GetIdx;
     internal static readonly Func<JsonElement, JsonDocument> GetParent;
 
     static JsonElementInternal()
@@ -18,7 +18,7 @@ internal static class JsonElementInternal
         if ( idxField == null )
             throw new MissingFieldException( nameof( JsonElement ), "_idx" );
 
-        var getIdxDynamicMethod = new DynamicMethod( nameof(GetIdx), typeof( int ), [typeof( JsonElement )], typeof( JsonElement ) );
+        var getIdxDynamicMethod = new DynamicMethod( nameof( GetIdx ), typeof( int ), [typeof( JsonElement )], typeof( JsonElement ) );
         var ilIdx = getIdxDynamicMethod.GetILGenerator();
         ilIdx.Emit( OpCodes.Ldarg_0 );
         ilIdx.Emit( OpCodes.Ldfld, idxField );
@@ -33,7 +33,7 @@ internal static class JsonElementInternal
         if ( parentField == null )
             throw new MissingFieldException( nameof( JsonElement ), "_parent" );
 
-        var getParentDynamicMethod = new DynamicMethod( nameof(GetParent), typeof( JsonDocument ), [typeof( JsonElement )], typeof( JsonElement ) );
+        var getParentDynamicMethod = new DynamicMethod( nameof( GetParent ), typeof( JsonDocument ), [typeof( JsonElement )], typeof( JsonElement ) );
         var ilParent = getParentDynamicMethod.GetILGenerator();
         ilParent.Emit( OpCodes.Ldarg_0 );
         ilParent.Emit( OpCodes.Ldfld, parentField );

@@ -22,7 +22,7 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         //
         // These arguments are stored in private fields and are not exposed. While note ideal, we
         // will access these fields through dynamic methods to use for our comparison.
-        
+
         // check parent documents
 
         // BF: JsonElement ctor notes that parent may be null in some enumeration conditions.

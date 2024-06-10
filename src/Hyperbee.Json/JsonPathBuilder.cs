@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Hyperbee.Json;
 
@@ -79,7 +79,7 @@ public class JsonPathBuilder
 
     private static int GetUniqueId( JsonElement element )
     {
-        return JsonElementInternal.GetIdx( element ); 
+        return JsonElementInternal.GetIdx( element );
     }
 
     private static string BuildPath( int elementId, Dictionary<int, (int parentId, string segment)> parentMap )

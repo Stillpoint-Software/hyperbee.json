@@ -20,11 +20,11 @@ public class JsonPathExpressionParser
     {
         _nodeExpressionContext = new ParseExpressionContext<JsonNode>(
             Expression.Parameter( typeof( JsonNode ) ),
-            Expression.Parameter( typeof( JsonNode ) ) ); 
+            Expression.Parameter( typeof( JsonNode ) ) );
 
         _elementExpressionContext = new ParseExpressionContext<JsonElement>(
             Expression.Parameter( typeof( JsonElement ) ),
-            Expression.Parameter( typeof( JsonElement ) ) ); 
+            Expression.Parameter( typeof( JsonElement ) ) );
     }
 
     [Benchmark]

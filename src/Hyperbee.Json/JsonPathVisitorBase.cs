@@ -48,11 +48,11 @@ public abstract class JsonPathVisitorBase<TElement>
     internal IEnumerable<TElement> ExpressionVisitor( in TElement value, in TElement root, string query, IJsonPathFilterEvaluator<TElement> filterEvaluator )
     {
         if ( string.IsNullOrWhiteSpace( query ) )
-            throw new ArgumentNullException( nameof(query) );
+            throw new ArgumentNullException( nameof( query ) );
 
         if ( filterEvaluator == null )
-            throw new ArgumentNullException( nameof(filterEvaluator) );
-        
+            throw new ArgumentNullException( nameof( filterEvaluator ) );
+
         // quick out
 
         if ( query == "$" )
@@ -65,14 +65,14 @@ public abstract class JsonPathVisitorBase<TElement>
         if ( !tokens.IsEmpty )
         {
             var selector = tokens.Peek().FirstSelector;
-            
+
             if ( selector == "$" || selector == "@" )
                 tokens = tokens.Pop();
         }
 
         return ExpressionVisitor( root, new VisitorArgs( value, tokens ), filterEvaluator );
     }
-    
+
     private IEnumerable<TElement> ExpressionVisitor( TElement root, VisitorArgs args, IJsonPathFilterEvaluator<TElement> filterEvaluator )
     {
         var stack = new Stack<VisitorArgs>( 4 );
@@ -115,7 +115,7 @@ public abstract class JsonPathVisitorBase<TElement>
             {
                 foreach ( var (_, childKey) in EnumerateChildValues( current ) )
                 {
-                    Push( stack, current, tokens.Push( new ( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Dot | Index)
+                    Push( stack, current, tokens.Push( new( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Dot | Index)
                 }
 
                 continue;
@@ -128,7 +128,7 @@ public abstract class JsonPathVisitorBase<TElement>
                 foreach ( var (childValue, _) in EnumerateChildValues( current ) )
                 {
                     if ( IsObjectOrArray( childValue ) )
-                        Push( stack, childValue, tokens.Push( new ( "..", SelectorKind.UnspecifiedGroup ) ) ); // Descendant
+                        Push( stack, childValue, tokens.Push( new( "..", SelectorKind.UnspecifiedGroup ) ) ); // Descendant
                 }
 
                 Push( stack, current, tokens );
@@ -136,11 +136,11 @@ public abstract class JsonPathVisitorBase<TElement>
             }
 
             // union
-            
+
             for ( var i = 0; i < token.Selectors.Length; i++ ) // using 'for' for performance
             {
                 var childSelector = token.Selectors[i].Value;
-                
+
                 // [(exp)]
 
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
@@ -152,7 +152,7 @@ public abstract class JsonPathVisitorBase<TElement>
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
-                    Push( stack, current, tokens.Push( new ( evalSelector, selectorKind ) ) );
+                    Push( stack, current, tokens.Push( new( evalSelector, selectorKind ) ) );
                     continue;
                 }
 
@@ -166,7 +166,7 @@ public abstract class JsonPathVisitorBase<TElement>
 
                         // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
                         if ( filter is not null and not IConvertible || Convert.ToBoolean( filter, CultureInfo.InvariantCulture ) )
-                            Push( stack, current, tokens.Push( new ( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Name | Index)
+                            Push( stack, current, tokens.Push( new( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Name | Index)
                     }
 
                     continue;
@@ -193,7 +193,7 @@ public abstract class JsonPathVisitorBase<TElement>
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, GetElementAt( current, index ), tokens.Push( new ( childSelector, SelectorKind.UnspecifiedSingular ) ) ); // Name
+                        Push( stack, GetElementAt( current, index ), tokens.Push( new( childSelector, SelectorKind.UnspecifiedSingular ) ) ); // Name
 
                     continue;
                 }

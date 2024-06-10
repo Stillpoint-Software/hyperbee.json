@@ -6,7 +6,7 @@ namespace Hyperbee.Json;
 public sealed class JsonPath
 {
     public static IJsonPathFilterEvaluator<JsonElement> FilterEvaluator { get; set; } = new JsonPathExpressionEvaluator<JsonElement>();
-    
+
     private readonly JsonPathVisitorBase<JsonElement> _visitor = new JsonPathElementVisitor();
 
     public IEnumerable<JsonElement> Select( in JsonElement value, string query )

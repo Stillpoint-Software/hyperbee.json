@@ -4,14 +4,22 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace Hyperbee.Json.Evaluators;
 
-public sealed class JsonPathExpressionEvaluator<TType> : IJsonPathFilterEvaluator<TType>
+public sealed class JsonPathFilterEvaluator<TType> : IJsonPathFilterEvaluator<TType>
 {
+    private readonly IJsonTypeDescriptor _typeDescriptor;
+
     // ReSharper disable once StaticMemberInGenericType
     private static readonly ConcurrentDictionary<string, Func<TType, TType, bool>> Compiled = new();
 
+
+    public JsonPathFilterEvaluator( IJsonTypeDescriptor typeDescriptor )
+    {
+        _typeDescriptor = typeDescriptor;
+    }
+
     public object Evaluate( string filter, TType current, TType root )
     {
-        var compiled = Compiled.GetOrAdd( filter, _ => JsonPathExpression.Compile<TType>( filter ) );
+        var compiled = Compiled.GetOrAdd( filter, _ => JsonPathExpression.Compile<TType>( filter, _typeDescriptor ) );
 
         try
         {

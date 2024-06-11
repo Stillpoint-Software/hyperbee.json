@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Hyperbee.Json.Evaluators.Parser.Functions;
+namespace Hyperbee.Json.Evaluators.Parser;
 
-internal static partial class JsonPathFilterTokenizerRegex
+internal static partial class FilterTokenizerRegex
 {
     [GeneratedRegex( @"([a-z][a-z0-9_]*)\s*\(\s*((?:[^,()]+(?:\s*,\s*)?)*)\s*\)?" )]
     internal static partial Regex RegexFunction();

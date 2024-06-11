@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
-using Hyperbee.Json.Evaluators;
 using Hyperbee.Json.Extensions;
 using Newtonsoft.Json.Linq;
+using JsonEverything = Json.Path;
 
 namespace Hyperbee.Json.Benchmark;
 
@@ -59,14 +59,14 @@ public class JsonPathParseAndSelect
     public string Document;
 
     [Benchmark]
-    public void JsonPath_ExpressionEvaluator_JsonElement()
+    public void JsonPath_Hyperbee_JsonElement()
     {
         var element = JsonDocument.Parse( Document ).RootElement;
         var _ = element.Select( Filter ).ToArray();
     }
 
     [Benchmark]
-    public void JsonPath_ExpressionEvaluator_JsonNode()
+    public void JsonPath_Hyperbee_JsonNode()
     {
         var node = JsonNode.Parse( Document )!;
         var _ = node.Select( Filter ).ToArray();
@@ -78,4 +78,14 @@ public class JsonPathParseAndSelect
         var jObject = JObject.Parse( Document );
         var _ = jObject.SelectTokens( Filter ).ToArray();
     }
+
+    [Benchmark]
+    public void JsonPath_JsonEverything_JsonNode()
+    {
+
+        var path = JsonEverything.JsonPath.Parse( Filter );
+        var node = JsonNode.Parse( Document )!;
+        var _ = path.Evaluate( node ).Matches!.ToArray();
+    }
+
 }

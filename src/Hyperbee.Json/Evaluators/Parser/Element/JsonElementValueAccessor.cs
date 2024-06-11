@@ -1,13 +1,12 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using Hyperbee.Json.Extensions;
 
-namespace Hyperbee.Json;
+namespace Hyperbee.Json.Evaluators.Parser.Element;
 
-public class JsonPathElementVisitor : JsonPathVisitorBase<JsonElement>
+public class JsonElementValueAccessor : IJsonValueAccessor<JsonElement>
 {
-    internal override IEnumerable<(JsonElement, string)> EnumerateChildValues( JsonElement value )
+    public IEnumerable<(JsonElement, string)> EnumerateChildValues( JsonElement value )
     {
         switch ( value.ValueKind )
         {
@@ -50,19 +49,19 @@ public class JsonPathElementVisitor : JsonPathVisitorBase<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override JsonElement GetElementAt( JsonElement value, int index )
+    public JsonElement GetElementAt( JsonElement value, int index )
     {
         return value[index];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override bool IsObjectOrArray( JsonElement value )
+    public bool IsObjectOrArray( JsonElement value )
     {
         return value.ValueKind is JsonValueKind.Array or JsonValueKind.Object;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override bool IsArray( JsonElement value, out int length )
+    public bool IsArray( JsonElement value, out int length )
     {
         if ( value.ValueKind == JsonValueKind.Array )
         {
@@ -75,12 +74,12 @@ public class JsonPathElementVisitor : JsonPathVisitorBase<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override bool IsObject( JsonElement value )
+    public bool IsObject( JsonElement value )
     {
         return value.ValueKind is JsonValueKind.Object;
     }
 
-    internal override bool TryGetChildValue( in JsonElement value, ReadOnlySpan<char> childKey, out JsonElement childValue )
+    public bool TryGetChildValue( in JsonElement value, ReadOnlySpan<char> childKey, out JsonElement childValue )
     {
         static int? TryParseInt( ReadOnlySpan<char> numberString )
         {

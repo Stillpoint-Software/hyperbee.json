@@ -1,14 +1,14 @@
 ﻿using System.Linq.Expressions;
 
-namespace Hyperbee.Json.Evaluators.Parser.Functions;
+namespace Hyperbee.Json.Evaluators.Parser.Element;
 
-public class JsonPathElementFunction<TType>( ParseExpressionContext<TType> context ) : ParserFunction<TType>
+public class FilterElementFunction( ParseExpressionContext context ) : FilterFunction
 {
     protected override Expression Evaluate( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {
         var queryExp = Expression.Constant( item.ToString() );
 
         // Create a call expression for the extension method
-        return Expression.Call( JsonPathHelper<TType>.GetFirstElementValueMethod, context.Current, context.Root, queryExp );
+        return Expression.Call( FilterElementHelper.SelectFirstElementValueMethod, context.Current, context.Root, queryExp );
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using Hyperbee.Json.Evaluators.Parser.Functions;
 
 namespace Hyperbee.Json.Evaluators.Parser;
 // Based off Split-and-Merge Expression Parser
@@ -16,30 +15,28 @@ public class JsonPathExpression
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
-    public static Func<TType, TType, bool> Compile<TType>( ReadOnlySpan<char> filter )
+    public static Func<TElement, TElement, bool> Compile<TElement>( ReadOnlySpan<char> filter, IJsonTypeDescriptor typeDescriptor )
     {
-        var currentParam = Expression.Parameter( typeof( TType ) );
-        var rootParam = Expression.Parameter( typeof( TType ) );
-        var expressionContext = new ParseExpressionContext<TType>( currentParam, rootParam );
+        var currentParam = Expression.Parameter( typeof( TElement ) );
+        var rootParam = Expression.Parameter( typeof( TElement ) );
+        var expressionContext = new ParseExpressionContext( currentParam, rootParam, typeDescriptor );
         var expression = Parse( filter, expressionContext );
 
         return Expression
-            .Lambda<Func<TType, TType, bool>>( expression, currentParam, rootParam )
+            .Lambda<Func<TElement, TElement, bool>>( expression, currentParam, rootParam )
             .Compile();
     }
 
-    public static Expression Parse<TType>( ReadOnlySpan<char> filter, ParseExpressionContext<TType> context )
+    public static Expression Parse( ReadOnlySpan<char> filter, ParseExpressionContext context )
     {
         var start = 0;
         var from = 0;
         var expression = Parse( filter, ref start, ref from, EndLine, context );
 
-        return expression.Type == typeof( bool )
-            ? expression
-            : Expression.Call( JsonPathHelper<TType>.IsTruthyMethod!, expression );
+        return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse<TType>( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, ParseExpressionContext<TType> context = null )
+    internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, ParseExpressionContext context = null )
     {
         if ( from >= filter.Length || filter[from] == to )
         {
@@ -78,7 +75,7 @@ public class JsonPathExpression
             start = from;
 
             // `GetExpression` may call recursively call `Parse` for nested expressions
-            var func = new ParserFunction<TType>( currentPath, type, context );
+            var func = new FilterFunction( currentPath, type, context );
             var expression = func.GetExpression( filter, currentPath, ref start, ref from );
 
             var filterType = ValidType( type )

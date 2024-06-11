@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 
-namespace Hyperbee.Json.Evaluators.Parser.Functions;
+namespace Hyperbee.Json.Evaluators.Parser.Node;
 
-public class JsonPathValueFunction<TType>( string methodName, IList<string> arguments, ParseExpressionContext<TType> context ) : ParserExpressionFunction<TType>( methodName, arguments, context )
+public class ValueNodeFunction( string methodName, IList<string> arguments, ParseExpressionContext context ) : FilterExpressionFunction( methodName, arguments, context )
 {
     public const string Name = "value";
 
-    public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )
+    public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext context )
     {
         if ( arguments.Count != 1 )
         {
@@ -16,7 +16,7 @@ public class JsonPathValueFunction<TType>( string methodName, IList<string> argu
         var queryExp = Expression.Constant( arguments[0] );
 
         return Expression.Call(
-            JsonPathHelper<TType>.GetFirstElementValueMethod,
+            FilterNodeHelper.SelectFirstElementValueMethod,
             context.Current,
             context.Root,
             queryExp );

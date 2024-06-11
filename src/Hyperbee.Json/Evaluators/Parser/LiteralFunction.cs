@@ -1,16 +1,16 @@
 ﻿using System.Linq.Expressions;
 
-namespace Hyperbee.Json.Evaluators.Parser.Functions;
+namespace Hyperbee.Json.Evaluators.Parser;
 
 
-public class LiteralFunction<TType> : ParserFunction<TType>
+public class LiteralFunction : FilterFunction
 {
     protected override Expression Evaluate( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {
         // strings double or single
-        if ( JsonPathFilterTokenizerRegex.RegexQuotedDouble().IsMatch( item ) )
+        if ( FilterTokenizerRegex.RegexQuotedDouble().IsMatch( item ) )
             return Expression.Constant( TrimQuotes( item ).ToString() );
-        if ( JsonPathFilterTokenizerRegex.RegexQuoted().IsMatch( item ) )
+        if ( FilterTokenizerRegex.RegexQuoted().IsMatch( item ) )
             return Expression.Constant( TrimQuotes( item ).ToString() );
 
         // known literals (true, false, null)
@@ -30,7 +30,7 @@ public class LiteralFunction<TType> : ParserFunction<TType>
             if ( input.Length < 2 )
                 return input;
 
-            if ( (input[0] == '\'' && input[^1] == '\'') || (input[0] == '\"' && input[^1] == '\"') )
+            if ( input[0] == '\'' && input[^1] == '\'' || input[0] == '\"' && input[^1] == '\"' )
                 return input[1..^1];
 
             return input;

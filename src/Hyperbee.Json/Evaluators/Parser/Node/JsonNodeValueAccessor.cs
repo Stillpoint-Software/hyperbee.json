@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 
-namespace Hyperbee.Json.Nodes;
+namespace Hyperbee.Json.Evaluators.Parser.Node;
 
-internal class JsonPathNodeVisitor : JsonPathVisitorBase<JsonNode>
+internal class JsonNodeValueAccessor : IJsonValueAccessor<JsonNode>
 {
-    internal override IEnumerable<(JsonNode, string)> EnumerateChildValues( JsonNode value )
+    public IEnumerable<(JsonNode, string)> EnumerateChildValues( JsonNode value )
     {
         switch ( value )
         {
@@ -45,19 +45,19 @@ internal class JsonPathNodeVisitor : JsonPathVisitorBase<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override JsonNode GetElementAt( JsonNode value, int index )
+    public JsonNode GetElementAt( JsonNode value, int index )
     {
         return value[index];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override bool IsObjectOrArray( JsonNode value )
+    public bool IsObjectOrArray( JsonNode value )
     {
         return value is JsonObject or JsonArray;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override bool IsArray( JsonNode value, out int length )
+    public bool IsArray( JsonNode value, out int length )
     {
         if ( value is JsonArray jsonArray )
         {
@@ -70,12 +70,12 @@ internal class JsonPathNodeVisitor : JsonPathVisitorBase<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    internal override bool IsObject( JsonNode value )
+    public bool IsObject( JsonNode value )
     {
         return value is JsonObject;
     }
 
-    internal override bool TryGetChildValue( in JsonNode value, ReadOnlySpan<char> childKey, out JsonNode childValue )
+    public bool TryGetChildValue( in JsonNode value, ReadOnlySpan<char> childKey, out JsonNode childValue )
     {
         static int? TryParseInt( ReadOnlySpan<char> numberString )
         {
@@ -90,6 +90,7 @@ internal class JsonPathNodeVisitor : JsonPathVisitorBase<JsonNode>
                 {
                     if ( valueObject.TryGetPropertyValue( childKey.ToString(), out childValue ) )
                         return true;
+
                     break;
                 }
             case JsonArray valueArray:
@@ -108,6 +109,7 @@ internal class JsonPathNodeVisitor : JsonPathVisitorBase<JsonNode>
                 {
                     if ( !IsPathOperator( childKey ) )
                         throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
+
                     break;
                 }
         }

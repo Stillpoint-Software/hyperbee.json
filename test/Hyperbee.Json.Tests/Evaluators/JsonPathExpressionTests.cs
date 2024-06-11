@@ -4,6 +4,8 @@ using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Evaluators.Parser;
+using Hyperbee.Json.Evaluators.Parser.Element;
+using Hyperbee.Json.Evaluators.Parser.Node;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -151,12 +153,14 @@ public class JsonPathExpressionTests : JsonTestBase
     {
         var param = Expression.Parameter( sourceType );
         var expression = sourceType == typeof( JsonElement )
-            ? JsonPathExpression.Parse( filter, new ParseExpressionContext<JsonElement>(
+            ? JsonPathExpression.Parse( filter, new ParseExpressionContext(
                 param,
-                param ) )
-            : JsonPathExpression.Parse( filter, new ParseExpressionContext<JsonNode>(
                 param,
-                param ) );
+                new JsonElementTypeDescriptor() ) )
+            : JsonPathExpression.Parse( filter, new ParseExpressionContext(
+                param,
+                param,
+                new JsonNodeTypeDescriptor() ) );
 
         return (expression, param);
     }
@@ -190,7 +194,7 @@ public class JsonPathExpressionTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var source = GetDocument<JsonDocument>();
-            var func = JsonPathExpression.Compile<JsonElement>( filter );
+            var func = JsonPathExpression.Compile<JsonElement>( filter, new JsonElementTypeDescriptor() );
 
             return func( source.RootElement, source.RootElement );
         }
@@ -198,7 +202,7 @@ public class JsonPathExpressionTests : JsonTestBase
         {
             // arrange 
             var source = GetDocument<JsonNode>();
-            var func = JsonPathExpression.Compile<JsonNode>( filter );
+            var func = JsonPathExpression.Compile<JsonNode>( filter, new JsonNodeTypeDescriptor() );
 
             // act
             return func( source, source );

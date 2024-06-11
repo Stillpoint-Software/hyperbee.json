@@ -80,13 +80,13 @@ public class JsonPathSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_ExpressionEvaluator_JsonElement()
+    public void JsonPath_Hyperbee_JsonElement()
     {
         var _ = _element.Select( Filter ).ToArray();
     }
 
     [Benchmark]
-    public void JsonPath_ExpressionEvaluator_JsonNode()
+    public void JsonPath_Hyperbee_JsonNode()
     {
         var _ = _node.Select( Filter ).ToArray();
     }

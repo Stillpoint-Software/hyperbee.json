@@ -1,16 +1,17 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
 
-namespace Hyperbee.Json.Evaluators.Parser.Functions;
+namespace Hyperbee.Json.Evaluators.Parser.Element;
 
-public class JsonPathCountFunction<TType>( string methodName, IList<string> arguments, ParseExpressionContext<TType> context ) : ParserExpressionFunction<TType>( methodName, arguments, context )
+public class CountElementFunction( string methodName, IList<string> arguments, ParseExpressionContext context ) :
+    FilterExpressionFunction( methodName, arguments, context )
 {
     public const string Name = "count";
 
-    // ReSharper disable once StaticMemberInGenericType
     private static readonly MethodInfo CountMethod;
 
-    static JsonPathCountFunction()
+    static CountElementFunction()
     {
         CountMethod = typeof( Enumerable )
             .GetMethods( BindingFlags.Static | BindingFlags.Public )
@@ -18,10 +19,10 @@ public class JsonPathCountFunction<TType>( string methodName, IList<string> argu
                 m.Name == "Count" &&
                 m.GetParameters().Length == 1 &&
                 m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof( IEnumerable<> ) )
-            .MakeGenericMethod( typeof( TType ) );
+            .MakeGenericMethod( typeof( JsonElement ) );
     }
 
-    public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext<TType> context )
+    public override Expression GetExpression( string methodName, IList<string> arguments, ParseExpressionContext context )
     {
         if ( arguments.Count != 1 )
         {
@@ -31,10 +32,11 @@ public class JsonPathCountFunction<TType>( string methodName, IList<string> argu
         var queryExp = Expression.Constant( arguments[0] );
 
         return Expression.Convert( Expression.Call(
-            CountMethod,
-            Expression.Call( JsonPathHelper<TType>.SelectMethod,
-                context.Current,
-                context.Root,
-                queryExp ) ), typeof( float ) );
+                CountMethod,
+                Expression.Call( FilterElementHelper.SelectElementsMethod,
+                    context.Current,
+                    context.Root,
+                    queryExp ) )
+            , typeof( float ) );
     }
 }

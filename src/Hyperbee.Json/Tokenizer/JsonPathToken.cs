@@ -1,4 +1,4 @@
-
+﻿
 using System.Diagnostics;
 
 namespace Hyperbee.Json.Tokenizer;
@@ -19,7 +19,7 @@ internal record JsonPathToken
     public string FirstSelector => Selectors[0].Value;
 
     public bool Singular { get; }
-    
+
     public JsonPathToken( string selector, SelectorKind kind )
     {
         Selectors =

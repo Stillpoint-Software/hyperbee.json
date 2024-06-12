@@ -2,9 +2,9 @@
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using Hyperbee.Json.Extensions;
+using JsonCons.JsonPath;
 using Newtonsoft.Json.Linq;
 using JsonEverything = Json.Path;
-using JsonCons.JsonPath;
 
 namespace Hyperbee.Json.Benchmark;
 

@@ -4,36 +4,34 @@ A C# implementation of JSONPath for .NET `System.Text.Json` and `System.Text.Jso
 
 ## Why
 
-.NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to provide a JSONPath library for .NET that will
+.NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to provide a JSONPath library for .NET that
 
-* Directly leverage `System.Text.Json` and `System.Text.Json.Nodes`
-* Align with the draft JSONPath Specification RFC 9535 
+* Works natively with both `JsonDocument` (`JsonElement`) and `JsonNode`
+* Can be extended to support other JSON models
+* Aligns with the draft JSONPath Specification RFC 9535 
   * [Working Draft](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base).
   * [Editor Copy](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html)
-* Function according to the emerging consensus of use based on the majority of existing implementations; except through concious exception or deference to the RFC.
+* Functions according to the emerging consensus of use based on the majority of existing implementations; except through concious exception or deference to the RFC.
   * [Parser Comparison Results](https://cburgmer.github.io/json-path-comparison)
   * [Parser Comparison GitHub](https://github.com/cburgmer/json-path-comparison/tree/master)
 
 ## JSONPath Expressions
 
 JSONPath expressions always refers to a JSON structure in the same way as XPath
-expression are used in combination with an XML document. Since a JSON structure is
-usually anonymous and doesn't necessarily have a root member object JSONPath
+expressions are used in combination with an XML document. Since a JSON structure is
+usually anonymous and doesn't necessarily have a root member object, JSONPath
 assumes the abstract name `$` assigned to the outer level object.
 
-JSONPath expressions can use the dot-notation:
+JSONPath expressions can use dot-notation:
 
     $.store.book[0].title
 
-or the bracket-notation:
+or bracket-notation:
 
     $['store']['book'][0]['title']
 
-for input paths. Internal or output paths will always be converted to the more
-general bracket-notation.
-
 JSONPath allows the wildcard symbol `*` for member names and array indices. It
-borrows the descendant operator `..` from [E4X][e4x] and the array slice
+borrows the descendant operator `..` from [E4X][e4x], and the array slice
 syntax proposal `[start:end:step]` from ECMASCRIPT 4.
 
 Expressions can be used as an alternative to explicit names or indices, as in:
@@ -166,6 +164,9 @@ foreach( var element in matches )
 ```
 ## Helper Classes
 
+In addition to JSONPath processing, a few additional helper classes are provided to support dynamic property access,
+property diving, and element comparisons.
+
 ### Dynamic Object Serialization
 
 Basic support is provided for serializing to and from dynamic objects through the use of a custom `JsonConverter`.
@@ -201,19 +202,19 @@ numeric values during the deserialization process.
 |:-----------------------------------|:-----------
 | `JsonElement.DeepEquals`           | Performs a deep equals comparison 
 | `JsonElementEqualityDeepComparer`  | A deep equals equality comparer
-| `JsonElementPositionComparer`      | A position comparer that compares position in the backing stream
+| `JsonElementPositionComparer`      | A position comparer that compares the element's position in the backing stream
 
 ### Property Diving
 
 | Method                             | Description
 |:-----------------------------------|:-----------
-| `JsonElement.GetPropertyFromKey`   | Dives for properties using absolute keys like `$['store']['book'][2]['author']`
+| `JsonElement.GetPropertyFromKey`   | Dives for properties using absolute bracket notation keys like `$['store']['book'][2]['author']`
 
 ### JsonElement Helpers
 
 | Method                             | Description
 |:-----------------------------------|:-----------
-| `JsonPathBuilder`                  | Returns the absolute JsonPath string for a given element
+| `JsonPathBuilder`                  | Returns the JsonPath location string for a given element
 
 ## Acknowlegements
 

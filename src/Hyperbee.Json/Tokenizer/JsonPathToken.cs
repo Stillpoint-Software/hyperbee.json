@@ -20,20 +20,6 @@ internal record JsonPathToken
 
     public bool Singular { get; }
     
-    private bool IsSingular()
-    {
-        if ( Selectors.Length != 1 )
-            return false;
-
-        var selectorKind = Selectors[0].SelectorKind;
-
-        return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
-               selectorKind == SelectorKind.Dot ||
-               selectorKind == SelectorKind.Index ||
-               selectorKind == SelectorKind.Name ||
-               selectorKind == SelectorKind.Root;
-    }
-
     public JsonPathToken( string selector, SelectorKind kind )
     {
         Selectors =
@@ -48,6 +34,20 @@ internal record JsonPathToken
     {
         Selectors = selectors;
         Singular = IsSingular();
+    }
+
+    private bool IsSingular()
+    {
+        if ( Selectors.Length != 1 )
+            return false;
+
+        var selectorKind = Selectors[0].SelectorKind;
+
+        return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
+               selectorKind == SelectorKind.Dot ||
+               selectorKind == SelectorKind.Index ||
+               selectorKind == SelectorKind.Name ||
+               selectorKind == SelectorKind.Root;
     }
 
     public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )

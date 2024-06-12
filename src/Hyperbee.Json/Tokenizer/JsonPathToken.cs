@@ -15,8 +15,11 @@ internal record SelectorDescriptor
 [DebuggerDisplay( "Singular = {Singular}, SelectorCount = {Selectors.Length}" )]
 internal record JsonPathToken
 {
+    public static JsonPathToken DescendToken = new( "..", SelectorKind.UnspecifiedGroup );
+
     public SelectorDescriptor[] Selectors { get; init; }
 
+    // TODO: Check if we can set in ctor
     public string FirstSelector => Selectors[0].Value;
 
     public bool Singular

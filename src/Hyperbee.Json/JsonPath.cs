@@ -34,7 +34,7 @@
 
 using System.Collections.Immutable;
 using System.Globalization;
-using Hyperbee.Json.Evaluators;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Memory;
 using Hyperbee.Json.Tokenizer;
 
@@ -45,11 +45,7 @@ namespace Hyperbee.Json;
 
 public sealed class JsonPath<TElement>
 {
-    private static readonly IJsonTypeDescriptor Descriptor = JsonTypeRegistry.GetDescriptor<TElement>();
-
-    private static readonly IJsonValueAccessor<TElement> Accessor = Descriptor.GetAccessor<TElement>();
-
-    private static readonly IJsonPathFilterEvaluator<TElement> FilterEvaluator = Descriptor.GetFilterEvaluator<TElement>();
+    private static readonly ITypeDescriptor<TElement> Descriptor = JsonTypeRegistry.GetDescriptor<TElement>();
 
     public IEnumerable<TElement> Select( in TElement value, string query )
     {
@@ -89,6 +85,9 @@ public sealed class JsonPath<TElement>
     {
         var stack = new Stack<ElementArgs>( 4 );
 
+        var filterEvaluator = Descriptor.FilterEvaluator;
+        var accessor = Descriptor.Accessor;
+
         do
         {
             // deconstruct the next args node
@@ -108,14 +107,14 @@ public sealed class JsonPath<TElement>
 
             // make sure we have a complex value
 
-            if ( !Accessor.IsObjectOrArray( current ) )
+            if ( !accessor.IsObjectOrArray( current ) )
                 throw new InvalidOperationException( "Object or Array expected." );
 
             // try to access object or array using KEY value
 
             if ( token.Singular )
             {
-                if ( Accessor.TryGetChildValue( current, selector, out var childValue ) )
+                if ( accessor.TryGetChildValue( current, selector, out var childValue ) )
                     Push( stack, childValue, tokens );
 
                 continue;
@@ -125,7 +124,7 @@ public sealed class JsonPath<TElement>
 
             if ( selector == "*" )
             {
-                foreach ( var (_, childKey) in Accessor.EnumerateChildValues( current ) )
+                foreach ( var (_, childKey) in accessor.EnumerateChildValues( current ) )
                 {
                     Push( stack, current, tokens.Push( new( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Dot | Index)
                 }
@@ -137,10 +136,10 @@ public sealed class JsonPath<TElement>
 
             if ( selector == ".." )
             {
-                foreach ( var (childValue, _) in Accessor.EnumerateChildValues( current ) )
+                foreach ( var (childValue, _) in accessor.EnumerateChildValues( current ) )
                 {
-                    if ( Accessor.IsObjectOrArray( childValue ) )
-                        Push( stack, childValue, tokens.Push( new( "..", SelectorKind.UnspecifiedGroup ) ) ); // Descendant
+                    if ( accessor.IsObjectOrArray( childValue ) )
+                        Push( stack, childValue, tokens.Push( JsonPathToken.DescendToken ) ); // Descendant
                 }
 
                 Push( stack, current, tokens );
@@ -157,7 +156,7 @@ public sealed class JsonPath<TElement>
 
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
                 {
-                    if ( FilterEvaluator.Evaluate( childSelector, current, root ) is not string evalSelector )
+                    if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string evalSelector )
                         continue;
 
                     var selectorKind = evalSelector != "*" && evalSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( evalSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
@@ -172,9 +171,9 @@ public sealed class JsonPath<TElement>
 
                 if ( childSelector.Length > 3 && childSelector[0] == '?' && childSelector[1] == '(' && childSelector[^1] == ')' )
                 {
-                    foreach ( var (childValue, childKey) in Accessor.EnumerateChildValues( current ) )
+                    foreach ( var (childValue, childKey) in accessor.EnumerateChildValues( current ) )
                     {
-                        var filter = FilterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
+                        var filter = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
 
                         // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
                         if ( filter is not null and not IConvertible || Convert.ToBoolean( filter, CultureInfo.InvariantCulture ) )
@@ -186,12 +185,12 @@ public sealed class JsonPath<TElement>
 
                 // [name1,name2,...] or [#,#,...] or [start:end:step]
 
-                if ( Accessor.IsArray( current, out var length ) )
+                if ( accessor.IsArray( current, out var length ) )
                 {
                     if ( JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
                     {
                         // [#,#,...] 
-                        Push( stack, Accessor.GetElementAt( current, int.Parse( childSelector ) ), tokens );
+                        Push( stack, accessor.GetElementAt( current, int.Parse( childSelector ) ), tokens );
                         continue;
                     }
 
@@ -199,26 +198,26 @@ public sealed class JsonPath<TElement>
                     if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) )
                     {
                         foreach ( var index in EnumerateSlice( current, childSelector ) )
-                            Push( stack, Accessor.GetElementAt( current, index ), tokens );
+                            Push( stack, accessor.GetElementAt( current, index ), tokens );
                         continue;
                     }
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, Accessor.GetElementAt( current, index ), tokens.Push( new( childSelector, SelectorKind.UnspecifiedSingular ) ) ); // Name
+                        Push( stack, accessor.GetElementAt( current, index ), tokens.Push( new( childSelector, SelectorKind.UnspecifiedSingular ) ) ); // Name
 
                     continue;
                 }
 
                 // [name1,name2,...]
 
-                if ( Accessor.IsObject( current ) )
+                if ( accessor.IsObject( current ) )
                 {
                     if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) || JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
                         continue;
 
                     // [name1,name2,...]
-                    if ( Accessor.TryGetChildValue( current, childSelector, out var childValue ) )
+                    if ( accessor.TryGetChildValue( current, childSelector, out var childValue ) )
                         Push( stack, childValue, tokens );
                 }
             }
@@ -238,7 +237,7 @@ public sealed class JsonPath<TElement>
 
     private static IEnumerable<int> EnumerateSlice( TElement value, string sliceExpr )
     {
-        if ( !Accessor.IsArray( value, out var length ) )
+        if ( !Descriptor.Accessor.IsArray( value, out var length ) )
             yield break;
 
         var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );

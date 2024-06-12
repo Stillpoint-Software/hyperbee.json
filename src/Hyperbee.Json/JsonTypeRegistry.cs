@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using System.Text.Json.Nodes;
-using Hyperbee.Json.Evaluators;
-using Hyperbee.Json.Evaluators.Parser.Element;
-using Hyperbee.Json.Evaluators.Parser.Node;
+﻿using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Descriptors.Element;
+using Hyperbee.Json.Descriptors.Node;
 
 namespace Hyperbee.Json;
 
@@ -12,20 +10,20 @@ public class JsonTypeRegistry
 
     static JsonTypeRegistry()
     {
-        Register<JsonElement>( new JsonElementTypeDescriptor() );
-        Register<JsonNode>( new JsonNodeTypeDescriptor() );
+        Register( new ElementTypeDescriptor() );
+        Register( new NodeTypeDescriptor() );
     }
 
-    public static void Register<TElement>( IJsonTypeDescriptor descriptor )
+    public static void Register<TElement>( ITypeDescriptor<TElement> descriptor )
     {
         Descriptors[typeof( TElement )] = descriptor;
     }
 
-    public static IJsonTypeDescriptor GetDescriptor<TElement>()
+    public static ITypeDescriptor<TElement> GetDescriptor<TElement>()
     {
         if ( Descriptors.TryGetValue( typeof( TElement ), out var descriptor ) )
         {
-            return descriptor;
+            return descriptor as ITypeDescriptor<TElement>;
         }
 
         throw new InvalidOperationException( $"No JSON descriptors registered for type {typeof( TElement )}." );

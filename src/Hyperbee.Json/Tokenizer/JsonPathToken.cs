@@ -1,6 +1,5 @@
 ﻿
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace Hyperbee.Json.Tokenizer;
 
@@ -19,22 +18,20 @@ internal record JsonPathToken
 
     public string FirstSelector => Selectors[0].Value;
 
-    public bool Singular
+    public bool Singular { get; }
+    
+    private bool IsSingular()
     {
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        get
-        {
-            if ( Selectors.Length != 1 )
-                return false;
+        if ( Selectors.Length != 1 )
+            return false;
 
-            var selectorKind = Selectors[0].SelectorKind;
+        var selectorKind = Selectors[0].SelectorKind;
 
-            return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
-                   selectorKind == SelectorKind.Dot ||
-                   selectorKind == SelectorKind.Index ||
-                   selectorKind == SelectorKind.Name ||
-                   selectorKind == SelectorKind.Root;
-        }
+        return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
+               selectorKind == SelectorKind.Dot ||
+               selectorKind == SelectorKind.Index ||
+               selectorKind == SelectorKind.Name ||
+               selectorKind == SelectorKind.Root;
     }
 
     public JsonPathToken( string selector, SelectorKind kind )
@@ -43,11 +40,14 @@ internal record JsonPathToken
         [
             new SelectorDescriptor { SelectorKind = kind, Value = selector }
         ];
+
+        Singular = IsSingular();
     }
 
     public JsonPathToken( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
+        Singular = IsSingular();
     }
 
     public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )

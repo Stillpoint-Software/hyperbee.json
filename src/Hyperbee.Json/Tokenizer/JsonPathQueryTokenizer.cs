@@ -81,7 +81,7 @@ public static partial class JsonPathQueryTokenizer
         if ( selectors == null || selectors.Length == 0 )
             return;
 
-        tokens.Add( new Segment( null, selectors ) );
+        tokens.Add( new Segment( selectors ) );
     }
 
     internal static Segment Tokenize( string query )
@@ -398,7 +398,6 @@ public static partial class JsonPathQueryTokenizer
         }
 
         // finished
-        //return ImmutableStack.Create( ((IEnumerable<JsonPathSegments>) tokens).Reverse().ToArray() );
 
         for ( var index = 0; index < tokens.Count; index++ )
         {

@@ -32,7 +32,6 @@
 
 #endregion
 
-using System.Collections.Immutable;
 using System.Globalization;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Memory;
@@ -226,7 +225,6 @@ public sealed class JsonPath<TElement>
 
         yield break;
 
-        //static void Push( Stack<SegmentArgs> s, in TElement v, in IImmutableStack<JsonPathSegments> t ) => s.Push( new SegmentArgs( v, t ) );
         static void Push( Stack<SegmentArgs> s, in TElement v, in Segment t ) => s.Push( new SegmentArgs( v, t ) );
     }
 
@@ -264,18 +262,6 @@ public sealed class JsonPath<TElement>
         }
     }
 
-    // private sealed class SegmentArgs( in TElement value, in IImmutableStack<JsonPathSegments> segments )
-    // {
-    //     public readonly TElement Value = value;
-    //     public readonly IImmutableStack<JsonPathSegments> Segments = segments;
-    //
-    //     public void Deconstruct( out TElement value, out IImmutableStack<JsonPathSegments> segments )
-    //     {
-    //         value = Value;
-    //         segments = Segments;
-    //     }
-    // }
-
     private sealed class SegmentArgs( in TElement value, in Segment segment )
     {
         public readonly TElement Value = value;
@@ -288,59 +274,4 @@ public sealed class JsonPath<TElement>
         }
     }
 
-}
-
-internal record Segment
-{
-    public static Segment TerminalSegment = new( null, null, SelectorKind.Undefined );
-
-    public bool IsEmpty => Next == null;
-
-    public string FirstSelector => Selectors[0].Value;
-
-    public bool Singular { get; }
-
-    public Segment Next { get; set; }
-    public SelectorDescriptor[] Selectors { get; init; }
-
-    public Segment( Segment next, string selector, SelectorKind kind )
-    {
-        Next = next;
-        Selectors =
-        [
-            new SelectorDescriptor { SelectorKind = kind, Value = selector }
-        ];
-        Singular = IsSingular();
-    }
-
-    public Segment( Segment next, SelectorDescriptor[] selectors )
-    {
-        Next = next;
-        Selectors = selectors;
-        Singular = IsSingular();
-    }
-
-    public Segment Push( string selector, SelectorKind kind ) => new( this, selector, kind );
-
-    public Segment Push( SelectorDescriptor[] selectors ) => new( this, selectors );
-
-    public Segment Pop( out Segment segment )
-    {
-        segment = this;
-        return Next;
-    }
-
-    private bool IsSingular()
-    {
-        if ( Selectors.Length != 1 )
-            return false;
-
-        var selectorKind = Selectors[0].SelectorKind;
-
-        return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
-               selectorKind == SelectorKind.Dot ||
-               selectorKind == SelectorKind.Index ||
-               selectorKind == SelectorKind.Name ||
-               selectorKind == SelectorKind.Root;
-    }
 }

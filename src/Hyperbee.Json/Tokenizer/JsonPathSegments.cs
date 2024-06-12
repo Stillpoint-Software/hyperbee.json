@@ -1,5 +1,4 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Hyperbee.Json.Tokenizer;
 
@@ -12,31 +11,41 @@ internal record SelectorDescriptor
 
 [DebuggerTypeProxy( typeof( JsonPathSegmentDebugView ) )]
 [DebuggerDisplay( "Singular = {Singular}, SelectorCount = {Selectors.Length}" )]
-internal record JsonPathSegments
+internal record Segment
 {
-    public static JsonPathSegments DescendSegments = new( "..", SelectorKind.UnspecifiedGroup );
+    public static Segment TerminalSegment = new( null, null, SelectorKind.Undefined );
 
-    public SelectorDescriptor[] Selectors { get; init; }
+    public bool IsEmpty => Next == null;
 
-    // TODO: Check if we can set in ctor
     public string FirstSelector => Selectors[0].Value;
 
     public bool Singular { get; }
 
-    public JsonPathSegments( string selector, SelectorKind kind )
+    public Segment Next { get; set; }
+    public SelectorDescriptor[] Selectors { get; init; }
+
+    public Segment( Segment next, string selector, SelectorKind kind )
     {
+        Next = next;
         Selectors =
         [
             new SelectorDescriptor { SelectorKind = kind, Value = selector }
         ];
-
         Singular = IsSingular();
     }
 
-    public JsonPathSegments( SelectorDescriptor[] selectors )
+    public Segment( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
         Singular = IsSingular();
+    }
+
+    public Segment Push( string selector, SelectorKind kind ) => new( this, selector, kind );
+
+    public Segment Pop( out Segment segment )
+    {
+        segment = this;
+        return Next;
     }
 
     private bool IsSingular()
@@ -53,13 +62,7 @@ internal record JsonPathSegments
                selectorKind == SelectorKind.Root;
     }
 
-    public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )
-    {
-        singular = Singular;
-        selectors = Selectors;
-    }
-
-    internal class JsonPathSegmentDebugView( JsonPathSegments instance )
+    internal class JsonPathSegmentDebugView( Segment instance )
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         public SelectorDescriptor[] Selectors => instance.Selectors;

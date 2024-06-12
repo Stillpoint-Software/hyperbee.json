@@ -31,7 +31,7 @@ internal enum SelectorKind
 
 public static partial class JsonPathQueryTokenizer
 {
-    private static readonly ConcurrentDictionary<string, IImmutableStack<JsonPathToken>> JsonPathTokens = new();
+    private static readonly ConcurrentDictionary<string, Segment> JsonPathTokens = new();
 
     [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
     private static partial Regex RegexSlice();
@@ -68,7 +68,7 @@ public static partial class JsonPathQueryTokenizer
         return length <= 0 ? null : buffer.Slice( start, length ).Trim().ToString();
     }
 
-    private static void InsertToken( ICollection<JsonPathToken> tokens, SelectorDescriptor selector )
+    private static void InsertToken( ICollection<Segment> tokens, SelectorDescriptor selector )
     {
         if ( selector?.Value == null )
             return;
@@ -76,29 +76,29 @@ public static partial class JsonPathQueryTokenizer
         InsertToken( tokens, [selector] );
     }
 
-    private static void InsertToken( ICollection<JsonPathToken> tokens, SelectorDescriptor[] selectors )
+    private static void InsertToken( ICollection<Segment> tokens, SelectorDescriptor[] selectors )
     {
         if ( selectors == null || selectors.Length == 0 )
             return;
 
-        tokens.Add( new JsonPathToken( selectors ) );
+        tokens.Add( new Segment( null, selectors ) );
     }
 
-    internal static IImmutableStack<JsonPathToken> Tokenize( string query )
+    internal static Segment Tokenize( string query )
     {
         return JsonPathTokens.GetOrAdd( query, x => TokenFactory( x.AsSpan() ) );
     }
 
-    internal static IImmutableStack<JsonPathToken> TokenizeNoCache( ReadOnlySpan<char> query )
+    internal static Segment TokenizeNoCache( ReadOnlySpan<char> query )
     {
         return TokenFactory( query );
     }
 
-    private static ImmutableStack<JsonPathToken> TokenFactory( ReadOnlySpan<char> query )
+    private static Segment TokenFactory( ReadOnlySpan<char> query )
     {
         // transform jsonpath patterns like "$.store.book[*]..author" to an array of tokens [ $, store, book, *, .., author ]
 
-        var tokens = new List<JsonPathToken>();
+        var tokens = new List<Segment>();
 
         var i = 0;
         var n = query.Length;
@@ -398,7 +398,16 @@ public static partial class JsonPathQueryTokenizer
         }
 
         // finished
-        return ImmutableStack.Create( ((IEnumerable<JsonPathToken>) tokens).Reverse().ToArray() );
+        //return ImmutableStack.Create( ((IEnumerable<JsonPathSegments>) tokens).Reverse().ToArray() );
+
+        for ( var index = 0; index < tokens.Count; index++ )
+        {
+            tokens[index].Next = index == tokens.Count - 1
+                ? Segment.TerminalSegment
+                : tokens[index + 1];
+        }
+
+        return tokens.First();
     }
 
     private static SelectorKind GetElementSelectorKind( string selector )

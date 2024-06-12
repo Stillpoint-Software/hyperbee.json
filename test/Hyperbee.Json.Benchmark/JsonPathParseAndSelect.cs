@@ -93,11 +93,11 @@ public class JsonPathParseAndSelect
     }
 
     [Benchmark]
-    public void JsonPath_JsonCons_JsonNode()
+    public void JsonPath_JsonCons_JsonElement()
     {
         var path = JsonSelector.Parse( Filter )!;
         var element = JsonDocument.Parse( Document ).RootElement;
-        if ( path.Select( element ).ToArray().Length <= 0 )
+        if ( path.Select( element ).Count <= 0 )
             throw new InvalidDataException( "Failed Test" );
     }
 }

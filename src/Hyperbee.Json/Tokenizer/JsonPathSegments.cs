@@ -10,11 +10,11 @@ internal record SelectorDescriptor
     public string Value { get; init; }
 }
 
-[DebuggerTypeProxy( typeof( JsonPathTokenDebugView ) )]
+[DebuggerTypeProxy( typeof( JsonPathSegmentDebugView ) )]
 [DebuggerDisplay( "Singular = {Singular}, SelectorCount = {Selectors.Length}" )]
-internal record JsonPathToken
+internal record JsonPathSegments
 {
-    public static JsonPathToken DescendToken = new( "..", SelectorKind.UnspecifiedGroup );
+    public static JsonPathSegments DescendSegments = new( "..", SelectorKind.UnspecifiedGroup );
 
     public SelectorDescriptor[] Selectors { get; init; }
 
@@ -23,7 +23,7 @@ internal record JsonPathToken
 
     public bool Singular { get; }
 
-    public JsonPathToken( string selector, SelectorKind kind )
+    public JsonPathSegments( string selector, SelectorKind kind )
     {
         Selectors =
         [
@@ -33,7 +33,7 @@ internal record JsonPathToken
         Singular = IsSingular();
     }
 
-    public JsonPathToken( SelectorDescriptor[] selectors )
+    public JsonPathSegments( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
         Singular = IsSingular();
@@ -59,7 +59,7 @@ internal record JsonPathToken
         selectors = Selectors;
     }
 
-    internal class JsonPathTokenDebugView( JsonPathToken instance )
+    internal class JsonPathSegmentDebugView( JsonPathSegments instance )
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         public SelectorDescriptor[] Selectors => instance.Selectors;

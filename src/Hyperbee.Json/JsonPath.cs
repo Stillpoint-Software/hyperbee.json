@@ -63,27 +63,27 @@ public sealed class JsonPath<TElement>
 
         // quick out
 
-        if ( query == "$" )
+        if ( query == "$" || query == "@" )
             return [value];
 
         // tokenize
 
-        var tokens = JsonPathQueryTokenizer.Tokenize( query );
+        var segments = JsonPathQueryTokenizer.Tokenize( query );
 
-        if ( !tokens.IsEmpty )
+        if ( !segments.IsEmpty )
         {
-            var selector = tokens.Peek().FirstSelector;
+            var selector = segments.FirstSelector;
 
             if ( selector == "$" || selector == "@" )
-                tokens = tokens.Pop();
+                segments = segments.Next;
         }
 
-        return EnumerateMatches( root, new ElementArgs( value, tokens ) );
+        return EnumerateMatches( root, new SegmentArgs( value, segments ) );
     }
 
-    private static IEnumerable<TElement> EnumerateMatches( TElement root, ElementArgs args )
+    private static IEnumerable<TElement> EnumerateMatches( TElement root, SegmentArgs args )
     {
-        var stack = new Stack<ElementArgs>( 4 );
+        var stack = new Stack<SegmentArgs>( 16 );
 
         var filterEvaluator = Descriptor.FilterEvaluator;
         var accessor = Descriptor.Accessor;
@@ -92,9 +92,9 @@ public sealed class JsonPath<TElement>
         {
             // deconstruct the next args node
 
-            var (current, tokens) = args;
+            var (current, segments) = args;
 
-            if ( tokens.IsEmpty )
+            if ( segments.IsEmpty )
             {
                 yield return current;
                 continue;
@@ -102,8 +102,8 @@ public sealed class JsonPath<TElement>
 
             // pop the next token from the stack
 
-            tokens = tokens.Pop( out var token );
-            var selector = token.FirstSelector;
+            segments = segments.Pop( out var segment );
+            var selector = segment.FirstSelector;
 
             // make sure we have a complex value
 
@@ -112,10 +112,10 @@ public sealed class JsonPath<TElement>
 
             // try to access object or array using KEY value
 
-            if ( token.Singular )
+            if ( segment.Singular )
             {
                 if ( accessor.TryGetChildValue( current, selector, out var childValue ) )
-                    Push( stack, childValue, tokens );
+                    Push( stack, childValue, segments );
 
                 continue;
             }
@@ -126,7 +126,7 @@ public sealed class JsonPath<TElement>
             {
                 foreach ( var (_, childKey) in accessor.EnumerateChildValues( current ) )
                 {
-                    Push( stack, current, tokens.Push( new( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Dot | Index)
+                    Push( stack, current, segments.Push( childKey, SelectorKind.UnspecifiedSingular ) ); // (Dot | Index)
                 }
 
                 continue;
@@ -139,18 +139,18 @@ public sealed class JsonPath<TElement>
                 foreach ( var (childValue, _) in accessor.EnumerateChildValues( current ) )
                 {
                     if ( accessor.IsObjectOrArray( childValue ) )
-                        Push( stack, childValue, tokens.Push( JsonPathToken.DescendToken ) ); // Descendant
+                        Push( stack, childValue, segments.Push( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
                 }
 
-                Push( stack, current, tokens );
+                Push( stack, current, segments );
                 continue;
             }
 
             // union
 
-            for ( var i = 0; i < token.Selectors.Length; i++ ) // using 'for' for performance
+            for ( var i = 0; i < segment.Selectors.Length; i++ ) // using 'for' for performance
             {
-                var childSelector = token.Selectors[i].Value;
+                var childSelector = segment.Selectors[i].Value;
 
                 // [(exp)]
 
@@ -163,7 +163,7 @@ public sealed class JsonPath<TElement>
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
-                    Push( stack, current, tokens.Push( new( evalSelector, selectorKind ) ) );
+                    Push( stack, current, segments.Push( evalSelector, selectorKind ) );
                     continue;
                 }
 
@@ -177,7 +177,7 @@ public sealed class JsonPath<TElement>
 
                         // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
                         if ( filter is not null and not IConvertible || Convert.ToBoolean( filter, CultureInfo.InvariantCulture ) )
-                            Push( stack, current, tokens.Push( new( childKey, SelectorKind.UnspecifiedSingular ) ) ); // (Name | Index)
+                            Push( stack, current, segments.Push( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
                     }
 
                     continue;
@@ -190,7 +190,7 @@ public sealed class JsonPath<TElement>
                     if ( JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
                     {
                         // [#,#,...] 
-                        Push( stack, accessor.GetElementAt( current, int.Parse( childSelector ) ), tokens );
+                        Push( stack, accessor.GetElementAt( current, int.Parse( childSelector ) ), segments );
                         continue;
                     }
 
@@ -198,13 +198,13 @@ public sealed class JsonPath<TElement>
                     if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) )
                     {
                         foreach ( var index in EnumerateSlice( current, childSelector ) )
-                            Push( stack, accessor.GetElementAt( current, index ), tokens );
+                            Push( stack, accessor.GetElementAt( current, index ), segments );
                         continue;
                     }
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, accessor.GetElementAt( current, index ), tokens.Push( new( childSelector, SelectorKind.UnspecifiedSingular ) ) ); // Name
+                        Push( stack, accessor.GetElementAt( current, index ), segments.Push( childSelector, SelectorKind.UnspecifiedSingular ) ); // Name
 
                     continue;
                 }
@@ -218,7 +218,7 @@ public sealed class JsonPath<TElement>
 
                     // [name1,name2,...]
                     if ( accessor.TryGetChildValue( current, childSelector, out var childValue ) )
-                        Push( stack, childValue, tokens );
+                        Push( stack, childValue, segments );
                 }
             }
 
@@ -226,7 +226,8 @@ public sealed class JsonPath<TElement>
 
         yield break;
 
-        static void Push( Stack<ElementArgs> s, in TElement v, in IImmutableStack<JsonPathToken> t ) => s.Push( new ElementArgs( v, t ) );
+        //static void Push( Stack<SegmentArgs> s, in TElement v, in IImmutableStack<JsonPathSegments> t ) => s.Push( new SegmentArgs( v, t ) );
+        static void Push( Stack<SegmentArgs> s, in TElement v, in Segment t ) => s.Push( new SegmentArgs( v, t ) );
     }
 
     private static IEnumerable<int> EnumerateArrayIndices( int length )
@@ -263,15 +264,83 @@ public sealed class JsonPath<TElement>
         }
     }
 
-    private sealed class ElementArgs( in TElement value, in IImmutableStack<JsonPathToken> tokens )
+    // private sealed class SegmentArgs( in TElement value, in IImmutableStack<JsonPathSegments> segments )
+    // {
+    //     public readonly TElement Value = value;
+    //     public readonly IImmutableStack<JsonPathSegments> Segments = segments;
+    //
+    //     public void Deconstruct( out TElement value, out IImmutableStack<JsonPathSegments> segments )
+    //     {
+    //         value = Value;
+    //         segments = Segments;
+    //     }
+    // }
+
+    private sealed class SegmentArgs( in TElement value, in Segment segment )
     {
         public readonly TElement Value = value;
-        public readonly IImmutableStack<JsonPathToken> Tokens = tokens;
+        public readonly Segment Segment = segment;
 
-        public void Deconstruct( out TElement value, out IImmutableStack<JsonPathToken> tokens )
+        public void Deconstruct( out TElement value, out Segment segment )
         {
             value = Value;
-            tokens = Tokens;
+            segment = Segment;
         }
+    }
+
+}
+
+internal record Segment
+{
+    public static Segment TerminalSegment = new( null, null, SelectorKind.Undefined );
+
+    public bool IsEmpty => Next == null;
+
+    public string FirstSelector => Selectors[0].Value;
+
+    public bool Singular { get; }
+
+    public Segment Next { get; set; }
+    public SelectorDescriptor[] Selectors { get; init; }
+
+    public Segment( Segment next, string selector, SelectorKind kind )
+    {
+        Next = next;
+        Selectors =
+        [
+            new SelectorDescriptor { SelectorKind = kind, Value = selector }
+        ];
+        Singular = IsSingular();
+    }
+
+    public Segment( Segment next, SelectorDescriptor[] selectors )
+    {
+        Next = next;
+        Selectors = selectors;
+        Singular = IsSingular();
+    }
+
+    public Segment Push( string selector, SelectorKind kind ) => new( this, selector, kind );
+
+    public Segment Push( SelectorDescriptor[] selectors ) => new( this, selectors );
+
+    public Segment Pop( out Segment segment )
+    {
+        segment = this;
+        return Next;
+    }
+
+    private bool IsSingular()
+    {
+        if ( Selectors.Length != 1 )
+            return false;
+
+        var selectorKind = Selectors[0].SelectorKind;
+
+        return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
+               selectorKind == SelectorKind.Dot ||
+               selectorKind == SelectorKind.Index ||
+               selectorKind == SelectorKind.Name ||
+               selectorKind == SelectorKind.Root;
     }
 }

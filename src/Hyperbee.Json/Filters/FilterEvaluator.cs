@@ -12,7 +12,6 @@ public sealed class FilterEvaluator<TType> : IFilterEvaluator<TType>
     // ReSharper disable once StaticMemberInGenericType
     private static readonly ConcurrentDictionary<string, Func<TType, TType, bool>> Compiled = new();
 
-
     public FilterEvaluator( ITypeDescriptor<TType> typeDescriptor )
     {
         _typeDescriptor = typeDescriptor;

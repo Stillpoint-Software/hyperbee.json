@@ -1,4 +1,4 @@
-﻿
+
 using System.Diagnostics;
 
 namespace Hyperbee.Json.Tokenizer;

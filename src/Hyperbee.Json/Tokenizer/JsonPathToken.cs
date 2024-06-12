@@ -19,7 +19,7 @@ internal record JsonPathToken
     public string FirstSelector => Selectors[0].Value;
 
     public bool Singular { get; }
-    
+
     private bool IsSingular()
     {
         if ( Selectors.Length != 1 )

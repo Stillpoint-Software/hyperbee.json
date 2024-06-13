@@ -15,12 +15,17 @@ A C# implementation of JSONPath for .NET `System.Text.Json` and `System.Text.Jso
   * [Parser Comparison Results](https://cburgmer.github.io/json-path-comparison)
   * [Parser Comparison GitHub](https://github.com/cburgmer/json-path-comparison/tree/master)
 
-## JSONPath Expressions
+## JSONPath
 
-JSONPath expressions always refers to a JSON structure in the same way as XPath
-expressions are used in combination with an XML document. Since a JSON structure is
-usually anonymous and doesn't necessarily have a root member object, JSONPath
-assumes the abstract name `$` assigned to the outer level object.
+JSON Path is a query language for JSON documents inspired by XPath. JSONPath defines 
+a string syntax for selecting and extracting JSON (RFC 8259) values from within a 
+given JSON value.
+
+## JSONPath Syntax
+
+JSONPath expressions refer to a JSON structure in the same way as XPath expressions 
+are used in combination with an XML document. JSONPath assumes the abstract name `$` 
+is assigned to the outer level object.
 
 JSONPath expressions can use dot-notation:
 
@@ -208,7 +213,7 @@ numeric values during the deserialization process.
 
 | Method                             | Description
 |:-----------------------------------|:-----------
-| `JsonElement.GetPropertyFromKey`   | Dives for properties using absolute bracket notation keys like `$['store']['book'][2]['author']`
+| `JsonElement.GetPropertyFromKey`   | Dives for properties using absolute bracket location keys like `$['store']['book'][2]['author']`
 
 ### JsonElement Helpers
 

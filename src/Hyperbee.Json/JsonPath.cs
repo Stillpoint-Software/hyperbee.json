@@ -223,7 +223,7 @@ public sealed class JsonPath<TElement>
 
         yield break;
 
-        static void Push( Stack<NodeArgs> s, in TElement v, in JsonPathSegment t ) => s.Push( new NodeArgs( v, t ) );
+        static void Push( Stack<NodeArgs> n, in TElement v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
 
     private static bool Truthy( object value )

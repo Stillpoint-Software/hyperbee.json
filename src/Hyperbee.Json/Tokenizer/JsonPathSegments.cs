@@ -9,11 +9,11 @@ internal record SelectorDescriptor
     public string Value { get; init; }
 }
 
-[DebuggerTypeProxy( typeof( SegmentDebugView ) )]
+[DebuggerTypeProxy( typeof(SegmentDebugView) )]
 [DebuggerDisplay( "First = ({Selectors[0]}), Singular = {Singular}, Count = {Selectors.Length}" )]
 internal class Segment
 {
-    internal static readonly Segment Terminal = new( null, null, SelectorKind.Undefined ); // marks end of segments
+    internal static readonly Segment Terminal = new();
 
     public bool IsEmpty => Next == null;
 
@@ -22,9 +22,11 @@ internal class Segment
     public Segment Next { get; set; }
     public SelectorDescriptor[] Selectors { get; init; }
 
+    private Segment() { }
+
     public Segment( Segment next, string selector, SelectorKind kind )
     {
-        Next = next; //BF: should we get smarter here and set Selectors = [] for terminal
+        Next = next;
         Selectors =
         [
             new SelectorDescriptor { SelectorKind = kind, Value = selector }
@@ -38,12 +40,30 @@ internal class Segment
         Singular = IsSingular();
     }
 
-    public Segment Push( string selector, SelectorKind kind ) => new( this, selector, kind ); //BF: Insert(), AddHead()
+    public Segment Insert( string selector, SelectorKind kind ) => new(this, selector, kind);
 
-    public Segment Pop( out Segment segment )   //BF: Next()
+    public Segment MoveNext( out Segment segment ) //BF: Next()
     {
         segment = this;
         return Next;
+    }
+
+    public IEnumerable<Segment> AsEnumerable()
+    {
+        var current = this;
+
+        while ( current != Terminal )
+        {
+            yield return current;
+
+            current = current.Next;
+        }
+    }
+
+    public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )
+    {
+        singular = Singular;
+        selectors = Selectors;
     }
 
     private bool IsSingular()

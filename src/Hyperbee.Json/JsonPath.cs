@@ -101,7 +101,7 @@ public sealed class JsonPath<TElement>
 
             // pop the next token from the stack
 
-            segments = segments.Pop( out var segment );
+            segments = segments.MoveNext( out var segment );
             var selector = segment.Selectors[0].Value; // first selector in segment;
 
             // make sure we have a complex value
@@ -125,7 +125,7 @@ public sealed class JsonPath<TElement>
             {
                 foreach ( var (_, childKey) in accessor.EnumerateChildValues( current ) )
                 {
-                    Push( stack, current, segments.Push( childKey, SelectorKind.UnspecifiedSingular ) ); // (Dot | Index)
+                    Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Dot | Index)
                 }
 
                 continue;
@@ -138,7 +138,7 @@ public sealed class JsonPath<TElement>
                 foreach ( var (childValue, _) in accessor.EnumerateChildValues( current ) )
                 {
                     if ( accessor.IsObjectOrArray( childValue ) )
-                        Push( stack, childValue, segments.Push( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
+                        Push( stack, childValue, segments.Insert( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
                 }
 
                 Push( stack, current, segments );
@@ -162,7 +162,7 @@ public sealed class JsonPath<TElement>
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
-                    Push( stack, current, segments.Push( evalSelector, selectorKind ) );
+                    Push( stack, current, segments.Insert( evalSelector, selectorKind ) );
                     continue;
                 }
 
@@ -176,7 +176,7 @@ public sealed class JsonPath<TElement>
 
                         // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
                         if ( Truthy( filter ) )
-                            Push( stack, current, segments.Push( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
+                            Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
                     }
 
                     continue;
@@ -203,7 +203,7 @@ public sealed class JsonPath<TElement>
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, accessor.GetElementAt( current, index ), segments.Push( childSelector, SelectorKind.UnspecifiedSingular ) ); // Name
+                        Push( stack, accessor.GetElementAt( current, index ), segments.Insert( childSelector, SelectorKind.UnspecifiedSingular ) ); // Name
 
                     continue;
                 }

@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
-public class ElementValueAccessor : IValueAccessor<JsonElement>
+internal class ElementValueAccessor : IValueAccessor<JsonElement>
 {
     public IEnumerable<(JsonElement, string)> EnumerateChildValues( JsonElement value )
     {

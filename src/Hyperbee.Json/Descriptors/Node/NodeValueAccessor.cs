@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Filters;
 
 namespace Hyperbee.Json.Descriptors.Node;
 

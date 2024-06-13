@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
-public static class FilterElementHelper
+internal static class FilterElementHelper
 {
     public static readonly MethodInfo SelectFirstElementValueMethod;
     public static readonly MethodInfo SelectFirstMethod;

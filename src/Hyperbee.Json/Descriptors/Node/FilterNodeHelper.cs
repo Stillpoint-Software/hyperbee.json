@@ -5,7 +5,7 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
-public static class FilterNodeHelper
+internal static class FilterNodeHelper
 {
     public static readonly MethodInfo SelectFirstElementValueMethod;
     public static readonly MethodInfo SelectFirstMethod;

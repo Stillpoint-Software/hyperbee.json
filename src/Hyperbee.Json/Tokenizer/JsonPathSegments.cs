@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Hyperbee.Json.Tokenizer; 
+namespace Hyperbee.Json.Tokenizer;
 
 [DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
 internal record SelectorDescriptor
@@ -53,7 +53,7 @@ internal class Segment
 
         var selectorKind = Selectors[0].SelectorKind;
 
-        return selectorKind == SelectorKind.UnspecifiedSingular || 
+        return selectorKind == SelectorKind.UnspecifiedSingular ||
                selectorKind == SelectorKind.Dot ||
                selectorKind == SelectorKind.Index ||
                selectorKind == SelectorKind.Name ||

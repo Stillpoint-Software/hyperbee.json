@@ -405,7 +405,7 @@ public static partial class JsonPathQueryTokenizer
                 : tokens[index + 1];
         }
 
-        return tokens.First(); 
+        return tokens.First();
     }
 
     private static SelectorKind GetElementSelectorKind( string selector )

@@ -13,7 +13,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
             case JsonArray arrayValue:
                 for ( var index = arrayValue.Count - 1; index >= 0; index-- )
                 {
-                    var child = value[index];
+                    var child = arrayValue[index];
 
                     if ( includeValues || child is JsonObject or JsonArray )
                         yield return (child, index.ToString());
@@ -68,13 +68,13 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         return value is JsonObject;
     }
 
-    public bool TryGetChildValue( in JsonNode value, ReadOnlySpan<char> childKey, out JsonNode childValue )
+    public bool TryGetChildValue( in JsonNode value, string childKey, out JsonNode childValue )
     {
         switch ( value )
         {
             case JsonObject valueObject:
                 {
-                    if ( valueObject.TryGetPropertyValue( childKey.ToString(), out childValue ) )
+                    if ( valueObject.TryGetPropertyValue( childKey, out childValue ) )
                         return true;
 
                     break;
@@ -94,7 +94,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
             default:
                 {
                     if ( !IsPathOperator( childKey ) )
-                        throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
+                        throw new ArgumentException( $"Invalid child type '{childKey}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
 
                     break;
                 }

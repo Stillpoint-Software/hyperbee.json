@@ -71,7 +71,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         return value.ValueKind is JsonValueKind.Object;
     }
 
-    public bool TryGetChildValue( in JsonElement value, ReadOnlySpan<char> childKey, out JsonElement childValue )
+    public bool TryGetChildValue( in JsonElement value, string childKey, out JsonElement childValue )
     {
         switch ( value.ValueKind )
         {
@@ -93,7 +93,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
             default:
                 if ( !IsPathOperator( childKey ) )
-                    throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
+                    throw new ArgumentException( $"Invalid child type '{childKey}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
                 break;
         }
 

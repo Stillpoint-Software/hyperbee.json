@@ -7,16 +7,16 @@ public static class JsonPathSelectExtensions
 {
     public static IEnumerable<JsonElement> Select( this JsonElement element, string query )
     {
-        return new JsonPath<JsonElement>().Select( element, query );
+        return JsonPath<JsonElement>.Select( element, query );
     }
 
     public static IEnumerable<JsonElement> Select( this JsonDocument document, string query )
     {
-        return new JsonPath<JsonElement>().Select( document.RootElement, query );
+        return JsonPath<JsonElement>.Select( document.RootElement, query );
     }
 
     public static IEnumerable<JsonNode> Select( this JsonNode node, string query )
     {
-        return new JsonPath<JsonNode>().Select( node, query );
+        return JsonPath<JsonNode>.Select( node, query );
     }
 }

@@ -7,5 +7,5 @@ public interface IValueAccessor<TElement>
     bool IsObjectOrArray( in TElement current );
     bool IsArray( in TElement current, out int length );
     bool IsObject( in TElement current );
-    bool TryGetChildValue( in TElement current, ReadOnlySpan<char> childKey, out TElement childValue );
+    bool TryGetChildValue( in TElement current, string childKey, out TElement childValue );
 }

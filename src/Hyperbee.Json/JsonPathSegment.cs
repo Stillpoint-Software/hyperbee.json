@@ -17,7 +17,7 @@ internal class JsonPathSegment
 
     public bool IsEmpty => Next == null;
 
-    public bool Singular { get; }
+    public bool Singular { get; } // singular is true when the selector resolves to one and only one element
 
     public JsonPathSegment Next { get; set; }
     public SelectorDescriptor[] Selectors { get; init; }

@@ -207,7 +207,6 @@ numeric values during the deserialization process.
 |:-----------------------------------|:-----------
 | `JsonElement.DeepEquals`           | Performs a deep equals comparison 
 | `JsonElementEqualityDeepComparer`  | A deep equals equality comparer
-| `JsonElementPositionComparer`      | A position comparer that compares the element's position in the backing stream
 
 ### Property Diving
 

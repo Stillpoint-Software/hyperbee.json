@@ -41,11 +41,11 @@ namespace Hyperbee.Json;
 // https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
 // https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
-public sealed class JsonPath<TElement>
+public static class JsonPath<TElement>
 {
     private static readonly ITypeDescriptor<TElement> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TElement>();
 
-    public IEnumerable<TElement> Select( in TElement value, string query )
+    public static IEnumerable<TElement> Select( in TElement value, string query )
     {
         return EnumerateMatches( value, value, query );
     }

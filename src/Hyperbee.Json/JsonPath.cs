@@ -175,7 +175,7 @@ public sealed class JsonPath<TElement>
                         var filter = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
 
                         // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
-                        if ( filter is not null and not IConvertible || Convert.ToBoolean( filter, CultureInfo.InvariantCulture ) )
+                        if ( Truthy( filter ) )
                             Push( stack, current, segments.Push( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
                     }
 
@@ -226,6 +226,11 @@ public sealed class JsonPath<TElement>
         yield break;
 
         static void Push( Stack<NodeArgs> s, in TElement v, in Segment t ) => s.Push( new NodeArgs( v, t ) );
+    }
+
+    private static bool Truthy( object value )
+    {
+        return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
     }
 
     private static IEnumerable<int> EnumerateArrayIndices( int length )

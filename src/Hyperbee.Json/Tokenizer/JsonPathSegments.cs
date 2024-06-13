@@ -9,7 +9,7 @@ internal record SelectorDescriptor
     public string Value { get; init; }
 }
 
-[DebuggerTypeProxy( typeof(SegmentDebugView) )]
+[DebuggerTypeProxy( typeof( SegmentDebugView ) )]
 [DebuggerDisplay( "First = ({Selectors[0]}), Singular = {Singular}, Count = {Selectors.Length}" )]
 internal class Segment
 {
@@ -40,7 +40,7 @@ internal class Segment
         Singular = IsSingular();
     }
 
-    public Segment Insert( string selector, SelectorKind kind ) => new(this, selector, kind);
+    public Segment Insert( string selector, SelectorKind kind ) => new( this, selector, kind );
 
     public Segment MoveNext( out Segment segment ) //BF: Next()
     {

@@ -42,9 +42,9 @@ internal class Segment
 
     public Segment Insert( string selector, SelectorKind kind ) => new( this, selector, kind );
 
-    public Segment MoveNext( out Segment segment ) //BF: Next()
+    public Segment MoveNext( out Segment previous ) 
     {
-        segment = this;
+        previous = this;
         return Next;
     }
 

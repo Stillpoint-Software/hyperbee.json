@@ -99,7 +99,8 @@ public sealed class JsonPath<TElement>
                 continue;
             }
 
-            // pop the next token from the stack
+            // get the current segment as out, and then move the
+            // segments reference to the next segment in the list
 
             segments = segments.MoveNext( out var segment );
             var selector = segment.Selectors[0].Value; // first selector in segment;
@@ -155,14 +156,14 @@ public sealed class JsonPath<TElement>
 
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
                 {
-                    if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string evalSelector )
+                    if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string filterSelector )
                         continue;
 
-                    var selectorKind = evalSelector != "*" && evalSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( evalSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
+                    var selectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
-                    Push( stack, current, segments.Insert( evalSelector, selectorKind ) );
+                    Push( stack, current, segments.Insert( filterSelector, selectorKind ) );
                     continue;
                 }
 
@@ -172,10 +173,9 @@ public sealed class JsonPath<TElement>
                 {
                     foreach ( var (childValue, childKey) in accessor.EnumerateChildValues( current ) )
                     {
-                        var filter = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
+                        var filterValue = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
 
-                        // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
-                        if ( Truthy( filter ) )
+                        if ( Truthy( filterValue ) )
                             Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
                     }
 
@@ -267,7 +267,7 @@ public sealed class JsonPath<TElement>
         }
     }
 
-    private sealed class NodeArgs( in TElement value, in Segment segment ) //BF: NodeArgs
+    private sealed class NodeArgs( in TElement value, in Segment segment )
     {
         public readonly TElement Value = value;
         public readonly Segment Segment = segment;

@@ -83,8 +83,7 @@ public static class JsonPath<TElement>
     {
         var stack = new Stack<NodeArgs>( 16 );
 
-        var filterEvaluator = Descriptor.FilterEvaluator;
-        var accessor = Descriptor.Accessor;
+        var (accessor, filterEvaluator) = Descriptor;
 
         do
         {

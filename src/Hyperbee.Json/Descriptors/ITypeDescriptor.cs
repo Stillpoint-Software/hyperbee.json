@@ -15,4 +15,10 @@ public interface ITypeDescriptor<TElement> : IJsonTypeDescriptor
 {
     public IValueAccessor<TElement> Accessor { get; }
     public IFilterEvaluator<TElement> FilterEvaluator { get; }
+
+    public void Deconstruct( out IValueAccessor<TElement> valueAccessor, out IFilterEvaluator<TElement> filterEvaluator )
+    {
+        valueAccessor = Accessor;
+        filterEvaluator = FilterEvaluator;
+    }
 }

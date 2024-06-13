@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Hyperbee.Json.Tokenizer;
+namespace Hyperbee.Json;
 
 [DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
 internal record SelectorDescriptor
@@ -11,20 +11,20 @@ internal record SelectorDescriptor
 
 [DebuggerTypeProxy( typeof( SegmentDebugView ) )]
 [DebuggerDisplay( "First = ({Selectors[0]}), Singular = {Singular}, Count = {Selectors.Length}" )]
-internal class Segment
+internal class JsonPathSegment
 {
-    internal static readonly Segment Terminal = new();
+    internal static readonly JsonPathSegment Terminal = new();
 
     public bool IsEmpty => Next == null;
 
     public bool Singular { get; }
 
-    public Segment Next { get; set; }
+    public JsonPathSegment Next { get; set; }
     public SelectorDescriptor[] Selectors { get; init; }
 
-    private Segment() { }
+    private JsonPathSegment() { }
 
-    public Segment( Segment next, string selector, SelectorKind kind )
+    public JsonPathSegment( JsonPathSegment next, string selector, SelectorKind kind )
     {
         Next = next;
         Selectors =
@@ -34,21 +34,21 @@ internal class Segment
         Singular = IsSingular();
     }
 
-    public Segment( SelectorDescriptor[] selectors )
+    public JsonPathSegment( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
         Singular = IsSingular();
     }
 
-    public Segment Insert( string selector, SelectorKind kind ) => new( this, selector, kind );
+    public JsonPathSegment Insert( string selector, SelectorKind kind ) => new( this, selector, kind );
 
-    public Segment MoveNext( out Segment previous )
+    public JsonPathSegment MoveNext( out JsonPathSegment previous )
     {
         previous = this;
         return Next;
     }
 
-    public IEnumerable<Segment> AsEnumerable()
+    public IEnumerable<JsonPathSegment> AsEnumerable()
     {
         var current = this;
 
@@ -80,12 +80,12 @@ internal class Segment
                selectorKind == SelectorKind.Root;
     }
 
-    internal class SegmentDebugView( Segment instance )
+    internal class SegmentDebugView( JsonPathSegment instance )
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         public SelectorDescriptor[] Selectors => instance.Selectors;
 
         [DebuggerBrowsable( DebuggerBrowsableState.Collapsed )]
-        public Segment Next => instance.Next;
+        public JsonPathSegment Next => instance.Next;
     }
 }

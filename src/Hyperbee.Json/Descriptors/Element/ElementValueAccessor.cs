@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Descriptors.Element;
 
 internal class ElementValueAccessor : IValueAccessor<JsonElement>
 {
-    public IEnumerable<(JsonElement, string)> EnumerateChildValues( JsonElement value )
+    public IEnumerable<(JsonElement, string)> EnumerateChildren( JsonElement value, bool includeValues = true )
     {
         switch ( value.ValueKind )
         {
@@ -14,54 +14,46 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 {
                     for ( var index = value.GetArrayLength() - 1; index >= 0; index-- )
                     {
-                        yield return (value[index], index.ToString());
+                        var child = value[index];
+                        
+                        if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
+                            yield return (child, index.ToString());
                     }
 
                     break;
                 }
             case JsonValueKind.Object:
                 {
-                    foreach ( var result in ReverseProperties( value.EnumerateObject() ) )
-                        yield return result;
+                    if ( includeValues )
+                    {
+                        foreach ( var child in value.EnumerateObject().Reverse() )
+                            yield return (child.Value, child.Name);
+                    }
+                    else
+                    {
+                        foreach ( var child in value.EnumerateObject().Where( property => property.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object ).Reverse() )
+                            yield return (child.Value, child.Name);
+                    }
 
                     break;
                 }
         }
-
-        yield break;
-
-        static IEnumerable<(JsonElement, string)> ReverseProperties( JsonElement.ObjectEnumerator enumerator )
-        {
-            if ( !enumerator.MoveNext() )
-            {
-                yield break;
-            }
-
-            var property = enumerator.Current;
-
-            foreach ( var result in ReverseProperties( enumerator ) )
-            {
-                yield return result;
-            }
-
-            yield return (property.Value, property.Name);
-        }
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public JsonElement GetElementAt( JsonElement value, int index )
+    public JsonElement GetElementAt( in JsonElement value, int index )
     {
         return value[index];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObjectOrArray( JsonElement value )
+    public bool IsObjectOrArray( in JsonElement value )
     {
         return value.ValueKind is JsonValueKind.Array or JsonValueKind.Object;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsArray( JsonElement value, out int length )
+    public bool IsArray( in JsonElement value, out int length )
     {
         if ( value.ValueKind == JsonValueKind.Array )
         {
@@ -74,20 +66,13 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObject( JsonElement value )
+    public bool IsObject( in JsonElement value )
     {
         return value.ValueKind is JsonValueKind.Object;
     }
 
     public bool TryGetChildValue( in JsonElement value, ReadOnlySpan<char> childKey, out JsonElement childValue )
     {
-        static int? TryParseInt( ReadOnlySpan<char> numberString )
-        {
-            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
-        }
-
-        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
-
         switch ( value.ValueKind )
         {
             case JsonValueKind.Object:
@@ -114,5 +99,12 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
         childValue = default;
         return false;
+
+        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
+
+        static int? TryParseInt( ReadOnlySpan<char> numberString )
+        {
+            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
+        }
     }
 }

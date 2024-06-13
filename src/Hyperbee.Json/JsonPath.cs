@@ -44,7 +44,7 @@ namespace Hyperbee.Json;
 
 public sealed class JsonPath<TElement>
 {
-    private static readonly ITypeDescriptor<TElement> Descriptor = JsonTypeRegistry.GetDescriptor<TElement>();
+    private static readonly ITypeDescriptor<TElement> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TElement>();
 
     public IEnumerable<TElement> Select( in TElement value, string query )
     {
@@ -124,7 +124,7 @@ public sealed class JsonPath<TElement>
 
             if ( selector == "*" )
             {
-                foreach ( var (_, childKey) in accessor.EnumerateChildValues( current ) )
+                foreach ( var (_, childKey) in accessor.EnumerateChildren( current ) )
                 {
                     Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Dot | Index)
                 }
@@ -136,10 +136,9 @@ public sealed class JsonPath<TElement>
 
             if ( selector == ".." )
             {
-                foreach ( var (childValue, _) in accessor.EnumerateChildValues( current ) )
+                foreach ( var (childValue, _) in accessor.EnumerateChildren( current, includeValues:false ) ) // child arrays or objects only
                 {
-                    if ( accessor.IsObjectOrArray( childValue ) )
-                        Push( stack, childValue, segments.Insert( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
+                    Push( stack, childValue, segments.Insert( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
                 }
 
                 Push( stack, current, segments );
@@ -171,7 +170,7 @@ public sealed class JsonPath<TElement>
 
                 if ( childSelector.Length > 3 && childSelector[0] == '?' && childSelector[1] == '(' && childSelector[^1] == ')' )
                 {
-                    foreach ( var (childValue, childKey) in accessor.EnumerateChildValues( current ) )
+                    foreach ( var (childValue, childKey) in accessor.EnumerateChildren( current ) )
                     {
                         var filterValue = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
 
@@ -225,7 +224,7 @@ public sealed class JsonPath<TElement>
 
         yield break;
 
-        static void Push( Stack<NodeArgs> s, in TElement v, in Segment t ) => s.Push( new NodeArgs( v, t ) );
+        static void Push( Stack<NodeArgs> s, in TElement v, in JsonPathSegment t ) => s.Push( new NodeArgs( v, t ) );
     }
 
     private static bool Truthy( object value )
@@ -267,12 +266,12 @@ public sealed class JsonPath<TElement>
         }
     }
 
-    private sealed class NodeArgs( in TElement value, in Segment segment )
+    private sealed class NodeArgs( in TElement value, in JsonPathSegment segment )
     {
         public readonly TElement Value = value;
-        public readonly Segment Segment = segment;
+        public readonly JsonPathSegment Segment = segment;
 
-        public void Deconstruct( out TElement value, out Segment segment )
+        public void Deconstruct( out TElement value, out JsonPathSegment segment )
         {
             value = Value;
             segment = Segment;

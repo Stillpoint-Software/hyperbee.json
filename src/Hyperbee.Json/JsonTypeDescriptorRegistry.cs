@@ -4,11 +4,11 @@ using Hyperbee.Json.Descriptors.Node;
 
 namespace Hyperbee.Json;
 
-public class JsonTypeRegistry
+public class JsonTypeDescriptorRegistry
 {
     private static readonly Dictionary<Type, IJsonTypeDescriptor> Descriptors = [];
 
-    static JsonTypeRegistry()
+    static JsonTypeDescriptorRegistry()
     {
         Register( new ElementTypeDescriptor() );
         Register( new NodeTypeDescriptor() );

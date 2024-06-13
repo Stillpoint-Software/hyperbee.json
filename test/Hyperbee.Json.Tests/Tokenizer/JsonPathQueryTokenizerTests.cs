@@ -32,9 +32,9 @@ public class JsonPathQueryTokenizerTests
     public void Should_tokenize_json_path( string jsonPath, string expected )
     {
         // arrange
-        static string TokensToString( Segment segment )
+        static string TokensToString( JsonPathSegment segment )
         {
-            static string TokenToString( Segment segment )
+            static string TokenToString( JsonPathSegment segment )
             {
                 var (keySelector, selectors) = segment;
                 var selectorType = keySelector ? "k" : "s";

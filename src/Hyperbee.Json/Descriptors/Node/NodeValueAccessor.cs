@@ -6,58 +6,51 @@ namespace Hyperbee.Json.Descriptors.Node;
 
 internal class NodeValueAccessor : IValueAccessor<JsonNode>
 {
-    public IEnumerable<(JsonNode, string)> EnumerateChildValues( JsonNode value )
+    public IEnumerable<(JsonNode, string)> EnumerateChildren( JsonNode value, bool includeValues = true )
     {
         switch ( value )
         {
             case JsonArray arrayValue:
                 for ( var index = arrayValue.Count - 1; index >= 0; index-- )
                 {
-                    yield return (value[index], index.ToString());
+                    var child = value[index];
+                    
+                    if ( includeValues || child is JsonObject or JsonArray )
+                        yield return (child, index.ToString());
                 }
 
                 break;
             case JsonObject objectValue:
-                foreach ( var result in ProcessProperties( objectValue.GetEnumerator() ) )
-                    yield return result;
+
+                if ( includeValues )
+                {
+                    foreach ( var child in objectValue.Reverse() )
+                        yield return (child.Value, child.Key);
+                }
+                else
+                {
+                    foreach ( var child in objectValue.Where( property => property.Value is JsonObject or JsonArray ).Reverse() )
+                        yield return (child.Value, child.Key);
+                }
 
                 break;
-        }
-
-        yield break;
-
-        static IEnumerable<(JsonNode, string)> ProcessProperties( IEnumerator<KeyValuePair<string, JsonNode>> enumerator )
-        {
-            if ( !enumerator.MoveNext() )
-            {
-                yield break;
-            }
-
-            var property = enumerator.Current;
-
-            foreach ( var result in ProcessProperties( enumerator ) )
-            {
-                yield return result;
-            }
-
-            yield return (property.Value, property.Key);
         }
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public JsonNode GetElementAt( JsonNode value, int index )
+    public JsonNode GetElementAt( in JsonNode value, int index )
     {
         return value[index];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObjectOrArray( JsonNode value )
+    public bool IsObjectOrArray( in JsonNode value )
     {
         return value is JsonObject or JsonArray;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsArray( JsonNode value, out int length )
+    public bool IsArray( in JsonNode value, out int length )
     {
         if ( value is JsonArray jsonArray )
         {
@@ -70,20 +63,13 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObject( JsonNode value )
+    public bool IsObject( in JsonNode value )
     {
         return value is JsonObject;
     }
 
     public bool TryGetChildValue( in JsonNode value, ReadOnlySpan<char> childKey, out JsonNode childValue )
     {
-        static int? TryParseInt( ReadOnlySpan<char> numberString )
-        {
-            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
-        }
-
-        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
-
         switch ( value )
         {
             case JsonObject valueObject:
@@ -116,5 +102,12 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
 
         childValue = default;
         return false;
+
+        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
+
+        static int? TryParseInt( ReadOnlySpan<char> numberString )
+        {
+            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
+        }
     }
 }

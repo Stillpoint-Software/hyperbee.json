@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 
-namespace Hyperbee.Json.Tokenizer;
+namespace Hyperbee.Json;
 // https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
 // https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
@@ -30,7 +30,7 @@ internal enum SelectorKind
 
 public static partial class JsonPathQueryTokenizer
 {
-    private static readonly ConcurrentDictionary<string, Segment> JsonPathTokens = new();
+    private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
     [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
     private static partial Regex RegexSlice();
@@ -67,7 +67,7 @@ public static partial class JsonPathQueryTokenizer
         return length <= 0 ? null : buffer.Slice( start, length ).Trim().ToString();
     }
 
-    private static void InsertToken( ICollection<Segment> tokens, SelectorDescriptor selector )
+    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor selector )
     {
         if ( selector?.Value == null )
             return;
@@ -75,29 +75,29 @@ public static partial class JsonPathQueryTokenizer
         InsertToken( tokens, [selector] );
     }
 
-    private static void InsertToken( ICollection<Segment> tokens, SelectorDescriptor[] selectors )
+    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor[] selectors )
     {
         if ( selectors == null || selectors.Length == 0 )
             return;
 
-        tokens.Add( new Segment( selectors ) );
+        tokens.Add( new JsonPathSegment( selectors ) );
     }
 
-    internal static Segment Tokenize( string query )
+    internal static JsonPathSegment Tokenize( string query )
     {
         return JsonPathTokens.GetOrAdd( query, x => TokenFactory( x.AsSpan() ) );
     }
 
-    internal static Segment TokenizeNoCache( ReadOnlySpan<char> query )
+    internal static JsonPathSegment TokenizeNoCache( ReadOnlySpan<char> query )
     {
         return TokenFactory( query );
     }
 
-    private static Segment TokenFactory( ReadOnlySpan<char> query )
+    private static JsonPathSegment TokenFactory( ReadOnlySpan<char> query )
     {
         // transform jsonpath patterns like "$.store.book[*]..author" to an array of tokens [ $, store, book, *, .., author ]
 
-        var tokens = new List<Segment>();
+        var tokens = new List<JsonPathSegment>();
 
         var i = 0;
         var n = query.Length;
@@ -401,7 +401,7 @@ public static partial class JsonPathQueryTokenizer
         for ( var index = 0; index < tokens.Count; index++ )
         {
             tokens[index].Next = index == tokens.Count - 1
-                ? Segment.Terminal
+                ? JsonPathSegment.Terminal
                 : tokens[index + 1];
         }
 

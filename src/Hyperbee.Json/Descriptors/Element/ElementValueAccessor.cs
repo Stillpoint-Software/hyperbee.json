@@ -15,7 +15,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                     for ( var index = value.GetArrayLength() - 1; index >= 0; index-- )
                     {
                         var child = value[index];
-                        
+
                         if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
                             yield return (child, index.ToString());
                     }

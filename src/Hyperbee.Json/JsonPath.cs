@@ -136,7 +136,7 @@ public sealed class JsonPath<TElement>
 
             if ( selector == ".." )
             {
-                foreach ( var (childValue, _) in accessor.EnumerateChildren( current, includeValues:false ) ) // child arrays or objects only
+                foreach ( var (childValue, _) in accessor.EnumerateChildren( current, includeValues: false ) ) // child arrays or objects only
                 {
                     Push( stack, childValue, segments.Insert( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
                 }

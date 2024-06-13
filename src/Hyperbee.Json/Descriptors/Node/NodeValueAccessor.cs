@@ -14,7 +14,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 for ( var index = arrayValue.Count - 1; index >= 0; index-- )
                 {
                     var child = value[index];
-                    
+
                     if ( includeValues || child is JsonObject or JsonArray )
                         yield return (child, index.ToString());
                 }

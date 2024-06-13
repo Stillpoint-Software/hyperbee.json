@@ -77,12 +77,12 @@ public sealed class JsonPath<TElement>
                 segments = segments.Next;
         }
 
-        return EnumerateMatches( root, new SegmentArgs( value, segments ) );
+        return EnumerateMatches( root, new NodeArgs( value, segments ) );
     }
 
-    private static IEnumerable<TElement> EnumerateMatches( TElement root, SegmentArgs args )
+    private static IEnumerable<TElement> EnumerateMatches( TElement root, NodeArgs args )
     {
-        var stack = new Stack<SegmentArgs>( 16 );
+        var stack = new Stack<NodeArgs>( 16 );
 
         var filterEvaluator = Descriptor.FilterEvaluator;
         var accessor = Descriptor.Accessor;
@@ -225,7 +225,7 @@ public sealed class JsonPath<TElement>
 
         yield break;
 
-        static void Push( Stack<SegmentArgs> s, in TElement v, in Segment t ) => s.Push( new SegmentArgs( v, t ) );
+        static void Push( Stack<NodeArgs> s, in TElement v, in Segment t ) => s.Push( new NodeArgs( v, t ) );
     }
 
     private static IEnumerable<int> EnumerateArrayIndices( int length )
@@ -262,7 +262,7 @@ public sealed class JsonPath<TElement>
         }
     }
 
-    private sealed class SegmentArgs( in TElement value, in Segment segment ) //BF: Node
+    private sealed class NodeArgs( in TElement value, in Segment segment ) //BF: NodeArgs
     {
         public readonly TElement Value = value;
         public readonly Segment Segment = segment;

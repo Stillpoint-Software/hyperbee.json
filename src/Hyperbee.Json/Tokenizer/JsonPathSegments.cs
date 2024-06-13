@@ -1,23 +1,21 @@
 ﻿using System.Diagnostics;
 
-namespace Hyperbee.Json.Tokenizer;
+namespace Hyperbee.Json.Tokenizer; 
 
-[DebuggerDisplay( "SelectorKind = {SelectorKind}, Value = {Value}" )]
+[DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
 internal record SelectorDescriptor
 {
     public SelectorKind SelectorKind { get; init; }
     public string Value { get; init; }
 }
 
-[DebuggerTypeProxy( typeof( JsonPathSegmentDebugView ) )]
-[DebuggerDisplay( "Singular = {Singular}, SelectorCount = {Selectors.Length}" )]
-internal record Segment
+[DebuggerTypeProxy( typeof( SegmentDebugView ) )]
+[DebuggerDisplay( "First = ({Selectors[0]}), Singular = {Singular}, Count = {Selectors.Length}" )]
+internal class Segment
 {
-    public static Segment TerminalSegment = new( null, null, SelectorKind.Undefined );
+    internal static readonly Segment Terminal = new( null, null, SelectorKind.Undefined ); // marks end of segments
 
     public bool IsEmpty => Next == null;
-
-    public string FirstSelector => Selectors[0].Value;
 
     public bool Singular { get; }
 
@@ -26,7 +24,7 @@ internal record Segment
 
     public Segment( Segment next, string selector, SelectorKind kind )
     {
-        Next = next;
+        Next = next; //BF: should we get smarter here and set Selectors = [] for terminal
         Selectors =
         [
             new SelectorDescriptor { SelectorKind = kind, Value = selector }
@@ -40,9 +38,9 @@ internal record Segment
         Singular = IsSingular();
     }
 
-    public Segment Push( string selector, SelectorKind kind ) => new( this, selector, kind );
+    public Segment Push( string selector, SelectorKind kind ) => new( this, selector, kind ); //BF: Insert(), AddHead()
 
-    public Segment Pop( out Segment segment )
+    public Segment Pop( out Segment segment )   //BF: Next()
     {
         segment = this;
         return Next;
@@ -55,16 +53,19 @@ internal record Segment
 
         var selectorKind = Selectors[0].SelectorKind;
 
-        return selectorKind == SelectorKind.UnspecifiedSingular || // prioritize runtime value
+        return selectorKind == SelectorKind.UnspecifiedSingular || 
                selectorKind == SelectorKind.Dot ||
                selectorKind == SelectorKind.Index ||
                selectorKind == SelectorKind.Name ||
                selectorKind == SelectorKind.Root;
     }
 
-    internal class JsonPathSegmentDebugView( Segment instance )
+    internal class SegmentDebugView( Segment instance )
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         public SelectorDescriptor[] Selectors => instance.Selectors;
+
+        [DebuggerBrowsable( DebuggerBrowsableState.Collapsed )]
+        public Segment Next => instance.Next;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 
 namespace Hyperbee.Json.Tokenizer;
@@ -397,16 +396,16 @@ public static partial class JsonPathQueryTokenizer
             } );
         }
 
-        // finished
+        // fixup nameof(Segment.Next) properties
 
         for ( var index = 0; index < tokens.Count; index++ )
         {
             tokens[index].Next = index == tokens.Count - 1
-                ? Segment.TerminalSegment
+                ? Segment.Terminal
                 : tokens[index + 1];
         }
 
-        return tokens.First();
+        return tokens.First(); 
     }
 
     private static SelectorKind GetElementSelectorKind( string selector )

@@ -71,7 +71,7 @@ public sealed class JsonPath<TElement>
 
         if ( !segments.IsEmpty )
         {
-            var selector = segments.FirstSelector;
+            var selector = segments.Selectors[0].Value; // first selector in segment
 
             if ( selector == "$" || selector == "@" )
                 segments = segments.Next;
@@ -102,7 +102,7 @@ public sealed class JsonPath<TElement>
             // pop the next token from the stack
 
             segments = segments.Pop( out var segment );
-            var selector = segment.FirstSelector;
+            var selector = segment.Selectors[0].Value; // first selector in segment;
 
             // make sure we have a complex value
 
@@ -262,7 +262,7 @@ public sealed class JsonPath<TElement>
         }
     }
 
-    private sealed class SegmentArgs( in TElement value, in Segment segment )
+    private sealed class SegmentArgs( in TElement value, in Segment segment ) //BF: Node
     {
         public readonly TElement Value = value;
         public readonly Segment Segment = segment;

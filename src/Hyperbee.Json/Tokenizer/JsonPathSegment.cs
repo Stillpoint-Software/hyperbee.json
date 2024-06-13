@@ -42,7 +42,7 @@ internal class Segment
 
     public Segment Insert( string selector, SelectorKind kind ) => new( this, selector, kind );
 
-    public Segment MoveNext( out Segment previous ) 
+    public Segment MoveNext( out Segment previous )
     {
         previous = this;
         return Next;

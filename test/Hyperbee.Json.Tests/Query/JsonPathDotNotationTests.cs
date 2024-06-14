@@ -20,7 +20,7 @@ public class JsonPathDotNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.SelectPath( query ).ToList();
+            var _ = source.Select( query ).ToList();
         } );
     }
 
@@ -34,7 +34,7 @@ public class JsonPathDotNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.SelectPath( query ).ToList();
+            var _ = source.Select( query ).ToList();
         } );
     }
 
@@ -68,7 +68,7 @@ public class JsonPathDotNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.SelectPath( query ).ToList();
+            var _ = source.Select( query ).ToList();
         } );
     }
 }

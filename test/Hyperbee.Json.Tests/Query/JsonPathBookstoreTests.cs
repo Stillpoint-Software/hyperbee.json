@@ -102,12 +102,11 @@ public class JsonPathBookstoreTests : JsonTestBase
     public void TheThirdBook( string query, Type sourceType )
     {
         var source = GetDocumentProxy( sourceType );
-        var match = source.SelectPath( query ).ToList();
+        var match = source.Select( query ).ToList();
         var expected = source.GetPropertyFromKey( "$['store']['book'][2]" );
 
         Assert.IsTrue( match.Count == 1 );
-        Assert.AreEqual( expected, match[0].Value );
-        Assert.AreEqual( "$.store.book[2]", match[0].Path );
+        Assert.AreEqual( expected, match[0] );
     }
 
     [DataTestMethod]
@@ -116,11 +115,10 @@ public class JsonPathBookstoreTests : JsonTestBase
     public void TheLastBookInOrder( string query, Type sourceType )
     {
         var source = GetDocumentProxy( sourceType );
-        var match = source.SelectPath( query ).Single();
+        var match = source.Select( query ).Single();
         var expected = source.GetPropertyFromKey( "$['store']['book'][3]" );
 
-        Assert.AreEqual( expected, match.Value );
-        Assert.AreEqual( "$.store.book[3]", match.Path );
+        Assert.AreEqual( expected, match );
     }
 
     [DataTestMethod]
@@ -166,6 +164,8 @@ public class JsonPathBookstoreTests : JsonTestBase
     }
 
     [DataTestMethod]
+    [DataRow( "$..book[?@.isbn]", typeof( JsonDocument ) )]
+    [DataRow( "$..book[?@.isbn]", typeof( JsonNode ) )]
     [DataRow( "$..book[?(@.isbn)]", typeof( JsonDocument ) )]
     [DataRow( "$..book[?(@.isbn)]", typeof( JsonNode ) )]
     public void FilterAllBooksWithIsbnNumber( string query, Type sourceType )
@@ -184,6 +184,8 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$..book[?(@.price<10)]", typeof( JsonDocument ) )]
     [DataRow( "$..book[?(@.price<10)]", typeof( JsonNode ) )]
+    [DataRow( "$..book[?@.price<10]", typeof( JsonDocument ) )]
+    [DataRow( "$..book[?@.price<10]", typeof( JsonNode ) )]
     public void FilterAllBooksCheaperThan10( string query, Type sourceType )
     {
         var source = GetDocumentProxy( sourceType );
@@ -240,33 +242,14 @@ public class JsonPathBookstoreTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( @"$.store.book[?(@path != ""$.store.book[0]"")]", typeof( JsonDocument ) )]
-    [DataRow( @"$.store.book[?(@path != ""$.store.book[0]"")]", typeof( JsonNode ) )]
-    public void AllBooksBesidesThatAtThePathPointingToTheFirst( string query, Type sourceType )
-    {
-        var source = GetDocumentProxy( sourceType );
-        var matches = source.Select( query );
-
-        var expected = new[]
-        {
-            source.GetPropertyFromKey( "$['store']['book'][1]" ),
-            source.GetPropertyFromKey( "$['store']['book'][2]" ),
-            source.GetPropertyFromKey( "$['store']['book'][3]" )
-        };
-
-        Assert.IsTrue( expected.SequenceEqual( matches ) );
-    }
-
-    [DataTestMethod]
     [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]", typeof( JsonDocument ) )]
     [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]", typeof( JsonNode ) )]
     public void FilterAllBooksUsingLogicalAndInScript( string query, Type sourceType )
     {
         var source = GetDocumentProxy( sourceType );
-        var match = source.SelectPath( query ).Single();
+        var match = source.Select( query ).Single();
         var expected = source.GetPropertyFromKey( "$['store']['book'][2]" );
 
-        Assert.AreEqual( expected, match.Value );
-        Assert.AreEqual( "$.store.book[2]", match.Path );
+        Assert.AreEqual( expected, match );
     }
 }

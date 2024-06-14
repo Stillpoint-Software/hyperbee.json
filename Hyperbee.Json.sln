@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperbee.Json.Tests", "test\Hyperbee.Json.Tests\Hyperbee.Json.Tests.csproj", "{97886205-1467-4EE6-B3DA-496CA3D086E4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperbee.Json.Benchmark", "test\Hyperbee.Json.Benchmark\Hyperbee.Json.Benchmark.csproj", "{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{97886205-1467-4EE6-B3DA-496CA3D086E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97886205-1467-4EE6-B3DA-496CA3D086E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97886205-1467-4EE6-B3DA-496CA3D086E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{1FA7CE2A-C9DA-4DC3-A242-5A7EAF8EE4FC} = {870D9301-BE3D-44EA-BF9C-FCC2E87FE4CD}
 		{4DBDB7F5-3F66-4572-80B5-3322449C77A4} = {1FA7CE2A-C9DA-4DC3-A242-5A7EAF8EE4FC}
 		{97886205-1467-4EE6-B3DA-496CA3D086E4} = {F9B24CD9-E06B-4834-84CB-8C29E5F10BE0}
+		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9} = {F9B24CD9-E06B-4834-84CB-8C29E5F10BE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32874F5B-B467-4F28-A8E2-82C2536FB228}

@@ -42,12 +42,6 @@ internal class JsonPathSegment
 
     public JsonPathSegment Insert( string selector, SelectorKind kind ) => new( this, selector, kind );
 
-    public JsonPathSegment MoveNext( out JsonPathSegment previous )
-    {
-        previous = this;
-        return Next;
-    }
-
     public IEnumerable<JsonPathSegment> AsEnumerable()
     {
         var current = this;

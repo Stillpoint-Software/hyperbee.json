@@ -100,8 +100,10 @@ public static class JsonPath<TElement>
             // get the current segment as out, and then move the
             // segments reference to the next segment in the list
 
-            segments = segments.MoveNext( out var segment );
+            var segment = segments; // get current segment
             var selector = segment.Selectors[0].Value; // first selector in segment;
+
+            segments = segments.Next;
 
             // make sure we have a complex value
 

@@ -35,7 +35,8 @@ public static partial class JsonPathQueryTokenizer
     [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
     private static partial Regex RegexSlice();
 
-    [GeneratedRegex( @"^\??\((.*?)\)$" )]
+//  [GeneratedRegex( @"^\??\((.*?)\)$" )]
+    [GeneratedRegex( @"^\?\(?([^)]*)\)?$" )]
     private static partial Regex RegexFilter();
 
     [GeneratedRegex( @"^[0-9*]+$" )]

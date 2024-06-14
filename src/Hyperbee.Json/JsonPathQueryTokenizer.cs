@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 
 namespace Hyperbee.Json;
@@ -35,7 +35,7 @@ public static partial class JsonPathQueryTokenizer
     [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
     private static partial Regex RegexSlice();
 
-    [GeneratedRegex( @"^\??\((.*?)\)$" )]
+    [GeneratedRegex( @"^\?\(?(.*?)\)?$" )]
     private static partial Regex RegexFilter();
 
     [GeneratedRegex( @"^[0-9*]+$" )]

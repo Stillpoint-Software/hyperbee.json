@@ -4,6 +4,8 @@ using System.Text.Json.Nodes;
 namespace Hyperbee.Json.Extensions;
 
 // DISTINCT from JsonPath these extensions are intended to facilitate 'diving' for Json Properties by key.
+// similar to JsonPointer but uses JsonPath notation.
+//
 // syntax supports singular paths; dotted notation, quoted names, and simple bracketed array accessors only.
 //
 // Json path style '$', wildcard '*', '..', and '[a,b]' multi-result selector notations are NOT supported.
@@ -18,14 +20,9 @@ namespace Hyperbee.Json.Extensions;
 
 public static class JsonPropertyKeyExtensions
 {
-    public static JsonElement GetPropertyFromKey( this JsonDocument document, ReadOnlySpan<char> propertyPath )
-    {
-        return document.RootElement.GetPropertyFromKey( propertyPath );
-    }
-
     public static JsonElement GetPropertyFromKey( this JsonElement jsonElement, ReadOnlySpan<char> propertyPath )
     {
-        if ( jsonElement.IsNullOrUndefined() || propertyPath.IsEmpty )
+        if ( IsNullOrUndefined( jsonElement ) || propertyPath.IsEmpty )
             return default;
 
         var splitter = new JsonPropertyKeySplitter( propertyPath );
@@ -40,11 +37,13 @@ public static class JsonPropertyKeyExtensions
 
             jsonElement = jsonElement.TryGetProperty( name!, out var value ) ? value : default;
 
-            if ( jsonElement.IsNullOrUndefined() )
+            if ( IsNullOrUndefined( jsonElement ) )
                 return default;
         }
 
         return jsonElement;
+
+        static bool IsNullOrUndefined( JsonElement value ) => value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined;
     }
 
     public static JsonNode GetPropertyFromKey( this JsonNode jsonNode, ReadOnlySpan<char> propertyPath )

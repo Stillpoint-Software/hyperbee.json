@@ -1,4 +1,5 @@
 ﻿#region License
+
 // C# Implementation of JSONPath[1]
 //
 // [1] http://goessner.net/articles/JsonPath/
@@ -28,125 +29,93 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+
 #endregion
 
-using System.Collections.Immutable;
 using System.Globalization;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using Hyperbee.Json.Evaluators;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Memory;
-using Hyperbee.Json.Tokenizer;
 
 namespace Hyperbee.Json;
+
 // https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
 // https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
-public sealed partial class JsonPath
+public static class JsonPath<TNode>
 {
-    public static IJsonPathScriptEvaluator<JsonElement> DefaultEvaluator { get; set; } = new JsonPathCSharpElementEvaluator();
-    private readonly IJsonPathScriptEvaluator<JsonElement> _evaluator;
+    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
-    // generated regex
-
-    [GeneratedRegex( "^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
-    private static partial Regex RegexSlice();
-
-    [GeneratedRegex( @"^\?\((.*?)\)$" )]
-    private static partial Regex RegexPathFilter();
-
-    [GeneratedRegex( @"^[0-9*]+$" )]
-    private static partial Regex RegexNumber();
-
-    // property names can be simple (@.property) if they contain no SpecialCharacters,
-    // otherwise they require bracket notation (@['property']).
-
-    private static readonly char[] SpecialCharacters = ['.', ' ', '\'', '/', '"', '[', ']', '(', ')', '\t', '\n', '\r', '\f', '\b', '\\', '\u0085', '\u2028', '\u2029'];
-    private static string GetPath( string prefix, int childKey ) => $"{prefix}[{childKey}]";
-
-    private static string GetPath( string prefix, string childKey, JsonValueKind tokenKind )
+    public static IEnumerable<TNode> Select( in TNode value, string query )
     {
-        if ( tokenKind == JsonValueKind.Array )
-            return $"{prefix}[{childKey}]";
-                
-        return childKey.IndexOfAny( SpecialCharacters ) == -1 ? $"{prefix}.{childKey}" : $@"{prefix}['{childKey}']";
+        return EnumerateMatches( value, value, query );
     }
 
-    // ctor
-
-    public JsonPath()
-        : this( null )
+    internal static IEnumerable<TNode> Select( in TNode value, TNode root, string query )
     {
+        return EnumerateMatches( value, root, query );
     }
 
-    public JsonPath( IJsonPathScriptEvaluator<JsonElement> evaluator )
+    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query )
     {
-        _evaluator = evaluator ?? DefaultEvaluator ?? new JsonPathCSharpElementEvaluator();
-    }
-
-    public IEnumerable<JsonElement> Select( in JsonElement value, string query )
-    {
-        return SelectPath( value, query ).Select( x => x.Value );
-    }
-
-    public IEnumerable<JsonPathElement> SelectPath( in JsonElement value, string query )
-    {
-        if ( string.IsNullOrWhiteSpace( query ) )
-            throw new ArgumentNullException( nameof(query) );
+        ArgumentException.ThrowIfNullOrWhiteSpace( query );
 
         // quick out
 
-        if ( query == "$" )
-            return new[] { new JsonPathElement( value, query ) };
+        if ( query == "$" || query == "@" )
+            return [value];
 
         // tokenize
 
-        var tokens = JsonPathQueryTokenizer.Tokenize( query );
+        var segments = JsonPathQueryTokenizer.Tokenize( query );
 
-        // initiate the expression walk
+        if ( !segments.IsEmpty )
+        {
+            var selector = segments.Selectors[0].Value; // first selector in segment
 
-        if ( !tokens.IsEmpty && tokens.Peek().Selectors.First().Value == "$" )
-            tokens = tokens.Pop();
+            if ( selector == "$" || selector == "@" )
+                segments = segments.Next;
+        }
 
-        return ExpressionVisitor( new VisitorArgs( value, tokens, "$" ), _evaluator.Evaluator );
+        return EnumerateMatches( root, new NodeArgs( value, segments ) );
     }
 
-    private static IEnumerable<JsonPathElement> ExpressionVisitor( VisitorArgs args, JsonPathEvaluator<JsonElement> evaluator )
+    private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args )
     {
-        var nodes = new Stack<VisitorArgs>( 4 );
-        void PushNode( in JsonElement v, in IImmutableStack<JsonPathToken> t, string p ) => nodes.Push( new VisitorArgs( v, t, p ) );
+        var stack = new Stack<NodeArgs>( 16 );
+
+        var (accessor, filterEvaluator) = Descriptor;
 
         do
         {
             // deconstruct the next args node
 
-            var (current, tokens, path) = args;
+            var (current, segments) = args;
 
-            if ( tokens.IsEmpty )
+            if ( segments.IsEmpty )
             {
-                if ( !string.IsNullOrEmpty( path ) )
-                    yield return new JsonPathElement( current, path );
-
+                yield return current;
                 continue;
             }
 
-            // pop the next token from the stack
+            // get the current segment, and then move the segments
+            // reference to the next segment in the list
 
-            tokens = tokens.Pop( out var token );
-            var selector = token.Selectors.First().Value;
+            var segment = segments; // get current segment
+            var (selector, _) = segment.Selectors[0]; // first selector in segment;
 
-            // make sure we have a container value
+            segments = segments.Next;
 
-            if ( !current.IsObjectOrArray() )
+            // make sure we have a complex value
+
+            if ( !accessor.IsObjectOrArray( current ) )
                 throw new InvalidOperationException( "Object or Array expected." );
 
             // try to access object or array using KEY value
 
-            if ( token.Singular )
+            if ( segment.Singular )
             {
-                if ( TryGetChildValue( current, selector, out var childValue ) )
-                    PushNode( childValue, tokens, GetPath( path, selector, current.ValueKind ) );
+                if ( accessor.TryGetChildValue( current, selector, out var childValue ) )
+                    Push( stack, childValue, segments );
 
                 continue;
             }
@@ -155,62 +124,58 @@ public sealed partial class JsonPath
 
             if ( selector == "*" )
             {
-                foreach ( var childKey in EnumerateKeys( current ) )
-                    PushNode( current, tokens.Push( childKey, SelectorKind.UnspecifiedSingular ), path );
+                foreach ( var (_, childKey) in accessor.EnumerateChildren( current ) )
+                {
+                    Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Dot | Index)
+                }
+
                 continue;
             }
 
-            // descendant 
+            // descendant
 
             if ( selector == ".." )
             {
-                foreach ( var childKey in EnumerateKeys( current ) )
+                foreach ( var (childValue, _) in accessor.EnumerateChildren( current, includeValues: false ) ) // child arrays or objects only
                 {
-                    if ( !TryGetChildValue( current, childKey, out var childValue ) )
-                        continue;
-
-                    if ( childValue.IsObjectOrArray() )
-                        PushNode( childValue, tokens.Push( "..", SelectorKind.UnspecifiedGroup ), GetPath( path, childKey, current.ValueKind ) );
+                    Push( stack, childValue, segments.Insert( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
                 }
 
-                PushNode( current, tokens, path );
+                Push( stack, current, segments );
                 continue;
             }
 
             // union
 
-            foreach ( var childSelector in token.Selectors.Select( x => x.Value ) )
+            for ( var i = 0; i < segment.Selectors.Length; i++ ) // using 'for' for performance
             {
+                var childSelector = segment.Selectors[i].Value;
+
                 // [(exp)]
 
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
                 {
-                    if ( evaluator( childSelector, current, path[(path.LastIndexOf( ';' ) + 1)..] ) is not string evalSelector )
+                    if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string filterSelector )
                         continue;
 
-                    var selectorKind = evalSelector != "*" && evalSelector != ".." && !RegexSlice().IsMatch( evalSelector )
+                    var filterSelectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
-                    PushNode( current, tokens.Push( evalSelector, selectorKind ), path );
+                    Push( stack, current, segments.Insert( filterSelector, filterSelectorKind ) );
                     continue;
                 }
 
-                // [?(exp)]
+                // [?exp]
 
-                if ( childSelector.Length > 3 && childSelector[0] == '?' && childSelector[1] == '(' && childSelector[^1] == ')' )
+                if ( childSelector[0] == '?' )
                 {
-                    foreach ( var childKey in EnumerateKeys( current ) )
+                    foreach ( var (childValue, childKey) in accessor.EnumerateChildren( current ) )
                     {
-                        if ( !TryGetChildValue( current, childKey, out var childValue ) )
-                            continue;
+                        var filterValue = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
 
-                        var childContext = GetPath( path, childKey, current.ValueKind );
-                        var filter = evaluator( RegexPathFilter().Replace( childSelector, "$1" ), childValue, childContext );
-
-                        // treat the filter result as truthy if the evaluator returned a non-convertible object instance. 
-                        if ( filter is not null and not IConvertible || Convert.ToBoolean( filter, CultureInfo.InvariantCulture ) )
-                            PushNode( current, tokens.Push( childKey, SelectorKind.UnspecifiedSingular ), path );
+                        if ( Truthy( filterValue ) )
+                            Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
                     }
 
                     continue;
@@ -218,156 +183,99 @@ public sealed partial class JsonPath
 
                 // [name1,name2,...] or [#,#,...] or [start:end:step]
 
-                if ( current.ValueKind == JsonValueKind.Array )
+                if ( accessor.IsArray( current, out var length ) )
                 {
-                    if ( RegexNumber().IsMatch( childSelector ) )
+                    if ( JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
                     {
                         // [#,#,...] 
-                        PushNode( current[int.Parse( childSelector )], tokens, GetPath( path, childSelector, JsonValueKind.Array ) );
+                        Push( stack, accessor.GetElementAt( current, int.Parse( childSelector ) ), segments );
                         continue;
                     }
 
                     // [start:end:step] Python slice syntax
-                    if ( RegexSlice().IsMatch( childSelector ) )
+                    if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) )
                     {
                         foreach ( var index in EnumerateSlice( current, childSelector ) )
-                            PushNode( current[index], tokens, GetPath( path, index ) );
+                            Push( stack, accessor.GetElementAt( current, index ), segments );
                         continue;
                     }
 
                     // [name1,name2,...]
-                    foreach ( var index in EnumerateArrayIndicies( current ) )
-                        PushNode( current[index], tokens.Push( childSelector, SelectorKind.UnspecifiedSingular ), GetPath( path, index ) );
+                    foreach ( var index in EnumerateArrayIndices( length ) )
+                        Push( stack, accessor.GetElementAt( current, index ), segments.Insert( childSelector, SelectorKind.UnspecifiedSingular ) ); // Name
 
                     continue;
                 }
 
                 // [name1,name2,...]
 
-                if ( current.ValueKind == JsonValueKind.Object )
+                if ( accessor.IsObject( current ) )
                 {
-                    if ( RegexSlice().IsMatch( childSelector ) || RegexNumber().IsMatch( childSelector ) )
+                    if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) || JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
                         continue;
 
                     // [name1,name2,...]
-                    if ( TryGetChildValue( current, childSelector, out var childValue ) )
-                        PushNode( childValue, tokens, GetPath( path, childSelector, JsonValueKind.Object ) );
+                    if ( accessor.TryGetChildValue( current, childSelector, out var childValue ) )
+                        Push( stack, childValue, segments );
                 }
             }
 
-        } while ( nodes.TryPop( out args ) );
+        } while ( stack.TryPop( out args ) );
+
+        yield break;
+
+        static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
 
-    // because we are using stack processing we will enumerate object members and array
-    // indicies in reverse order. this preserves the logical (left-to-right, top-down)
-    // order of the match results that are returned to the user.
-
-    private static IEnumerable<string> EnumerateKeys( JsonElement value )
+    private static bool Truthy( object value )
     {
-        return value.ValueKind switch
-        {
-            JsonValueKind.Array => EnumerateArrayIndicies( value ).Select( x => x.ToString() ),
-            JsonValueKind.Object => EnumeratePropertyNames( value ),
-            _ => throw new NotSupportedException()
-        };
+        return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
     }
 
-    private static IEnumerable<int> EnumerateArrayIndicies( JsonElement value )
+    private static IEnumerable<int> EnumerateArrayIndices( int length )
     {
-        for ( var index = value.GetArrayLength() - 1; index >= 0; index-- )
+        for ( var index = length - 1; index >= 0; index-- )
             yield return index;
     }
 
-    private static IEnumerable<string> EnumeratePropertyNames( JsonElement value )
+    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr )
     {
-        // Select() before the Reverse() to reduce size of allocation
-        return value.EnumerateObject().Select( x => x.Name ).Reverse();
-    }
-
-    private static IEnumerable<int> EnumerateSlice( JsonElement value, string sliceExpr )
-    {
-        if ( value.ValueKind != JsonValueKind.Array )
+        if ( !Descriptor.Accessor.IsArray( value, out var length ) )
             yield break;
 
-        var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, value.GetArrayLength(), reverse: true );
+        var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
         switch ( step )
         {
             case 0:
-            {
-                yield break;
-            }
-            case > 0:
-            {
-                for ( var index = lower; index < upper; index += step )
-                    yield return index;
-                break;
-            }
-            case < 0:
-            {
-                for ( var index = upper; index > lower; index += step )
-                    yield return index;
-                break;
-            }
-        }
-    }
-
-    private static bool TryGetChildValue( in JsonElement value, ReadOnlySpan<char> childKey, out JsonElement childValue )
-    {
-        static int? TryParseInt( ReadOnlySpan<char> numberString )
-        {
-            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
-        }
-
-        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
-
-        switch ( value.ValueKind )
-        {
-            case JsonValueKind.Object:
-                if ( value.TryGetProperty( childKey, out childValue ) )
-                    return true;
-                break;
-
-            case JsonValueKind.Array:
-                var index = TryParseInt( childKey ) ?? -1;
-
-                if ( index >= 0 && index < value.GetArrayLength() )
                 {
-                    childValue = value[index];
-                    return true;
+                    yield break;
                 }
-
-                break;
-
-            default:
-                if ( !IsPathOperator( childKey ) )
-                    throw new ArgumentException( $"Invalid child type '{childKey.ToString()}'. Expected child to be Object, Array or a path selector.", nameof(value) );
-                break;
+            case > 0:
+                {
+                    for ( var index = lower; index < upper; index += step )
+                        yield return index;
+                    break;
+                }
+            case < 0:
+                {
+                    for ( var index = upper; index > lower; index += step )
+                        yield return index;
+                    break;
+                }
         }
-
-        childValue = default;
-        return false;
     }
 
-    private sealed class VisitorArgs
+    private sealed class NodeArgs( in TNode value, in JsonPathSegment segment )
     {
-        public readonly JsonElement Value;
-        public readonly IImmutableStack<JsonPathToken> Tokens;
-        public readonly string Path;
+        public readonly TNode Value = value;
+        public readonly JsonPathSegment Segment = segment;
 
-        public VisitorArgs( in JsonElement value, in IImmutableStack<JsonPathToken> tokens, string path )
-        {
-            Tokens = tokens;
-            Value = value;
-            Path = path;
-        }
-
-        public void Deconstruct( out JsonElement value, out IImmutableStack<JsonPathToken> tokens, out string path )
+        public void Deconstruct( out TNode value, out JsonPathSegment segment )
         {
             value = Value;
-            tokens = Tokens;
-            path = Path;
+            segment = Segment;
         }
     }
- 
+
 }

@@ -11,8 +11,8 @@ namespace Hyperbee.Json.Tests.Query;
 public class JsonPathUnionTests : JsonTestBase
 {
     [DataTestMethod]
-    [DataRow( "$[0,0]", typeof(JsonDocument))]
-    [DataRow( "$[0,0]", typeof(JsonNode))]
+    [DataRow( "$[0,0]", typeof( JsonDocument ) )]
+    [DataRow( "$[0,0]", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromArray( string query, Type sourceType )
     {
         const string json = "[\"a\"]";
@@ -31,8 +31,8 @@ public class JsonPathUnionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['a','a']", typeof(JsonDocument))]
-    [DataRow( "$['a','a']", typeof(JsonNode) )]
+    [DataRow( "$['a','a']", typeof( JsonDocument ) )]
+    [DataRow( "$['a','a']", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromObject( string query, Type sourceType )
     {
         const string json = "{\"a\": 1}";
@@ -51,8 +51,8 @@ public class JsonPathUnionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof(JsonDocument))]
-    [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof(JsonNode) )]
+    [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof( JsonDocument ) )]
+    [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof( JsonNode ) )]
     public void UnionWithFilter( string query, Type sourceType )
     {
         const string json = "[{\"key\": 1}, {\"key\": 8}, {\"key\": 3}, {\"key\": 10}, {\"key\": 7}, {\"key\": 2}, {\"key\": 6}, {\"key\": 4}]";
@@ -75,8 +75,8 @@ public class JsonPathUnionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['key','another']", typeof(JsonDocument))]
-    [DataRow( "$['key','another']", typeof(JsonNode) )]
+    [DataRow( "$['key','another']", typeof( JsonDocument ) )]
+    [DataRow( "$['key','another']", typeof( JsonNode ) )]
     public void UnionWithKeys( string query, Type sourceType )
     {
         const string json = "{\"key\": \"value\", \"another\": \"entry\"}";
@@ -95,8 +95,8 @@ public class JsonPathUnionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$['key','another','thing1']", typeof(JsonDocument))]
-    [DataRow( "$['key','another','thing1']", typeof(JsonNode) )]
+    [DataRow( "$['key','another','thing1']", typeof( JsonDocument ) )]
+    [DataRow( "$['key','another','thing1']", typeof( JsonNode ) )]
     public void UnionWithMultipleKeys( string query, Type sourceType )
     {
         const string json = "{\"key\": \"value\", \"another\": \"entry\", \"thing1\": \"thing2\"}";

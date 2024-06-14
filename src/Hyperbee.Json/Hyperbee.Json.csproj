@@ -16,6 +16,7 @@
 	<Description>A C# implementation of JSONPath for .NET `System.Text.Json` with a plugable expression selector. </Description>
 	<RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
+	<PackageReleaseNotes>https://github.com/Stillpoint-Software/hyperbee.json/releases/latest</PackageReleaseNotes>
 
   </PropertyGroup>
   <ItemGroup>
@@ -42,6 +43,7 @@
 		<PrivateAssets>all</PrivateAssets>
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
+	<PackageReference Include="CommandLineParser" Version="2.9.1" />
 	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.9.2" />
   </ItemGroup>
 </Project>

@@ -1,13 +1,13 @@
 name: Publish
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
 env:
   BRANCH_NAME: ${{ github.event.release.target_commitish }}
   SOLUTION_NAME: ${{ vars.SOLUTION_NAME }}
-  PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   DOTNET_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   BUILD_CONFIGURATION: ''
@@ -19,13 +19,13 @@ jobs:
 
     steps:
     - name: Release Configuration
-      if: ${{ env.BRANCH_NAME == 'main' && github.event.release.prerelease == false }}
+      if: ${{ env.BRANCH_NAME == 'main' && (github.event.release.prerelease == false || github.event_name == 'workflow_dispatch') }}
       run: |
           echo "BUILD_CONFIGURATION=Release" >> $GITHUB_ENV
           echo "VERSION_SUFFIX=" >> $GITHUB_ENV 
     
     - name: Debug Configuration
-      if: ${{ github.event.release.prerelease }}
+      if: ${{ (github.event.release.prerelease || github.event_name == 'workflow_dispatch') }}
       run: |
           echo "BUILD_CONFIGURATION=Debug" >> $GITHUB_ENV
           echo "VERSION_SUFFIX=develop.$(date +'%y%m%d%H%M%S')" >> $GITHUB_ENV
@@ -40,7 +40,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -52,9 +52,6 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration ${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_NAME }}
-
-    - name: Publish
-      run: dotnet publish --no-build --configuration ${{ env.BUILD_CONFIGURATION }} -o ./publish ./src/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
 
     - name: Pack and Push
       run: dotnet pack --no-build --configuration ${{ env.BUILD_CONFIGURATION }} -p:PackageOutputPath=../../output --version-suffix "${{ env.VERSION_SUFFIX }}" -p:PackageSource='${{ env.NUGET_SOURCE }}' -p:PushAfterPack=true -p:PackageApiKey='${{ secrets.NUGET_API_KEY }}'

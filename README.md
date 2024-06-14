@@ -1,44 +1,42 @@
 ﻿# JSONPath
 
-A C# implementation of JSONPath for .NET `System.Text.Json` with a plugable expression selector. 
+JSON Path is a query language for JSON documents inspired by XPath. JSONPath defines 
+a string syntax for selecting and extracting JSON values from within a given JSON document.
 
-## Why
+This library is a C# implementation of JSONPath for .NET `System.Text.Json` and `System.Text.Json.Nodes`. 
 
-.NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to create a JSONPath library for .NET that will
+The implementation
 
-* Directly leverage `System.Text.Json` 
-* Align with the draft JSONPath Specification 
+* Works natively with both `JsonDocument` (`JsonElement`) and `JsonNode`
+* Can be extended to support other JSON models
+* Aligns with the draft JSONPath Specification RFC 9535 
   * [Working Draft](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base).
   * [Editor Copy](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html)
-* Function according to the emerging consensus of use based on the majority of existing implementations; except through concious exception or deference to the RFC.
-  * [Parser Comparison](https://cburgmer.github.io/json-path-comparison)
-* Provide a plugable model for expression script handling.
+* Functions according to the emerging consensus of use based on the majority of existing 
+  implementations; except through concious exception or deference to the RFC.
+  * [Parser Comparison Results](https://cburgmer.github.io/json-path-comparison)
+  * [Parser Comparison GitHub](https://github.com/cburgmer/json-path-comparison/tree/master)
 
 
-## JSONPath Expressions
+## JSONPath Syntax
 
-JSONPath expressions always refers to a JSON structure in the same way as XPath
-expression are used in combination with an XML document. Since a JSON structure is
-usually anonymous and doesn't necessarily have a root member object JSONPath
-assumes the abstract name `$` assigned to the outer level object.
+JSONPath expressions refer to a JSON structure in the same way as XPath expressions 
+are used in combination with an XML document. JSONPath assumes the name `$` is assigned 
+to the root level object.
 
-JSONPath expressions can use the dot-notation:
+JSONPath expressions can use dot-notation:
 
     $.store.book[0].title
 
-or the bracket-notation:
+or bracket-notation:
 
     $['store']['book'][0]['title']
 
-for input paths. Internal or output paths will always be converted to the more
-general bracket-notation.
-
 JSONPath allows the wildcard symbol `*` for member names and array indices. It
-borrows the descendant operator `..` from [E4X][e4x] and the array slice
+borrows the descendant operator `..` from [E4X][e4x], and the array slice
 syntax proposal `[start:end:step]` from ECMASCRIPT 4.
 
-Expressions of the underlying scripting language (`<expr>`) can be used as an
-alternative to explicit names or indices, as in:
+Expressions can be used as an alternative to explicit names or indices, as in:
 
     $.store.book[(@.length-1)].title
 
@@ -54,15 +52,15 @@ syntax elements with its XPath counterparts:
 |:----------|:-------------------|:-----------------------------------------------------------
 | `/`       | `$`                | The root object/element                                    
 | `.`       | `@`                | The current object/element                                 
-| `/`       | `.` or `[]`       | Child operator                                             
+| `/`       | `.` or `[]`        | Child operator                                             
 | `..`      | n/a                | Parent operator                                            
-| `//`      | `..`              | Recursive descent. JSONPath borrows this syntax from E4X.  
-| `*`       | `*`               | Wildcard. All objects/elements regardless their names.     
+| `//`      | `..`               | Recursive descent. JSONPath borrows this syntax from E4X.  
+| `*`       | `*`                | Wildcard. All objects/elements regardless their names.     
 | `@`       | n/a                | Attribute access. JSON structures don't have attributes.   
-| `[]`      | `[]`              | Subscript operator. XPath uses it to iterate over element collections and for [predicates][xpath-predicates]. In Javascript and JSON it is the native array operator. 
-| `\|`      | `[,]`             | Union operator in XPath results in a combination of node sets. JSONPath allows alternate names or array indices as a set.
-| n/a       | `[start:end:step]`| Array slice operator borrowed from ES4.
-| `[]`      | `?()`             | Applies a filter (script) expression.
+| `[]`      | `[]`               | Subscript operator. XPath uses it to iterate over element collections and for [predicates][xpath-predicates]. In Javascript and JSON it is the native array operator. 
+| `\|`      | `[,]`              | Union operator in XPath results in a combination of node sets. JSONPath allows alternate names or array indices as a set.
+| n/a       | `[start:end:step]` | Array slice operator borrowed from ES4.
+| `[]`      | `?()`              | Applies a filter (script) expression.
 | n/a       | `()`               | Script expression, using the underlying script engine.
 | `()`      | n/a                | Grouping in XPath
 
@@ -106,66 +104,19 @@ Given a simple JSON structure that represents a bookstore:
 
 | XPath                 | JSONPath                  | Result                                 | Notes
 |:----------------------|:--------------------------|:---------------------------------------|:------
-|`/store/book/author` | `$.store.book[*].author` | The authors of all books in the store 
-|`//author`            | `$..author`              | All authors                            
-|`/store/*`            | `$.store.*`              | All things in store, which are some books and a red bicycle 
-|`/store//price`       | `$.store..price`        | The price of everything in the store
-|`//book[3]`           | `$..book[2]`             | The third book
-|`//book[last()]`      | `$..book[(@.length-1)]<br>$..book[-1:]`  | The last book in order
-|`//book[position()<3]`| `$..book[0,1]`<br>`$..book[:2]`| The first two books
+|`/store/book/author`   | `$.store.book[*].author`  | The authors of all books in the store 
+|`//author`             | `$..author`               | All authors                            
+|`/store/*`             | `$.store.*`               | All things in store, which are some books and a red bicycle 
+|`/store//price`        | `$.store..price`          | The price of everything in the store
+|`//book[3]`            | `$..book[2]`              | The third book
+|`//book[last()]`       | `$..book[(@.length-1)]<br>$..book[-1:]`  | The last book in order
+|`//book[position()<3]` | `$..book[0,1]`<br>`$..book[:2]`| The first two books
 |`//book/*[self::category|self::author]` or `//book/(category,author)` in XPath 2.0 | `$..book[category,author]` | The categories and authors of all books 
-|`//book[isbn]`        | `$..book[?(@.isbn)]`    | Filter all books with `isbn` number
-|`//book[price<10]`   | `$..book[?(@.price<10)]` | Filter all books cheapier than 10
-|`//*[price>19]/..`   | `$..[?(@.price>19)]`    | Categories with things more expensive than 19 | Parent (caret) not present in original spec
-|`//*`                 | `$..*`                    | All elements in XML document; all members of JSON structure 
+|`//book[isbn]`         | `$..book[?(@.isbn)]`      | Filter all books with `isbn` number
+|`//book[price<10]`     | `$..book[?(@.price<10)]`  | Filter all books cheapier than 10
+|`//*[price>19]/..`     | `$..[?(@.price>19)]`      | Categories with things more expensive than 19 | Parent (caret) not present in original spec
+|`//*`                  | `$..*`                    | All elements in XML document; all members of JSON structure 
 |`/store/book/[position()!=1]` | `$.store.book[?(@path !== "$[\'store\'][\'book\'][0]")]` | All books besides that at the path pointing to the first | `@path` not present in original spec
-
-## Script Evaluators
-
-`Hyperbee.Json` provides out-of-the-box expression evaluators for handling JsonPath filter selectors.
-
-| Name                    | Description |
-| ----------------------- | ----------- |
-| JsonPathCSharpEvaluator | A Roslyn based expression evaluator that supports `[(@...)]` and `[?(@...)]` expresison syntax|
-| JsonPathFuncEvaluator   | A simple `Func<>` evaluator suitable for simple, custom expression handling |
-| JsonPathNullEvaluator   | An evaluator that does nothing |
-
-You can create your own evaluator by deriving from `IJsonPathScriptEvaluator`. 
-
-```csharp
-public class JsonPathFuncEvaluator : IJsonPathScriptEvaluator
-{
-    private readonly JsonPathEvaluator _evaluator;
-
-    public JsonPathFuncEvaluator( JsonPathEvaluator evaluator )
-    {
-        _evaluator = evaluator;
-    }
-
-    public object Evaluator( string script, JsonElement current, string context )
-    {
-        return _evaluator?.Invoke( script, current, context );
-    }
-}
-```
-
-You can set a global default for the evaluator.
-
-```csharp
-JsonPath.DefaultEvaluator = new JsonPathCSharpEvaluator();
-```
-
-Or you can wire it up through dependency injection.
-
-```csharp
-public static IServiceCollection AddJsonPath( this IServiceCollection services, IConfiguration config )
-{
-    services.AddTransient<IJsonPathScriptEvaluator,JsonPathCSharpEvaluator>();
-    services.AddTransient<JsonPath>();
-
-    return services;
-}
-```
 
 ## Code examples
 A couple of trivial code examples. Review the tests for detailed examples.
@@ -180,13 +131,13 @@ const string json = @"
 ]";
 
 var document = JsonDocument.Parse( json );
-var match = document.SelectPath( "$[-1:]" ).Single();
+var match = document.Select( "$[-1:]" ).Single();
 
 Assert.IsTrue( match.Value.GetString() == "third" );
 ```
 
 **Example 2** Select all elemets that have a `key` property with a value less than 42. 
-This example leverages bracket expressions using the `Roslyn` jsonpath script evaluator.
+This example leverages bracket expressions using the default `Expression` jsonpath filter evaluator.
 
 ```csharp
 const string json = @"
@@ -203,7 +154,7 @@ const string json = @"
 ]";
 
 var document = JsonDocument.Parse( json );
-var matches = document.SelectPath( "$[?(@.key<42)]", JsonPathCSharpEvaluator.Evaluator );
+var matches = document.Select( "$[?(@.key<42)]" );
 
 // outputs 0 -1 41 41.9999
 
@@ -213,13 +164,17 @@ foreach( var element in matches )
 };
 
 ```
+## Helper Classes
 
-## Dynamic Object Serialization
+In addition to JSONPath processing, a few additional helper classes are provided to support dynamic property access,
+property diving, and element comparisons.
+
+### Dynamic Object Serialization
 
 Basic support is provided for serializing to and from dynamic objects through the use of a custom `JsonConverter`.
 The `DynamicJsonConverter` converter class is useful for simple scenareos. It is intended as a simple helper for basic use cases only.
 
-### DynamicJsonConverter
+#### DynamicJsonConverter
 
 ```csharp
 var serializerOptions = new JsonSerializerOptions
@@ -237,16 +192,35 @@ var jsonOutput = JsonSerializer.Serialize<dynamic>( jobject, serializerOptions )
 Assert.IsTrue( jsonInput == jsonOutput );
 ```
 
-#### Enum handling
+##### Enum handling
 
 When deserializing, the converter will treat enumerations as strings. You can override this behavior by setting 
 the `TryReadValueHandler` on the converter. This handler will allow you to intercept and convert string and
 numeric values during the deserialization process.
 
+### Equality Helpers
+
+| Method                             | Description
+|:-----------------------------------|:-----------
+| `JsonElement.DeepEquals`           | Performs a deep equals comparison 
+| `JsonElementEqualityDeepComparer`  | A deep equals equality comparer
+
+### Property Diving
+
+| Method                             | Description
+|:-----------------------------------|:-----------
+| `JsonElement.GetPropertyFromKey`   | Dives for properties using absolute bracket location keys like `$['store']['book'][2]['author']`
+
+### JsonElement Helpers
+
+| Method                             | Description
+|:-----------------------------------|:-----------
+| `JsonPathBuilder`                  | Returns the JsonPath location string for a given element
+
 ## Acknowlegements
 
 This project builds on the work of:
 
-[Stefan G&ouml;ssner - Original JSONPath specification dated 2007-02-21](http://goessner.net/articles/JsonPath/#e2)  
-[Atif Aziz - .NET JSONPath](https://github.com/atifaziz/JSONPath)  
-[Christoph Burgmer - Parser Consensus tests](https://cburgmer.github.io/json-path-comparison)
+* [Stefan G&ouml;ssner - Original JSONPath specification dated 2007-02-21](http://goessner.net/articles/JsonPath/#e2)  
+* [Atif Aziz - .NET JSONPath](https://github.com/atifaziz/JSONPath)  
+* [Christoph Burgmer - Parser Consensus tests](https://cburgmer.github.io/json-path-comparison)

@@ -56,6 +56,6 @@ internal static class JsonValueHelper
     public static string MinifyJsonString( string json )
     {
         const string minifyPattern = "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+";
-        return Regex.Replace( json, minifyPattern, "$1" ); 
+        return Regex.Replace( json, minifyPattern, "$1" );
     }
 }

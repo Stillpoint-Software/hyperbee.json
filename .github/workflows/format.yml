@@ -1,0 +1,43 @@
+name: Format
+
+on: 
+  push:
+  workflow_run: 
+    workflows: 
+      - Create Prerelease
+      - Create Release
+    types: [requested]
+  workflow_dispatch:
+  pull_request:
+    types: [opened,edited,synchronize,reopened]
+    branches:
+    - main
+    - develop
+
+env:
+  DOTNET_VERSION: '8.0.x'
+    
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Format
+      run: dotnet format
+
+    - name: Update Styles
+      continue-on-error: true
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git commit -am "Updated code formatting to match rules in .editorconfig"
+        git push
+

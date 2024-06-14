@@ -301,7 +301,7 @@ public static partial class JsonPathQueryTokenizer
                             if ( string.IsNullOrEmpty( selectorValue ) ) // [] is not valid
                                 throw new NotSupportedException( "Invalid bracket expression syntax. Bracket expression cannot be empty." );
 
-                            selectorKind = GetElementSelectorKind( selectorValue );
+                            selectorKind = GetSelectorKind( selectorValue );
 
                             if ( selectorKind == SelectorKind.Undefined )
                                 throw new NotSupportedException( $"Invalid bracket expression syntax. Unrecognized selector format at pos {i - 1}." );
@@ -408,7 +408,7 @@ public static partial class JsonPathQueryTokenizer
         return tokens.First();
     }
 
-    private static SelectorKind GetElementSelectorKind( string selector )
+    private static SelectorKind GetSelectorKind( string selector )
     {
         if ( RegexFilter().IsMatch( selector ) )
             return SelectorKind.Filter;

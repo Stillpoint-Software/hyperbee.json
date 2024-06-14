@@ -1,31 +1,28 @@
 ﻿# JSONPath
 
-A C# implementation of JSONPath for .NET `System.Text.Json` and `System.Text.Json.Nodes`. 
+JSON Path is a query language for JSON documents inspired by XPath. JSONPath defines 
+a string syntax for selecting and extracting JSON values from within a given JSON document.
 
-## Why
+This library is a C# implementation of JSONPath for .NET `System.Text.Json` and `System.Text.Json.Nodes`. 
 
-.NET `System.Text.Json` lacks support for JSONPath. The primary goal of this project is to provide a JSONPath library for .NET that
+The implementation
 
 * Works natively with both `JsonDocument` (`JsonElement`) and `JsonNode`
 * Can be extended to support other JSON models
 * Aligns with the draft JSONPath Specification RFC 9535 
   * [Working Draft](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base).
   * [Editor Copy](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html)
-* Functions according to the emerging consensus of use based on the majority of existing implementations; except through concious exception or deference to the RFC.
+* Functions according to the emerging consensus of use based on the majority of existing 
+  implementations; except through concious exception or deference to the RFC.
   * [Parser Comparison Results](https://cburgmer.github.io/json-path-comparison)
   * [Parser Comparison GitHub](https://github.com/cburgmer/json-path-comparison/tree/master)
 
-## JSONPath
-
-JSON Path is a query language for JSON documents inspired by XPath. JSONPath defines 
-a string syntax for selecting and extracting JSON (RFC 8259) values from within a 
-given JSON value.
 
 ## JSONPath Syntax
 
 JSONPath expressions refer to a JSON structure in the same way as XPath expressions 
-are used in combination with an XML document. JSONPath assumes the abstract name `$` 
-is assigned to the outer level object.
+are used in combination with an XML document. JSONPath assumes the name `$` is assigned 
+to the root level object.
 
 JSONPath expressions can use dot-notation:
 
@@ -224,6 +221,6 @@ numeric values during the deserialization process.
 
 This project builds on the work of:
 
-[Stefan G&ouml;ssner - Original JSONPath specification dated 2007-02-21](http://goessner.net/articles/JsonPath/#e2)  
-[Atif Aziz - .NET JSONPath](https://github.com/atifaziz/JSONPath)  
-[Christoph Burgmer - Parser Consensus tests](https://cburgmer.github.io/json-path-comparison)
+* [Stefan G&ouml;ssner - Original JSONPath specification dated 2007-02-21](http://goessner.net/articles/JsonPath/#e2)  
+* [Atif Aziz - .NET JSONPath](https://github.com/atifaziz/JSONPath)  
+* [Christoph Burgmer - Parser Consensus tests](https://cburgmer.github.io/json-path-comparison)

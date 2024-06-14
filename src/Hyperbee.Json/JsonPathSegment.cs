@@ -73,11 +73,7 @@ internal class JsonPathSegment
 
         var selectorKind = Selectors[0].SelectorKind;
 
-        return selectorKind == SelectorKind.UnspecifiedSingular ||
-               selectorKind == SelectorKind.Dot ||
-               selectorKind == SelectorKind.Index ||
-               selectorKind == SelectorKind.Name ||
-               selectorKind == SelectorKind.Root;
+        return (selectorKind & SelectorKind.Singular) == SelectorKind.Singular;
     }
 
     internal class SegmentDebugView( JsonPathSegment instance )

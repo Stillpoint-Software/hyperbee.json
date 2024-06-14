@@ -63,24 +63,21 @@ public class JsonPathParseAndSelect
     public void JsonPath_Hyperbee_JsonElement()
     {
         var element = JsonDocument.Parse( Document ).RootElement;
-        if ( element.Select( Filter ).ToArray().Length <= 0 )
-            throw new InvalidDataException( "Failed Test" );
+        var _ = element.Select( Filter ).First();
     }
 
     [Benchmark]
     public void JsonPath_Hyperbee_JsonNode()
     {
         var node = JsonNode.Parse( Document )!;
-        if ( node.Select( Filter ).ToArray().Length <= 0 )
-            throw new InvalidDataException( "Failed Test" );
+        var _ = node.Select( Filter ).First();
     }
 
     [Benchmark]
     public void JsonPath_Newtonsoft_JObject()
     {
         var jObject = JObject.Parse( Document );
-        if ( jObject.SelectTokens( Filter ).ToArray().Length <= 0 )
-            throw new InvalidDataException( "Failed Test" );
+        var _ = jObject.SelectTokens( Filter ).First();
     }
 
     [Benchmark]
@@ -88,8 +85,7 @@ public class JsonPathParseAndSelect
     {
         var path = JsonEverything.JsonPath.Parse( Filter );
         var node = JsonNode.Parse( Document )!;
-        if ( path.Evaluate( node ).Matches!.ToArray().Length <= 0 )
-            throw new InvalidDataException( "Failed Test" );
+        var _ = path.Evaluate( node ).Matches!.First();
     }
 
     [Benchmark]
@@ -97,7 +93,6 @@ public class JsonPathParseAndSelect
     {
         var path = JsonSelector.Parse( Filter )!;
         var element = JsonDocument.Parse( Document ).RootElement;
-        if ( path.Select( element ).Count <= 0 )
-            throw new InvalidDataException( "Failed Test" );
+        var _ = path.Select( element ).First();
     }
 }

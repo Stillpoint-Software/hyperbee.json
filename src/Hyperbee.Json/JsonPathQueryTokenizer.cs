@@ -5,46 +5,52 @@ namespace Hyperbee.Json;
 // https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
 // https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
+[Flags]
 internal enum SelectorKind
 {
-    Undefined,
+    Undefined = 0x0,
+
+    // subtype
+    Singular = 0x1,
+    Group = 0x2,
 
     // dot notation
-    Root,
-    Dot,
+    Root = 0x4 | Singular,
+    Dot = 0x8 | Singular,
 
     // union notation
-    Name,
-    Slice,
-    Filter,
-    Index,
+    Name = 0x10 | Singular,
+    Slice = 0x20 | Group,
+    Filter = 0x40 | Group,
+    Index = 0x80 | Singular,
 
     // 
-    Wildcard,
-    Descendant,
+    Wildcard = 0x100 | Group,
+    Descendant = 0x200 | Group,
 
     // internal reserved for runtime processing
-    UnspecifiedSingular, // singular selector (root, name or index)
-    UnspecifiedGroup     // non-singular selector
+    Unspecified = 0x400,
+    UnspecifiedSingular = Unspecified | Singular, // singular selector (root, name or index)
+    UnspecifiedGroup = Unspecified | Group        // non-singular selector
 }
 
 public static partial class JsonPathQueryTokenizer
 {
     private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
-    [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
+    [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$", RegexOptions.ExplicitCapture )]
     private static partial Regex RegexSlice();
 
-    [GeneratedRegex( @"^\?\(?(.*?)\)?$" )]
+    [GeneratedRegex( @"^\?\(?(.*?)\)?$", RegexOptions.ExplicitCapture )]
     private static partial Regex RegexFilter();
 
     [GeneratedRegex( @"^[0-9*]+$" )]
     private static partial Regex RegexNumber();
 
-    [GeneratedRegex( @"^""(?:[^""\\]|\\.)*""$" )]
+    [GeneratedRegex( @"^""(?:[^""\\]|\\.)*""$", RegexOptions.ExplicitCapture )]
     private static partial Regex RegexQuotedDouble();
 
-    [GeneratedRegex( @"^'(?:[^'\\]|\\.)*'$" )]
+    [GeneratedRegex( @"^'(?:[^'\\]|\\.)*'$", RegexOptions.ExplicitCapture )]
     private static partial Regex RegexQuoted();
 
     private enum Scanner

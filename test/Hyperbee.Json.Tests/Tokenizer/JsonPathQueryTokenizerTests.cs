@@ -24,7 +24,9 @@ public class JsonPathQueryTokenizerTests
     [DataRow( "$.store.book[0,1]", "{$|k};{store|k};{book|k};{1,0|s}" )]
     [DataRow( "$..book['category','author']", "{$|k};{..|s};{book|k};{author,category|s}" )]
     [DataRow( "$..book[?(@.isbn)]", "{$|k};{..|s};{book|k};{?(@.isbn)|s}" )]
+    [DataRow( "$..book[?@.isbn]", "{$|k};{..|s};{book|k};{?@.isbn|s}" )]
     [DataRow( "$..book[?(@.price<10)]", "{$|k};{..|s};{book|k};{?(@.price<10)|s}" )]
+    [DataRow( "$..book[?@.price<10]", "{$|k};{..|s};{book|k};{?@.price<10|s}" )]
     [DataRow( "$..*", "{$|k};{..|s};{*|s}" )]
     [DataRow( """$.store.book[?(@path !== "$['store']['book'][0]")]""", """{$|k};{store|k};{book|k};{?(@path !== "$['store']['book'][0]")|s}""" )]
     [DataRow( """$..book[?(@.price == 8.99 && @.category == "fiction")]""", """{$|k};{..|s};{book|k};{?(@.price == 8.99 && @.category == "fiction")|s}""" )]
@@ -33,6 +35,8 @@ public class JsonPathQueryTokenizerTests
         // arrange
         static string TokensToString( JsonPathSegment segment )
         {
+            return string.Join( ';', segment.AsEnumerable().Select( TokenToString ) );
+
             static string TokenToString( JsonPathSegment segment )
             {
                 var (keySelector, selectors) = segment;
@@ -41,8 +45,6 @@ public class JsonPathQueryTokenizerTests
 
                 return $"{{{selectorsString}|{selectorType}}}";
             }
-
-            return string.Join( ';', segment.AsEnumerable().Select( TokenToString ) );
         }
 
         // act

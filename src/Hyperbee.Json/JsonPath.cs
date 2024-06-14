@@ -97,11 +97,11 @@ public static class JsonPath<TElement>
                 continue;
             }
 
-            // get the current segment as out, and then move the
-            // segments reference to the next segment in the list
+            // get the current segment, and then move the segments
+            // reference to the next segment in the list
 
             var segment = segments; // get current segment
-            var selector = segment.Selectors[0].Value; // first selector in segment;
+            var (selector, _) = segment.Selectors[0]; // first selector in segment;
 
             segments = segments.Next;
 
@@ -158,15 +158,15 @@ public static class JsonPath<TElement>
                     if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string filterSelector )
                         continue;
 
-                    var selectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
+                    var filterSelectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
-                    Push( stack, current, segments.Insert( filterSelector, selectorKind ) );
+                    Push( stack, current, segments.Insert( filterSelector, filterSelectorKind ) );
                     continue;
                 }
 
-                // [?(exp)]
+                // [?exp]
 
                 if ( childSelector.Length > 3 && childSelector[0] == '?' && childSelector[1] == '(' && childSelector[^1] == ')' )
                 {

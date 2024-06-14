@@ -7,6 +7,12 @@ internal record SelectorDescriptor
 {
     public SelectorKind SelectorKind { get; init; }
     public string Value { get; init; }
+
+    public void Deconstruct( out string value, out SelectorKind selectorKind )
+    {
+        value = Value;
+        selectorKind = SelectorKind;
+    }
 }
 
 [DebuggerTypeProxy( typeof( SegmentDebugView ) )]

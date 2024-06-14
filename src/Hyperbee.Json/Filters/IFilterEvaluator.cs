@@ -1,7 +1,7 @@
 ﻿
 namespace Hyperbee.Json.Filters;
 
-public interface IFilterEvaluator<in TType>
+public interface IFilterEvaluator<in TNode>
 {
-    public object Evaluate( string filter, TType current, TType root );
+    public object Evaluate( string filter, TNode current, TNode root );
 }

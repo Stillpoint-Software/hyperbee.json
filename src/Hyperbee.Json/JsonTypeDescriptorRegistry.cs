@@ -14,18 +14,18 @@ public class JsonTypeDescriptorRegistry
         Register( new NodeTypeDescriptor() );
     }
 
-    public static void Register<TElement>( ITypeDescriptor<TElement> descriptor )
+    public static void Register<TNode>( ITypeDescriptor<TNode> descriptor )
     {
-        Descriptors[typeof( TElement )] = descriptor;
+        Descriptors[typeof( TNode )] = descriptor;
     }
 
-    public static ITypeDescriptor<TElement> GetDescriptor<TElement>()
+    public static ITypeDescriptor<TNode> GetDescriptor<TNode>()
     {
-        if ( Descriptors.TryGetValue( typeof( TElement ), out var descriptor ) )
+        if ( Descriptors.TryGetValue( typeof( TNode ), out var descriptor ) )
         {
-            return descriptor as ITypeDescriptor<TElement>;
+            return descriptor as ITypeDescriptor<TNode>;
         }
 
-        throw new InvalidOperationException( $"No JSON descriptors registered for type {typeof( TElement )}." );
+        throw new InvalidOperationException( $"No JSON descriptors registered for type {typeof( TNode )}." );
     }
 }

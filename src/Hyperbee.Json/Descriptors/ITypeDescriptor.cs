@@ -11,12 +11,12 @@ public interface IJsonTypeDescriptor
     public FilterFunction GetFilterFunction( ParseExpressionContext context );
 }
 
-public interface ITypeDescriptor<TElement> : IJsonTypeDescriptor
+public interface ITypeDescriptor<TNode> : IJsonTypeDescriptor
 {
-    public IValueAccessor<TElement> Accessor { get; }
-    public IFilterEvaluator<TElement> FilterEvaluator { get; }
+    public IValueAccessor<TNode> Accessor { get; }
+    public IFilterEvaluator<TNode> FilterEvaluator { get; }
 
-    public void Deconstruct( out IValueAccessor<TElement> valueAccessor, out IFilterEvaluator<TElement> filterEvaluator )
+    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out IFilterEvaluator<TNode> filterEvaluator )
     {
         valueAccessor = Accessor;
         filterEvaluator = FilterEvaluator;

@@ -41,21 +41,21 @@ namespace Hyperbee.Json;
 // https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
 // https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
-public static class JsonPath<TElement>
+public static class JsonPath<TNode>
 {
-    private static readonly ITypeDescriptor<TElement> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TElement>();
+    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
-    public static IEnumerable<TElement> Select( in TElement value, string query )
+    public static IEnumerable<TNode> Select( in TNode value, string query )
     {
         return EnumerateMatches( value, value, query );
     }
 
-    internal static IEnumerable<TElement> Select( in TElement value, TElement root, string query )
+    internal static IEnumerable<TNode> Select( in TNode value, TNode root, string query )
     {
         return EnumerateMatches( value, root, query );
     }
 
-    private static IEnumerable<TElement> EnumerateMatches( in TElement value, in TElement root, string query )
+    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace( query );
 
@@ -79,7 +79,7 @@ public static class JsonPath<TElement>
         return EnumerateMatches( root, new NodeArgs( value, segments ) );
     }
 
-    private static IEnumerable<TElement> EnumerateMatches( TElement root, NodeArgs args )
+    private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args )
     {
         var stack = new Stack<NodeArgs>( 16 );
 
@@ -224,7 +224,7 @@ public static class JsonPath<TElement>
 
         yield break;
 
-        static void Push( Stack<NodeArgs> n, in TElement v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
+        static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
 
     private static bool Truthy( object value )
@@ -238,7 +238,7 @@ public static class JsonPath<TElement>
             yield return index;
     }
 
-    private static IEnumerable<int> EnumerateSlice( TElement value, string sliceExpr )
+    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr )
     {
         if ( !Descriptor.Accessor.IsArray( value, out var length ) )
             yield break;
@@ -266,12 +266,12 @@ public static class JsonPath<TElement>
         }
     }
 
-    private sealed class NodeArgs( in TElement value, in JsonPathSegment segment )
+    private sealed class NodeArgs( in TNode value, in JsonPathSegment segment )
     {
-        public readonly TElement Value = value;
+        public readonly TNode Value = value;
         public readonly JsonPathSegment Segment = segment;
 
-        public void Deconstruct( out TElement value, out JsonPathSegment segment )
+        public void Deconstruct( out TNode value, out JsonPathSegment segment )
         {
             value = Value;
             segment = Segment;

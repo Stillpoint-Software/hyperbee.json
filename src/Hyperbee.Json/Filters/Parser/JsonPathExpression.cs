@@ -16,15 +16,15 @@ public class JsonPathExpression
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
-    public static Func<TElement, TElement, bool> Compile<TElement>( ReadOnlySpan<char> filter, IJsonTypeDescriptor typeDescriptor )
+    public static Func<TNode, TNode, bool> Compile<TNode>( ReadOnlySpan<char> filter, IJsonTypeDescriptor typeDescriptor )
     {
-        var currentParam = Expression.Parameter( typeof( TElement ) );
-        var rootParam = Expression.Parameter( typeof( TElement ) );
+        var currentParam = Expression.Parameter( typeof( TNode ) );
+        var rootParam = Expression.Parameter( typeof( TNode ) );
         var expressionContext = new ParseExpressionContext( currentParam, rootParam, typeDescriptor );
         var expression = Parse( filter, expressionContext );
 
         return Expression
-            .Lambda<Func<TElement, TElement, bool>>( expression, currentParam, rootParam )
+            .Lambda<Func<TNode, TNode, bool>>( expression, currentParam, rootParam )
             .Compile();
     }
 

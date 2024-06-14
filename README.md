@@ -6,7 +6,7 @@ The library is designed to be extensible, allowing support for other JSON docume
 
 ## Features
 
-- **Supports `JsonElement` and `JsonNode`:** Flexibility to work with different JSON representations.
+- **Supports:** `JsonElement` and `JsonNode`.
 - **Extensible:** Easily extended to support additional JSON document types.
 - **High Performance:** Optimized for performance and efficiency.
 - **Enumerable Results:** Returns an `IEnumerable` for convenient and flexible result handling.
@@ -128,10 +128,10 @@ the syntax `?(<boolean expr>)`, as in:
 
 For a complete guide, see [JSONPath Syntax](docs/syntax.md).
 
-## Other Helper Methods
+## Helper Classes
 
-Hyperbee.Json also provides several helper methods to facilitate JSONPath operations. For more details, 
-refer to our [Helper Methods Documentation](docs/helper-methods).
+Hyperbee.Json also provides several helpers to facilitate document operations. For more details, 
+refer to our [Helper Classes Documentation](docs/helper-classes.md).
 
 ## Benchmarks
 

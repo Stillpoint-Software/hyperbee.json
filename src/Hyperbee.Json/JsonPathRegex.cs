@@ -9,7 +9,7 @@ internal partial class JsonPathRegex
     [GeneratedRegex( "^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
     internal static partial Regex RegexSlice();
 
-    [GeneratedRegex( @"^\?\((.*?)\)$" )]
+    [GeneratedRegex( @"^\?\(?(.*?)\)?$" )]
     internal static partial Regex RegexPathFilter();
 
     [GeneratedRegex( @"^[0-9*]+$" )]

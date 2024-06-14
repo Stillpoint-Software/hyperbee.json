@@ -168,7 +168,7 @@ public static class JsonPath<TElement>
 
                 // [?exp]
 
-                if ( childSelector.Length > 3 && childSelector[0] == '?' && childSelector[1] == '(' && childSelector[^1] == ')' )
+                if ( childSelector[0] == '?' )
                 {
                     foreach ( var (childValue, childKey) in accessor.EnumerateChildren( current ) )
                     {

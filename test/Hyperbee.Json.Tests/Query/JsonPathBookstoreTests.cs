@@ -164,6 +164,8 @@ public class JsonPathBookstoreTests : JsonTestBase
     }
 
     [DataTestMethod]
+    [DataRow( "$..book[?@.isbn]", typeof( JsonDocument ) )]
+    [DataRow( "$..book[?@.isbn]", typeof( JsonNode ) )]
     [DataRow( "$..book[?(@.isbn)]", typeof( JsonDocument ) )]
     [DataRow( "$..book[?(@.isbn)]", typeof( JsonNode ) )]
     public void FilterAllBooksWithIsbnNumber( string query, Type sourceType )
@@ -182,6 +184,8 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$..book[?(@.price<10)]", typeof( JsonDocument ) )]
     [DataRow( "$..book[?(@.price<10)]", typeof( JsonNode ) )]
+    [DataRow( "$..book[?@.price<10]", typeof( JsonDocument ) )]
+    [DataRow( "$..book[?@.price<10]", typeof( JsonNode ) )]
     public void FilterAllBooksCheaperThan10( string query, Type sourceType )
     {
         var source = GetDocumentProxy( sourceType );

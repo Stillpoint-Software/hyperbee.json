@@ -13,10 +13,10 @@
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<Copyright>Stillpoint Software, Inc.</Copyright>
 	<Title>Hyperbee Json</Title>
-	<Description>A C# implementation of JSONPath for .NET `System.Text.Json` with a plugable expression selector. </Description>
+	<Description>A C# implementation of JSONPath for .NET `System.Text.Json` `JsonElement`, and `JsonNode`. </Description>
 	<RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
-	<PackageReleaseNotes>https://github.com/Stillpoint-Software/hyperbee.json/releases/latest</PackageReleaseNotes>
+	<PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>
 
   </PropertyGroup>
   <ItemGroup>

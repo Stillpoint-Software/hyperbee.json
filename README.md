@@ -180,9 +180,9 @@ refer to our [Helper Classes Documentation](docs/helper-classes.md).
 
 ### Why Choose Hyperbee.Json?
 
-- **Multiple JSON Types:** Supports both `JsonElement` and `JsonNode`, offering greater flexibility.
-- **Extensibility:** Easily extendable to support new JSON document types as needed.
-- **User-Friendly:** Intuitive API with clear documentation, tests, and examples.
+- **Multiple JSON Types:** Supports both `JsonElement` and `JsonNode`.
+- **Extensibility:** Easily extendable to support new JSON document types.
+- **User-Friendly:** Clear documentation, tests, and examples.
 - **High Performance:** Optimized for speed and efficiency.
 - **Enumerable Results:** Provides an `IEnumerable` for easy and flexible result handling.
 - **Consensus Focused** 
@@ -191,7 +191,7 @@ refer to our [Helper Classes Documentation](docs/helper-classes.md).
 
 Hyperbee.Json is built upon the great work of several open-source projects. Special thanks to:
 
-- Stefan Goessner for the [original JSONPath implementation](https://goessner.net/articles/JsonPath/).
+- Stefan Goessner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - System.Text.Json team for their work on the `System.Text.Json` library.
 - Atif Aziz [.NET JSONPath](https://github.com/atifaziz/JSONPath)  
 - Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison)
@@ -203,4 +203,3 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-

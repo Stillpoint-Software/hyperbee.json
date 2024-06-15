@@ -15,7 +15,7 @@ public class JsonPathFilterTests : JsonTestBase
     [DataRow( "$[?(@.key)]", typeof( JsonNode ) )]
     public void FilterWithTruthyProperty( string query, Type sourceType )
     {
-        const string json = 
+        const string json =
             """
             [
               {"some": "some value"}, 
@@ -52,7 +52,7 @@ public class JsonPathFilterTests : JsonTestBase
               {"some": "value"}
             ]
             """;
-        
+
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );

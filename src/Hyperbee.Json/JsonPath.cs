@@ -149,10 +149,10 @@ public static class JsonPath<TNode>
 
             for ( var i = 0; i < segment.Selectors.Length; i++ ) // using 'for' for performance
             {
-                var (unionSelector,unionSelectorKind) = segment.Selectors[i]; 
+                var (unionSelector, unionSelectorKind) = segment.Selectors[i];
 
                 // [(exp)]
-                
+
                 /* //BF keep until we validate [(<expr>)] path is not needed
                  
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
@@ -167,7 +167,7 @@ public static class JsonPath<TNode>
                 }
                 
                 */
-                
+
                 // [?exp]
 
                 if ( unionSelectorKind == SelectorKind.Filter )
@@ -251,7 +251,7 @@ public static class JsonPath<TNode>
         };
     }
     */
-    
+
     private static SelectorKind GetSelectorKindNameOrIndex( string selector )
     {
         return JsonPathRegex.RegexNumber().IsMatch( selector ) ? SelectorKind.Index : SelectorKind.Name;

@@ -1,50 +1,60 @@
 # JSONPath Syntax Reference
 
-JSONPath is a query language for JSON, similar to XPath for XML. It allows you to extract specific values from JSON documents. This page outlines the syntax and operators supported by Hyperbee.Json.
+JSONPath is a query language for JSON, similar to XPath for XML. It allows you to extract specific values from JSON documents. 
+This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ## Basic Syntax
 
 ### Root Node
 
-- `$`: Refers to the root object or array.
+`$` : Refers to the root object or array.
 
 ### Child Operator
 
-- `.`: Access a child element.
-  ```csharp
+`.` : Access a child element.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": \"value\" } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = """
+  { 
+    "store": { 
+      "book": "value" 
+    } 
+  }
+  """;
+  
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$.store.book");
 
   Console.WriteLine(result.First()); // Output: "value"
-  ```
+```
 
 ### Subscript Operator
 
-- `[]`: Access elements by index or key.
-  ```csharp
+`[]` : Access elements by index or key.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": [\"value1\", \"value2\"] } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\"] } }";
+  
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$.store.book[0]");
 
   Console.WriteLine(result.First()); // Output: "value1"
-  ```
+```
 
 ### Wildcard
 
-- `[*]`: Wildcard for arrays or objects.
-  ```csharp
+`[*]` : Wildcard for arrays or objects.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": [\"value1\", \"value2\"] } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\"] } }";
+
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$.store.book[*]");
 
   foreach (var item in result)
@@ -53,19 +63,20 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
   }
   // Output: "value1"
   // Output: "value2"
-  ```
+```
 
 ## Filters
 
 ### Filter Expressions
 
-- `?()`: Filters elements based on a predicate.
-  ```csharp
+`?()` : Filters elements based on a predicate.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": [{ \"price\": 10 }, { \"price\": 15 }] } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = "{ \"store\": { \"book\": [{ \"price\": 10 }, { \"price\": 15 }] } }";
+
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
 
   foreach (var item in result)
@@ -73,17 +84,18 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
       Console.WriteLine(item);
   }
   // Output: { "price": 15 }
-  ```
+```
 
 ### Current Node
 
-- `@`: Represents the current node being processed in filters.
-  ```csharp
+`@` : Represents the current node being processed in filters.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": [{ \"price\": 10 }, { \"price\": 15 }] } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = "{ \"store\": { \"book\": [{ \"price\": 10 }, { \"price\": 15 }] } }";
+
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
 
   foreach (var item in result)
@@ -91,19 +103,20 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
       Console.WriteLine(item);
   }
   // Output: { "price": 15 }
-  ```
+```
 
 ## Operators
 
 ### Recursive Descent
 
-- `..`: Recursively search for matching elements.
-  ```csharp
+`..` : Recursively search for matching elements.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": [{\"category\": \"fiction\"}, {\"category\": \"science\"}], \"bicycle\": {\"category\": \"road\"} } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = "{ \"store\": { \"book\": [{\"category\": \"fiction\"}, {\"category\": \"science\"}], \"bicycle\": {\"category\": \"road\"} } }";
+
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$..category");
 
   foreach (var item in result)
@@ -113,17 +126,18 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
   // Output: "fiction"
   // Output: "science"
   // Output: "road"
-  ```
+```
 
 ### Union
 
-- `[ , ]`: Select multiple items.
-  ```csharp
+`[ , ]` : Select multiple items.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": [\"value1\", \"value2\", \"value3\"] } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\", \"value3\"] } }";
+
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$.store.book[0,2]");
 
   foreach (var item in result)
@@ -132,17 +146,18 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
   }
   // Output: "value1"
   // Output: "value3"
-  ```
+```
 
 ### Slices
 
-- `[start:end:step]`: Python-like array slicing.
-  ```csharp
+`[start:end:step]` : Python-like array slicing.
+```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  string json = "{ \"store\": { \"book\": [\"value1\", \"value2\", \"value3\", \"value4\"] } }";
-  JsonElement root = JsonDocument.Parse(json).RootElement;
+  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\", \"value3\", \"value4\"] } }";
+
+  var root = JsonDocument.Parse(json).RootElement;
   var result = JsonPath.Select(root, "$.store.book[0:3:2]");
 
   foreach (var item in result)
@@ -151,7 +166,7 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
   }
   // Output: "value1"
   // Output: "value3"
-  ```
+```
 
 ## Examples
 
@@ -176,8 +191,7 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   string json = "{ \"store\": { \"book\": [{ \"category\": \"fiction\", \"price\": 10 }, { \"category\": \"science\", \"price\": 15 }] } }";
-   JsonElement root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json).RootElement;
    var result = JsonPath.Select(root, "$.store.book[*]");
 
    foreach (var item in result)
@@ -193,8 +207,7 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   string json = "{ \"store\": { \"book\": [{ \"category\": \"fiction\", \"price\": 10 }, { \"category\": \"science\", \"price\": 15 }] } }";
-   JsonElement root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json).RootElement;
    var result = JsonPath.Select(root, "$.store.book[*].category");
 
    foreach (var item in result)
@@ -210,8 +223,7 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   string json = "{ \"store\": { \"book\": [{ \"category\": \"fiction\", \"price\": 10 }, { \"category\": \"science\", \"price\": 15 }] } }";
-   JsonElement root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json).RootElement;
    var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
 
    foreach (var item in result)
@@ -242,8 +254,7 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   string json = "{ \"library\": { \"books\": [{ \"title\": \"Book 1\", \"details\": { \"author\": \"Author 1\" } }, { \"title\": \"Book 2\", \"details\": { \"author\": \"Author 2\" } }] } }";
-   JsonElement root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json).RootElement;
    var result = JsonPath.Select(root, "$.library.books[*].title");
 
    foreach (var item in result)
@@ -259,8 +270,7 @@ JSONPath is a query language for JSON, similar to XPath for XML. It allows you t
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   string json = "{ \"library\": { \"books\": [{ \"title\": \"Book 1\", \"details\": { \"author\": \"Author 1\" } }, { \"title\": \"Book 2\", \"details\": { \"author\": \"Author 2\" } }] } }";
-   JsonElement root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json).RootElement;
    var result = JsonPath.Select(root, "$.library.books[*].details.author");
 
    foreach (var item in result)

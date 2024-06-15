@@ -6,12 +6,18 @@ internal partial class JsonPathRegex
 {
     // generated regex
 
-    [GeneratedRegex( "^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$" )]
+    [GeneratedRegex( @"^(-?\d*):?(-?\d*):?(-?\d*)$" )]
     internal static partial Regex RegexSlice();
 
-    [GeneratedRegex( @"^\?\(?(.*?)\)?$" )]
+    [GeneratedRegex( @"^\?\(?(.*)\)?$" )]
     internal static partial Regex RegexPathFilter();
 
-    [GeneratedRegex( @"^[0-9*]+$" )]
+    [GeneratedRegex( @"^[\d*]+$" )]
     internal static partial Regex RegexNumber();
+
+    [GeneratedRegex( @"^""?:[^""\\]|\\.*""$" )]
+    internal static partial Regex RegexQuotedDouble();
+
+    [GeneratedRegex( @"^'?:[^'\\]|\\.*'$" )]
+    internal static partial Regex RegexQuoted();
 }

@@ -20,9 +20,9 @@ internal enum SelectorKind
 
     // union notation
     Name = 0x10 | Singular,
-    Slice = 0x20 | Group,
-    Filter = 0x40 | Group,
-    Index = 0x80 | Singular,
+    Index = 0x20 | Singular,
+    Slice = 0x40 | Group,
+    Filter = 0x80 | Group,
 
     // 
     Wildcard = 0x100 | Group,
@@ -30,6 +30,7 @@ internal enum SelectorKind
 
     // internal reserved for runtime processing
     Unspecified = 0x400,
+    
     UnspecifiedSingular = Unspecified | Singular, // singular selector (root, name or index)
     UnspecifiedGroup = Unspecified | Group        // non-singular selector
 }
@@ -38,13 +39,13 @@ public static partial class JsonPathQueryTokenizer
 {
     private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
-    [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$", RegexOptions.ExplicitCapture )]
+    [GeneratedRegex( @"^(-?\d*):?(-?\d*):?(-?\d*)$", RegexOptions.ExplicitCapture )]
     private static partial Regex RegexSlice();
 
-    [GeneratedRegex( @"^\?\(?(.*?)\)?$", RegexOptions.ExplicitCapture )]
+    [GeneratedRegex( @"^\?\(?(.*)\)?$", RegexOptions.ExplicitCapture )]
     private static partial Regex RegexFilter();
 
-    [GeneratedRegex( @"^[0-9*]+$" )]
+    [GeneratedRegex( @"^[\d*]+$" )]
     private static partial Regex RegexNumber();
 
     [GeneratedRegex( @"^""(?:[^""\\]|\\.)*""$", RegexOptions.ExplicitCapture )]

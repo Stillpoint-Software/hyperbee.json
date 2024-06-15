@@ -30,7 +30,7 @@ internal enum SelectorKind
 
     // internal reserved for runtime processing
     Unspecified = 0x400,
-    
+
     UnspecifiedSingular = Unspecified | Singular, // singular selector (root, name or index)
     UnspecifiedGroup = Unspecified | Group        // non-singular selector
 }

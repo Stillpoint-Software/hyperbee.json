@@ -2,14 +2,14 @@
 # Hyperbee.Json
 
 `Hyperbee.Json` is a high-performance JSONPath parser for .NET, supporting both `JsonElement` and `JsonNode`. 
-The library is designed to be extensible, allowing support for other JSON document types.
+The library is designed to be quick and extensible, allowing support for other JSON document types.
 
 ## Features
 
+- **High Performance:** Optimized for performance and efficiency.
 - **Supports:** `JsonElement` and `JsonNode`.
 - **Extensible:** Easily extended to support additional JSON document types.
-- **High Performance:** Optimized for performance and efficiency.
-- **Enumerable Results:** Returns an `IEnumerable` for convenient and flexible result handling.
+- **`IEnumerable` Results:** Deferred execution queries with `IEnumerable`.
 - **Compliant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
 
 ## JSONPath Consensus
@@ -37,8 +37,18 @@ dotnet add package Hyperbee.Json
 using Hyperbee.JsonPath;
 using System.Text.Json;
 
-string json = "{ \"store\": { \"book\": [ { \"category\": \"fiction\" }, { \"category\": \"science\" } ] } }";
-JsonElement root = JsonDocument.Parse(json).RootElement;
+var json = """
+{ 
+  "store": { 
+    "book": [ 
+      { "category": "fiction" }, 
+      { "category": "science" } 
+    ] 
+  } 
+}
+""";
+
+var root = JsonDocument.Parse(json).RootElement;
 var result = JsonPath.Select(root, "$.store.book[0].category");
 
 Console.WriteLine(result.First()); // Output: "fiction"
@@ -47,8 +57,21 @@ Console.WriteLine(result.First()); // Output: "fiction"
 #### Selecting Multiple Elements
 
 ```csharp
-string json = "{ \"store\": { \"book\": [ { \"category\": \"fiction\" }, { \"category\": \"science\" } ] } }";
-JsonElement root = JsonDocument.Parse(json).RootElement;
+using Hyperbee.JsonPath;
+using System.Text.Json;
+
+var json = """
+{ 
+  "store": { 
+    "book": [
+      { "category": "fiction" }, 
+      { "category": "science" } 
+    ] 
+  } 
+}
+""";
+
+var root = JsonDocument.Parse(json).RootElement;
 var result = JsonPath.Select(root, "$.store.book[*].category");
 
 foreach (var item in result)
@@ -62,8 +85,27 @@ foreach (var item in result)
 #### Filtering
 
 ```csharp
-string json = "{ \"store\": { \"book\": [ { \"category\": \"fiction\", \"price\": 10 }, { \"category\": \"science\", \"price\": 15 } ] } }";
-JsonElement root = JsonDocument.Parse(json).RootElement;
+using Hyperbee.JsonPath;
+using System.Text.Json;
+
+var json = """
+{ 
+  "store": { 
+    "book": [
+      { 
+        "category": "fiction",
+        "price": 10  
+      }, 
+      { 
+        "category": "science",
+        "price": 15  
+      } 
+    ] 
+  } 
+}
+""";
+
+var root = JsonDocument.Parse(json).RootElement;
 var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
 
 foreach (var item in result)
@@ -75,10 +117,21 @@ foreach (var item in result)
 #### Working with JsonNode
 
 ```csharp
+using Hyperbee.JsonPath;
 using System.Text.Json.Nodes;
 
-string json = "{ \"store\": { \"book\": [ { \"category\": \"fiction\" }, { \"category\": \"science\" } ] } }";
-JsonNode root = JsonNode.Parse(json);
+var json = """
+{ 
+  "store": { 
+    "book": [
+      { "category": "fiction" }, 
+      { "category": "science" } 
+    ] 
+  } 
+}
+""";
+
+var root = JsonNode.Parse(json);
 var result = JsonPath.Select(root, "$.store.book[0].category");
 
 Console.WriteLine(result.First()); // Output: "fiction"
@@ -88,18 +141,18 @@ Console.WriteLine(result.First()); // Output: "fiction"
 
 Here's a quick reference for JSONPath syntax supported by Hyperbee.Json:
 
-| JSONPath           | Description                                                
-|:-------------------|:-----------------------------------------------------------
-| `$`                | Root object                                    
-| `@`                | Current node                                 
-| `.`                | Child operator                                             
-| `..`               | Recursive descent  
-| `*`                | Wildcard 
-| `[]`               | Subscript operator
-| `[,]`              | Union operator
-| `[start:end:step]` | Array slice operator
-| `?()`              | Filter selector
-| `()`               | Filter expression
+| JSONPath                                     | Description                                                
+|:---------------------------------------------|:-----------------------------------------------------------
+| `$`                                          | Root node                                    
+| `@`                                          | Current node                                 
+| `.<name>`, `.'<name>'`, or `."<name>"`       | Object member dot operator
+| `[<name>]`, or `['<name>']`, or `["<name>"]` | Object member subscript operator
+| `[<index]`                                   | Array access operator
+| `[,]`                                        | Union operator
+| `[start:end:step]`                           | Array slice operator
+| `*`, or `[*]`                                | Wildcard 
+| `..`                                         | Recursive descent  
+| `?<expr>`                                    | Filter selector
 
 JSONPath expressions refer to a JSON structure in the same way as XPath expressions 
 are used in combination with an XML document. JSONPath assumes the name `$` is assigned 
@@ -159,33 +212,46 @@ refer to our [Helper Classes Documentation](docs/helper-classes.md).
 
 ## Comparison with Other Libraries
 
+There are excellent options available for .NET JsonPath.
+
 ### JsonEverything
 
 - **Pros:**
-  - Comprehensive feature set.
   - Extensive JSON ecosystem.
-  - Documentation and examples.
+  - Comprehensive feature set.
+  - Deferred execution queries with `IEnumerable`.
 
 - **Cons:**
-  - Limited support for different JSON document types.
-  - Not as performant as other implementations.
+  - Not as fast as other implementations.
+  - No support for `JsonElement`.
 
 ### JsonCons.NET
 
 - **Pros:**
   - High performance.
+  - Enhanced JsonPath syntax.
 
 - **Cons:**
-  - Does not return an enumerable result, making it less flexible, or performant, for certain operations.
+  - Uses Net Standard 2.1
+  - Does not return an `IEnumerable` result (no defered query execution).
+  making it less efficient for certain operations.
+
+### Json.Net
+
+- **Pros:**
+  - Comprehensive feature set.
+  - Documentation and examples.
+
+- **Cons:**
+  - Does not support `System.Text.Json`.
 
 ### Why Choose Hyperbee.Json?
 
-- **Multiple JSON Types:** Supports both `JsonElement` and `JsonNode`.
-- **Extensibility:** Easily extendable to support new JSON document types.
-- **User-Friendly:** Clear documentation, tests, and examples.
-- **High Performance:** Optimized for speed and efficiency.
-- **Enumerable Results:** Provides an `IEnumerable` for easy and flexible result handling.
-- **Consensus Focused** 
+- High Performance.
+- Supports `JsonElement`, and `JsonNode`.
+- Extendable to support additional JSON document types.
+- Deferred execution queries with `IEnumerable`.
+- Consensus Focused 
 
 ## Credits
 
@@ -193,8 +259,8 @@ Hyperbee.Json is built upon the great work of several open-source projects. Spec
 
 - Stefan Goessner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - System.Text.Json team for their work on the `System.Text.Json` library.
-- Atif Aziz [.NET JSONPath](https://github.com/atifaziz/JSONPath)  
-- Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison)
+- Atif Aziz [.NET JSONPath](https://github.com/atifaziz/JSONPath).  
+- Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).
 
 ## Contributing
 

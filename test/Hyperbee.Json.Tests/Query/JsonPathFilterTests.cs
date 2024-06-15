@@ -15,7 +15,13 @@ public class JsonPathFilterTests : JsonTestBase
     [DataRow( "$[?(@.key)]", typeof( JsonNode ) )]
     public void FilterWithTruthyProperty( string query, Type sourceType )
     {
-        const string json = "[{\"some\": \"some value\"}, {\"key\": \"value\"}]";
+        const string json = 
+            """
+            [
+              {"some": "some value"}, 
+              {"key": "value"}
+            ]
+            """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -32,7 +38,21 @@ public class JsonPathFilterTests : JsonTestBase
     [DataRow( "$[?(@.key<42)]", typeof( JsonNode ) )]
     public void FilterWithLessThan( string query, Type sourceType )
     {
-        const string json = "[{\"key\": 0}, {\"key\": 42}, {\"key\": -1}, {\"key\": 41}, {\"key\": 43}, {\"key\": 42.0001}, {\"key\": 41.9999}, {\"key\": 100}, {\"some\": \"value\"}]";
+        const string json =
+            """
+            [
+              {"key": 0}, 
+              {"key": 42}, 
+              {"key": -1}, 
+              {"key": 41}, 
+              {"key": 43}, 
+              {"key": 42.0001}, 
+              {"key": 41.9999}, 
+              {"key": 100}, 
+              {"some": "value"}
+            ]
+            """;
+        
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );

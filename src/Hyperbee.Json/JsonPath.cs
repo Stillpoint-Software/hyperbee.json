@@ -158,7 +158,7 @@ public static class JsonPath<TNode>
                     if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string filterSelector )
                         continue;
 
-                    var filterSelectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
+                    var filterSelectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | (Wildcard, Descendant, Slice)
                         ? SelectorKind.UnspecifiedSingular
                         : SelectorKind.UnspecifiedGroup;
 
@@ -172,7 +172,8 @@ public static class JsonPath<TNode>
                 {
                     foreach ( var (childValue, childKey) in accessor.EnumerateChildren( current ) )
                     {
-                        var filterValue = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
+                        var filterSelector = JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ); // remove '?(' and ')' //BF: should this be the evaluator's responsibility?
+                        var filterValue = filterEvaluator.Evaluate( filterSelector, childValue, root );
 
                         if ( Truthy( filterValue ) )
                             Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)

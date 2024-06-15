@@ -101,7 +101,7 @@ public static class JsonPath<TNode>
             // reference to the next segment in the list
 
             var segment = segments; // get current segment
-            var (selector, _) = segment.Selectors[0]; // first selector in segment;
+            var (selector, selectorKind) = segment.Selectors[0]; // first selector in segment;
 
             segments = segments.Next;
 
@@ -122,11 +122,11 @@ public static class JsonPath<TNode>
 
             // wildcard
 
-            if ( selector == "*" )
+            if ( selectorKind == SelectorKind.Wildcard )
             {
                 foreach ( var (_, childKey) in accessor.EnumerateChildren( current ) )
                 {
-                    Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Dot | Index)
+                    Push( stack, current, segments.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
                 }
 
                 continue;
@@ -134,11 +134,11 @@ public static class JsonPath<TNode>
 
             // descendant
 
-            if ( selector == ".." )
+            if ( selectorKind == SelectorKind.Descendant )
             {
                 foreach ( var (childValue, _) in accessor.EnumerateChildren( current, includeValues: false ) ) // child arrays or objects only
                 {
-                    Push( stack, childValue, segments.Insert( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
+                    Push( stack, childValue, segments.Insert( "..", SelectorKind.Descendant ) ); // Descendant
                 }
 
                 Push( stack, current, segments );
@@ -149,34 +149,36 @@ public static class JsonPath<TNode>
 
             for ( var i = 0; i < segment.Selectors.Length; i++ ) // using 'for' for performance
             {
-                var childSelector = segment.Selectors[i].Value;
+                var (unionSelector,unionSelectorKind) = segment.Selectors[i]; 
 
                 // [(exp)]
-
+                
+                /* //BF keep until we validate [(<expr>)] path is not needed
+                 
                 if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
                 {
                     if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string filterSelector )
                         continue;
 
-                    var filterSelectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | (Wildcard, Descendant, Slice)
-                        ? SelectorKind.UnspecifiedSingular
-                        : SelectorKind.UnspecifiedGroup;
+                    var filterSelectorKind = GetSelectorKind( filterSelector );
 
                     Push( stack, current, segments.Insert( filterSelector, filterSelectorKind ) );
                     continue;
                 }
-
+                
+                */
+                
                 // [?exp]
 
-                if ( childSelector[0] == '?' )
+                if ( unionSelectorKind == SelectorKind.Filter )
                 {
                     foreach ( var (childValue, childKey) in accessor.EnumerateChildren( current ) )
                     {
-                        var filterSelector = JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ); // remove '?(' and ')' //BF: should this be the evaluator's responsibility?
+                        var filterSelector = JsonPathRegex.RegexPathFilter().Replace( unionSelector, "$1" ); // remove '?(' and ')' //BF: should this be the evaluator's responsibility?
                         var filterValue = filterEvaluator.Evaluate( filterSelector, childValue, root );
 
                         if ( Truthy( filterValue ) )
-                            Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
+                            Push( stack, current, segments.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
                     }
 
                     continue;
@@ -186,24 +188,24 @@ public static class JsonPath<TNode>
 
                 if ( accessor.IsArray( current, out var length ) )
                 {
-                    if ( JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
+                    if ( unionSelectorKind == SelectorKind.Index )
                     {
                         // [#,#,...] 
-                        Push( stack, accessor.GetElementAt( current, int.Parse( childSelector ) ), segments );
+                        Push( stack, accessor.GetElementAt( current, int.Parse( unionSelector ) ), segments );
                         continue;
                     }
 
                     // [start:end:step] Python slice syntax
-                    if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) )
+                    if ( unionSelectorKind == SelectorKind.Slice )
                     {
-                        foreach ( var index in EnumerateSlice( current, childSelector ) )
+                        foreach ( var index in EnumerateSlice( current, unionSelector ) )
                             Push( stack, accessor.GetElementAt( current, index ), segments );
                         continue;
                     }
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, accessor.GetElementAt( current, index ), segments.Insert( childSelector, SelectorKind.UnspecifiedSingular ) ); // Name
+                        Push( stack, accessor.GetElementAt( current, index ), segments.Insert( unionSelector, SelectorKind.Name ) ); // Name
 
                     continue;
                 }
@@ -212,11 +214,11 @@ public static class JsonPath<TNode>
 
                 if ( accessor.IsObject( current ) )
                 {
-                    if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) || JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
+                    if ( unionSelectorKind == SelectorKind.Slice || unionSelectorKind == SelectorKind.Index )
                         continue;
 
                     // [name1,name2,...]
-                    if ( accessor.TryGetChildValue( current, childSelector, out var childValue ) )
+                    if ( accessor.TryGetChildValue( current, unionSelector, out var childValue ) )
                         Push( stack, childValue, segments );
                 }
             }
@@ -226,6 +228,33 @@ public static class JsonPath<TNode>
         yield break;
 
         static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
+    }
+
+    /* //BF keep until we validate [(<expr>)] path is not needed
+     
+    private static SelectorKind GetSelectorKind( string selector )
+    {
+        if ( selector[0] == '?' )
+            return SelectorKind.Filter;
+
+        if ( JsonPathRegex.RegexNumber().IsMatch( selector ) )
+            return SelectorKind.Index;
+
+        if ( JsonPathRegex.RegexSlice().IsMatch( selector ) )
+            return SelectorKind.Slice;
+
+        return selector switch
+        {
+            "*" => SelectorKind.Wildcard,
+            ".." => SelectorKind.Descendant,
+            _ => SelectorKind.Name
+        };
+    }
+    */
+    
+    private static SelectorKind GetSelectorKindNameOrIndex( string selector )
+    {
+        return JsonPathRegex.RegexNumber().IsMatch( selector ) ? SelectorKind.Index : SelectorKind.Name;
     }
 
     private static bool Truthy( object value )

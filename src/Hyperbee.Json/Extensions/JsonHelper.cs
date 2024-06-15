@@ -40,8 +40,6 @@ public static class JsonHelper
                         break;
 
                     case SelectorKind.Undefined:
-                    case SelectorKind.UnspecifiedSingular:
-                    case SelectorKind.UnspecifiedGroup:
                     default:
                         throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
                 }

@@ -26,13 +26,7 @@ internal enum SelectorKind
 
     // 
     Wildcard = 0x100 | Group,
-    Descendant = 0x200 | Group,
-
-    // internal reserved for runtime processing
-    Unspecified = 0x400,
-
-    UnspecifiedSingular = Unspecified | Singular, // singular selector (root, name or index)
-    UnspecifiedGroup = Unspecified | Group        // non-singular selector
+    Descendant = 0x200 | Group
 }
 
 public static partial class JsonPathQueryTokenizer

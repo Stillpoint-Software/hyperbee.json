@@ -29,7 +29,7 @@ public class DynamicJsonConverter : JsonConverter<dynamic>
     public TryReadJsonValue TryReadValueHandler { get; set; }
 
     private readonly JsonPath _jsonPath = new();
-    
+
     public override dynamic Read( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
     {
         try

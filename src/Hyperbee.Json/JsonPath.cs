@@ -223,7 +223,7 @@ public static class JsonPath<TNode>
     {
         // This is a very specialized helper. It is only called when
         // we KNOW the selector is either an index or a name.
-        
+
         return IsNumber( selector ) ? SelectorKind.Index : SelectorKind.Name;
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]

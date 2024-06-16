@@ -5,7 +5,6 @@ using Hyperbee.Json.Descriptors;
 namespace Hyperbee.Json.Filters.Parser;
 // Based off Split-and-Merge Expression Parser
 // https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/october/csharp-a-split-and-merge-expression-parser-in-csharp
-// Handles `filter-selector` in the https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base/blob/main/sourcecode/abnf/jsonpath-collected.abnf#L69
 
 public class JsonPathExpression
 {
@@ -180,20 +179,18 @@ public class JsonPathExpression
                     || ch == stopCollecting);
     }
 
-    private static bool ValidType( FilterTokenType? type ) =>
-        type != null && type switch
-        {
-            FilterTokenType.Not => true,
-            FilterTokenType.Equals => true,
-            FilterTokenType.NotEquals => true,
-            FilterTokenType.GreaterThanOrEqual => true,
-            FilterTokenType.GreaterThan => true,
-            FilterTokenType.LessThanOrEqual => true,
-            FilterTokenType.LessThan => true,
-            FilterTokenType.Or => true,
-            FilterTokenType.And => true,
-            _ => false
-        };
+    private static bool ValidType( FilterTokenType? type )
+    {
+        return type is FilterTokenType.Not or
+            FilterTokenType.Equals or
+            FilterTokenType.NotEquals or
+            FilterTokenType.GreaterThanOrEqual or
+            FilterTokenType.GreaterThan or
+            FilterTokenType.LessThanOrEqual or
+            FilterTokenType.LessThan or
+            FilterTokenType.Or or
+            FilterTokenType.And;
+    }
 
     private static FilterTokenType UpdateType( ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, char to )
     {
@@ -226,7 +223,7 @@ public class JsonPathExpression
             var next = listToMerge[index++];
             while ( !CanMergeTokens( current, next ) )
             {
-                Merge( next, ref index, listToMerge, true /* mergeOneOnly */);
+                Merge( next, ref index, listToMerge, mergeOneOnly:true );
             }
             MergeTokens( current, next );
             if ( mergeOneOnly )
@@ -253,21 +250,22 @@ public class JsonPathExpression
     private static void MergeTokens( FilterToken left, FilterToken right )
     {
         // TODO: clean up handling numerical, string and object comparing. feels messy.
-        var isNumerical = left.Expression != null && IsNumerical( left.Expression.Type ) || IsNumerical( right.Expression.Type );
+        bool isNumerical = IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type );
+
         left.Expression = left.Type switch
         {
             FilterTokenType.Equals => CompareConvert( isNumerical ? Expression.Equal : Equal, left.Expression, right.Expression, isNumerical ),
             FilterTokenType.NotEquals => CompareConvert( isNumerical ? Expression.NotEqual : NotEqual, left.Expression, right.Expression, isNumerical ),
 
-            // Assume/force numerical 
+            // Assume/force numerical
             FilterTokenType.GreaterThan => CompareConvert( Expression.GreaterThan, left.Expression, right.Expression ),
             FilterTokenType.GreaterThanOrEqual => CompareConvert( Expression.GreaterThanOrEqual, left.Expression, right.Expression ),
             FilterTokenType.LessThan => CompareConvert( Expression.LessThan, left.Expression, right.Expression ),
             FilterTokenType.LessThanOrEqual => CompareConvert( Expression.LessThanOrEqual, left.Expression, right.Expression ),
-
+            
             FilterTokenType.And => Expression.AndAlso( left.Expression!, right.Expression ),
             FilterTokenType.Or => Expression.OrElse( left.Expression!, right.Expression ),
-
+            
             FilterTokenType.Not => Expression.Not( right.Expression ),
             _ => left.Expression
         };
@@ -275,43 +273,46 @@ public class JsonPathExpression
         //TODO: Invalid compares should be false, but is this the best way?
         left.Expression = left.Expression == null
             ? left.Expression
-            : Expression.TryCatchFinally( left.Expression, null, [Expression.Catch( typeof( Exception ), Expression.Constant( false ) )] );
+            : Expression.TryCatchFinally(
+                left.Expression,
+                Expression.Empty(), // Ensure finally block is present
+                Expression.Catch( typeof(Exception), Expression.Constant( false ) )
+            );
 
         left.Type = right.Type;
-
         return;
 
         // Use Equal Method vs equal operator
         static Expression Equal( Expression l, Expression r ) => Expression.Call( ObjectEquals, l, r );
         static Expression NotEqual( Expression l, Expression r ) => Expression.Not( Equal( l, r ) );
     }
-
+    
     private static Expression CompareConvert( Func<Expression, Expression, Expression> compare, Expression left, Expression right, bool isNumerical = true )
     {
-        // TODO: clean up... I don't like that most of the time the type is an object because it's being boxed to support num/string/ etc
+        if ( isNumerical )
+        {
+            if ( left.Type == typeof(object) ) 
+                left = Expression.Convert( left, typeof(float) );
+            
+            if ( right.Type == typeof(object) ) 
+                right = Expression.Convert( right, typeof(float) );
+            
+            if ( left.Type == typeof(int) ) 
+                left = Expression.Convert( left, typeof(float) );
+            
+            if ( right.Type == typeof(int) ) 
+                right = Expression.Convert( right, typeof(float) );
+        }
 
-        // force numerical check for <, >, =<, =>
-        if ( isNumerical && left.Type == typeof( object ) && right.Type == typeof( object ) )
-            return compare( Expression.Convert( left, typeof( float ) ), Expression.Convert( right, typeof( float ) ) );
-
-        if ( left.Type == typeof( float ) && right.Type == typeof( object ) )
-            return compare( left, Expression.Convert( right, typeof( float ) ) );
-        if ( left.Type == typeof( object ) && right.Type == typeof( float ) )
-            return compare( Expression.Convert( left, typeof( float ) ), right );
-        if ( left.Type == typeof( int ) && right.Type == typeof( object ) )
-            return compare( left, Expression.Convert( right, typeof( float ) ) );
-        if ( left.Type == typeof( object ) && right.Type == typeof( int ) )
-            return compare( Expression.Convert( left, typeof( float ) ), right );
-        if ( left.Type == typeof( int ) && right.Type == typeof( int ) )
-            return compare( Expression.Convert( left, typeof( float ) ), Expression.Convert( right, typeof( float ) ) );
-        if ( left.Type == typeof( object ) && right.Type == typeof( string ) )
-            return compare( Expression.Convert( left, typeof( string ) ), right );
-        if ( left.Type == typeof( string ) && right.Type == typeof( object ) )
-            return compare( left, Expression.Convert( right, typeof( string ) ) );
+        if ( left.Type == typeof(object) && right.Type == typeof(string) )
+            return compare( Expression.Convert( left, typeof(string) ), right );
+        
+        if ( left.Type == typeof(string) && right.Type == typeof(object) )
+            return compare( left, Expression.Convert( right, typeof(string) ) );
 
         return compare( left, right );
     }
-
+    
     private static bool IsNumerical( Type type )
     {
         return type == typeof( int ) || type == typeof( float );
@@ -321,17 +322,13 @@ public class JsonPathExpression
     {
         OpenParen,
         ClosedParen,
-
         Not,
-
         Equals,
         NotEquals,
-
         LessThan,
         LessThanOrEqual,
         GreaterThan,
         GreaterThanOrEqual,
-
         Or,
         And
     }

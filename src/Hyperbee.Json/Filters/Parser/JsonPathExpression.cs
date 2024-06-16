@@ -223,7 +223,7 @@ public class JsonPathExpression
             var next = listToMerge[index++];
             while ( !CanMergeTokens( current, next ) )
             {
-                Merge( next, ref index, listToMerge, mergeOneOnly:true );
+                Merge( next, ref index, listToMerge, mergeOneOnly: true );
             }
             MergeTokens( current, next );
             if ( mergeOneOnly )
@@ -262,10 +262,10 @@ public class JsonPathExpression
             FilterTokenType.GreaterThanOrEqual => CompareConvert( Expression.GreaterThanOrEqual, left.Expression, right.Expression ),
             FilterTokenType.LessThan => CompareConvert( Expression.LessThan, left.Expression, right.Expression ),
             FilterTokenType.LessThanOrEqual => CompareConvert( Expression.LessThanOrEqual, left.Expression, right.Expression ),
-            
+
             FilterTokenType.And => Expression.AndAlso( left.Expression!, right.Expression ),
             FilterTokenType.Or => Expression.OrElse( left.Expression!, right.Expression ),
-            
+
             FilterTokenType.Not => Expression.Not( right.Expression ),
             _ => left.Expression
         };
@@ -276,7 +276,7 @@ public class JsonPathExpression
             : Expression.TryCatchFinally(
                 left.Expression,
                 Expression.Empty(), // Ensure finally block is present
-                Expression.Catch( typeof(Exception), Expression.Constant( false ) )
+                Expression.Catch( typeof( Exception ), Expression.Constant( false ) )
             );
 
         left.Type = right.Type;
@@ -286,33 +286,33 @@ public class JsonPathExpression
         static Expression Equal( Expression l, Expression r ) => Expression.Call( ObjectEquals, l, r );
         static Expression NotEqual( Expression l, Expression r ) => Expression.Not( Equal( l, r ) );
     }
-    
+
     private static Expression CompareConvert( Func<Expression, Expression, Expression> compare, Expression left, Expression right, bool isNumerical = true )
     {
         if ( isNumerical )
         {
-            if ( left.Type == typeof(object) ) 
-                left = Expression.Convert( left, typeof(float) );
-            
-            if ( right.Type == typeof(object) ) 
-                right = Expression.Convert( right, typeof(float) );
-            
-            if ( left.Type == typeof(int) ) 
-                left = Expression.Convert( left, typeof(float) );
-            
-            if ( right.Type == typeof(int) ) 
-                right = Expression.Convert( right, typeof(float) );
+            if ( left.Type == typeof( object ) )
+                left = Expression.Convert( left, typeof( float ) );
+
+            if ( right.Type == typeof( object ) )
+                right = Expression.Convert( right, typeof( float ) );
+
+            if ( left.Type == typeof( int ) )
+                left = Expression.Convert( left, typeof( float ) );
+
+            if ( right.Type == typeof( int ) )
+                right = Expression.Convert( right, typeof( float ) );
         }
 
-        if ( left.Type == typeof(object) && right.Type == typeof(string) )
-            return compare( Expression.Convert( left, typeof(string) ), right );
-        
-        if ( left.Type == typeof(string) && right.Type == typeof(object) )
-            return compare( left, Expression.Convert( right, typeof(string) ) );
+        if ( left.Type == typeof( object ) && right.Type == typeof( string ) )
+            return compare( Expression.Convert( left, typeof( string ) ), right );
+
+        if ( left.Type == typeof( string ) && right.Type == typeof( object ) )
+            return compare( left, Expression.Convert( right, typeof( string ) ) );
 
         return compare( left, right );
     }
-    
+
     private static bool IsNumerical( Type type )
     {
         return type == typeof( int ) || type == typeof( float );

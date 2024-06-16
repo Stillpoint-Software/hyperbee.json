@@ -33,19 +33,19 @@ public static partial class JsonPathQueryTokenizer
 {
     private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
-    [GeneratedRegex( @"^(-?\d*):?(-?\d*):?(-?\d*)$", RegexOptions.ExplicitCapture )]
+    [GeneratedRegex( @"^(-?\d*):?(-?\d*):?(-?\d*)$", RegexOptions.None )]
     private static partial Regex RegexSlice();
 
-    [GeneratedRegex( @"^\?\(?(.*)\)?$", RegexOptions.ExplicitCapture )]
+    [GeneratedRegex( @"^\?\(?(.+?)\)?$", RegexOptions.None )]
     private static partial Regex RegexFilter();
 
-    [GeneratedRegex( @"^[\d*]+$" )]
+    [GeneratedRegex( @"^\d*$", RegexOptions.None )]
     private static partial Regex RegexNumber();
 
-    [GeneratedRegex( @"^""(?:[^""\\]|\\.)*""$", RegexOptions.ExplicitCapture )]
+    [GeneratedRegex( """^"(?:[^"\\]|\\.)*"$""", RegexOptions.None )]
     private static partial Regex RegexQuotedDouble();
 
-    [GeneratedRegex( @"^'(?:[^'\\]|\\.)*'$", RegexOptions.ExplicitCapture )]
+    [GeneratedRegex( @"^'(?:[^'\\]|\\.)*'$", RegexOptions.None )]
     private static partial Regex RegexQuoted();
 
     private enum Scanner

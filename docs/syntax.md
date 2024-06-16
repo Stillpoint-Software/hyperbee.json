@@ -7,11 +7,11 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Root Node
 
-`$` : Refers to the root object or array.
+`$` - Refers to the root object or array.
 
 ### Child Operator
 
-`.` : Access a child element.
+`.` - Access a child element.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -24,7 +24,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
   }
   """;
   
-  var root = JsonDocument.Parse(json).RootElement;
+  var root = JsonDocument.Parse(json);
   var result = JsonPath.Select(root, "$.store.book");
 
   Console.WriteLine(result.First()); // Output: "value"
@@ -32,14 +32,23 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Subscript Operator
 
-`[]` : Access elements by index or key.
+`[]` - Access elements by index or key.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\"] } }";
+  var json = """
+  {
+    "store": {
+      "book": [
+        "value1",
+        "value2"
+      ]
+    }
+  }
+  """;
   
-  var root = JsonDocument.Parse(json).RootElement;
+  var root = JsonDocument.Parse(json);
   var result = JsonPath.Select(root, "$.store.book[0]");
 
   Console.WriteLine(result.First()); // Output: "value1"
@@ -47,14 +56,23 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Wildcard
 
-`[*]` : Wildcard for arrays or objects.
+`[*]` - Wildcard for arrays or objects.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\"] } }";
+  var json = """
+  {
+    "store": {
+      "book": [
+        "value1",
+        "value2"
+      ]
+    }
+  }
+  """;
 
-  var root = JsonDocument.Parse(json).RootElement;
+  var root = JsonDocument.Parse(json);
   var result = JsonPath.Select(root, "$.store.book[*]");
 
   foreach (var item in result)
@@ -69,15 +87,28 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Filter Expressions
 
-`?()` : Filters elements based on a predicate.
+`?` - Filter elements based on an expression.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  var json = "{ \"store\": { \"book\": [{ \"price\": 10 }, { \"price\": 15 }] } }";
+  var json = """
+  {
+    "store": {
+      "book": [
+        {
+          "price": 10
+        },
+        {
+          "price": 15
+        }
+      ]
+    }
+  }
+  """;
 
-  var root = JsonDocument.Parse(json).RootElement;
-  var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
+  var root = JsonDocument.Parse(json);
+  var result = JsonPath.Select(root, "$.store.book[?@.price > 10]");
 
   foreach (var item in result)
   {
@@ -88,14 +119,27 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Current Node
 
-`@` : Represents the current node being processed in filters.
+`@` - Represents the current node being processed in filters.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  var json = "{ \"store\": { \"book\": [{ \"price\": 10 }, { \"price\": 15 }] } }";
+  var json = """
+  {
+    "store": {
+      "book": [
+        {
+          "price": 10
+        },
+        {
+          "price": 15
+        }
+      ]
+    }
+  }
+  """;
 
-  var root = JsonDocument.Parse(json).RootElement;
+  var root = JsonDocument.Parse(json);
   var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
 
   foreach (var item in result)
@@ -109,14 +153,30 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Recursive Descent
 
-`..` : Recursively search for matching elements.
+`..` - Recursively search for matching elements.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  var json = "{ \"store\": { \"book\": [{\"category\": \"fiction\"}, {\"category\": \"science\"}], \"bicycle\": {\"category\": \"road\"} } }";
+  var json = """
+  {
+    "store": {
+      "book": [
+        {
+          "category": "fiction"
+        },
+        {
+          "category": "science"
+        }
+      ],
+      "bicycle": {
+        "category": "road"
+      }
+    }
+  }
+  """;
 
-  var root = JsonDocument.Parse(json).RootElement;
+  var root = JsonDocument.Parse(json);
   var result = JsonPath.Select(root, "$..category");
 
   foreach (var item in result)
@@ -130,14 +190,24 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Union
 
-`[ , ]` : Select multiple items.
+`[ , ]` - Select multiple items.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\", \"value3\"] } }";
+  var json = """
+  {
+    "store": {
+      "book": [
+        "value1",
+        "value2",
+        "value3"
+      ]
+    }
+  }
+  """;
 
-  var root = JsonDocument.Parse(json).RootElement;
+  var root = JsonDocument.Parse(json);
   var result = JsonPath.Select(root, "$.store.book[0,2]");
 
   foreach (var item in result)
@@ -150,14 +220,25 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Slices
 
-`[start:end:step]` : Python-like array slicing.
+`[start:end:step]` - Python-like array slicing.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
 
-  var json = "{ \"store\": { \"book\": [\"value1\", \"value2\", \"value3\", \"value4\"] } }";
+  var json = """
+  {
+    "store": {
+      "book": [
+        "value1",
+        "value2",
+        "value3",
+        "value4"
+      ]
+    }
+  }
+  """;
 
-  var root = JsonDocument.Parse(json).RootElement;
+  var root = JsonDocument.Parse(json);
   var result = JsonPath.Select(root, "$.store.book[0:3:2]");
 
   foreach (var item in result)
@@ -191,7 +272,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   var root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json);
    var result = JsonPath.Select(root, "$.store.book[*]");
 
    foreach (var item in result)
@@ -207,7 +288,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   var root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json);
    var result = JsonPath.Select(root, "$.store.book[*].category");
 
    foreach (var item in result)
@@ -223,8 +304,8 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   var root = JsonDocument.Parse(json).RootElement;
-   var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
+   var root = JsonDocument.Parse(json);
+   var result = JsonPath.Select(root, "$.store.book[?@.price > 10]");
 
    foreach (var item in result)
    {
@@ -254,7 +335,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   var root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json);
    var result = JsonPath.Select(root, "$.library.books[*].title");
 
    foreach (var item in result)
@@ -270,7 +351,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
    using Hyperbee.JsonPath;
    using System.Text.Json;
 
-   var root = JsonDocument.Parse(json).RootElement;
+   var root = JsonDocument.Parse(json);
    var result = JsonPath.Select(root, "$.library.books[*].details.author");
 
    foreach (var item in result)
@@ -285,4 +366,4 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 - Stefan Goessner for the [original JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
-- Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison)
+

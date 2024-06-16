@@ -1,7 +1,7 @@
 ﻿
 # Hyperbee.Json
 
-`Hyperbee.Json` is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`. 
+`Hyperbee.Json` is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`.  
 The library is designed to be quick and extensible, allowing support for other JSON document types.
 
 ## Features
@@ -10,14 +10,14 @@ The library is designed to be quick and extensible, allowing support for other J
 - **Supports:** `JsonElement` and `JsonNode`.
 - **Extensible:** Easily extended to support additional JSON document types.
 - **`IEnumerable` Results:** Deferred execution queries with `IEnumerable`.
-- **Compliant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
+- **Comformant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
 
 ## JSONPath Consensus
 
-Hyperbee.Json aims to follow the emerging JSONPath consensus standard where applicable. This standardization 
-effort is critical for ensuring consistent behavior across different implementations of JSONPath. However, 
-where the consensus is ambiguous or not aligned with our performance and usability goals, we may deviate. 
-Our goal is always to provide a robust and performant library while keeping an eye on standardization progress.
+Hyperbee.Json aims to follow the emerging [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) standard where applicable.   
+This standardization effort is critical for ensuring consistent behavior across different implementations of JSONPath.  
+However, where the consensus is ambiguous or not aligned with our performance and usability goals, we may deviate. Our  
+goal is always to provide a robust and performant library while keeping an eye on standardization progress.
 
 ## Installation
 
@@ -48,7 +48,7 @@ var json = """
 }
 """;
 
-var root = JsonDocument.Parse(json).RootElement;
+var root = JsonDocument.Parse(json);
 var result = JsonPath.Select(root, "$.store.book[0].category");
 
 Console.WriteLine(result.First()); // Output: "fiction"
@@ -71,7 +71,7 @@ var json = """
 }
 """;
 
-var root = JsonDocument.Parse(json).RootElement;
+var root = JsonDocument.Parse(json);
 var result = JsonPath.Select(root, "$.store.book[*].category");
 
 foreach (var item in result)
@@ -105,7 +105,7 @@ var json = """
 }
 """;
 
-var root = JsonDocument.Parse(json).RootElement;
+var root = JsonDocument.Parse(json);
 var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
 
 foreach (var item in result)

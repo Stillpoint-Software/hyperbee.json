@@ -41,12 +41,33 @@ numeric values during the deserialization process.
 
 ### Property Diving
 
-| Method                             | Description
-|:-----------------------------------|:-----------
-| `JsonElement.GetPropertyFromKey`   | Dives for properties using absolute bracket location keys like `$['store']['book'][2]['author']`
-
-### JsonElement Helpers
+Property diving acts similarly to JSON Pointer; it expects a path that returns a single element.
+Unlike JSON Pointer, property diving expects simplified JSON Path notation. 
 
 | Method                             | Description
 |:-----------------------------------|:-----------
-| `JsonPathBuilder`                  | Returns the JsonPath location string for a given element
+| `JsonElement.GetPropertyFromPath`  | Dives for properties using absolute bracket locations like `$['store']['book'][2]['author']`
+
+The syntax supports singular paths; dotted notation, quoted names, and simple bracketed array accessors only.
+
+Json path style '$', wildcard '*', '..', and '[a,b]' multi-result selector notations and filters are NOT supported.
+
+```
+Examples of valid paths:
+
+    prop1.prop2
+    prop1[0]
+    'prop.2'
+    prop1[0].prop2
+    prop1['prop.2']
+    prop1.'prop.2'[0].prop3
+```
+
+### JsonElement Path
+
+Unlike `JsonNode`, `JsonElement` does not have a `Path` property. `JsonPathBuilder` will find the path
+for a given element.
+
+| Method                    | Description
+|:--------------------------|:-----------
+| `JsonPathBuilder.GetPath` | Returns the JsonPath location string for a given element

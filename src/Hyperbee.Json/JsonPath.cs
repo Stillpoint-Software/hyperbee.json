@@ -129,7 +129,7 @@ public static class JsonPath<TNode>
             {
                 foreach ( var (_, childKey) in accessor.EnumerateChildren( value ) )
                 {
-                    Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
+                    Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindForNameOrIndex( childKey ) ) ); // (Name | Index)
                 }
 
                 continue;
@@ -161,11 +161,11 @@ public static class JsonPath<TNode>
                 {
                     foreach ( var (childValue, childKey) in accessor.EnumerateChildren( value ) )
                     {
-                        var filter = TrimFilter( selector ); //BF: should this be the evaluator's responsibility?
+                        var filter = NormalizeFilter( selector ); //BF: should this be the evaluator's responsibility?
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
 
                         if ( Truthy( result ) )
-                            Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
+                            Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindForNameOrIndex( childKey ) ) ); // (Name | Index)
                     }
 
                     continue;
@@ -214,13 +214,19 @@ public static class JsonPath<TNode>
 
         yield break;
 
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
 
-    private static SelectorKind GetSelectorKindNameOrIndex( ReadOnlySpan<char> selector )
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    private static SelectorKind GetSelectorKindForNameOrIndex( ReadOnlySpan<char> selector )
     {
+        // This is a very specialized helper. It is only called when
+        // we KNOW the selector is either an index or a name.
+        
         return IsNumber( selector ) ? SelectorKind.Index : SelectorKind.Name;
 
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         static bool IsNumber( ReadOnlySpan<char> input )
         {
             foreach ( char c in input )
@@ -233,7 +239,8 @@ public static class JsonPath<TNode>
         }
     }
 
-    public static string TrimFilter( ReadOnlySpan<char> input )
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public static string NormalizeFilter( ReadOnlySpan<char> input )
     {
         // Remove the leading '?'
         if ( input.Length > 0 && input[0] == '?' )

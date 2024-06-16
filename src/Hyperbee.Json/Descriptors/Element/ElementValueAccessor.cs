@@ -17,7 +17,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                         var child = value[index];
 
                         if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
-                            yield return (child, index.ToString(), SelectorKind.Index );
+                            yield return (child, index.ToString(), SelectorKind.Index);
                     }
 
                     break;
@@ -27,7 +27,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                     if ( includeValues )
                     {
                         foreach ( var child in value.EnumerateObject().Reverse() )
-                            yield return (child.Value, child.Name, SelectorKind.Name );
+                            yield return (child.Value, child.Name, SelectorKind.Name);
                     }
                     else
                     {

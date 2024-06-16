@@ -262,7 +262,7 @@ Hyperbee.Json is built upon the great work of several open-source projects. Spec
 
 - Stefan Goessner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - System.Text.Json team for their work on the `System.Text.Json` library.
-- Atif Aziz's C# port of Goessner's JSONPath library[.NET JSONPath](https://github.com/atifaziz/JSONPath).  
+- Atif Aziz's C# port of Goessner's JSONPath library [.NET JSONPath](https://github.com/atifaziz/JSONPath).  
 - Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).
 
 ## Contributing

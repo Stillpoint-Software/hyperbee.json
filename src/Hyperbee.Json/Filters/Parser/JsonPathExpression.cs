@@ -6,7 +6,7 @@
 //  
 // Adapted for use in this project under the terms of the Microsoft Public License (Ms-PL).
 // https://opensource.org/license/ms-pl-html
- 
+
 #endregion
 
 using System.Linq.Expressions;

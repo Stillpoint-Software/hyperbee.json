@@ -214,7 +214,7 @@ refer to our [Helper Classes Documentation](docs/helper-classes.md).
 
 There are excellent options available for RFC-9535 .NET JsonPath.
 
-### [JsonEverything](https://json-everything.net/)
+### [JsonPath.Net](https://docs.json-everything.net/path/basics/) Json-Everything
 
 - **Pros:**
   - Extensive JSON ecosystem.
@@ -224,7 +224,7 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 
 - **Cons:**
   - No support for `JsonElement`.
-  - Not as fast as other implementations.
+  - Not quite as fast as other implementations.
 
 ### [JsonCons.NET](https://danielaparker.github.io/JsonCons.Net/articles/JsonPath/JsonConsJsonPath.html)
 
@@ -238,7 +238,7 @@ There are excellent options available for RFC-9535 .NET JsonPath.
   making it less efficient for certain operations.
   - Uses Net Standard 2.1.
   
-### [Json.NET](https://www.newtonsoft.com/json)
+### [Json.NET](https://www.newtonsoft.com/json) Newtonsoft
 
 - **Pros:**
   - Comprehensive feature set.
@@ -247,8 +247,9 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 
 - **Cons:**
   - No support for `JsonElement`, or `JsonNode`.
+  - Slower performance and higher memory allocation than `System.Text.Json`.
 
-### Why Choose Hyperbee.Json?
+### Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/hyperbee.json) ?
 
 - High Performance.
 - Supports both `JsonElement`, and `JsonNode`.

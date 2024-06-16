@@ -1,10 +1,19 @@
-﻿using System.Linq.Expressions;
+﻿#region License
+
+// This code is adapted from an algorithm published in MSDN Magazine, October 2015.
+// Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
+// URL: https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/october/csharp-a-split-and-merge-expression-parser-in-csharp
+//  
+// Adapted for use in this project under the terms of the Microsoft Public License (Ms-PL).
+// https://opensource.org/license/ms-pl-html
+ 
+#endregion
+
+using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
-// Based off Split-and-Merge Expression Parser
-// https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/october/csharp-a-split-and-merge-expression-parser-in-csharp
 
 public class JsonPathExpression
 {

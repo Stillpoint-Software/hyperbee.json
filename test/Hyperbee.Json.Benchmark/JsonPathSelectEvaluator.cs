@@ -33,7 +33,7 @@ public class JsonPathSelectEvaluator
     [GlobalSetup]
     public void Setup()
     {
-        const string document = 
+        const string document =
         """
         {
           "store": {

@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // C# Implementation of JSONPath[1]
 //
@@ -33,6 +33,7 @@
 #endregion
 
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Memory;
 
@@ -66,17 +67,17 @@ public static class JsonPath<TNode>
 
         // tokenize
 
-        var segments = JsonPathQueryTokenizer.Tokenize( query );
+        var segmentNext = JsonPathQueryTokenizer.Tokenize( query );
 
-        if ( !segments.IsEmpty )
+        if ( !segmentNext.IsEmpty )
         {
-            var selector = segments.Selectors[0].Value; // first selector in segment
+            var selector = segmentNext.Selectors[0].Value; // first selector in segment
 
             if ( selector == "$" || selector == "@" )
-                segments = segments.Next;
+                segmentNext = segmentNext.Next;
         }
 
-        return EnumerateMatches( root, new NodeArgs( value, segments ) );
+        return EnumerateMatches( root, new NodeArgs( value, segmentNext ) );
     }
 
     private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args )
@@ -89,33 +90,33 @@ public static class JsonPath<TNode>
         {
             // deconstruct the next args node
 
-            var (current, segments) = args;
+            var (value, segmentNext) = args;
 
-            if ( segments.IsEmpty )
+            if ( segmentNext.IsEmpty )
             {
-                yield return current;
+                yield return value;
                 continue;
             }
 
             // get the current segment, and then move the segments
             // reference to the next segment in the list
 
-            var segment = segments; // get current segment
-            var (selector, selectorKind) = segment.Selectors[0]; // first selector in segment;
+            var segmentCurrent = segmentNext; // get current segment
+            var (selector, selectorKind) = segmentCurrent.Selectors[0]; // first selector in segment;
 
-            segments = segments.Next;
+            segmentNext = segmentNext.Next;
 
             // make sure we have a complex value
 
-            if ( !accessor.IsObjectOrArray( current ) )
+            if ( !accessor.IsObjectOrArray( value ) )
                 throw new InvalidOperationException( "Object or Array expected." );
 
             // try to access object or array using KEY value
 
-            if ( segment.Singular )
+            if ( segmentCurrent.Singular )
             {
-                if ( accessor.TryGetChildValue( current, selector, out var childValue ) )
-                    Push( stack, childValue, segments );
+                if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                    Push( stack, childValue, segmentNext );
 
                 continue;
             }
@@ -124,9 +125,9 @@ public static class JsonPath<TNode>
 
             if ( selectorKind == SelectorKind.Wildcard )
             {
-                foreach ( var (_, childKey) in accessor.EnumerateChildren( current ) )
+                foreach ( var (_, childKey) in accessor.EnumerateChildren( value ) )
                 {
-                    Push( stack, current, segments.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
+                    Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
                 }
 
                 continue;
@@ -136,49 +137,33 @@ public static class JsonPath<TNode>
 
             if ( selectorKind == SelectorKind.Descendant )
             {
-                foreach ( var (childValue, _) in accessor.EnumerateChildren( current, includeValues: false ) ) // child arrays or objects only
+                foreach ( var (childValue, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
-                    Push( stack, childValue, segments.Insert( "..", SelectorKind.Descendant ) ); // Descendant
+                    Push( stack, childValue, segmentNext.Insert( "..", SelectorKind.Descendant ) ); // Descendant
                 }
 
-                Push( stack, current, segments );
+                Push( stack, value, segmentNext );
                 continue;
             }
 
-            // union
+            // group
 
-            for ( var i = 0; i < segment.Selectors.Length; i++ ) // using 'for' for performance
+            for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // using 'for' for performance
             {
-                var (unionSelector, unionSelectorKind) = segment.Selectors[i];
-
-                // [(exp)]
-
-                /* //BF keep until we validate [(<expr>)] path is not needed
-                 
-                if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
-                {
-                    if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string filterSelector )
-                        continue;
-
-                    var filterSelectorKind = GetSelectorKind( filterSelector );
-
-                    Push( stack, current, segments.Insert( filterSelector, filterSelectorKind ) );
-                    continue;
-                }
-                
-                */
+                if ( i != 0 )
+                    (selector, selectorKind) = segmentCurrent.Selectors[i]; 
 
                 // [?exp]
 
-                if ( unionSelectorKind == SelectorKind.Filter )
+                if ( selectorKind == SelectorKind.Filter )
                 {
-                    foreach ( var (childValue, childKey) in accessor.EnumerateChildren( current ) )
+                    foreach ( var (childValue, childKey) in accessor.EnumerateChildren( value ) )
                     {
-                        var filterSelector = JsonPathRegex.RegexPathFilter().Replace( unionSelector, "$1" ); // remove '?(' and ')' //BF: should this be the evaluator's responsibility?
-                        var filterValue = filterEvaluator.Evaluate( filterSelector, childValue, root );
+                        var filter = TrimFilter( selector ); // remove '?(' and ')' //BF: should this be the evaluator's responsibility?
+                        var result = filterEvaluator.Evaluate( filter, childValue, root );
 
-                        if ( Truthy( filterValue ) )
-                            Push( stack, current, segments.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
+                        if ( Truthy( result ) )
+                            Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindNameOrIndex( childKey ) ) ); // (Name | Index)
                     }
 
                     continue;
@@ -186,40 +171,40 @@ public static class JsonPath<TNode>
 
                 // [name1,name2,...] or [#,#,...] or [start:end:step]
 
-                if ( accessor.IsArray( current, out var length ) )
+                if ( accessor.IsArray( value, out var length ) )
                 {
-                    if ( unionSelectorKind == SelectorKind.Index )
+                    if ( selectorKind == SelectorKind.Index )
                     {
                         // [#,#,...] 
-                        Push( stack, accessor.GetElementAt( current, int.Parse( unionSelector ) ), segments );
+                        Push( stack, accessor.GetElementAt( value, int.Parse( selector ) ), segmentNext );
                         continue;
                     }
 
                     // [start:end:step] Python slice syntax
-                    if ( unionSelectorKind == SelectorKind.Slice )
+                    if ( selectorKind == SelectorKind.Slice )
                     {
-                        foreach ( var index in EnumerateSlice( current, unionSelector ) )
-                            Push( stack, accessor.GetElementAt( current, index ), segments );
+                        foreach ( var index in EnumerateSlice( value, selector ) )
+                            Push( stack, accessor.GetElementAt( value, index ), segmentNext );
                         continue;
                     }
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, accessor.GetElementAt( current, index ), segments.Insert( unionSelector, SelectorKind.Name ) ); // Name
+                        Push( stack, accessor.GetElementAt( value, index ), segmentNext.Insert( selector, SelectorKind.Name ) ); // Name
 
                     continue;
                 }
 
                 // [name1,name2,...]
 
-                if ( accessor.IsObject( current ) )
+                if ( accessor.IsObject( value ) )
                 {
-                    if ( unionSelectorKind == SelectorKind.Slice || unionSelectorKind == SelectorKind.Index )
+                    if ( selectorKind == SelectorKind.Slice || selectorKind == SelectorKind.Index )
                         continue;
 
                     // [name1,name2,...]
-                    if ( accessor.TryGetChildValue( current, unionSelector, out var childValue ) )
-                        Push( stack, childValue, segments );
+                    if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                        Push( stack, childValue, segmentNext );
                 }
             }
 
@@ -230,33 +215,44 @@ public static class JsonPath<TNode>
         static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
 
-    /* //BF keep until we validate [(<expr>)] path is not needed
-     
-    private static SelectorKind GetSelectorKind( string selector )
+    public static string TrimFilter( ReadOnlySpan<char> input )
     {
-        if ( selector[0] == '?' )
-            return SelectorKind.Filter;
-
-        if ( JsonPathRegex.RegexNumber().IsMatch( selector ) )
-            return SelectorKind.Index;
-
-        if ( JsonPathRegex.RegexSlice().IsMatch( selector ) )
-            return SelectorKind.Slice;
-
-        return selector switch
+        // Remove the leading '?'
+        if ( input.Length > 0 && input[0] == '?' )
         {
-            "*" => SelectorKind.Wildcard,
-            ".." => SelectorKind.Descendant,
-            _ => SelectorKind.Name
-        };
-    }
-    */
+            input = input[1..];
+        }
 
+        // Trim leading and trailing whitespace
+        input = input.Trim();
+
+        // Remove any wrapping '(' and ')' with whitespace
+        while ( input.Length > 0 && input[0] == '(' && input[^1] == ')' )
+        {
+            input = input[1..^1].Trim();
+        }
+
+        return input.ToString();
+    }
+    
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static SelectorKind GetSelectorKindNameOrIndex( string selector )
     {
-        return JsonPathRegex.RegexNumber().IsMatch( selector ) ? SelectorKind.Index : SelectorKind.Name;
+        return IsNumber( selector ) ? SelectorKind.Index : SelectorKind.Name;
+
+        static bool IsNumber( ReadOnlySpan<char> input )
+        {
+            for ( int i = 0; i < input.Length; i++ )
+            {
+                if ( !char.IsDigit( input[i] ) )
+                    return false;
+            }
+
+            return true;
+        }
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static bool Truthy( object value )
     {
         return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );

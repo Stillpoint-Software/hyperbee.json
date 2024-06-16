@@ -1,9 +1,4 @@
-﻿using System.Dynamic;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
-namespace Hyperbee.Json.Dynamic;
-/*
+﻿/*
     A converter that provides limited support for serializing to and from dynamic objects.
     It does not directly support enums; see TryReadValueHandler.
 
@@ -13,235 +8,192 @@ namespace Hyperbee.Json.Dynamic;
     });
 */
 
+using System.Dynamic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Hyperbee.Json.Dynamic;
+
 public class DynamicJsonConverter : JsonConverter<dynamic>
 {
     private class JsonPath
     {
         private readonly Stack<string> _path = new();
-
         public void Clear() => _path.Clear();
         public string Current => _path.TryPeek( out var path ) ? path : string.Empty;
         public void Push( string part ) => _path.Push( _path.Count == 0 ? part : $"{Current}.{part}" );
         public void Pop() => _path.Pop();
     }
 
-    private readonly JsonPath JPath = new();
-
     public delegate bool TryReadJsonValue( ref Utf8JsonReader reader, JsonTokenType tokenType, JsonSerializerOptions options, string jsonPath, out IConvertible value );
-
     public TryReadJsonValue TryReadValueHandler { get; set; }
 
+    private readonly JsonPath _jsonPath = new();
+    
     public override dynamic Read( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
     {
         try
         {
-            return InternalRead( ref reader, typeToConvert, options );
+            return ReadInternal( ref reader, typeToConvert, options );
         }
         finally
         {
-            JPath.Clear();
+            _jsonPath.Clear();
         }
     }
 
-    private dynamic InternalRead( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
+    private dynamic ReadInternal( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
     {
-        switch ( reader.TokenType )
+        return reader.TokenType switch
         {
-            case JsonTokenType.StartObject:
-                IDictionary<string, object> expando = new ExpandoObject();
+            JsonTokenType.StartObject => ReadObject( ref reader, typeToConvert, options ),
+            JsonTokenType.StartArray => ReadArray( ref reader, typeToConvert, options ),
+            JsonTokenType.Number or JsonTokenType.String => ReadPrimitive( ref reader, options ),
+            JsonTokenType.True => true,
+            JsonTokenType.False => false,
+            JsonTokenType.Null => null,
+            _ => throw new JsonException()
+        };
+    }
 
-                while ( reader.Read() )
-                {
-                    if ( reader.TokenType == JsonTokenType.EndObject )
-                        return expando;
+    private IDictionary<string, object> ReadObject( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
+    {
+        IDictionary<string, object> expando = new ExpandoObject();
 
-                    if ( reader.TokenType != JsonTokenType.PropertyName )
-                        throw new JsonException();
-
-                    var propertyName = reader.GetString();
-                    reader.Read();
-
-                    try
-                    {
-                        JPath.Push( $"{propertyName}" );
-                        expando[propertyName!] = InternalRead( ref reader, typeToConvert, options );
-                    }
-                    finally
-                    {
-                        JPath.Pop();
-                    }
-                }
-
+        while ( reader.Read() )
+        {
+            if ( reader.TokenType == JsonTokenType.EndObject )
                 return expando;
 
+            if ( reader.TokenType != JsonTokenType.PropertyName )
+                throw new JsonException();
 
-            case JsonTokenType.StartArray:
-                IList<object> array = [];
+            var propertyName = reader.GetString();
+            reader.Read();
 
-                var i = 0;
-                while ( reader.Read() )
-                {
-                    if ( reader.TokenType == JsonTokenType.EndArray )
-                        return array;
-
-                    try
-                    {
-                        JPath.Push( $"[{i++}]" );
-                        array.Add( InternalRead( ref reader, typeToConvert, options ) );
-                    }
-                    finally
-                    {
-                        JPath.Pop();
-                    }
-                }
-
-                return array.Count == 0 ? null : array;
-
-            case JsonTokenType.Number:
-            case JsonTokenType.String:
-                if ( TryReadValueHandler != null && TryReadValueHandler( ref reader, reader.TokenType, options, JPath.Current, out var value ) )
-                    return value;
-
-                if ( TryReadValue( ref reader, reader.TokenType, options, JPath.Current, out value ) )
-                    return value;
-
-                throw new InvalidDataException();
-
-            case JsonTokenType.True:
-                return true;
-            case JsonTokenType.False:
-                return false;
-
-            case JsonTokenType.None:
-            case JsonTokenType.Null:
-                return null;
-
-            case JsonTokenType.Comment:
-                break;
-
-            case JsonTokenType.PropertyName:
-            case JsonTokenType.EndObject:
-            case JsonTokenType.EndArray:
-                throw new InvalidDataException();
+            try
+            {
+                _jsonPath.Push( propertyName );
+                expando[propertyName!] = ReadInternal( ref reader, typeToConvert, options );
+            }
+            finally
+            {
+                _jsonPath.Pop();
+            }
         }
 
-        throw new InvalidDataException();
+        throw new JsonException();
     }
 
-    public bool TryReadValue( ref Utf8JsonReader reader, JsonTokenType tokenType, JsonSerializerOptions options, string jsonPath, out IConvertible value )
+    private IList<object> ReadArray( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
     {
-        switch ( tokenType )
+        IList<object> array = [];
+        int index = 0;
+
+        while ( reader.Read() )
         {
-            case JsonTokenType.Number:
-                {
-                    if ( reader.TryGetInt64( out var number ) )
-                        value = number;
-                    else
-                        value = reader.GetDouble();
+            if ( reader.TokenType == JsonTokenType.EndArray )
+                return array;
 
-                    return true;
-                }
-            case JsonTokenType.String:
-                {
-                    if ( reader.TryGetDateTime( out var datetime ) )
-                        value = datetime;
-                    else
-                        value = reader.GetString();
-
-                    return true;
-                }
-            default:
-                {
-                    value = null;
-                    return false;
-                }
+            try
+            {
+                _jsonPath.Push( $"[{index++}]" );
+                array.Add( ReadInternal( ref reader, typeToConvert, options ) );
+            }
+            finally
+            {
+                _jsonPath.Pop();
+            }
         }
+
+        throw new JsonException();
     }
 
-    public override void Write( Utf8JsonWriter writer, object value, JsonSerializerOptions options )
+    private dynamic ReadPrimitive( ref Utf8JsonReader reader, JsonSerializerOptions options )
+    {
+        if ( TryReadValueHandler != null && TryReadValueHandler( ref reader, reader.TokenType, options, _jsonPath.Current, out var value ) )
+            return value;
+
+        return reader.TokenType switch
+        {
+            JsonTokenType.Number when reader.TryGetInt64( out var l ) => l,
+            JsonTokenType.Number => reader.GetDouble(),
+            JsonTokenType.String when reader.TryGetDateTime( out var datetime ) => datetime,
+            JsonTokenType.String => reader.GetString(),
+            _ => throw new JsonException()
+        };
+    }
+
+    public override void Write( Utf8JsonWriter writer, dynamic value, JsonSerializerOptions options )
     {
         try
         {
-            InternalWrite( writer, null, value, options );
+            WriteInternal( writer, null, value, options );
         }
         finally
         {
-            JPath.Clear();
+            _jsonPath.Clear();
         }
     }
 
-    private static void InternalWrite( Utf8JsonWriter writer, string name, object value, JsonSerializerOptions options )
+    private void WriteInternal( Utf8JsonWriter writer, string name, dynamic value, JsonSerializerOptions options )
     {
         switch ( value )
         {
-            case IList<object> array:
-                {
-                    if ( name != null )
-                        writer.WriteStartArray( name );
-                    else
-                        writer.WriteStartArray();
-
-                    foreach ( var v in array )
-                    {
-                        InternalWrite( writer, null, v, options );
-                    }
-
-                    writer.WriteEndArray();
-                    break;
-                }
-            case IDictionary<string, object> dictionary:
-                {
-                    if ( name != null )
-                        writer.WriteStartObject( name );
-                    else
-                        writer.WriteStartObject();
-
-                    foreach ( var (n, v) in dictionary )
-                    {
-                        InternalWrite( writer, n, v, options );
-                    }
-
-                    writer.WriteEndObject();
-                    break;
-                }
-            case decimal valueDecimal:
-                {
-                    writer.WriteNumber( name, valueDecimal );
-                    break;
-                }
-            case double valueDouble:
-                {
-                    writer.WriteNumber( name, valueDouble );
-                    break;
-                }
-            case int valueInt:
-                {
-                    writer.WriteNumber( name, valueInt );
-                    break;
-                }
-            case long valueLong:
-                {
-                    writer.WriteNumber( name, valueLong );
-                    break;
-                }
-            case bool valueBoolean:
-                {
-                    writer.WriteBoolean( name, valueBoolean );
-                    break;
-                }
-            case Enum valueEnum:
-                {
-                    if ( options?.GetConverter( valueEnum.GetType() ) is JsonConverter<Enum> converter )
-                        converter.Write( writer, valueEnum, options );
-                    else
-                        writer.WriteString( name, value.ToString() );
-                    break;
-                }
+            case null:
+                writer.WriteNull( name );
+                break;
+            case string s:
+                writer.WriteString( name, s );
+                break;
+            case long l:
+                writer.WriteNumber( name, l );
+                break;
+            case double d:
+                writer.WriteNumber( name, d );
+                break;
+            case bool b:
+                writer.WriteBoolean( name, b );
+                break;
+            case IDictionary<string, object> dict:
+                WriteDictionary( writer, name, dict, options );
+                break;
+            case IEnumerable<object> list:
+                WriteList( writer, name, list, options );
+                break;
             default:
-                {
-                    writer.WriteString( name, value.ToString() );
-                    break;
-                }
+                writer.WriteString( name, value.ToString() );
+                break;
         }
+    }
+
+    private void WriteDictionary( Utf8JsonWriter writer, string name, IDictionary<string, object> dict, JsonSerializerOptions options )
+    {
+        if ( name != null )
+            writer.WriteStartObject( name );
+        else
+            writer.WriteStartObject();
+
+        foreach ( var kvp in dict )
+        {
+            WriteInternal( writer, kvp.Key, kvp.Value, options );
+        }
+
+        writer.WriteEndObject();
+    }
+
+    private void WriteList( Utf8JsonWriter writer, string name, IEnumerable<object> list, JsonSerializerOptions options )
+    {
+        if ( name != null )
+            writer.WriteStartArray( name );
+        else
+            writer.WriteStartArray();
+
+        foreach ( var item in list )
+        {
+            WriteInternal( writer, null, item, options );
+        }
+
+        writer.WriteEndArray();
     }
 }

@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // C# Implementation of JSONPath[1]
 //
@@ -151,7 +151,7 @@ public static class JsonPath<TNode>
             for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // using 'for' for performance
             {
                 if ( i != 0 )
-                    (selector, selectorKind) = segmentCurrent.Selectors[i]; 
+                    (selector, selectorKind) = segmentCurrent.Selectors[i];
 
                 // [?exp]
 
@@ -234,7 +234,7 @@ public static class JsonPath<TNode>
 
         return input.ToString();
     }
-    
+
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static SelectorKind GetSelectorKindNameOrIndex( string selector )
     {

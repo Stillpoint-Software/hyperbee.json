@@ -161,7 +161,7 @@ public static class JsonPath<TNode>
                 {
                     foreach ( var (childValue, childKey) in accessor.EnumerateChildren( value ) )
                     {
-                        var filter = TrimFilter( selector ); // remove '?(' and ')' //BF: should this be the evaluator's responsibility?
+                        var filter = TrimFilter( selector ); //BF: should this be the evaluator's responsibility?
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
 
                         if ( Truthy( result ) )

@@ -44,8 +44,10 @@ namespace Hyperbee.Json;
 
 public static class JsonPath<TNode>
 {
-    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    private record NodeArgs( in TNode Value, in JsonPathSegment Segment );
 
+    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    
     public static IEnumerable<TNode> Select( in TNode value, string query )
     {
         return EnumerateMatches( value, value, query );
@@ -215,6 +217,22 @@ public static class JsonPath<TNode>
         static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
 
+    private static SelectorKind GetSelectorKindNameOrIndex( ReadOnlySpan<char> selector )
+    {
+        return IsNumber( selector ) ? SelectorKind.Index : SelectorKind.Name;
+
+        static bool IsNumber( ReadOnlySpan<char> input )
+        {
+            foreach ( char c in input )
+            {
+                if ( c < '0' || c > '9' )
+                    return false;
+            }
+
+            return true;
+        }
+    }
+
     public static string TrimFilter( ReadOnlySpan<char> input )
     {
         // Remove the leading '?'
@@ -233,23 +251,6 @@ public static class JsonPath<TNode>
         }
 
         return input.ToString();
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static SelectorKind GetSelectorKindNameOrIndex( string selector )
-    {
-        return IsNumber( selector ) ? SelectorKind.Index : SelectorKind.Name;
-
-        static bool IsNumber( ReadOnlySpan<char> input )
-        {
-            for ( int i = 0; i < input.Length; i++ )
-            {
-                if ( !char.IsDigit( input[i] ) )
-                    return false;
-            }
-
-            return true;
-        }
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -291,17 +292,4 @@ public static class JsonPath<TNode>
                 }
         }
     }
-
-    private sealed class NodeArgs( in TNode value, in JsonPathSegment segment )
-    {
-        public readonly TNode Value = value;
-        public readonly JsonPathSegment Segment = segment;
-
-        public void Deconstruct( out TNode value, out JsonPathSegment segment )
-        {
-            value = Value;
-            segment = Segment;
-        }
-    }
-
 }

@@ -6,7 +6,7 @@ namespace Hyperbee.Json;
 // https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
 [Flags]
-internal enum SelectorKind
+public enum SelectorKind
 {
     Undefined = 0x0,
 

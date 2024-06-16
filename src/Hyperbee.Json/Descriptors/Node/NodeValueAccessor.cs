@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Descriptors.Node;
 
 internal class NodeValueAccessor : IValueAccessor<JsonNode>
 {
-    public IEnumerable<(JsonNode, string)> EnumerateChildren( JsonNode value, bool includeValues = true )
+    public IEnumerable<(JsonNode, string, SelectorKind)> EnumerateChildren( JsonNode value, bool includeValues = true )
     {
         switch ( value )
         {
@@ -16,7 +16,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                     var child = arrayValue[index];
 
                     if ( includeValues || child is JsonObject or JsonArray )
-                        yield return (child, index.ToString());
+                        yield return (child, index.ToString(), SelectorKind.Index);
                 }
 
                 break;
@@ -25,12 +25,12 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 if ( includeValues )
                 {
                     foreach ( var child in objectValue.Reverse() )
-                        yield return (child.Value, child.Key);
+                        yield return (child.Value, child.Key, SelectorKind.Name);
                 }
                 else
                 {
                     foreach ( var child in objectValue.Where( property => property.Value is JsonObject or JsonArray ).Reverse() )
-                        yield return (child.Value, child.Key);
+                        yield return (child.Value, child.Key, SelectorKind.Name);
                 }
 
                 break;

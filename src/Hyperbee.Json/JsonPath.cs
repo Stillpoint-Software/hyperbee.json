@@ -127,9 +127,9 @@ public static class JsonPath<TNode>
 
             if ( selectorKind == SelectorKind.Wildcard )
             {
-                foreach ( var (_, childKey) in accessor.EnumerateChildren( value ) )
+                foreach ( var (_, childKey, childKind) in accessor.EnumerateChildren( value ) )
                 {
-                    Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindForNameOrIndex( childKey ) ) ); // (Name | Index)
+                    Push( stack, value, segmentNext.Insert( childKey, childKind ) ); // (Name | Index)
                 }
 
                 continue;
@@ -139,7 +139,7 @@ public static class JsonPath<TNode>
 
             if ( selectorKind == SelectorKind.Descendant )
             {
-                foreach ( var (childValue, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
+                foreach ( var (childValue, _, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
                     Push( stack, childValue, segmentNext.Insert( "..", SelectorKind.Descendant ) ); // Descendant
                 }
@@ -159,13 +159,13 @@ public static class JsonPath<TNode>
 
                 if ( selectorKind == SelectorKind.Filter )
                 {
-                    foreach ( var (childValue, childKey) in accessor.EnumerateChildren( value ) )
+                    foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                     {
-                        var filter = NormalizeFilter( selector ); //BF: should this be the evaluator's responsibility?
+                        var filter = NormalizeFilter( selector ); //BF: should this be in the evaluator?
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
 
                         if ( Truthy( result ) )
-                            Push( stack, value, segmentNext.Insert( childKey, GetSelectorKindForNameOrIndex( childKey ) ) ); // (Name | Index)
+                            Push( stack, value, segmentNext.Insert( childKey, childKind ) ); // (Name | Index)
                     }
 
                     continue;
@@ -219,34 +219,11 @@ public static class JsonPath<TNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static SelectorKind GetSelectorKindForNameOrIndex( ReadOnlySpan<char> selector )
-    {
-        // This is a very specialized helper. It is only called when
-        // we KNOW the selector is either an index or a name.
-
-        return IsNumber( selector ) ? SelectorKind.Index : SelectorKind.Name;
-
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        static bool IsNumber( ReadOnlySpan<char> input )
-        {
-            foreach ( char c in input )
-            {
-                if ( c < '0' || c > '9' )
-                    return false;
-            }
-
-            return true;
-        }
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public static string NormalizeFilter( ReadOnlySpan<char> input )
     {
         // Remove the leading '?'
         if ( input.Length > 0 && input[0] == '?' )
-        {
             input = input[1..];
-        }
 
         // Trim leading and trailing whitespace
         input = input.Trim();

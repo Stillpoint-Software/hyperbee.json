@@ -2,7 +2,7 @@
 
 public interface IValueAccessor<TNode>
 {
-    IEnumerable<(TNode, string)> EnumerateChildren( TNode value, bool includeValues = true );
+    IEnumerable<(TNode, string, SelectorKind)> EnumerateChildren( TNode value, bool includeValues = true );
     TNode GetElementAt( in TNode value, int index );
     bool IsObjectOrArray( in TNode value );
     bool IsArray( in TNode value, out int length );

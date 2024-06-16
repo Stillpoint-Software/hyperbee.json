@@ -47,7 +47,7 @@ public static class JsonPath<TNode>
     private record NodeArgs( in TNode Value, in JsonPathSegment Segment );
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
-    
+
     public static IEnumerable<TNode> Select( in TNode value, string query )
     {
         return EnumerateMatches( value, value, query );

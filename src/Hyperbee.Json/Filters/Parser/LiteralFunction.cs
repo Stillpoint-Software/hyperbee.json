@@ -34,7 +34,7 @@ public class LiteralFunction : FilterFunction
             return input;
         }
     }
-    
+
     //protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     //{
     //    // strings double or single

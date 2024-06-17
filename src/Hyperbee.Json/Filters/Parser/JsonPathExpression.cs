@@ -40,7 +40,7 @@ public class JsonPathExpression
     public static Expression Parse( ReadOnlySpan<char> filter, ParseExpressionContext context )
     {
         filter = TrimParensAndWhitespace( filter );
-        
+
         var start = 0;
         var from = 0;
         var expression = Parse( filter, ref start, ref from, EndLine, context );

@@ -78,7 +78,7 @@ public class FilterFunction
     private static bool TryGetExtensionFunction( ReadOnlySpan<char> item, ParseExpressionContext context, out FilterFunction function )
     {
         function = null;
-        
+
         if ( !TryParseFunction( item, out var method, out var arguments ) )
             return false;
 
@@ -118,7 +118,7 @@ public class FilterFunction
         method = new string( methodSpan );
 
         // Arguments
-        
+
         var argsSpan = exprSpan[(openParenIndex + 1)..].Trim();
         arguments = [];
 
@@ -128,7 +128,7 @@ public class FilterFunction
         return true;
     }
 
-    
+
     private static List<string> ParseArguments( ReadOnlySpan<char> argsSpan )
     {
         List<string> arguments = [];

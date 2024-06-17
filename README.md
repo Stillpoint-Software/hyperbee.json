@@ -224,8 +224,8 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 
 - **Cons:**
   - No support for `JsonElement`.
-  - Not quite as fast as other implementations.
-
+  - Slower performance and higher memory allocation than other `System.Text.Json` implementations.
+   
 ### [JsonCons.NET](https://danielaparker.github.io/JsonCons.Net/articles/JsonPath/JsonConsJsonPath.html)
 
 - **Pros:**
@@ -236,7 +236,6 @@ There are excellent options available for RFC-9535 .NET JsonPath.
   - No support for `JsonNode`.
   - Does not return an `IEnumerable` result (no defered query execution).
   making it less efficient for certain operations.
-  - Uses Net Standard 2.1.
   
 ### [Json.NET](https://www.newtonsoft.com/json) Newtonsoft
 

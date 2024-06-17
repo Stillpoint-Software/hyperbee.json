@@ -74,27 +74,103 @@ public class FilterFunction
         function = null;
         return false;
     }
+
     private static bool TryGetExtensionFunction( ReadOnlySpan<char> item, ParseExpressionContext context, out FilterFunction function )
     {
-        var match = FilterTokenizerRegex.RegexFunction().Match( item.ToString() );
-
-        if ( match.Groups.Count != 3 )
-        {
-            function = null;
-            return false;
-        }
-
-        var method = match.Groups[1].Value;
-        var arguments = match.Groups[2].Value.Split( ',', options: StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries );
-
-        if ( context.Descriptor.Functions.TryGetValue( method.ToLowerInvariant(), out var creator ) )
-        {
-            function = creator( method, arguments, context );
-            return true;
-        }
-
         function = null;
-        return false;
+        
+        if ( !TryParseFunction( item, out var method, out var arguments ) )
+            return false;
+
+        if ( !context.Descriptor.Functions.TryGetValue( method, out var creator ) )
+            return false;
+
+        function = creator( method, [.. arguments], context );
+        return true;
+
     }
 
+    private static bool TryParseFunction( ReadOnlySpan<char> exprSpan, out string method, out List<string> arguments )
+    {
+        method = null;
+        arguments = null;
+
+        // Find parens
+
+        var openParenIndex = exprSpan.IndexOf( '(' );
+
+        if ( openParenIndex == -1 )
+            return false;
+
+        // Method name
+
+        var methodSpan = exprSpan[..openParenIndex].Trim();
+
+        if ( methodSpan.Length == 0 || !char.IsLower( methodSpan[0] ) )
+            return false;
+
+        for ( var i = 0; i < methodSpan.Length; i++ )
+        {
+            if ( !(char.IsLower( methodSpan[i] ) || char.IsDigit( methodSpan[i] ) || methodSpan[i] == '_') )
+                return false;
+        }
+
+        method = new string( methodSpan );
+
+        // Arguments
+        
+        var argsSpan = exprSpan[(openParenIndex + 1)..].Trim();
+        arguments = [];
+
+        if ( argsSpan.Length > 0 )
+            arguments = ParseArguments( argsSpan );
+
+        return true;
+    }
+
+    
+    private static List<string> ParseArguments( ReadOnlySpan<char> argsSpan )
+    {
+        List<string> arguments = [];
+        var length = argsSpan.Length;
+        var inQuotes = false;
+        var quoteChar = '\0';
+        var start = 0;
+
+        for ( var i = 0; i < length; i++ )
+        {
+            var c = argsSpan[i];
+
+            switch ( c )
+            {
+                case '"':
+                case '\'':
+                    {
+                        if ( inQuotes )
+                        {
+                            if ( c == quoteChar )
+                            {
+                                inQuotes = false;
+                            }
+                        }
+                        else
+                        {
+                            inQuotes = true;
+                            quoteChar = c;
+                        }
+
+                        break;
+                    }
+                case ',' when !inQuotes:
+                    arguments.Add( argsSpan[start..i].Trim().ToString() );
+                    start = i + 1;
+                    break;
+            }
+        }
+
+        if ( start < length )
+            arguments.Add( argsSpan[start..length].Trim().ToString() );
+
+        return arguments;
+    }
 }

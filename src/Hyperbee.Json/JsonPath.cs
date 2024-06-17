@@ -161,7 +161,7 @@ public static class JsonPath<TNode>
                 {
                     foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                     {
-                        var filter = NormalizeFilter( selector ); //BF: should this be in the evaluator?
+                        var filter = selector[1..]; // remove leading '?'
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
 
                         if ( Truthy( result ) )
@@ -216,25 +216,6 @@ public static class JsonPath<TNode>
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public static string NormalizeFilter( ReadOnlySpan<char> input )
-    {
-        // Remove the leading '?'
-        if ( input.Length > 0 && input[0] == '?' )
-            input = input[1..];
-
-        // Trim leading and trailing whitespace
-        input = input.Trim();
-
-        // Remove any wrapping '(' and ')' with whitespace
-        while ( input.Length > 0 && input[0] == '(' && input[^1] == ')' )
-        {
-            input = input[1..^1].Trim();
-        }
-
-        return input.ToString();
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

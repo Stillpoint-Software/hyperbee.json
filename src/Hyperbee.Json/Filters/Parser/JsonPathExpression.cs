@@ -11,6 +11,7 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
@@ -38,11 +39,28 @@ public class JsonPathExpression
 
     public static Expression Parse( ReadOnlySpan<char> filter, ParseExpressionContext context )
     {
+        filter = TrimParensAndWhitespace( filter );
+        
         var start = 0;
         var from = 0;
         var expression = Parse( filter, ref start, ref from, EndLine, context );
 
         return FilterTruthyExpression.IsTruthyExpression( expression );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        static ReadOnlySpan<char> TrimParensAndWhitespace( ReadOnlySpan<char> exprSpan )
+        {
+            // Trim leading and trailing whitespace
+            exprSpan = exprSpan.Trim();
+
+            // Remove any wrapping parens with whitespace
+            while ( exprSpan.Length > 0 && exprSpan[0] == '(' && exprSpan[^1] == ')' )
+            {
+                exprSpan = exprSpan[1..^1].Trim();
+            }
+
+            return exprSpan;
+        }
     }
 
     internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, ParseExpressionContext context = null )

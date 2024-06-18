@@ -401,9 +401,9 @@ public static partial class JsonPathQueryTokenizer
 
         for ( var index = 0; index < tokens.Count; index++ )
         {
-            tokens[index].Next = index == tokens.Count - 1
-                ? JsonPathSegment.Terminal
-                : tokens[index + 1];
+            tokens[index].Next = index != tokens.Count - 1
+                ? tokens[index + 1]
+                : JsonPathSegment.Final;
         }
 
         return tokens.First();

@@ -16,12 +16,12 @@ internal record SelectorDescriptor
 }
 
 [DebuggerTypeProxy( typeof( SegmentDebugView ) )]
-[DebuggerDisplay( "First = ({Selectors[0]}), Singular = {Singular}, Count = {Selectors.Length}" )]
+[DebuggerDisplay( "First = ({Selectors?[0]}), Singular = {Singular}, Count = {Selectors?.Length}" )]
 internal class JsonPathSegment
 {
-    internal static readonly JsonPathSegment Terminal = new();
+    internal static readonly JsonPathSegment Final = new(); // special end node
 
-    public bool IsEmpty => Next == null;
+    public bool IsFinal => Next == null;
 
     public bool Singular { get; } // singular is true when the selector resolves to one and only one element
 
@@ -52,7 +52,7 @@ internal class JsonPathSegment
     {
         var current = this;
 
-        while ( current != Terminal )
+        while ( current != Final )
         {
             yield return current;
 

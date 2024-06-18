@@ -44,7 +44,7 @@ namespace Hyperbee.Json;
 
 public static class JsonPath<TNode>
 {
-    private record NodeArgs( in TNode Value, in JsonPathSegment Segment );
+    private record struct NodeArgs( in TNode Value, in JsonPathSegment Segment );
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
@@ -71,7 +71,7 @@ public static class JsonPath<TNode>
 
         var segmentNext = JsonPathQueryTokenizer.Tokenize( query );
 
-        if ( !segmentNext.IsEmpty )
+        if ( !segmentNext.IsFinal )
         {
             var selector = segmentNext.Selectors[0].Value; // first selector in segment
 
@@ -94,7 +94,7 @@ public static class JsonPath<TNode>
 
             var (value, segmentNext) = args;
 
-            if ( segmentNext.IsEmpty )
+            if ( segmentNext.IsFinal )
             {
                 yield return value;
                 continue;
@@ -118,7 +118,9 @@ public static class JsonPath<TNode>
             if ( segmentCurrent.Singular )
             {
                 if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                {
                     Push( stack, childValue, segmentNext );
+                }
 
                 continue;
             }
@@ -161,7 +163,7 @@ public static class JsonPath<TNode>
                 {
                     foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                     {
-                        var filter = selector[1..]; // remove leading '?'
+                        var filter = selector[1..]; // remove '?'
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
 
                         if ( Truthy( result ) )

@@ -46,7 +46,7 @@ internal class JsonPathSegment
         Singular = IsSingular();
     }
 
-    public JsonPathSegment Insert( string selector, SelectorKind kind ) => new( this, selector, kind );
+    public JsonPathSegment Prepend( string selector, SelectorKind kind ) => new( this, selector, kind );
 
     public IEnumerable<JsonPathSegment> AsEnumerable()
     {

@@ -129,7 +129,7 @@ public static class JsonPath<TNode>
             {
                 foreach ( var (_, childKey, childKind) in accessor.EnumerateChildren( value ) )
                 {
-                    Push( stack, value, segmentNext.Insert( childKey, childKind ) ); // (Name | Index)
+                    Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                 }
 
                 continue;
@@ -141,7 +141,7 @@ public static class JsonPath<TNode>
             {
                 foreach ( var (childValue, _, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
-                    Push( stack, childValue, segmentNext.Insert( "..", SelectorKind.Descendant ) ); // Descendant
+                    Push( stack, childValue, segmentNext.Prepend( "..", SelectorKind.Descendant ) ); // Descendant
                 }
 
                 Push( stack, value, segmentNext );
@@ -165,7 +165,7 @@ public static class JsonPath<TNode>
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
 
                         if ( Truthy( result ) )
-                            Push( stack, value, segmentNext.Insert( childKey, childKind ) ); // (Name | Index)
+                            Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                     }
 
                     continue;
@@ -192,7 +192,7 @@ public static class JsonPath<TNode>
 
                     // [name1,name2,...]
                     foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, accessor.GetElementAt( value, index ), segmentNext.Insert( selector, SelectorKind.Name ) ); // Name
+                        Push( stack, accessor.GetElementAt( value, index ), segmentNext.Prepend( selector, SelectorKind.Name ) ); // Name
 
                     continue;
                 }

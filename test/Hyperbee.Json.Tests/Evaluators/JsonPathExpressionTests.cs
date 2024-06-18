@@ -154,11 +154,11 @@ public class JsonPathExpressionTests : JsonTestBase
     {
         var param = Expression.Parameter( sourceType );
         var expression = sourceType == typeof( JsonElement )
-            ? JsonPathExpression.Parse( filter, new ParseExpressionContext(
+            ? FilterExpressionParser.Parse( filter, new ParseExpressionContext(
                 param,
                 param,
                 new ElementTypeDescriptor() ) )
-            : JsonPathExpression.Parse( filter, new ParseExpressionContext(
+            : FilterExpressionParser.Parse( filter, new ParseExpressionContext(
                 param,
                 param,
                 new NodeTypeDescriptor() ) );
@@ -195,7 +195,7 @@ public class JsonPathExpressionTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var source = GetDocument<JsonDocument>();
-            var func = JsonPathExpression.Compile<JsonElement>( filter, new ElementTypeDescriptor() );
+            var func = FilterExpressionParser.Compile<JsonElement>( filter, new ElementTypeDescriptor() );
 
             return func( source.RootElement, source.RootElement );
         }
@@ -203,7 +203,7 @@ public class JsonPathExpressionTests : JsonTestBase
         {
             // arrange 
             var source = GetDocument<JsonNode>();
-            var func = JsonPathExpression.Compile<JsonNode>( filter, new NodeTypeDescriptor() );
+            var func = FilterExpressionParser.Compile<JsonNode>( filter, new NodeTypeDescriptor() );
 
             // act
             return func( source, source );

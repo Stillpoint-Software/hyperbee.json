@@ -15,7 +15,7 @@ using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
 
-public class JsonPathExpression
+public class FilterExpressionParser
 {
     public const char EndLine = '\n';
     public const char EndArg = ')';

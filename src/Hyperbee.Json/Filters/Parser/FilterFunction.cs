@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using static Hyperbee.Json.Filters.Parser.JsonPathExpression;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -12,7 +11,7 @@ public class FilterFunction
         _implementation = this;
     }
 
-    internal FilterFunction( ReadOnlySpan<char> item, FilterTokenType? type, ParseExpressionContext context )
+    internal FilterFunction( ReadOnlySpan<char> item, FilterExpressionParser.FilterTokenType? type, ParseExpressionContext context )
     {
         if ( TryGetParenFunction( item, type, context, out _implementation ) )
         {
@@ -45,11 +44,11 @@ public class FilterFunction
         return Expression.Throw( Expression.Constant( new NotImplementedException() ) );
     }
 
-    private static bool TryGetParenFunction( ReadOnlySpan<char> item, FilterTokenType? type, ParseExpressionContext context, out FilterFunction function )
+    private static bool TryGetParenFunction( ReadOnlySpan<char> item, FilterExpressionParser.FilterTokenType? type, ParseExpressionContext context, out FilterFunction function )
     {
         function = null;
 
-        if ( item.Length != 0 || type != FilterTokenType.OpenParen )
+        if ( item.Length != 0 || type != FilterExpressionParser.FilterTokenType.OpenParen )
         {
             return false;
         }

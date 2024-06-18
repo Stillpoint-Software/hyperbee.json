@@ -6,6 +6,6 @@ internal class ParenFunction( ParseExpressionContext context ) : FilterFunction
 {
     protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {
-        return JsonPathExpression.Parse( data, ref start, ref from, JsonPathExpression.EndArg, context );
+        return FilterExpressionParser.Parse( data, ref start, ref from, FilterExpressionParser.EndArg, context );
     }
 }

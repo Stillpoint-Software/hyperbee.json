@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class ValueElementFunction( string methodName, ParseExpressionContext context ) 
+public class ValueElementFunction( string methodName, ParseExpressionContext context )
     : FilterExtensionFunction( methodName, 1, context )
 {
     public const string Name = "value";

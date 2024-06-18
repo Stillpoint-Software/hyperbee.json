@@ -29,8 +29,8 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
     {
         if ( expression is null ) return null;
 
-        return expression.Type == typeof(IEnumerable<JsonElement>)
-            ? Expression.Call( ValueElementFunction.ValueMethod, expression ) 
+        return expression.Type == typeof( IEnumerable<JsonElement> )
+            ? Expression.Call( ValueElementFunction.ValueMethod, expression )
             : expression;
     }
 

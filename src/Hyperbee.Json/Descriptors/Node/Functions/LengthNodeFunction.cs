@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class LengthNodeFunction( string methodName, ParseExpressionContext context ) 
+public class LengthNodeFunction( string methodName, ParseExpressionContext context )
     : FilterExtensionFunction( methodName, 1, context )
 {
     public const string Name = "length";

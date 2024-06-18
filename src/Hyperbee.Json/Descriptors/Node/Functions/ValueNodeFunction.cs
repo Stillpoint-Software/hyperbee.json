@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
-using Hyperbee.Json.Filters.Parser;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class ValueNodeFunction( string methodName, ParseExpressionContext context ) 
+public class ValueNodeFunction( string methodName, ParseExpressionContext context )
     : FilterExtensionFunction( methodName, 1, context )
 {
     public const string Name = "value";

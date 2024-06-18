@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class MatchNodeFunction( string methodName, ParseExpressionContext context ) : 
+public class MatchNodeFunction( string methodName, ParseExpressionContext context ) :
     FilterExtensionFunction( methodName, 2, context )
 {
     public const string Name = "match";

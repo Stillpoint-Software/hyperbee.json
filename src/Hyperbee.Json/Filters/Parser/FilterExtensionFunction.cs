@@ -24,12 +24,12 @@ public abstract class FilterExtensionFunction : FilterFunction
 
         for ( var i = 0; i < _argumentCount; i++ )
         {
-            var argument = JsonPathExpression.Parse( data,
+            var argument = FilterExpressionParser.Parse( data,
                 ref start,
                 ref from,
                 i == _argumentCount - 1
-                    ? JsonPathExpression.EndArg
-                    : JsonPathExpression.ArgSeparator,
+                    ? FilterExpressionParser.EndArg
+                    : FilterExpressionParser.ArgSeparator,
                 _context );
 
             arguments[i] = argument;

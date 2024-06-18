@@ -1,4 +1,5 @@
-﻿using Hyperbee.Json.Filters;
+﻿using System.Linq.Expressions;
+using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
@@ -8,7 +9,9 @@ public interface IJsonTypeDescriptor
 {
     public Dictionary<string, FunctionCreator> Functions { get; }
 
-    public FilterFunction GetFilterFunction( ParseExpressionContext context );
+    public FilterFunction GetSelectFunction( ParseExpressionContext context );
+
+    public Expression GetValueExpression( Expression context );
 }
 
 public interface ITypeDescriptor<TNode> : IJsonTypeDescriptor

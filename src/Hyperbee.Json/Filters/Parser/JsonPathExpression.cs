@@ -11,7 +11,6 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
@@ -20,8 +19,7 @@ public class JsonPathExpression
 {
     public const char EndLine = '\n';
     public const char EndArg = ')';
-
-    private static readonly char[] ValidPathParts = ['.', '$', '@'];
+    public const char ArgSeparator = ',';
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
@@ -39,28 +37,11 @@ public class JsonPathExpression
 
     public static Expression Parse( ReadOnlySpan<char> filter, ParseExpressionContext context )
     {
-        filter = TrimParensAndWhitespace( filter );
-
         var start = 0;
         var from = 0;
         var expression = Parse( filter, ref start, ref from, EndLine, context );
 
         return FilterTruthyExpression.IsTruthyExpression( expression );
-
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        static ReadOnlySpan<char> TrimParensAndWhitespace( ReadOnlySpan<char> exprSpan )
-        {
-            // Trim leading and trailing whitespace
-            exprSpan = exprSpan.Trim();
-
-            // Remove any wrapping parens with whitespace
-            while ( exprSpan.Length > 0 && exprSpan[0] == '(' && exprSpan[^1] == ')' )
-            {
-                exprSpan = exprSpan[1..^1].Trim();
-            }
-
-            return exprSpan;
-        }
     }
 
     internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, ParseExpressionContext context = null )
@@ -76,10 +57,7 @@ public class JsonPathExpression
 
         do
         {
-            if ( !TryNext( filter, ref start, ref from, ref quote, out var result ) )
-            {
-                continue;
-            }
+            Next( filter, ref start, ref from, ref quote, out var result );
 
             var (ch, type) = result;
 
@@ -111,21 +89,24 @@ public class JsonPathExpression
 
             tokens.Add( new FilterToken( expression, filterType ) );
 
+            currentPath = null;
+
         } while ( from < filter.Length && filter[from] != to );
 
         if ( from < filter.Length && (filter[from] == EndArg || filter[from] == to) )
         {
             // This happens when called recursively: move one char forward.
             from++;
+            start = from;
         }
 
         var baseToken = tokens[0];
         var index = 1;
 
-        return Merge( baseToken, ref index, tokens );
+        return Merge( baseToken, ref index, tokens, context );
     }
 
-    private static bool TryNext( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quote, out (char NextChar, FilterTokenType? Type) result )
+    private static void Next( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quote, out (char NextChar, FilterTokenType? Type) result )
     {
         var nextChar = data[from++];
         switch ( nextChar )
@@ -134,60 +115,60 @@ public class JsonPathExpression
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.And);
-                return true;
+                break;
             case '|' when ValidNextCharacter( data, from, '|' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.Or);
-                return true;
+                break;
             case '=' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.Equals);
-                return true;
+                break;
             case '!' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.NotEquals);
-                return true;
+                break;
             case '>' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.GreaterThanOrEqual);
-                return true;
+                break;
             case '<' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.LessThanOrEqual);
-                return true;
+                break;
             case '>':
                 start = from;
                 result = (nextChar, FilterTokenType.GreaterThan);
-                return true;
+                break;
             case '<':
                 start = from;
                 result = (nextChar, FilterTokenType.LessThan);
-                return true;
+                break;
             case '!':
                 start = from;
                 result = (nextChar, FilterTokenType.Not);
-                return true;
+                break;
             case '(':
                 result = (nextChar, FilterTokenType.OpenParen);
-                return true;
+                break;
             case ')':
                 result = (nextChar, FilterTokenType.ClosedParen);
-                return true;
+                break;
             case ' ' or '\t' when quote == null:
                 result = (nextChar, null);
-                return false;  // eat whitespace
+                break;
             case '\'' or '\"' when from > 0 && data[from - 1] != '\\':
                 quote = quote == null ? nextChar : null;
                 result = (nextChar, null);
-                return true;
+                break;
             default:
                 result = (nextChar, null);
-                return true;
+                break;
         }
     }
 
@@ -200,10 +181,13 @@ public class JsonPathExpression
             ? EndArg
             : to;
 
-        return item.Length == 0 && ch == EndArg ||
-               !(ValidType( type ) ||
-                   type == FilterTokenType.OpenParen && (item.Length > 0 && ValidPathParts.Contains( item[0] ) || item.Length == 0)
-                    || ch == stopCollecting);
+        if ( item.Length == 0 && ch == EndArg )
+            return true;
+
+        if ( ValidType( type ) || ch == stopCollecting )
+            return false;
+
+        return type != FilterTokenType.OpenParen;
     }
 
     private static bool ValidType( FilterTokenType? type )
@@ -232,7 +216,7 @@ public class JsonPathExpression
         char? quote = null;
         while ( !ValidType( startType ) && index < item.Length )
         {
-            TryNext( item, ref start, ref index, ref quote, out var result );
+            Next( item, ref start, ref index, ref quote, out var result );
             startType = result.Type;
         }
 
@@ -243,16 +227,16 @@ public class JsonPathExpression
         return startType!.Value;
     }
 
-    private static Expression Merge( FilterToken current, ref int index, List<FilterToken> listToMerge, bool mergeOneOnly = false )
+    private static Expression Merge( FilterToken current, ref int index, List<FilterToken> listToMerge, ParseExpressionContext context, bool mergeOneOnly = false )
     {
         while ( index < listToMerge.Count )
         {
             var next = listToMerge[index++];
             while ( !CanMergeTokens( current, next ) )
             {
-                Merge( next, ref index, listToMerge, mergeOneOnly: true );
+                Merge( next, ref index, listToMerge, context, mergeOneOnly: true );
             }
-            MergeTokens( current, next );
+            MergeTokens( current, next, context );
             if ( mergeOneOnly )
             {
                 return current.Expression;
@@ -274,8 +258,11 @@ public class JsonPathExpression
             _ => 0,
         };
 
-    private static void MergeTokens( FilterToken left, FilterToken right )
+    private static void MergeTokens( FilterToken left, FilterToken right, ParseExpressionContext context )
     {
+        left.Expression = context.Descriptor.GetValueExpression( left.Expression );
+        right.Expression = context.Descriptor.GetValueExpression( right.Expression );
+
         // TODO: clean up handling numerical, string and object comparing. feels messy.
         bool isNumerical = IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type );
 

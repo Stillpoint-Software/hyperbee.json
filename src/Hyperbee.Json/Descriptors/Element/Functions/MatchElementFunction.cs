@@ -6,7 +6,8 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class MatchElementFunction( string methodName, IList<string> arguments, ParseExpressionContext context ) : FilterExtensionFunction( methodName, arguments, context )
+public class MatchElementFunction( string methodName, ParseExpressionContext context ) 
+    : FilterExtensionFunction( methodName, 2, context )
 {
     public const string Name = "match";
 
@@ -14,32 +15,29 @@ public class MatchElementFunction( string methodName, IList<string> arguments, P
 
     static MatchElementFunction()
     {
-        MatchMethod = typeof( MatchElementFunction ).GetMethod( nameof( Match ), [typeof( JsonElement ), typeof( string )] );
+        MatchMethod = typeof( MatchElementFunction ).GetMethod( nameof( Match ), [typeof( IEnumerable<JsonElement> ), typeof( string )] );
     }
 
-    public override Expression GetExtensionExpression( string methodName, IList<string> arguments, ParseExpressionContext context )
+    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
     {
-        if ( arguments.Count != 2 )
+        if ( arguments.Length != 2 )
         {
             return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
         }
 
-        var queryExp = Expression.Constant( arguments[0] );
-        var regex = Expression.Constant( arguments[1] );
-
-        return Expression.Call(
-            MatchMethod,
-            Expression.Call( FilterElementHelper.SelectFirstMethod,
-                context.Current,
-                context.Root,
-                queryExp )
-            , regex );
+        return Expression.Call( MatchMethod, arguments[0], arguments[1] );
     }
 
-    public static bool Match( JsonElement element, string regex )
+    public static bool Match( IEnumerable<JsonElement> elements, string regex )
     {
+        var elementValue = elements.FirstOrDefault().GetString();
+        if ( elementValue == null )
+        {
+            return false;
+        }
+
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        var value = $"^{element.GetString()}$";
+        var value = $"^{elementValue}$";
 
         return regexPattern.IsMatch( value );
     }

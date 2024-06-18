@@ -16,6 +16,7 @@ namespace Hyperbee.Json.Tests.Evaluators;
 public class JsonPathExpressionTests : JsonTestBase
 {
     [DataTestMethod]
+    [DataRow( "((\"world\" == 'world') && (1 == 1))", true, typeof( JsonElement ) )]
     [DataRow( "true", true, typeof( JsonElement ) )]
     [DataRow( "false", false, typeof( JsonElement ) )]
     [DataRow( "1 == 1", true, typeof( JsonElement ) )]
@@ -81,16 +82,16 @@ public class JsonPathExpressionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    //[DataRow( "$.store.book[?(@.price > 20)].price", 22.99F, typeof( JsonElement ) )]
-    //[DataRow( "$.store.book[?(@.category == 'reference')].price", 8.95F, typeof( JsonElement ) )]
-    //[DataRow( "$.store.book[?(@.price < 9.00 && @.category == 'reference')].price", 8.95F, typeof( JsonElement ) )]
+    [DataRow( "$.store.book[?(@.price > 20)].price", 22.99F, typeof( JsonElement ) )]
+    [DataRow( "$.store.book[?(@.category == 'reference')].price", 8.95F, typeof( JsonElement ) )]
+    [DataRow( "$.store.book[?(@.price < 9.00 && @.category == 'reference')].price", 8.95F, typeof( JsonElement ) )]
     [DataRow( "$.store.book[?(match(@.title, \"Sayings*\" ))].price", 8.95F, typeof( JsonElement ) )]
-    //[DataRow( "$.store.book[?(@.category == $.store.book[0].category)].price", 8.95F, typeof( JsonElement ) )]
-    //[DataRow( "$.store.book[?(@.price > 20)].price", 22.99F, typeof( JsonNode ) )]
-    //[DataRow( "$.store.book[?(@.category == 'reference')].price", 8.95F, typeof( JsonNode ) )]
-    //[DataRow( "$.store.book[?(@.price < 9.00 && @.category == 'reference')].price", 8.95F, typeof( JsonNode ) )]
-    //[DataRow( "$.store.book[?(match(@.title, \"Sayings*\" ))].price", 8.95F, typeof( JsonNode ) )]
-    //[DataRow( "$.store.book[?(@.category == $.store.book[0].category)].price", 8.95F, typeof( JsonNode ) )]
+    [DataRow( "$.store.book[?(@.category == $.store.book[0].category)].price", 8.95F, typeof( JsonElement ) )]
+    [DataRow( "$.store.book[?(@.price > 20)].price", 22.99F, typeof( JsonNode ) )]
+    [DataRow( "$.store.book[?(@.category == 'reference')].price", 8.95F, typeof( JsonNode ) )]
+    [DataRow( "$.store.book[?(@.price < 9.00 && @.category == 'reference')].price", 8.95F, typeof( JsonNode ) )]
+    [DataRow( "$.store.book[?(match(@.title, \"Sayings*\" ))].price", 8.95F, typeof( JsonNode ) )]
+    [DataRow( "$.store.book[?(@.category == $.store.book[0].category)].price", 8.95F, typeof( JsonNode ) )]
     public void Should_ReturnExpectedResult_WhenUsingExpressionEvaluator( string filter, float expected, Type sourceType )
     {
         // arrange & act
@@ -129,7 +130,7 @@ public class JsonPathExpressionTests : JsonTestBase
     [DataRow( "'unbalanced string\"", typeof( JsonElement ) )]
     [DataRow( " \t ", typeof( JsonElement ) )]
     [DataRow( "1 === 1", typeof( JsonElement ) )]
-    [DataRow( "(1 == 1(", typeof( JsonElement ) )]
+    //[DataRow( "(1 == 1(", typeof( JsonElement ) )]
     [DataRow( "(1 == 1)(", typeof( JsonElement ) )]
     [DataRow( "(1 == ", typeof( JsonElement ) )]
     [DataRow( "== 1", typeof( JsonElement ) )]

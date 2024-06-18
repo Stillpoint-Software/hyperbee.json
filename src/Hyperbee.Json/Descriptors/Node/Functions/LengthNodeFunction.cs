@@ -6,7 +6,8 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class LengthNodeFunction( string methodName, IList<string> arguments, ParseExpressionContext context ) : FilterExtensionFunction( methodName, arguments, context )
+public class LengthNodeFunction( string methodName, ParseExpressionContext context ) 
+    : FilterExtensionFunction( methodName, 1, context )
 {
     public const string Name = "length";
 
@@ -14,29 +15,23 @@ public class LengthNodeFunction( string methodName, IList<string> arguments, Par
 
     static LengthNodeFunction()
     {
-        LengthMethod = typeof( LengthNodeFunction ).GetMethod( nameof( Length ), [typeof( JsonNode )] );
+        LengthMethod = typeof( LengthNodeFunction ).GetMethod( nameof( Length ), [typeof( IEnumerable<JsonNode> )] );
     }
 
-    public override Expression GetExtensionExpression( string methodName, IList<string> arguments, ParseExpressionContext context )
+    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
     {
-        if ( arguments.Count != 1 )
+        if ( arguments.Length != 1 )
         {
             return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
         }
 
-        var queryExp = Expression.Constant( arguments[0] );
-
-        return Expression.Call(
-            LengthMethod,
-            Expression.Call( FilterNodeHelper.SelectFirstMethod,
-                context.Current,
-                context.Root,
-                queryExp ) );
+        return Expression.Call( LengthMethod, arguments[0] );
     }
 
-    public static float Length( JsonNode node )
+    public static float Length( IEnumerable<JsonNode> nodes )
     {
-        return node.GetValueKind() switch
+        var node = nodes.FirstOrDefault();
+        return node?.GetValueKind() switch
         {
             JsonValueKind.String => node.GetValue<string>()?.Length ?? 0,
             JsonValueKind.Array => node.AsArray().Count,

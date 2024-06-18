@@ -6,7 +6,8 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class MatchNodeFunction( string methodName, IList<string> arguments, ParseExpressionContext context ) : FilterExtensionFunction( methodName, arguments, context )
+public class MatchNodeFunction( string methodName, ParseExpressionContext context ) : 
+    FilterExtensionFunction( methodName, 2, context )
 {
     public const string Name = "match";
 
@@ -14,32 +15,29 @@ public class MatchNodeFunction( string methodName, IList<string> arguments, Pars
 
     static MatchNodeFunction()
     {
-        MatchMethod = typeof( MatchNodeFunction ).GetMethod( nameof( Match ), [typeof( JsonNode ), typeof( string )] );
+        MatchMethod = typeof( MatchNodeFunction ).GetMethod( nameof( Match ), [typeof( IEnumerable<JsonNode> ), typeof( string )] );
     }
 
-    public override Expression GetExtensionExpression( string methodName, IList<string> arguments, ParseExpressionContext context )
+    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
     {
-        if ( arguments.Count != 2 )
+        if ( arguments.Length != 2 )
         {
             return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
         }
 
-        var queryExp = Expression.Constant( arguments[0] );
-        var regex = Expression.Constant( arguments[1] );
-
-        return Expression.Call(
-            MatchMethod,
-            Expression.Call( FilterNodeHelper.SelectFirstMethod,
-                context.Current,
-                context.Root,
-                queryExp )
-            , regex );
+        return Expression.Call( MatchMethod, arguments[0], arguments[1] );
     }
 
-    public static bool Match( JsonNode node, string regex )
+    public static bool Match( IEnumerable<JsonNode> nodes, string regex )
     {
+        var nodeValue = nodes.FirstOrDefault()?.GetValue<string>();
+        if ( nodeValue == null )
+        {
+            return false;
+        }
+
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        var value = $"^{node.GetValue<string>()}$";
+        var value = $"^{nodeValue}$";
 
         return regexPattern.IsMatch( value );
     }

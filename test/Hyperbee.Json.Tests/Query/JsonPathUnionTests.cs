@@ -53,6 +53,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof( JsonNode ) )]
+    [DataRow( "$[?@.key<3,?@.key>6]", typeof( JsonDocument ) )]
+    [DataRow( "$[?@.key<3,?@.key>6]", typeof( JsonNode ) )]
     public void UnionWithFilter( string query, Type sourceType )
     {
         const string json = "[{\"key\": 1}, {\"key\": 8}, {\"key\": 3}, {\"key\": 10}, {\"key\": 7}, {\"key\": 2}, {\"key\": 6}, {\"key\": 4}]";

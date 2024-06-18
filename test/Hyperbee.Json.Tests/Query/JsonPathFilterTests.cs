@@ -13,6 +13,8 @@ public class JsonPathFilterTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$[?(@.key)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key)]", typeof( JsonNode ) )]
+    [DataRow( "$[? @.key]", typeof( JsonDocument ) )]
+    [DataRow( "$[? @.key]", typeof( JsonNode ) )]
     public void FilterWithTruthyProperty( string query, Type sourceType )
     {
         const string json =
@@ -36,6 +38,8 @@ public class JsonPathFilterTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$[?(@.key<42)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key<42)]", typeof( JsonNode ) )]
+    [DataRow( "$[?@.key < 42]", typeof( JsonDocument ) )]
+    [DataRow( "$[?@.key < 42]", typeof( JsonNode ) )]
     public void FilterWithLessThan( string query, Type sourceType )
     {
         const string json =

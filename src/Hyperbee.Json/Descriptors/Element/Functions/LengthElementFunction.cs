@@ -5,7 +5,8 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class LengthElementFunction( string methodName, IList<string> arguments, ParseExpressionContext context ) : FilterExtensionFunction( methodName, arguments, context )
+public class LengthElementFunction( string methodName, ParseExpressionContext context ) 
+    : FilterExtensionFunction( methodName, 1, context )
 {
     public const string Name = "length";
 
@@ -13,28 +14,22 @@ public class LengthElementFunction( string methodName, IList<string> arguments, 
 
     static LengthElementFunction()
     {
-        LengthMethod = typeof( LengthElementFunction ).GetMethod( nameof( Length ), [typeof( JsonElement )] );
+        LengthMethod = typeof( LengthElementFunction ).GetMethod( nameof( Length ), [typeof( IEnumerable<JsonElement> )] );
     }
 
-    public override Expression GetExtensionExpression( string methodName, IList<string> arguments, ParseExpressionContext context )
+    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
     {
-        if ( arguments.Count != 1 )
+        if ( arguments.Length != 1 )
         {
             return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
         }
 
-        var queryExp = Expression.Constant( arguments[0] );
-
-        return Expression.Call(
-            LengthMethod,
-            Expression.Call( FilterElementHelper.SelectFirstMethod,
-                context.Current,
-                context.Root,
-                queryExp ) );
+        return Expression.Call( LengthMethod, arguments[0] );
     }
 
-    public static float Length( JsonElement element )
+    public static float Length( IEnumerable<JsonElement> elements )
     {
+        var element = elements.FirstOrDefault();
         return element.ValueKind switch
         {
             JsonValueKind.String => element.GetString()?.Length ?? 0,

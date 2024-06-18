@@ -63,21 +63,21 @@ public class JsonPathParseAndSelect
     public void JsonPath_Hyperbee_JsonElement()
     {
         var element = JsonDocument.Parse( Document ).RootElement;
-        var _ = element.Select( Filter ).First();
+        var _ = element.Select( Filter ).ToArray();
     }
 
     [Benchmark]
     public void JsonPath_Hyperbee_JsonNode()
     {
         var node = JsonNode.Parse( Document )!;
-        var _ = node.Select( Filter ).First();
+        var _ = node.Select( Filter ).ToArray();
     }
 
     [Benchmark]
     public void JsonPath_Newtonsoft_JObject()
     {
         var jObject = JObject.Parse( Document );
-        var _ = jObject.SelectTokens( Filter ).First();
+        var _ = jObject.SelectTokens( Filter ).ToArray();
     }
 
     [Benchmark]
@@ -85,7 +85,7 @@ public class JsonPathParseAndSelect
     {
         var path = JsonEverything.JsonPath.Parse( Filter );
         var node = JsonNode.Parse( Document )!;
-        var _ = path.Evaluate( node ).Matches!.First();
+        var _ = path.Evaluate( node ).Matches!.ToArray();
     }
 
     [Benchmark]
@@ -93,6 +93,6 @@ public class JsonPathParseAndSelect
     {
         var path = JsonSelector.Parse( Filter )!;
         var element = JsonDocument.Parse( Document ).RootElement;
-        var _ = path.Select( element ).First();
+        var _ = path.Select( element ).ToArray();
     }
 }

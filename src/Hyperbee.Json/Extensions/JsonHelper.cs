@@ -8,7 +8,7 @@ public static class JsonHelper
 
     public static ReadOnlySpan<char> NormalizePath( ReadOnlySpan<char> path )
     {
-        var segments = JsonPathQueryTokenizer.TokenizeNoCache( path );
+        var segments = JsonPathQueryParser.ParseNoCache( path );
 
         var builder = new StringBuilder();
 

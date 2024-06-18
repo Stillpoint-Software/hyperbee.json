@@ -48,7 +48,7 @@ public class JsonPathQueryTokenizerTests
         }
 
         // act
-        var tokens = JsonPathQueryTokenizer.Tokenize( jsonPath );
+        var tokens = JsonPathQueryParser.Parse( jsonPath );
 
         // assert
         var result = TokensToString( tokens );

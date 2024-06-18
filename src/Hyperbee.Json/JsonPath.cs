@@ -69,7 +69,7 @@ public static class JsonPath<TNode>
 
         // tokenize
 
-        var segmentNext = JsonPathQueryTokenizer.Tokenize( query );
+        var segmentNext = JsonPathQueryParser.Parse( query );
 
         if ( !segmentNext.IsFinal )
         {

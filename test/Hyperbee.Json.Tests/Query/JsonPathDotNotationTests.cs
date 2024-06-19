@@ -11,9 +11,9 @@ namespace Hyperbee.Json.Tests.Query;
 public class JsonPathDotNotationTests : JsonTestBase
 {
     [DataTestMethod]
-    [DataRow("$.[key]", typeof(JsonDocument))]
-    [DataRow("$.[key]", typeof(JsonNode))]
-    public void DotBracketNotationWithoutQuotes(string query, Type sourceType)
+    [DataRow( "$.[key]", typeof( JsonDocument ) )]
+    [DataRow( "$.[key]", typeof( JsonNode ) )]
+    public void DotBracketNotationWithoutQuotes( string query, Type sourceType )
     {
         const string json = """
         {
@@ -27,18 +27,18 @@ public class JsonPathDotNotationTests : JsonTestBase
             }
         }
         """;
-        var source = GetDocumentProxyFromSource(sourceType, json);
+        var source = GetDocumentProxyFromSource( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>(() =>
+        Assert.ThrowsException<NotSupportedException>( () =>
         {
-            _ = source.Select(query).ToList();
-        });
+            _ = source.Select( query ).ToList();
+        } );
     }
 
     [DataTestMethod]
-    [DataRow("$.", typeof(JsonDocument))]
-    [DataRow("$.", typeof(JsonNode))]
-    public void DotBracketNotationWithEmptyPath(string query, Type sourceType)
+    [DataRow( "$.", typeof( JsonDocument ) )]
+    [DataRow( "$.", typeof( JsonNode ) )]
+    public void DotBracketNotationWithEmptyPath( string query, Type sourceType )
     {
         const string json = """
         {
@@ -47,27 +47,27 @@ public class JsonPathDotNotationTests : JsonTestBase
             "''": "nice"
         }
         """;
-        var source = GetDocumentProxyFromSource(sourceType, json);
+        var source = GetDocumentProxyFromSource( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>(() =>
+        Assert.ThrowsException<NotSupportedException>( () =>
         {
-            _ = source.Select(query).ToList();
-        });
+            _ = source.Select( query ).ToList();
+        } );
     }
 
     [DataTestMethod]
-    [DataRow("$.屬性", typeof(JsonDocument))]
-    [DataRow("$.屬性", typeof(JsonNode))]
-    public void DotNotationWithNonAsciiKey(string query, Type sourceType)
+    [DataRow( "$.屬性", typeof( JsonDocument ) )]
+    [DataRow( "$.屬性", typeof( JsonNode ) )]
+    public void DotNotationWithNonAsciiKey( string query, Type sourceType )
     {
         const string json = """
         {
             "\u5c6c\u6027": "value"
         }
         """;
-        var source = GetDocumentProxyFromSource(sourceType, json);
+        var source = GetDocumentProxyFromSource( sourceType, json );
 
-        var matches = source.Select(query).ToList();
+        var matches = source.Select( query ).ToList();
         var expected = new[]
         {
             source.GetPropertyFromKey("$['屬性']")
@@ -75,14 +75,14 @@ public class JsonPathDotNotationTests : JsonTestBase
 
         // no consensus
 
-        Assert.IsTrue(expected.SequenceEqual(matches));
-        Assert.IsTrue(JsonValueHelper.GetString(matches[0]) == "value");
+        Assert.IsTrue( expected.SequenceEqual( matches ) );
+        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
     }
 
     [DataTestMethod]
-    [DataRow("$a", typeof(JsonDocument))]
-    [DataRow("$a", typeof(JsonNode))]
-    public void DotNotationWithoutDot(string query, Type sourceType)
+    [DataRow( "$a", typeof( JsonDocument ) )]
+    [DataRow( "$a", typeof( JsonNode ) )]
+    public void DotNotationWithoutDot( string query, Type sourceType )
     {
         const string json = """
         {
@@ -90,11 +90,11 @@ public class JsonPathDotNotationTests : JsonTestBase
             "$a": 2
         }
         """;
-        var source = GetDocumentProxyFromSource(sourceType, json);
+        var source = GetDocumentProxyFromSource( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>(() =>
+        Assert.ThrowsException<NotSupportedException>( () =>
         {
-            _ = source.Select(query).ToList();
-        });
+            _ = source.Select( query ).ToList();
+        } );
     }
 }

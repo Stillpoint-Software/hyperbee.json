@@ -64,11 +64,11 @@ public class JsonPathParseAndSelect
             }
             """;
     }
-    
+
     public (string, bool) GetFilter()
     {
         const string First = " `First()`";
-        
+
         return Filter.EndsWith( First ) ? (Filter[..^First.Length], true) : (Filter, false);
     }
 

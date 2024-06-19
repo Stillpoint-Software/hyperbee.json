@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Linq.Expressions;
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node.Functions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
@@ -21,18 +22,27 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
         get => _evaluator ??= new FilterEvaluator<JsonNode>( this );
     }
 
-    public FilterFunction GetFilterFunction( ParseExpressionContext context ) =>
-        new FilterNodeFunction( context );
+    public FilterFunction GetSelectFunction( ParseExpressionContext context ) =>
+        new SelectNodeFunction( context );
+
+    public Expression GetValueExpression( Expression expression )
+    {
+        if ( expression is null ) return null;
+
+        return expression.Type == typeof( IEnumerable<JsonNode> )
+            ? Expression.Call( ValueNodeFunction.ValueMethod, expression )
+            : expression;
+    }
 
     public NodeTypeDescriptor()
     {
         Functions = new Dictionary<string, FunctionCreator>(
         [
-            new KeyValuePair<string, FunctionCreator>( CountNodeFunction.Name, ( name, arguments, context ) => new CountNodeFunction( name, arguments, context ) ),
-            new KeyValuePair<string, FunctionCreator>( LengthNodeFunction.Name, ( name, arguments, context ) => new LengthNodeFunction( name, arguments, context ) ),
-            new KeyValuePair<string, FunctionCreator>( MatchNodeFunction.Name, ( name, arguments, context ) => new MatchNodeFunction( name, arguments, context ) ),
-            new KeyValuePair<string, FunctionCreator>( SearchNodeFunction.Name, ( name, arguments, context ) => new SearchNodeFunction( name, arguments, context ) ),
-            new KeyValuePair<string, FunctionCreator>( ValueNodeFunction.Name, ( name, arguments, context ) => new ValueNodeFunction( name, arguments, context ) ),
+            new KeyValuePair<string, FunctionCreator>( CountNodeFunction.Name, ( name, context ) => new CountNodeFunction( name, context ) ),
+            new KeyValuePair<string, FunctionCreator>( LengthNodeFunction.Name, ( name, context ) => new LengthNodeFunction( name, context ) ),
+            new KeyValuePair<string, FunctionCreator>( MatchNodeFunction.Name, ( name, context ) => new MatchNodeFunction( name, context ) ),
+            new KeyValuePair<string, FunctionCreator>( SearchNodeFunction.Name, ( name, context ) => new SearchNodeFunction( name, context ) ),
+            new KeyValuePair<string, FunctionCreator>( ValueNodeFunction.Name, ( name, context ) => new ValueNodeFunction( name, context ) ),
         ] );
     }
 }

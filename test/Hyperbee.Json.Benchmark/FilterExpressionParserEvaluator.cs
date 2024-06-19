@@ -8,7 +8,7 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Benchmark;
 
-public class JsonPathExpressionParser
+public class FilterExpressionParserEvaluator
 {
     private ParseExpressionContext _nodeExpressionContext;
     private ParseExpressionContext _elementExpressionContext;
@@ -33,12 +33,12 @@ public class JsonPathExpressionParser
     [Benchmark]
     public void JsonPathFilterParser_JsonElement()
     {
-        JsonPathExpression.Parse( Filter, _elementExpressionContext );
+        FilterExpressionParser.Parse( Filter, _elementExpressionContext );
     }
 
     [Benchmark]
     public void JsonPathFilterParser_JsonNode()
     {
-        JsonPathExpression.Parse( Filter, _nodeExpressionContext );
+        FilterExpressionParser.Parse( Filter, _nodeExpressionContext );
     }
 }

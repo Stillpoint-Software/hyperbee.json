@@ -58,8 +58,6 @@ internal static class SliceSyntaxHelper
 
     private static (int Lower, int Upper, int Step) GetBoundedValues( int start, int end, int step, int length, bool reverse )
     {
-        static int Normalize( int value, int length ) => value >= 0 ? value : length + value;
-
         var normalizedStart = Normalize( start, length );
         var normalizedEnd = Normalize( end, length );
 
@@ -78,6 +76,8 @@ internal static class SliceSyntaxHelper
         }
 
         return reverse ? ReverseBoundedValues( lower, upper, step ) : (lower, upper, step);
+
+        static int Normalize( int value, int length ) => value >= 0 ? value : length + value;
     }
 
     // rewrite the slice to execute in reverse order

@@ -71,7 +71,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         var expected = new[]
         {
             source.GetPropertyFromKey( "$['store']['book']" ),
-            source.GetPropertyFromKey( "$['store']['bicycle']" ),
+            source.GetPropertyFromKey( "$['store']['bicycle']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -233,7 +233,6 @@ public class JsonPathBookstoreTests : JsonTestBase
             source.GetPropertyFromKey( "$['store']['book'][3]['title']" ),
             source.GetPropertyFromKey( "$['store']['book'][3]['isbn']" ),
             source.GetPropertyFromKey( "$['store']['book'][3]['price']" ),
-
             source.GetPropertyFromKey( "$['store']['bicycle']['color']" ),
             source.GetPropertyFromKey( "$['store']['bicycle']['price']" )
         };
@@ -244,7 +243,22 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataTestMethod]
     [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]", typeof( JsonDocument ) )]
     [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]", typeof( JsonNode ) )]
+    [DataRow( @"$..book[?@.price == 8.99 && @.category == ""fiction""]", typeof( JsonDocument ) )]
+    [DataRow( @"$..book[?@.price == 8.99 && @.category == ""fiction""]", typeof( JsonNode ) )]
     public void FilterAllBooksUsingLogicalAndInScript( string query, Type sourceType )
+    {
+        var source = GetDocumentProxy( sourceType );
+        var match = source.Select( query ).Single();
+        var expected = source.GetPropertyFromKey( "$['store']['book'][2]" );
+
+        Assert.AreEqual( expected, match );
+    }
+
+
+    [DataTestMethod]
+    [DataRow( @"$..book[?@.price == 8.99 && (@.category == ""fiction"")]", typeof( JsonDocument ) )]
+    [DataRow( @"$..book[?@.price == 8.99 && (@.category == ""fiction"")]", typeof( JsonNode ) )]
+    public void FilterWithUnevenParentheses( string query, Type sourceType )
     {
         var source = GetDocumentProxy( sourceType );
         var match = source.Select( query ).Single();

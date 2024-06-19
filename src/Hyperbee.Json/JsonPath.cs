@@ -33,16 +33,18 @@
 #endregion
 
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Memory;
 
 namespace Hyperbee.Json;
 
-// https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
-// https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
+// https://datatracker.ietf.org/doc/rfc9535/
 
 public static class JsonPath<TNode>
 {
+    private record struct NodeArgs( in TNode Value, in JsonPathSegment Segment );
+
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
     public static IEnumerable<TNode> Select( in TNode value, string query )
@@ -66,216 +68,203 @@ public static class JsonPath<TNode>
 
         // tokenize
 
-        var segments = JsonPathQueryTokenizer.Tokenize( query );
+        var segmentNext = JsonPathQueryParser.Parse( query );
 
-        if ( !segments.IsEmpty )
+        if ( !segmentNext.IsFinal )
         {
-            var selector = segments.Selectors[0].Value; // first selector in segment
+            var selector = segmentNext.Selectors[0].Value; // first selector in segment
 
             if ( selector == "$" || selector == "@" )
-                segments = segments.Next;
+                segmentNext = segmentNext.Next;
         }
 
-        return EnumerateMatches( root, new NodeArgs( value, segments ) );
+        return EnumerateMatches( root, new NodeArgs( value, segmentNext ) );
     }
 
     private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args )
     {
         var stack = new Stack<NodeArgs>( 16 );
-
         var (accessor, filterEvaluator) = Descriptor;
 
         do
         {
             // deconstruct the next args node
 
-            var (current, segments) = args;
+            var (value, segmentNext) = args;
 
-            if ( segments.IsEmpty )
+            if ( segmentNext.IsFinal )
             {
-                yield return current;
+                yield return value;
                 continue;
             }
 
             // get the current segment, and then move the segments
             // reference to the next segment in the list
 
-            var segment = segments; // get current segment
-            var (selector, _) = segment.Selectors[0]; // first selector in segment;
+            var segmentCurrent = segmentNext; // get current segment
+            var (selector, selectorKind) = segmentCurrent.Selectors[0]; // first selector in segment;
 
-            segments = segments.Next;
+            segmentNext = segmentNext.Next;
 
             // make sure we have a complex value
 
-            if ( !accessor.IsObjectOrArray( current ) )
+            if ( !accessor.IsObjectOrArray( value ) )
                 throw new InvalidOperationException( "Object or Array expected." );
 
             // try to access object or array using KEY value
 
-            if ( segment.Singular )
+            if ( segmentCurrent.Singular )
             {
-                if ( accessor.TryGetChildValue( current, selector, out var childValue ) )
-                    Push( stack, childValue, segments );
+                if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                {
+                    Push( stack, childValue, segmentNext );
+                }
 
                 continue;
             }
 
             // wildcard
 
-            if ( selector == "*" )
+            if ( selectorKind == SelectorKind.Wildcard )
             {
-                foreach ( var (_, childKey) in accessor.EnumerateChildren( current ) )
+                foreach ( var (_, childKey, childKind) in accessor.EnumerateChildren( value ) )
                 {
-                    Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Dot | Index)
+                    Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                 }
 
                 continue;
+
+                // we reduce push/pop operations, and related allocations, if we check
+                // segmentNext.IsFinal and yielding. 
+                //
+                // if ( segmentNext.IsFinal && !childValue.IsObjectOrArray() )
+                //    yield return childValue;
+                // else
+                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)                
+                //
+                // unfortunately, this type of optimization impacts result ordering. the rfc states that
+                // the result order should be as close to the json document order as possible. for that
+                // reason, we chose not to implement this type of performance optimization.
             }
 
             // descendant
 
-            if ( selector == ".." )
+            if ( selectorKind == SelectorKind.Descendant )
             {
-                foreach ( var (childValue, _) in accessor.EnumerateChildren( current, includeValues: false ) ) // child arrays or objects only
+                var descendantSegment = segmentNext.Prepend( "..", SelectorKind.Descendant );
+                foreach ( var (childValue, _, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
-                    Push( stack, childValue, segments.Insert( "..", SelectorKind.UnspecifiedGroup ) ); // Descendant
+                    Push( stack, childValue, descendantSegment ); // Descendant
                 }
 
-                Push( stack, current, segments );
+                Push( stack, value, segmentNext ); // process the current value
                 continue;
             }
 
-            // union
+            // group
 
-            for ( var i = 0; i < segment.Selectors.Length; i++ ) // using 'for' for performance
+            for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // use 'for' for performance
             {
-                var childSelector = segment.Selectors[i].Value;
-
-                // [(exp)]
-
-                if ( childSelector.Length > 2 && childSelector[0] == '(' && childSelector[^1] == ')' )
-                {
-                    if ( filterEvaluator.Evaluate( childSelector, current, root ) is not string filterSelector )
-                        continue;
-
-                    var filterSelectorKind = filterSelector != "*" && filterSelector != ".." && !JsonPathRegex.RegexSlice().IsMatch( filterSelector ) // (Dot | Index) | Wildcard, Descendant, Slice 
-                        ? SelectorKind.UnspecifiedSingular
-                        : SelectorKind.UnspecifiedGroup;
-
-                    Push( stack, current, segments.Insert( filterSelector, filterSelectorKind ) );
-                    continue;
-                }
+                if ( i != 0 )
+                    (selector, selectorKind) = segmentCurrent.Selectors[i];
 
                 // [?exp]
 
-                if ( childSelector[0] == '?' )
+                if ( selectorKind == SelectorKind.Filter )
                 {
-                    foreach ( var (childValue, childKey) in accessor.EnumerateChildren( current ) )
+                    foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                     {
-                        var filterValue = filterEvaluator.Evaluate( JsonPathRegex.RegexPathFilter().Replace( childSelector, "$1" ), childValue, root );
+                        var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove leading '?'
 
-                        if ( Truthy( filterValue ) )
-                            Push( stack, current, segments.Insert( childKey, SelectorKind.UnspecifiedSingular ) ); // (Name | Index)
+                        if ( Truthy( result ) )
+                            Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                     }
 
                     continue;
                 }
 
-                // [name1,name2,...] or [#,#,...] or [start:end:step]
+                // array [name1,name2,...] or [#,#,...] or [start:end:step]
 
-                if ( accessor.IsArray( current, out var length ) )
+                if ( accessor.IsArray( value, out var length ) )
                 {
-                    if ( JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
+                    // [#,#,...] 
+
+                    if ( selectorKind == SelectorKind.Index )
                     {
-                        // [#,#,...] 
-                        Push( stack, accessor.GetElementAt( current, int.Parse( childSelector ) ), segments );
+                        Push( stack, accessor.GetElementAt( value, int.Parse( selector ) ), segmentNext );
                         continue;
                     }
 
                     // [start:end:step] Python slice syntax
-                    if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) )
+
+                    if ( selectorKind == SelectorKind.Slice )
                     {
-                        foreach ( var index in EnumerateSlice( current, childSelector ) )
-                            Push( stack, accessor.GetElementAt( current, index ), segments );
+                        ProcessSlice( stack, value, selector, segmentNext, accessor );
                         continue;
                     }
 
                     // [name1,name2,...]
-                    foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, accessor.GetElementAt( current, index ), segments.Insert( childSelector, SelectorKind.UnspecifiedSingular ) ); // Name
+
+                    var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                    for ( var index = length - 1; index >= 0; index-- )
+                    {
+                        Push( stack, accessor.GetElementAt( value, index ), indexSegment );
+                    }
 
                     continue;
                 }
 
-                // [name1,name2,...]
+                // object [name1,name2,...]
 
-                if ( accessor.IsObject( current ) )
+                if ( accessor.IsObject( value ) )
                 {
-                    if ( JsonPathRegex.RegexSlice().IsMatch( childSelector ) || JsonPathRegex.RegexNumber().IsMatch( childSelector ) )
+                    if ( selectorKind == SelectorKind.Slice || selectorKind == SelectorKind.Index )
                         continue;
 
-                    // [name1,name2,...]
-                    if ( accessor.TryGetChildValue( current, childSelector, out var childValue ) )
-                        Push( stack, childValue, segments );
+                    if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                        Push( stack, childValue, segmentNext );
                 }
             }
 
         } while ( stack.TryPop( out args ) );
-
-        yield break;
-
-        static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    private static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static bool Truthy( object value )
     {
         return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
     }
 
-    private static IEnumerable<int> EnumerateArrayIndices( int length )
+    private static void ProcessSlice( Stack<NodeArgs> stack, TNode value, string sliceExpr, JsonPathSegment segmentNext, IValueAccessor<TNode> accessor )
     {
-        for ( var index = length - 1; index >= 0; index-- )
-            yield return index;
-    }
-
-    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr )
-    {
-        if ( !Descriptor.Accessor.IsArray( value, out var length ) )
-            yield break;
+        if ( !accessor.IsArray( value, out var length ) )
+            return;
 
         var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
         switch ( step )
         {
-            case 0:
-                {
-                    yield break;
-                }
             case > 0:
                 {
                     for ( var index = lower; index < upper; index += step )
-                        yield return index;
+                    {
+                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
+                    }
+
                     break;
                 }
             case < 0:
                 {
                     for ( var index = upper; index > lower; index += step )
-                        yield return index;
+                    {
+                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
+                    }
+
                     break;
                 }
         }
     }
-
-    private sealed class NodeArgs( in TNode value, in JsonPathSegment segment )
-    {
-        public readonly TNode Value = value;
-        public readonly JsonPathSegment Segment = segment;
-
-        public void Deconstruct( out TNode value, out JsonPathSegment segment )
-        {
-            value = Value;
-            segment = Segment;
-        }
-    }
-
 }

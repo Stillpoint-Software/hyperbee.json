@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Hyperbee.Json.Filters.Parser;
@@ -25,8 +26,9 @@ public static class FilterTruthyExpression
         {
             null => true,
             bool boolValue => !boolValue,
-            string str => string.IsNullOrEmpty( str ) || str == "false",
+            string str => string.IsNullOrEmpty( str ) || str.Equals( "false", StringComparison.OrdinalIgnoreCase ),
             Array array => array.Length == 0,
+            IEnumerable enumerable => !enumerable.Cast<object>().Any(),
             IConvertible convertible => !Convert.ToBoolean( convertible ),
             _ => false
         };

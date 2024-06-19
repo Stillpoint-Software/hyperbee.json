@@ -19,7 +19,7 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 
     public object Evaluate( string filter, TNode current, TNode root )
     {
-        var compiled = Compiled.GetOrAdd( filter, _ => JsonPathExpression.Compile<TNode>( filter, _typeDescriptor ) );
+        var compiled = Compiled.GetOrAdd( filter, _ => FilterExpressionParser.Compile<TNode>( filter, _typeDescriptor ) );
 
         try
         {

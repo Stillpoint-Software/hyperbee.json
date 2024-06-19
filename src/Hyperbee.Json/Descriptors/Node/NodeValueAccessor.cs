@@ -6,17 +6,18 @@ namespace Hyperbee.Json.Descriptors.Node;
 
 internal class NodeValueAccessor : IValueAccessor<JsonNode>
 {
-    public IEnumerable<(JsonNode, string)> EnumerateChildren( JsonNode value, bool includeValues = true )
+    public IEnumerable<(JsonNode, string, SelectorKind)> EnumerateChildren( JsonNode value, bool includeValues = true )
     {
         switch ( value )
         {
             case JsonArray arrayValue:
                 for ( var index = arrayValue.Count - 1; index >= 0; index-- )
+
                 {
                     var child = arrayValue[index];
 
                     if ( includeValues || child is JsonObject or JsonArray )
-                        yield return (child, index.ToString());
+                        yield return (child, index.ToString(), SelectorKind.Index);
                 }
 
                 break;
@@ -25,12 +26,12 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 if ( includeValues )
                 {
                     foreach ( var child in objectValue.Reverse() )
-                        yield return (child.Value, child.Key);
+                        yield return (child.Value, child.Key, SelectorKind.Name);
                 }
                 else
                 {
                     foreach ( var child in objectValue.Where( property => property.Value is JsonObject or JsonArray ).Reverse() )
-                        yield return (child.Value, child.Key);
+                        yield return (child.Value, child.Key, SelectorKind.Name);
                 }
 
                 break;
@@ -81,12 +82,13 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 }
             case JsonArray valueArray:
                 {
-                    var index = TryParseInt( childKey ) ?? -1;
-
-                    if ( index >= 0 && index < valueArray.Count )
+                    if ( int.TryParse( childKey, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                     {
-                        childValue = value[index];
-                        return true;
+                        if ( index >= 0 && index < valueArray.Count )
+                        {
+                            childValue = value[index];
+                            return true;
+                        }
                     }
 
                     break;
@@ -103,11 +105,16 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         childValue = default;
         return false;
 
-        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
-
-        static int? TryParseInt( ReadOnlySpan<char> numberString )
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        static bool IsPathOperator( ReadOnlySpan<char> x )
         {
-            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
+            return x.Length switch
+            {
+                1 => x[0] == '*',
+                2 => x[0] == '.' && x[1] == '.',
+                3 => x[0] == '$',
+                _ => false
+            };
         }
     }
 }

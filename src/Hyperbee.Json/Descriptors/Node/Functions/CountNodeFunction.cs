@@ -5,8 +5,8 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class CountNodeFunction( string methodName, IList<string> arguments, ParseExpressionContext context ) :
-    FilterExtensionFunction( methodName, arguments, context )
+public class CountNodeFunction( string methodName, ParseExpressionContext context ) :
+    FilterExtensionFunction( methodName, 1, context )
 {
     public const string Name = "count";
 
@@ -14,30 +14,21 @@ public class CountNodeFunction( string methodName, IList<string> arguments, Pars
 
     static CountNodeFunction()
     {
-        CountMethod = typeof( Enumerable )
-            .GetMethods( BindingFlags.Static | BindingFlags.Public )
-            .First( m =>
-                m.Name == "Count" &&
-                m.GetParameters().Length == 1 &&
-                m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof( IEnumerable<> ) )
-            .MakeGenericMethod( typeof( JsonNode ) );
+        CountMethod = typeof( CountNodeFunction ).GetMethod( nameof( Count ), [typeof( IEnumerable<JsonNode> )] );
     }
 
-    public override Expression GetExtensionExpression( string methodName, IList<string> arguments, ParseExpressionContext context )
+    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
     {
-        if ( arguments.Count != 1 )
+        if ( arguments.Length != 1 )
         {
             return Expression.Throw( Expression.Constant( new Exception( $"Invalid use of {Name} function" ) ) );
         }
 
-        var queryExp = Expression.Constant( arguments[0] );
+        return Expression.Call( CountMethod, arguments[0] );
+    }
 
-        return Expression.Convert( Expression.Call(
-                CountMethod,
-                Expression.Call( FilterNodeHelper.SelectElementsMethod,
-                    context.Current,
-                    context.Root,
-                    queryExp ) )
-            , typeof( float ) );
+    public static float Count( IEnumerable<JsonNode> elements )
+    {
+        return elements.Count();
     }
 }

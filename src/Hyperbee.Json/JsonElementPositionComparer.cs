@@ -25,7 +25,7 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
 
         // check parent documents
 
-        // BF: JsonElement ctor notes that parent may be null in some enumeration conditions.
+        // The JsonElement ctor notes that parent may be null in some enumeration conditions.
         // This check may not be reliable. If so, should be ok to remove the parent check.
 
         var xParent = JsonElementInternal.GetParent( x );

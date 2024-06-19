@@ -133,7 +133,7 @@ public static class JsonPath<TNode>
                 }
 
                 continue;
-                
+
                 // we reduce push/pop operations, and related allocations, if we check
                 // segmentNext.IsFinal and yielding. 
                 //
@@ -188,7 +188,7 @@ public static class JsonPath<TNode>
                 if ( accessor.IsArray( value, out var length ) )
                 {
                     // [#,#,...] 
-                    
+
                     if ( selectorKind == SelectorKind.Index )
                     {
                         Push( stack, accessor.GetElementAt( value, int.Parse( selector ) ), segmentNext );
@@ -196,7 +196,7 @@ public static class JsonPath<TNode>
                     }
 
                     // [start:end:step] Python slice syntax
-                    
+
                     if ( selectorKind == SelectorKind.Slice )
                     {
                         ProcessSlice( stack, value, selector, segmentNext, accessor );

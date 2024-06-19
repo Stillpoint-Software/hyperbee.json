@@ -69,10 +69,10 @@ public class JsonPathParseAndSelect
     [Benchmark]
     public void JsonPath_Hyperbee_JsonElement()
     {
-        var (filter,first) = GetFilter();
-        
+        var (filter, first) = GetFilter();
+
         var element = JsonDocument.Parse( Document ).RootElement;
-        
+
         if ( first )
             _ = element.Select( filter ).First();
         else
@@ -89,7 +89,7 @@ public class JsonPathParseAndSelect
         if ( first )
             _ = node.Select( filter ).First();
         else
-            _ = node.Select( filter ).ToArray();  
+            _ = node.Select( filter ).ToArray();
     }
 
     [Benchmark]

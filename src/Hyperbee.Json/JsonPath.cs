@@ -164,7 +164,7 @@ public static class JsonPath<TNode>
                     {
                         var filter = selector[1..]; // remove '?'
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
-                        
+
                         if ( Truthy( result ) )
                             Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                     }
@@ -235,27 +235,27 @@ public static class JsonPath<TNode>
             return;
 
         var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
-        
+
         switch ( step )
         {
             case > 0:
-            {
-                for ( var index = lower; index < upper; index += step )
                 {
-                    Push( stack, accessor.GetElementAt( value, index ), segmentNext );
-                }
+                    for ( var index = lower; index < upper; index += step )
+                    {
+                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
+                    }
 
-                break;
-            }
+                    break;
+                }
             case < 0:
-            {
-                for ( var index = upper; index > lower; index += step )
                 {
-                    Push( stack, accessor.GetElementAt( value, index ), segmentNext );
-                }
+                    for ( var index = upper; index > lower; index += step )
+                    {
+                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
     }
 }

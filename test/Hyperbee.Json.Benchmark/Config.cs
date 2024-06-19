@@ -27,7 +27,7 @@ public class Config : ManualConfig
 
         // Customize the summary style to prevent truncation
         WithSummaryStyle( SummaryStyle.Default.WithMaxParameterColumnWidth( 50 ) );
-        
+
         AddDiagnoser( MemoryDiagnoser.Default );
 
         Orderer = new FastestToSlowestByParamOrderer();

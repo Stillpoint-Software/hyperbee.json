@@ -15,7 +15,7 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$[0,0]", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromArray( string query, Type sourceType )
     {
-        const string json = "[\"a\"]";
+        const string json = """["a"]""";
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -35,7 +35,7 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['a','a']", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromObject( string query, Type sourceType )
     {
-        const string json = "{\"a\": 1}";
+        const string json = """{"a": 1}""";
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -57,7 +57,7 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$[?@.key<3,?@.key>6]", typeof( JsonNode ) )]
     public void UnionWithFilter( string query, Type sourceType )
     {
-        const string json = "[{\"key\": 1}, {\"key\": 8}, {\"key\": 3}, {\"key\": 10}, {\"key\": 7}, {\"key\": 2}, {\"key\": 6}, {\"key\": 4}]";
+        const string json = """[{"key": 1}, {"key": 8}, {"key": 3}, {"key": 10}, {"key": 7}, {"key": 2}, {"key": 6}, {"key": 4}]""";
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -81,7 +81,7 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['key','another']", typeof( JsonNode ) )]
     public void UnionWithKeys( string query, Type sourceType )
     {
-        const string json = "{\"key\": \"value\", \"another\": \"entry\"}";
+        const string json = """{"key": "value", "another": "entry"}""";
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -101,7 +101,7 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['key','another','thing1']", typeof( JsonNode ) )]
     public void UnionWithMultipleKeys( string query, Type sourceType )
     {
-        const string json = "{\"key\": \"value\", \"another\": \"entry\", \"thing1\": \"thing2\"}";
+        const string json = """{"key": "value", "another": "entry", "thing1": "thing2"}""";
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );

@@ -365,7 +365,7 @@ public static class JsonPathQueryParser
             return JsonPathSegment.Final;
 
         // set the next properties
-        
+
         for ( var index = 0; index < tokens.Count; index++ )
         {
             tokens[index].Next = index != tokens.Count - 1
@@ -375,7 +375,7 @@ public static class JsonPathQueryParser
 
         return tokens.First();
     }
-    
+
     private static SelectorKind GetSelectorKind( string selector )
     {
         if ( IsQuoted( selector ) )

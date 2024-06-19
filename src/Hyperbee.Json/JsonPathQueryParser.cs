@@ -354,8 +354,18 @@ public static class JsonPathQueryParser
             InsertToken( tokens, new SelectorDescriptor { SelectorKind = finalKind, Value = finalSelector } );
         }
 
-        // fixup nameof(Segment.Next) properties
+        // return tokenized query as a segment list
 
+        return TokensAsSegment( tokens );
+    }
+
+    private static JsonPathSegment TokensAsSegment( IList<JsonPathSegment> tokens )
+    {
+        if ( tokens == null || tokens.Count == 0 )
+            return JsonPathSegment.Final;
+
+        // set the next properties
+        
         for ( var index = 0; index < tokens.Count; index++ )
         {
             tokens[index].Next = index != tokens.Count - 1
@@ -365,7 +375,7 @@ public static class JsonPathQueryParser
 
         return tokens.First();
     }
-
+    
     private static SelectorKind GetSelectorKind( string selector )
     {
         if ( IsQuoted( selector ) )

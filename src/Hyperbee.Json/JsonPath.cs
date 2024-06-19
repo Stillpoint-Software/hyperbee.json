@@ -88,7 +88,7 @@ public static class JsonPath<TNode>
 
         do
         {
-            // deconstruct the next args node
+            // deconstruct next args
 
             var (value, segmentNext) = args;
 
@@ -134,8 +134,8 @@ public static class JsonPath<TNode>
 
                 continue;
 
-                // we reduce push/pop operations, and related allocations, if we check
-                // segmentNext.IsFinal and yielding. 
+                // we can reduce push/pop operations, and related allocations, if we check
+                // segmentNext.IsFinal and directly yielding when true. 
                 //
                 // if ( segmentNext.IsFinal && !childValue.IsObjectOrArray() )
                 //    yield return childValue;

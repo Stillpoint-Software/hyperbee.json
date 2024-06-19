@@ -1,6 +1,6 @@
-## Helper Classes
+## Additional Classes
 
-In addition to JSONPath processing, a few additional helper classes are provided to support dynamic property access,
+In addition to JSONPath processing, a few additional classes are provided to support dynamic property access,
 property diving, and element comparisons.
 
 ### Dynamic Object Serialization

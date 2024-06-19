@@ -179,48 +179,87 @@ the syntax `?(<boolean expr>)`, as in:
 
     $.store.book[?(@.price < 10)].title
 
-For a complete guide, see [JSONPath Syntax](docs/syntax.md).
+For a complete guide, see [JSONPath Syntax](./docs/JSONPATH-SYNTAX.md).
 
 ## Helper Classes
 
-Hyperbee.Json also provides several helpers to facilitate document operations. For more details, 
-refer to our [Helper Classes Documentation](docs/helper-classes.md).
+Hyperbee.Json also provides additional helpers to facilitate document operations. For more details, 
+refer to our [Additional Classes Documentation](./docs/ADDITIONAL-CLASSES.md).
 
 ## Benchmarks
 
+Here is a performance comparison of various queries on the standard book store document.
+
+```json
+{
+  "store": {
+    "book": [
+      {
+        "category": "reference",
+        "author": "Nigel Rees",
+        "title": "Sayings of the Century",
+        "price": 8.95
+      },
+      {
+        "category": "fiction",
+        "author": "Evelyn Waugh",
+        "title": "Sword of Honour",
+        "price": 12.99
+      },
+      {
+        "category": "fiction",
+        "author": "Herman Melville",
+        "title": "Moby Dick",
+        "isbn": "0-553-21311-3",
+        "price": 8.99
+      },
+      {
+        "category": "fiction",
+        "author": "J. R. R. Tolkien",
+        "title": "The Lord of the Rings",
+        "isbn": "0-395-19395-8",
+        "price": 22.99
+      }
+    ],
+    "bicycle": {
+      "color": "red",
+      "price": 19.95
+    }
+  }
+}
 ```
-| Method                           | Filter               | Document                | Mean      | Error     | StdDev    | Gen0   | Gen1   | Allocated |
-|--------------------------------- |--------------------- |------------------------ |----------:|----------:|----------:|-------:|-------:|----------:|
-| JsonPath_JsonCons_JsonElement    | $..*                 | {\r\n (...)}\r\n} [783] |  5.563 us | 1.2525 us | 0.0687 us | 1.0300 | 0.0076 |   8.45 KB |
-| JsonPath_Hyperbee_JsonElement    | $..*                 | {\r\n (...)}\r\n} [783] |  9.559 us | 1.3493 us | 0.0740 us | 1.7090 | 0.0153 |  13.97 KB |
-| JsonPath_Newtonsoft_JObject      | $..*                 | {\r\n (...)}\r\n} [783] | 10.372 us | 0.8962 us | 0.0491 us | 1.8158 | 0.0763 |  14.86 KB |
-| JsonPath_Hyperbee_JsonNode       | $..*                 | {\r\n (...)}\r\n} [783] | 11.705 us | 5.7483 us | 0.3151 us | 1.6479 |      - |  13.92 KB |
-| JsonPath_JsonEverything_JsonNode | $..*                 | {\r\n (...)}\r\n} [783] | 21.941 us | 3.2732 us | 0.1794 us | 4.4861 | 0.1831 |  36.81 KB |
-|                                  |                      |                         |           |           |           |        |        |           |
-| JsonPath_Hyperbee_JsonElement    | $..*|First()         | {\r\n (...)}\r\n} [783] |  3.163 us | 3.3098 us | 0.1814 us | 0.4654 | 0.0038 |   3.82 KB |
-| JsonPath_JsonEverything_JsonNode | $..*|First()         | {\r\n (...)}\r\n} [783] |  3.220 us | 0.4186 us | 0.0229 us | 0.4311 |      - |   3.53 KB |
-| JsonPath_Hyperbee_JsonNode       | $..*|First()         | {\r\n (...)}\r\n} [783] |  4.908 us | 0.5720 us | 0.0314 us | 0.3662 |      - |   3.11 KB |
-| JsonPath_JsonCons_JsonElement    | $..*|First()         | {\r\n (...)}\r\n} [783] |  5.609 us | 2.1326 us | 0.1169 us | 1.0376 | 0.0076 |   8.48 KB |
-| JsonPath_Newtonsoft_JObject      | $..*|First()         | {\r\n (...)}\r\n} [783] |  8.551 us | 0.9476 us | 0.0519 us | 1.7395 | 0.0458 |  14.22 KB |
-|                                  |                      |                         |           |           |           |        |        |           |
-| JsonPath_JsonCons_JsonElement    | $..price             | {\r\n (...)}\r\n} [783] |  4.628 us | 0.6357 us | 0.0348 us | 0.6866 |      - |   5.65 KB |
-| JsonPath_Hyperbee_JsonElement    | $..price             | {\r\n (...)}\r\n} [783] |  4.692 us | 0.5979 us | 0.0328 us | 0.8011 | 0.0076 |   6.58 KB |
-| JsonPath_Hyperbee_JsonNode       | $..price             | {\r\n (...)}\r\n} [783] |  7.585 us | 1.3128 us | 0.0720 us | 1.1139 | 0.0229 |   9.13 KB |
-| JsonPath_Newtonsoft_JObject      | $..price             | {\r\n (...)}\r\n} [783] | 10.028 us | 1.0181 us | 0.0558 us | 1.7548 | 0.0763 |   14.4 KB |
-| JsonPath_JsonEverything_JsonNode | $..price             | {\r\n (...)}\r\n} [783] | 16.348 us | 1.5375 us | 0.0843 us | 3.3569 | 0.0610 |  27.63 KB |
-|                                  |                      |                         |           |           |           |        |        |           |
-| JsonPath_Hyperbee_JsonElement    | $.sto(...).99)] [32] | {\r\n (...)}\r\n} [783] |  4.106 us | 0.5003 us | 0.0274 us | 0.7401 |      - |   6.08 KB |
-| JsonPath_JsonCons_JsonElement    | $.sto(...).99)] [32] | {\r\n (...)}\r\n} [783] |  4.970 us | 0.5980 us | 0.0328 us | 0.6180 |      - |   5.05 KB |
-| JsonPath_Hyperbee_JsonNode       | $.sto(...).99)] [32] | {\r\n (...)}\r\n} [783] |  6.610 us | 1.6158 us | 0.0886 us | 1.0147 | 0.0153 |   8.34 KB |
-| JsonPath_Newtonsoft_JObject      | $.sto(...).99)] [32] | {\r\n (...)}\r\n} [783] |  9.670 us | 3.6023 us | 0.1975 us | 1.9379 | 0.0763 |  15.84 KB |
-| JsonPath_JsonEverything_JsonNode | $.sto(...).99)] [32] | {\r\n (...)}\r\n} [783] | 11.227 us | 2.5612 us | 0.1404 us | 1.9379 | 0.0458 |  15.85 KB |
-|                                  |                      |                         |           |           |           |        |        |           |
-| JsonPath_Hyperbee_JsonElement    | $.store.book[0]      | {\r\n (...)}\r\n} [783] |  2.771 us | 0.1885 us | 0.0103 us | 0.3433 |      - |   2.81 KB |
-| JsonPath_JsonCons_JsonElement    | $.store.book[0]      | {\r\n (...)}\r\n} [783] |  3.026 us | 0.6708 us | 0.0368 us | 0.3929 |      - |   3.21 KB |
-| JsonPath_Hyperbee_JsonNode       | $.store.book[0]      | {\r\n (...)}\r\n} [783] |  3.260 us | 0.5807 us | 0.0318 us | 0.3815 |      - |   3.12 KB |
-| JsonPath_JsonEverything_JsonNode | $.store.book[0]      | {\r\n (...)}\r\n} [783] |  4.699 us | 0.9516 us | 0.0522 us | 0.7019 |      - |   5.96 KB |
-| JsonPath_Newtonsoft_JObject      | $.store.book[0]      | {\r\n (...)}\r\n} [783] |  8.909 us | 0.3828 us | 0.0210 us | 1.7700 | 0.0153 |  14.56 KB |
-```
+
+| Method                           | Filter                           | Mean      | Error      | StdDev    | Gen0   | Gen1   | Allocated |
+|--------------------------------- |--------------------------------- |----------:|-----------:|----------:|-------:|-------:|----------:|
+| JsonPath_Hyperbee_JsonElement    | $..* `First()`                   |  3.042 us |  0.3928 us | 0.0215 us | 0.4654 | 0.0038 |   3.82 KB |
+| JsonPath_JsonEverything_JsonNode | $..* `First()`                   |  3.201 us |  0.9936 us | 0.0545 us | 0.4311 |      - |   3.53 KB |
+| JsonPath_Hyperbee_JsonNode       | $..* `First()`                   |  3.206 us |  1.8335 us | 0.1005 us | 0.3777 |      - |   3.11 KB |
+| JsonPath_JsonCons_JsonElement    | $..* `First()`                   |  5.666 us |  0.7342 us | 0.0402 us | 1.0376 | 0.0076 |   8.48 KB |
+| JsonPath_Newtonsoft_JObject      | $..* `First()`                   |  8.741 us |  1.7537 us | 0.0961 us | 1.7395 | 0.0458 |  14.22 KB |
+|                                  |                                  |           |            |           |        |        |           |
+| JsonPath_JsonCons_JsonElement    | $..*                             |  5.599 us |  1.1146 us | 0.0611 us | 1.0300 | 0.0076 |   8.45 KB |
+| JsonPath_Hyperbee_JsonElement    | $..*                             |  9.511 us |  0.6130 us | 0.0336 us | 1.7090 | 0.0153 |  13.97 KB |
+| JsonPath_Newtonsoft_JObject      | $..*                             | 10.082 us |  1.0318 us | 0.0566 us | 1.8158 | 0.0763 |  14.86 KB |
+| JsonPath_Hyperbee_JsonNode       | $..*                             | 12.051 us |  5.3268 us | 0.2920 us | 1.6479 |      - |  13.92 KB |
+| JsonPath_JsonEverything_JsonNode | $..*                             | 22.612 us | 16.0118 us | 0.8777 us | 4.4861 | 0.1831 |  36.81 KB |
+|                                  |                                  |           |            |           |        |        |           |
+| JsonPath_Hyperbee_JsonElement    | $..price                         |  4.930 us |  3.3771 us | 0.1851 us | 0.8011 | 0.0076 |   6.58 KB |
+| JsonPath_JsonCons_JsonElement    | $..price                         |  4.934 us |  1.0796 us | 0.0592 us | 0.6866 |      - |   5.65 KB |
+| JsonPath_Hyperbee_JsonNode       | $..price                         |  7.784 us |  1.7326 us | 0.0950 us | 1.1139 | 0.0153 |   9.13 KB |
+| JsonPath_Newtonsoft_JObject      | $..price                         |  9.913 us |  2.6681 us | 0.1462 us | 1.7548 | 0.0610 |   14.4 KB |
+| JsonPath_JsonEverything_JsonNode | $..price                         | 16.365 us |  4.0688 us | 0.2230 us | 3.3569 | 0.0610 |  27.63 KB |
+|                                  |                                  |           |            |           |        |        |           |
+| JsonPath_Hyperbee_JsonElement    | $.store.book[?(@.price == 8.99)] |  4.062 us |  0.2682 us | 0.0147 us | 0.7401 |      - |   6.08 KB |
+| JsonPath_JsonCons_JsonElement    | $.store.book[?(@.price == 8.99)] |  4.959 us |  0.5051 us | 0.0277 us | 0.6180 |      - |   5.05 KB |
+| JsonPath_Hyperbee_JsonNode       | $.store.book[?(@.price == 8.99)] |  6.775 us |  1.3945 us | 0.0764 us | 1.0147 | 0.0153 |   8.34 KB |
+| JsonPath_Newtonsoft_JObject      | $.store.book[?(@.price == 8.99)] | 10.050 us |  5.3711 us | 0.2944 us | 1.9379 | 0.0763 |  15.84 KB |
+| JsonPath_JsonEverything_JsonNode | $.store.book[?(@.price == 8.99)] | 11.223 us |  0.5535 us | 0.0303 us | 1.9379 | 0.0458 |  15.85 KB |
+|                                  |                                  |           |            |           |        |        |           |
+| JsonPath_Hyperbee_JsonElement    | $.store.book[0]                  |  2.812 us |  0.5097 us | 0.0279 us | 0.3433 |      - |   2.81 KB |
+| JsonPath_Hyperbee_JsonNode       | $.store.book[0]                  |  3.259 us |  0.1929 us | 0.0106 us | 0.3815 |      - |   3.12 KB |
+| JsonPath_JsonCons_JsonElement    | $.store.book[0]                  |  3.365 us | 10.9259 us | 0.5989 us | 0.3891 |      - |   3.21 KB |
+| JsonPath_JsonEverything_JsonNode | $.store.book[0]                  |  4.670 us |  0.6449 us | 0.0354 us | 0.7248 |      - |   5.96 KB |
+| JsonPath_Newtonsoft_JObject      | $.store.book[0]                  |  8.572 us |  1.5455 us | 0.0847 us | 1.7700 | 0.0153 |  14.56 KB |
 
 ## Comparison with Other Libraries
 
@@ -278,8 +317,8 @@ Hyperbee.Json is built upon the great work of several open-source projects. Spec
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for more details.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.

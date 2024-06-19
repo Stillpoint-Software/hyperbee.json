@@ -8,11 +8,11 @@ public class LiteralFunction : FilterFunction
     protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {
         // Check for known literals (true, false, null) first
-        if ( item.Equals( KnownLiterals.TrueSpan, StringComparison.OrdinalIgnoreCase ) )
+        if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( true );
-        if ( item.Equals( KnownLiterals.FalseSpan, StringComparison.OrdinalIgnoreCase ) )
+        if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( false );
-        if ( item.Equals( KnownLiterals.NullSpan, StringComparison.OrdinalIgnoreCase ) )
+        if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( null );
 
         // Check for quoted strings
@@ -33,12 +33,5 @@ public class LiteralFunction : FilterFunction
 
             return input;
         }
-    }
-
-    internal ref struct KnownLiterals
-    {
-        internal static ReadOnlySpan<char> TrueSpan => "true".AsSpan();
-        internal static ReadOnlySpan<char> FalseSpan => "false".AsSpan();
-        internal static ReadOnlySpan<char> NullSpan => "null".AsSpan();
     }
 }

@@ -82,12 +82,13 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 }
             case JsonArray valueArray:
                 {
-                    var index = TryParseInt( childKey ) ?? -1;
-
-                    if ( index >= 0 && index < valueArray.Count )
+                    if ( int.TryParse( childKey, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                     {
-                        childValue = value[index];
-                        return true;
+                        if ( index >= 0 && index < valueArray.Count )
+                        {
+                            childValue = value[index];
+                            return true;
+                        }
                     }
 
                     break;
@@ -104,11 +105,16 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         childValue = default;
         return false;
 
-        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
-
-        static int? TryParseInt( ReadOnlySpan<char> numberString )
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        static bool IsPathOperator( ReadOnlySpan<char> x )
         {
-            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
+            return x.Length switch
+            {
+                1 => x[0] == '*',
+                2 => x[0] == '.' && x[1] == '.',
+                3 => x[0] == '$',
+                _ => false
+            };
         }
     }
 }

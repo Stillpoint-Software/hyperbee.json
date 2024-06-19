@@ -133,6 +133,18 @@ public static class JsonPath<TNode>
                 }
 
                 continue;
+                
+                // we reduce push/pop operations, and related allocations, if we check
+                // segmentNext.IsFinal and yielding. 
+                //
+                // if ( segmentNext.IsFinal && !childValue.IsObjectOrArray() )
+                //    yield return childValue;
+                // else
+                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)                
+                //
+                // unfortunately, this type of optimization impacts result ordering. the rfc states that
+                // the result order should be as close to the json document order as possible. for that
+                // reason, we chose not to implement this type of performance optimization.
             }
 
             // descendant
@@ -145,13 +157,13 @@ public static class JsonPath<TNode>
                     Push( stack, childValue, descendantSegment ); // Descendant
                 }
 
-                Push( stack, value, segmentNext );
+                Push( stack, value, segmentNext ); // process the current value
                 continue;
             }
 
             // group
 
-            for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // using 'for' for performance
+            for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // use 'for' for performance
             {
                 if ( i != 0 )
                     (selector, selectorKind) = segmentCurrent.Selectors[i];
@@ -162,8 +174,7 @@ public static class JsonPath<TNode>
                 {
                     foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                     {
-                        var filter = selector[1..]; // remove '?'
-                        var result = filterEvaluator.Evaluate( filter, childValue, root );
+                        var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove leading '?'
 
                         if ( Truthy( result ) )
                             Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
@@ -172,19 +183,20 @@ public static class JsonPath<TNode>
                     continue;
                 }
 
-                // [name1,name2,...] or [#,#,...] or [start:end:step]
+                // array [name1,name2,...] or [#,#,...] or [start:end:step]
 
                 if ( accessor.IsArray( value, out var length ) )
                 {
+                    // [#,#,...] 
+                    
                     if ( selectorKind == SelectorKind.Index )
                     {
-                        // [#,#,...] 
-
                         Push( stack, accessor.GetElementAt( value, int.Parse( selector ) ), segmentNext );
                         continue;
                     }
 
                     // [start:end:step] Python slice syntax
+                    
                     if ( selectorKind == SelectorKind.Slice )
                     {
                         ProcessSlice( stack, value, selector, segmentNext, accessor );
@@ -202,18 +214,15 @@ public static class JsonPath<TNode>
                     continue;
                 }
 
-                // [name1,name2,...]
+                // object [name1,name2,...]
 
                 if ( accessor.IsObject( value ) )
                 {
                     if ( selectorKind == SelectorKind.Slice || selectorKind == SelectorKind.Index )
                         continue;
 
-                    // [name1,name2,...]
                     if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
-                    {
                         Push( stack, childValue, segmentNext );
-                    }
                 }
             }
 

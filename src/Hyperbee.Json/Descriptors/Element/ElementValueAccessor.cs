@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
@@ -81,12 +82,13 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 break;
 
             case JsonValueKind.Array:
-                var index = TryParseInt( childKey ) ?? -1;
-
-                if ( index >= 0 && index < value.GetArrayLength() )
+                if ( int.TryParse( childKey, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
-                    childValue = value[index];
-                    return true;
+                    if ( index >= 0 && index < value.GetArrayLength() )
+                    {
+                        childValue = value[index];
+                        return true;
+                    }
                 }
 
                 break;
@@ -100,11 +102,16 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         childValue = default;
         return false;
 
-        static bool IsPathOperator( ReadOnlySpan<char> x ) => x == "*" || x == ".." || x == "$";
-
-        static int? TryParseInt( ReadOnlySpan<char> numberString )
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        static bool IsPathOperator( ReadOnlySpan<char> x )
         {
-            return numberString == null ? null : int.TryParse( numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : null;
+            return x.Length switch
+            {
+                1 => x[0] == '*',
+                2 => x[0] == '.' && x[1] == '.',
+                3 => x[0] == '$',
+                _ => false
+            };
         }
     }
 }

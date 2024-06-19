@@ -260,10 +260,11 @@ public class FilterExpressionParser
 
     private static void MergeTokens( FilterToken left, FilterToken right, ParseExpressionContext context )
     {
+        // Ensure both expressions are value expressions
         left.Expression = context.Descriptor.GetValueExpression( left.Expression );
         right.Expression = context.Descriptor.GetValueExpression( right.Expression );
 
-        // TODO: clean up handling numerical, string and object comparing. feels messy.
+        // Determine if we are comparing numerical values so that we can use the correct comparison method
         bool isNumerical = IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type );
 
         left.Expression = left.Type switch
@@ -284,7 +285,7 @@ public class FilterExpressionParser
             _ => left.Expression
         };
 
-        //TODO: Invalid compares should be false, but is this the best way?
+        // Wrap left expression in a try-catch block to handle exceptions
         left.Expression = left.Expression == null
             ? left.Expression
             : Expression.TryCatchFinally(

@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Hyperbee.Json.Tests.Evaluators;
 
 [TestClass]
-public class JsonPathExpressionTests : JsonTestBase
+public class FilterExpressionParserTests : JsonTestBase
 {
     [DataTestMethod]
     [DataRow( "((\"world\" == 'world') && (1 == 1))", true, typeof( JsonElement ) )]

@@ -12,6 +12,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         {
             case JsonArray arrayValue:
                 for ( var index = arrayValue.Count - 1; index >= 0; index-- )
+
                 {
                     var child = arrayValue[index];
 

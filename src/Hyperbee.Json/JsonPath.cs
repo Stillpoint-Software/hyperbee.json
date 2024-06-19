@@ -39,8 +39,7 @@ using Hyperbee.Json.Memory;
 
 namespace Hyperbee.Json;
 
-// https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
-// https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
+// https://datatracker.ietf.org/doc/rfc9535/
 
 public static class JsonPath<TNode>
 {
@@ -85,7 +84,6 @@ public static class JsonPath<TNode>
     private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args )
     {
         var stack = new Stack<NodeArgs>( 16 );
-
         var (accessor, filterEvaluator) = Descriptor;
 
         do
@@ -141,9 +139,10 @@ public static class JsonPath<TNode>
 
             if ( selectorKind == SelectorKind.Descendant )
             {
+                var descendantSegment = segmentNext.Prepend( "..", SelectorKind.Descendant );
                 foreach ( var (childValue, _, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
-                    Push( stack, childValue, segmentNext.Prepend( "..", SelectorKind.Descendant ) ); // Descendant
+                    Push( stack, childValue, descendantSegment ); // Descendant
                 }
 
                 Push( stack, value, segmentNext );
@@ -165,7 +164,7 @@ public static class JsonPath<TNode>
                     {
                         var filter = selector[1..]; // remove '?'
                         var result = filterEvaluator.Evaluate( filter, childValue, root );
-
+                        
                         if ( Truthy( result ) )
                             Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                     }
@@ -180,6 +179,7 @@ public static class JsonPath<TNode>
                     if ( selectorKind == SelectorKind.Index )
                     {
                         // [#,#,...] 
+
                         Push( stack, accessor.GetElementAt( value, int.Parse( selector ) ), segmentNext );
                         continue;
                     }
@@ -187,14 +187,17 @@ public static class JsonPath<TNode>
                     // [start:end:step] Python slice syntax
                     if ( selectorKind == SelectorKind.Slice )
                     {
-                        foreach ( var index in EnumerateSlice( value, selector ) )
-                            Push( stack, accessor.GetElementAt( value, index ), segmentNext );
+                        ProcessSlice( stack, value, selector, segmentNext, accessor );
                         continue;
                     }
 
                     // [name1,name2,...]
-                    foreach ( var index in EnumerateArrayIndices( length ) )
-                        Push( stack, accessor.GetElementAt( value, index ), segmentNext.Prepend( selector, SelectorKind.Name ) ); // Name
+
+                    var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                    for ( var index = length - 1; index >= 0; index-- )
+                    {
+                        Push( stack, accessor.GetElementAt( value, index ), indexSegment );
+                    }
 
                     continue;
                 }
@@ -208,17 +211,17 @@ public static class JsonPath<TNode>
 
                     // [name1,name2,...]
                     if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                    {
                         Push( stack, childValue, segmentNext );
+                    }
                 }
             }
 
         } while ( stack.TryPop( out args ) );
-
-        yield break;
-
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
     }
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    private static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static bool Truthy( object value )
@@ -226,37 +229,33 @@ public static class JsonPath<TNode>
         return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
     }
 
-    private static IEnumerable<int> EnumerateArrayIndices( int length )
+    private static void ProcessSlice( Stack<NodeArgs> stack, TNode value, string sliceExpr, JsonPathSegment segmentNext, IValueAccessor<TNode> accessor )
     {
-        for ( var index = length - 1; index >= 0; index-- )
-            yield return index;
-    }
-
-    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr )
-    {
-        if ( !Descriptor.Accessor.IsArray( value, out var length ) )
-            yield break;
+        if ( !accessor.IsArray( value, out var length ) )
+            return;
 
         var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
-
+        
         switch ( step )
         {
-            case 0:
-                {
-                    yield break;
-                }
             case > 0:
+            {
+                for ( var index = lower; index < upper; index += step )
                 {
-                    for ( var index = lower; index < upper; index += step )
-                        yield return index;
-                    break;
+                    Push( stack, accessor.GetElementAt( value, index ), segmentNext );
                 }
+
+                break;
+            }
             case < 0:
+            {
+                for ( var index = upper; index > lower; index += step )
                 {
-                    for ( var index = upper; index > lower; index += step )
-                        yield return index;
-                    break;
+                    Push( stack, accessor.GetElementAt( value, index ), segmentNext );
                 }
+
+                break;
+            }
         }
     }
 }

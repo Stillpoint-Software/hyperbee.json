@@ -13,6 +13,7 @@ public class JsonPathParseAndSelect
     [Params(
         "$.store.book[0]",
         "$.store.book[?(@.price == 8.99)]",
+        "$..price",
         "$..*"
     )]
     public string Filter;

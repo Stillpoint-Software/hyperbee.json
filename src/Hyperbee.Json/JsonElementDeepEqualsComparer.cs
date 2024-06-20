@@ -27,11 +27,8 @@ namespace Hyperbee.Json;
 // using var doc1 = JsonDocument.Parse( referenceJson );
 // using var doc2 = JsonDocument.Parse( resultJson );
 //
-// var result = doc1.RootElement.IsEquivalentTo( doc2.RootElement );
+// var result = doc1.RootElement.DeepEquals( doc2.RootElement );
 //
-// example 3:
-//
-// var result = JsonHelper.Compare( referenceJson, resultJson );
 
 public class JsonElementDeepEqualsComparer : IEqualityComparer<JsonElement>
 {

@@ -70,7 +70,7 @@ public class JsonPathDotNotationTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['屬性']")
+            source.GetPropertyFromPath("$['屬性']")
         };
 
         // no consensus

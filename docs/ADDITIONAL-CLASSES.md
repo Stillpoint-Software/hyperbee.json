@@ -36,8 +36,8 @@ numeric values during the deserialization process.
 
 | Method                             | Description
 |:-----------------------------------|:-----------
-| `JsonElement.DeepEquals`           | Performs a deep equals comparison 
-| `JsonElementEqualityDeepComparer`  | A deep equals equality comparer
+| `JsonElement.DeepEquals`           | Performs a deep equals comparison on two `JsonElements`
+| `JsonElementEqualityDeepComparer`  | A deep equals equality comparer that compares two `JsonElements`
 
 ### Property Diving
 
@@ -46,14 +46,14 @@ Unlike JSON Pointer, property diving expects simplified JSON Path notation.
 
 | Method                             | Description
 |:-----------------------------------|:-----------
-| `JsonElement.GetPropertyFromPath`  | Dives for properties using absolute bracket locations like `$['store']['book'][2]['author']`
+| `JsonElement.GetPropertyFromPath`  | Dives for properties using absolute locations like `$['store']['book'][2]['author']`
 
 The syntax supports singular paths; dotted notation, quoted names, and simple bracketed array accessors only.
 
 Json path style '$', wildcard '*', '..', and '[a,b]' multi-result selector notations and filters are NOT supported.
 
 ```
-Examples of valid paths:
+Examples of valid path syntax:
 
     prop1.prop2
     prop1[0]

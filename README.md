@@ -14,7 +14,7 @@ The library is designed to be quick and extensible, allowing support for other J
 
 ## JSONPath Consensus
 
-Hyperbee.Json aims to follow the emerging [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) standard where applicable.   
+Hyperbee.Json aims to follow the emerging [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) standard where possible.   
 This standardization effort is critical for ensuring consistent behavior across different implementations of JSONPath.  
 However, where the consensus is ambiguous or not aligned with our performance and usability goals, we may deviate. Our  
 goal is always to provide a robust and performant library while keeping an eye on standardization progress.
@@ -181,7 +181,7 @@ the syntax `?(<boolean expr>)`, as in:
 
 For a complete guide, see [JSONPath Syntax](./docs/JSONPATH-SYNTAX.md).
 
-## Helper Classes
+## Additional Classes
 
 Hyperbee.Json also provides additional helpers to facilitate document operations. For more details, 
 refer to our [Additional Classes Documentation](./docs/ADDITIONAL-CLASSES.md).

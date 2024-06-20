@@ -27,7 +27,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['key']")
+            source.GetPropertyFromPath("$['key']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -70,11 +70,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$[0]"),
-            source.GetPropertyFromKey("$[1]['key'][0]"),
-            source.GetPropertyFromKey("$[1]['key'][1]['more'][0]"),
-            source.GetPropertyFromKey("$[1]['key'][1]['more'][0]['nested'][0]"),
-            source.GetPropertyFromKey("$[1]['key'][1]['more'][1][0]")
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]['key'][0]"),
+            source.GetPropertyFromPath("$[1]['key'][1]['more'][0]"),
+            source.GetPropertyFromPath("$[1]['key'][1]['more'][0]['nested'][0]"),
+            source.GetPropertyFromPath("$[1]['key'][1]['more'][1][0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -356,7 +356,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$[1][1]")
+            source.GetPropertyFromPath("$[1][1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -380,7 +380,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['0']")
+            source.GetPropertyFromPath("$['0']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -500,7 +500,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['.']")
+            source.GetPropertyFromPath("$['.']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -525,7 +525,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['.*']")
+            source.GetPropertyFromPath("$['.*']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -563,7 +563,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey(@"$['\']")
+            source.GetPropertyFromPath(@"$['\']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -607,7 +607,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['0']")
+            source.GetPropertyFromPath("$['0']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -631,7 +631,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['$']")
+            source.GetPropertyFromPath("$['$']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -696,7 +696,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$[',']")
+            source.GetPropertyFromPath("$[',']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -720,7 +720,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['*']")
+            source.GetPropertyFromPath("$['*']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -771,7 +771,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['a']")
+            source.GetPropertyFromPath("$['a']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -796,7 +796,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['ni.*']")
+            source.GetPropertyFromPath("$['ni.*']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -876,10 +876,10 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromKey("$[0][0]"),
-            source.GetPropertyFromKey("$[0][1]"),
-            source.GetPropertyFromKey("$[1][0]"),
-            source.GetPropertyFromKey("$[1][1]")
+            source.GetPropertyFromPath("$[0][0]"),
+            source.GetPropertyFromPath("$[0][1]"),
+            source.GetPropertyFromPath("$[1][0]"),
+            source.GetPropertyFromPath("$[1][1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -908,7 +908,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$[0]['bar'][0]")
+            source.GetPropertyFromPath("$[0]['bar'][0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -936,12 +936,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['key']"),
-            source.GetPropertyFromKey("$['another key']"),
-            source.GetPropertyFromKey("$['another key']['complex']"),
-            source.GetPropertyFromKey("$['another key']['primitives']"),
-            source.GetPropertyFromKey("$['another key']['primitives'][0]"),
-            source.GetPropertyFromKey("$['another key']['primitives'][1]")
+            source.GetPropertyFromPath("$['key']"),
+            source.GetPropertyFromPath("$['another key']"),
+            source.GetPropertyFromPath("$['another key']['complex']"),
+            source.GetPropertyFromPath("$['another key']['primitives']"),
+            source.GetPropertyFromPath("$['another key']['primitives'][0]"),
+            source.GetPropertyFromPath("$['another key']['primitives'][1]")
         };
 
 
@@ -977,10 +977,10 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$[0]"),
-            source.GetPropertyFromKey("$[1]"),
-            source.GetPropertyFromKey("$[2]"),
-            source.GetPropertyFromKey("$[3]")
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -1041,9 +1041,9 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$[0]"),
-            source.GetPropertyFromKey("$[1]"),
-            source.GetPropertyFromKey("$[2]")
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -1072,10 +1072,10 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey("$['some']"),
-            source.GetPropertyFromKey("$['int']"),
-            source.GetPropertyFromKey("$['object']"),
-            source.GetPropertyFromKey("$['array']")
+            source.GetPropertyFromPath("$['some']"),
+            source.GetPropertyFromPath("$['int']"),
+            source.GetPropertyFromPath("$['object']"),
+            source.GetPropertyFromPath("$['array']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

@@ -7,11 +7,11 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Root Node
 
-`$` - Refers to the root object or array.
+`$` Refers to the root object or array.
 
 ### Child Operator
 
-`.` - Access a child element.
+`.` Access a child element.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -32,7 +32,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Subscript Operator
 
-`[]` - Access elements by index or key.
+`[]` Access elements by index or key.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -56,7 +56,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Wildcard
 
-`[*]` - Wildcard for arrays or objects.
+`[*]` Wildcard for arrays or objects.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -87,7 +87,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Filter Expressions
 
-`?` - Filter elements based on an expression.
+`?` Filter elements based on an expression.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -119,7 +119,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Current Node
 
-`@` - Represents the current node being processed in filters.
+`@` Represents the current node being processed in filters.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -153,7 +153,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Recursive Descent
 
-`..` - Recursively search for matching elements.
+`..` Recursively search for matching elements.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -190,7 +190,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Union
 
-`[ , ]` - Select multiple items.
+`[ , ]` Select multiple items.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;
@@ -220,7 +220,7 @@ This page outlines the syntax and operators supported by Hyperbee.Json.
 
 ### Slices
 
-`[start:end:step]` - Python-like array slicing.
+`[start:end:step]` Python-like array slicing.
 ```csharp
   using Hyperbee.JsonPath;
   using System.Text.Json;

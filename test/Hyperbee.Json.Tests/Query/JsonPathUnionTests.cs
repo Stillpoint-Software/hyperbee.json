@@ -25,8 +25,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[0]" )
+            source.GetPropertyFromPath( "$[0]" ),
+            source.GetPropertyFromPath( "$[0]" )
         };
 
         // consensus: ["a", "a"]
@@ -49,8 +49,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['a']" ),
-            source.GetPropertyFromKey( "$['a']" )
+            source.GetPropertyFromPath( "$['a']" ),
+            source.GetPropertyFromPath( "$['a']" )
         };
 
         // no consensus
@@ -82,12 +82,12 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ), // key: 1
-            source.GetPropertyFromKey( "$[5]" ), // key: 2
+            source.GetPropertyFromPath( "$[0]" ), // key: 1
+            source.GetPropertyFromPath( "$[5]" ), // key: 2
 
-            source.GetPropertyFromKey( "$[1]" ), // key: 8 
-            source.GetPropertyFromKey( "$[3]" ), // key: 10
-            source.GetPropertyFromKey( "$[4]" ) // key: 7 
+            source.GetPropertyFromPath( "$[1]" ), // key: 8 
+            source.GetPropertyFromPath( "$[3]" ), // key: 10
+            source.GetPropertyFromPath( "$[4]" ) // key: 7 
         };
 
         // no consensus
@@ -111,8 +111,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['key']" ),
-            source.GetPropertyFromKey( "$['another']" )
+            source.GetPropertyFromPath( "$['key']" ),
+            source.GetPropertyFromPath( "$['another']" )
         };
 
         // consensus: ["value", "entry"]
@@ -137,9 +137,9 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['key']" ),
-            source.GetPropertyFromKey( "$['another']" ),
-            source.GetPropertyFromKey( "$['thing1']" )
+            source.GetPropertyFromPath( "$['key']" ),
+            source.GetPropertyFromPath( "$['another']" ),
+            source.GetPropertyFromPath( "$['thing1']" )
         };
 
         // consensus: ["value", "entry"]

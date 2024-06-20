@@ -12,9 +12,9 @@ internal static class JsonElementInternal
     static JsonElementInternal()
     {
         // Create DynamicMethod for _idx field
-        
+
         const string idxName = "_idx";
-        
+
         var idxField = typeof( JsonElement ).GetField( idxName, BindingFlags.NonPublic | BindingFlags.Instance );
 
         if ( idxField == null )
@@ -31,7 +31,7 @@ internal static class JsonElementInternal
         // Create DynamicMethod for _parent field 
 
         const string parentName = "_parent";
-        
+
         var parentField = typeof( JsonElement ).GetField( parentName, BindingFlags.NonPublic | BindingFlags.Instance );
 
         if ( parentField == null )

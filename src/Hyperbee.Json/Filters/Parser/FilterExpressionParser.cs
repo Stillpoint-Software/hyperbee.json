@@ -71,7 +71,7 @@ public class FilterExpressionParser
             if ( StillCollecting( currentPath, ch, type, to ) )
             {
                 currentPath = filter[start..from].Trim();
-                
+
                 if ( from < filter.Length && filter[from] != to )
                     continue;
             }
@@ -213,7 +213,7 @@ public class FilterExpressionParser
 
         var index = from;
         char? quote = null;
-        
+
         while ( !ValidType( startType ) && index < item.Length )
         {
             Next( item, ref start, ref index, ref quote, out var result );
@@ -232,14 +232,14 @@ public class FilterExpressionParser
         while ( index < listToMerge.Count )
         {
             var next = listToMerge[index++];
-            
+
             while ( !CanMergeTokens( current, next ) )
             {
                 Merge( next, ref index, listToMerge, context, mergeOneOnly: true );
             }
-            
+
             MergeTokens( current, next, context );
-            
+
             if ( mergeOneOnly )
             {
                 return current.Expression;

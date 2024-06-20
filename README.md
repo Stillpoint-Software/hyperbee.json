@@ -315,4 +315,4 @@ Hyperbee.Json is built upon the great work of several open-source projects. Spec
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://github.com/Stillpoint-Software/Hyperbee.Json/blob/main/CONTRIBUTING.md) for more details.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Stillpoint-Software/.github/blob/main/.github/CONTRIBUTING.md) for more details.

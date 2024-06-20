@@ -230,7 +230,10 @@ public static class JsonPath<TNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
+    private static void Push( Stack<NodeArgs> stack, in TNode value, in JsonPathSegment segment )
+    {
+        stack.Push( new NodeArgs( value, segment ) );
+    }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static bool Truthy( object value )

@@ -41,7 +41,7 @@ jobs:
         echo -e "$releases"
 
         # Sort the releases by date and extract the most recent one that matches the version or version-prerelease
-        release_line=$(echo "$releases" | jq -r 'sort_by(.createdAt) | reverse | .[0] | select(.tagName | test("-prerelease$")) | .tagName')
+        release_line=$(echo "$releases" | jq -r 'sort_by(.createdAt) | reverse | .[0] | select(.tagName == $version_tag) | .tagName')
 
         echo -e "$release_line"
 

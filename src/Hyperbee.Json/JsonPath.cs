@@ -88,7 +88,7 @@ public static class JsonPath<TNode>
 
         do
         {
-            // deconstruct the next args node
+            // deconstruct next args
 
             var (value, segmentNext) = args;
 
@@ -102,7 +102,7 @@ public static class JsonPath<TNode>
             // reference to the next segment in the list
 
             var segmentCurrent = segmentNext; // get current segment
-            var (selector, selectorKind) = segmentCurrent.Selectors[0]; // first selector in segment;
+            var (selector, selectorKind) = segmentCurrent.Selectors[0]; // first selector in segment
 
             segmentNext = segmentNext.Next;
 
@@ -111,7 +111,7 @@ public static class JsonPath<TNode>
             if ( !accessor.IsObjectOrArray( value ) )
                 throw new InvalidOperationException( "Object or Array expected." );
 
-            // try to access object or array using KEY value
+            // try to access object or array using name or index
 
             if ( segmentCurrent.Singular )
             {
@@ -134,17 +134,17 @@ public static class JsonPath<TNode>
 
                 continue;
 
-                // we reduce push/pop operations, and related allocations, if we check
-                // segmentNext.IsFinal and yielding. 
+                // we can reduce push/pop operations, and related allocations, if we check
+                // segmentNext.IsFinal and directly yield when true where possible. 
                 //
                 // if ( segmentNext.IsFinal && !childValue.IsObjectOrArray() )
                 //    yield return childValue;
                 // else
-                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)                
+                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) );                 
                 //
-                // unfortunately, this type of optimization impacts result ordering. the rfc states that
-                // the result order should be as close to the json document order as possible. for that
-                // reason, we chose not to implement this type of performance optimization.
+                // unfortunately, this optimization impacts result ordering. the rfc states 
+                // result order should be as close to json document order as possible. for
+                // that reason, we chose not to implement this type of performance optimization.
             }
 
             // descendant
@@ -230,7 +230,10 @@ public static class JsonPath<TNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void Push( Stack<NodeArgs> n, in TNode v, in JsonPathSegment s ) => n.Push( new NodeArgs( v, s ) );
+    private static void Push( Stack<NodeArgs> stack, in TNode value, in JsonPathSegment segment )
+    {
+        stack.Push( new NodeArgs( value, segment ) );
+    }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static bool Truthy( object value )

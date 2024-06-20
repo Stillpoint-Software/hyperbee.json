@@ -14,21 +14,16 @@ public class FilterFunction
     internal FilterFunction( ReadOnlySpan<char> item, FilterExpressionParser.FilterTokenType? type, ParseExpressionContext context )
     {
         if ( TryGetParenFunction( item, type, context, out _implementation ) )
-        {
             return;
-        }
 
         if ( TryGetFilterFunction( item, context, out _implementation ) )
-        {
             return;
-        }
 
         if ( TryGetExtensionFunction( item, context, out _implementation ) )
-        {
             return;
-        }
 
         // No functions not found, try to parse this as a literal value.
+
         var literalFunction = new LiteralFunction();
         _implementation = literalFunction;
     }
@@ -49,9 +44,7 @@ public class FilterFunction
         function = null;
 
         if ( item.Length != 0 || type != FilterExpressionParser.FilterTokenType.OpenParen )
-        {
             return false;
-        }
 
         function = new ParenFunction( context );
         return true;

@@ -17,14 +17,22 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["second", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -37,23 +45,29 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "second", "third", "forth", "fifth"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[3]" ),
-            source.GetPropertyFromKey( "$[4]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[3]"),
+            source.GetPropertyFromPath("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
-
-    /////
 
     [DataTestMethod]
     [DataRow( "$[7:10]", typeof( JsonDocument ) )]
@@ -62,7 +76,15 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -78,7 +100,16 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "{\":\": 42, \"more\": \"string\", \"a\": 1, \"b\": 2, \"c\": 3, \"1:3\": \"nice\"}";
+        const string json = """
+        {
+            ":": 42,
+            "more": "string",
+            "a": 1,
+            "b": 2,
+            "c": 3,
+            "1:3": "nice"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -94,14 +125,20 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["second", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -114,15 +151,23 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["third", "forth", "fifth"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[3]" ),
-            source.GetPropertyFromKey( "$[4]" )
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[3]"),
+            source.GetPropertyFromPath("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -136,15 +181,23 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //implementation: ["third","second","first"] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[0]" )
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -157,14 +210,22 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "second"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -178,14 +239,22 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: [] //partial
         //deviation: ["fifth","forth"]  //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[4]" ),
-            source.GetPropertyFromKey( "$[3]" )
+            source.GetPropertyFromPath("$[4]"),
+            source.GetPropertyFromPath("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -198,7 +267,16 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -214,7 +292,16 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -230,13 +317,24 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: [4]
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[2]")
+
+
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -249,7 +347,16 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -265,7 +372,16 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -281,13 +397,22 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: [4]
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -301,14 +426,22 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //deviation: ["forth","second"] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[3]" ),
-            source.GetPropertyFromKey( "$[1]" )
+            source.GetPropertyFromPath("$[3]"),
+            source.GetPropertyFromPath("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -322,7 +455,15 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //deviation: [] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -339,13 +480,21 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //deviation: ["fifth"] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[4]" )
+            source.GetPropertyFromPath("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -359,15 +508,23 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //deviation: ["fifth","third","first"] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[4]" ),
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[0]" )
+            source.GetPropertyFromPath("$[4]"),
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -380,16 +537,24 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["second", "third", "forth", "fifth"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[3]" ),
-            source.GetPropertyFromKey( "$[4]" )
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[3]"),
+            source.GetPropertyFromPath("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -403,16 +568,24 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //deviation: ["forth","third","second","first"] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[3]" ),
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[0]" )
+            source.GetPropertyFromPath("$[3]"),
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -425,19 +598,26 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "second"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
-
 
     [DataTestMethod]
     [DataRow( "$[::]", typeof( JsonDocument ) )]
@@ -446,14 +626,19 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "second"]
 
-        const string json = "[\"first\", \"second\"]";
+        const string json = """
+        [
+            "first",
+            "second"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -466,7 +651,12 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "{\":\": 42, \"more\": \"string\"}";
+        const string json = """
+        {
+            ":": 42,
+            "more": "string"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -483,14 +673,22 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //deviation: ["fifth","forth"] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[4]" ),
-            source.GetPropertyFromKey( "$[3]" )
+            source.GetPropertyFromPath("$[4]"),
+            source.GetPropertyFromPath("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -503,7 +701,16 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -519,7 +726,16 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -535,13 +751,22 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: [5]
 
-        const string json = "[2, \"a\", 4, 5, 100, \"nice\"]";
+        const string json = """
+        [
+            2,
+            "a",
+            4,
+            5,
+            100,
+            "nice"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[3]" )
+            source.GetPropertyFromPath("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -554,7 +779,14 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -570,7 +802,12 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[\"first\", \"second\"]";
+        const string json = """
+        [
+            "first",
+            "second"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -586,13 +823,18 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first"]
 
-        const string json = "[\"first\", \"second\"]";
+        const string json = """
+        [
+            "first",
+            "second"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" )
+            source.GetPropertyFromPath("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -605,13 +847,19 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["third"]
 
-        const string json = "[\"first\", \"second\", \"third\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -624,14 +872,20 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["second", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -644,15 +898,21 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "second", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -665,14 +925,22 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -686,7 +954,15 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: //none
         //deviation: [] //rfc
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -702,15 +978,23 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "second", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -723,14 +1007,14 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: [10, 20]
 
-        const string json = "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]";
+        const string json = "[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]";
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[10]" ),
-            source.GetPropertyFromKey( "$[20]" )
+            source.GetPropertyFromPath("$[10]"),
+            source.GetPropertyFromPath("$[20]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -743,14 +1027,22 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["first", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -763,14 +1055,22 @@ public class JsonPathArrayTests : JsonTestBase
     {
         //consensus: ["second", "third"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

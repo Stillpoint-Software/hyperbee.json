@@ -71,10 +71,9 @@ public class FilterExpressionParser
             if ( StillCollecting( currentPath, ch, type, to ) )
             {
                 currentPath = filter[start..from].Trim();
+
                 if ( from < filter.Length && filter[from] != to )
-                {
                     continue;
-                }
             }
 
             start = from;
@@ -172,8 +171,10 @@ public class FilterExpressionParser
         }
     }
 
-    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected ) =>
-        from < data.Length && data[from] == expected;
+    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected )
+    {
+        return from < data.Length && data[from] == expected;
+    }
 
     private static bool StillCollecting( ReadOnlySpan<char> item, char ch, FilterTokenType? type, char to )
     {
@@ -208,12 +209,11 @@ public class FilterExpressionParser
         var startType = type;
 
         if ( from >= item.Length || item[from] == EndArg || item[from] == to )
-        {
             return FilterTokenType.ClosedParen;
-        }
 
         var index = from;
         char? quote = null;
+
         while ( !ValidType( startType ) && index < item.Length )
         {
             Next( item, ref start, ref index, ref quote, out var result );
@@ -232,11 +232,14 @@ public class FilterExpressionParser
         while ( index < listToMerge.Count )
         {
             var next = listToMerge[index++];
+
             while ( !CanMergeTokens( current, next ) )
             {
                 Merge( next, ref index, listToMerge, context, mergeOneOnly: true );
             }
+
             MergeTokens( current, next, context );
+
             if ( mergeOneOnly )
             {
                 return current.Expression;
@@ -245,18 +248,22 @@ public class FilterExpressionParser
         return current.Expression;
     }
 
-    private static bool CanMergeTokens( FilterToken left, FilterToken right ) =>
+    private static bool CanMergeTokens( FilterToken left, FilterToken right )
+    {
         // "Not" can never be a right side operator
-        right.Type != FilterTokenType.Not && GetPriority( left.Type ) >= GetPriority( right.Type );
+        return right.Type != FilterTokenType.Not && GetPriority( left.Type ) >= GetPriority( right.Type );
+    }
 
-    private static int GetPriority( FilterTokenType type ) =>
-        type switch
+    private static int GetPriority( FilterTokenType type )
+    {
+        return type switch
         {
             FilterTokenType.Not => 1,
             FilterTokenType.And or FilterTokenType.Or => 2,
             FilterTokenType.Equals or FilterTokenType.NotEquals or FilterTokenType.GreaterThan or FilterTokenType.GreaterThanOrEqual or FilterTokenType.LessThan or FilterTokenType.LessThanOrEqual => 3,
             _ => 0,
         };
+    }
 
     private static void MergeTokens( FilterToken left, FilterToken right, ParseExpressionContext context )
     {

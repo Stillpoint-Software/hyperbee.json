@@ -17,13 +17,17 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\"key\": \"value\"}";
+        const string json = """
+        {
+            "key": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['key']" )
+            source.GetPropertyFromPath("$['key']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -37,17 +41,40 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: ["deepest", "first nested", "first", "more", {"nested": ["deepest", "second"]}]
         //deviation: consensus results/different order //rfc in selector order
 
-        const string json = "[\"first\", {\"key\": [\"first nested\", {\"more\": [{\"nested\": [\"deepest\", \"second\"]}, [\"more\", \"values\"]]}]}]";
+        const string json = """
+        [
+            "first",
+            {
+                "key": [
+                    "first nested",
+                    {
+                        "more": [
+                            {
+                                "nested": [
+                                    "deepest",
+                                    "second"
+                                ]
+                            },
+                            [
+                                "more",
+                                "values"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]['key'][0]" ),
-            source.GetPropertyFromKey( "$[1]['key'][1]['more'][0]" ),
-            source.GetPropertyFromKey( "$[1]['key'][1]['more'][0]['nested'][0]" ),
-            source.GetPropertyFromKey( "$[1]['key'][1]['more'][1][0]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]['key'][0]"),
+            source.GetPropertyFromPath("$[1]['key'][1]['more'][0]"),
+            source.GetPropertyFromPath("$[1]['key'][1]['more'][0]['nested'][0]"),
+            source.GetPropertyFromPath("$[1]['key'][1]['more'][1][0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -60,7 +87,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "{\"key\": \"value\"}";
+        const string json = """
+        {
+            "key": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -76,7 +107,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "{\"u\\u0308\": 42}";
+        const string json = """
+        {
+            "u\u0308": 42
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -93,7 +128,18 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: //none
         //deviation: "42" //support bracket notation on objects
 
-        const string json = "{\"one\": {\"key\": \"value\"}, \"two\": {\"some\": \"more\", \"key\": \"other value\"}, \"two.some\": \"42\"}";
+        const string json = """
+        {
+            "one": {
+                "key": "value"
+            },
+            "two": {
+                "some": "more",
+                "key": "other value"
+            },
+            "two.some": "42"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
         var matches = source.Select( query ).ToList();
 
@@ -108,7 +154,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\"key\": \"value\"}";
+        const string json = """
+        {
+            "key": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
         var matches = source.Select( query ).ToList();
 
@@ -123,7 +173,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: NOT_SUPPORTED
 
-        const string json = "{\"\": 42, \"''\": 123, \"\\\"\\\"\": 222}";
+        const string json = """
+        {
+            "": 42,
+            "''": 123,
+            "\"\"": 222
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
@@ -140,7 +196,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [42]
 
-        const string json = "{\"\": 42, \"''\": 123, \"\\\"\\\"\": 222}";
+        const string json = """
+        {
+            "": 42,
+            "''": 123,
+            "\"\"": 222
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
         var matches = source.Select( query ).ToList();
 
@@ -155,7 +217,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [42]
 
-        const string json = "{\"\": 42, \"''\": 123, \"\\\"\\\"\": 222}";
+        const string json = """
+        {
+            "": 42,
+            "''": 123,
+            "\"\"": 222
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
         var matches = source.Select( query ).ToList();
 
@@ -171,7 +239,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: []
         //deviation: ["one element] //rfc (-2 => -2:1:1 => -1:1:1 [0])
 
-        const string json = "[\"one element\"]";
+        const string json = """
+        [
+            "one element"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -187,7 +259,15 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["third"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -203,7 +283,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["third"]
 
-        const string json = "[\"first\", \"second\", \"third\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -235,7 +321,15 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["first"]
 
-        const string json = "[\"first\", \"second\", \"third\", \"forth\", \"fifth\"]";
+        const string json = """
+        [
+            "first",
+            "second",
+            "third",
+            "forth",
+            "fifth"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -251,13 +345,18 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [3]
 
-        const string json = "[[1], [2, 3]]";
+        const string json = """
+        [
+            [1],
+            [2, 3]
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[1][1]" )
+            source.GetPropertyFromPath("$[1][1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -271,13 +370,17 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: []
         //deviation: ["value"]
 
-        const string json = "{\"0\": \"value\"}";
+        const string json = """
+        {
+            "0": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['0']" )
+            source.GetPropertyFromPath("$['0']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -290,7 +393,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[\"one element\"]";
+        const string json = """
+        [
+            "one element"
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -301,15 +408,15 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
     /*
     [DataTestMethod]
-    [DataRow( "$[0]", typeof(JsonDocument))]
-    [DataRow( "$[0]", typeof(JsonNode))]
-    public void BracketNotationWithNumberOnString( string query, Type sourceType )
+    [DataRow("$[0]", typeof(JsonDocument))]
+    [DataRow("$[0]", typeof(JsonNode))]
+    public void BracketNotationWithNumberOnString(string query, Type sourceType)
     {
         //consensus: []
         //deviation: NOT_SUPPORTED //JsonDocument can't parse
 
         const string json = "Hello World";
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentProxyFromSource(sourceType, json);
     }
     */
 
@@ -320,7 +427,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\":\": \"value\", \"another\": \"entry\"}";
+        const string json = """
+        {
+            ":": "value",
+            "another": "entry"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -336,7 +448,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [42]
 
-        const string json = "{\"]\": 42}";
+        const string json = """
+        {
+            "]": 42
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -352,7 +468,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\"@\": \"value\", \"another\": \"entry\"}";
+        const string json = """
+        {
+            "@": "value",
+            "another": "entry"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -368,13 +489,18 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\".\": \"value\",\"another\": \"entry\"}";
+        const string json = """
+        {
+            ".": "value",
+            "another": "entry"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['.']" )
+            source.GetPropertyFromPath("$['.']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -387,13 +513,19 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [1]
 
-        const string json = "{\"key\": 42, \".*\": 1, \"\": 10}";
+        const string json = """
+        {
+            "key": 42,
+            ".*": 1,
+            "": 10
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['.*']" )
+            source.GetPropertyFromPath("$['.*']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -401,15 +533,15 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
     /*
     [DataTestMethod]
-    [DataRow( "$['\"']", typeof(JsonDocument))]
-    [DataRow( "$['\"']", typeof(JsonNode))]
-    public void BracketNotationWithQuotedDoubleQuoteLiteral( string query, Type sourceType )
+    [DataRow("$['\"']", typeof(JsonDocument))]
+    [DataRow("$['\"']", typeof(JsonNode))]
+    public void BracketNotationWithQuotedDoubleQuoteLiteral(string query, Type sourceType)
     {
         //consensus: ["value"]
         //deviation: NOT_SUPPORTED //JsonDocument can't parse
 
         const string json = "{ \"\"\": \"value\", \"another\": \"entry\"}";
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentProxyFromSource(sourceType, json);
     }
     */
 
@@ -421,13 +553,17 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: //none
         //deviation: ["value"] 
 
-        const string json = @"{""\\"": ""value""}";
+        const string json = """
+        {
+            "\\": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( @"$['\']" )
+            source.GetPropertyFromPath(@"$['\']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -441,7 +577,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: //none
         //deviation: ["value"]
 
-        const string json = @"{""'"": ""value""}";
+        const string json = """
+        {
+            "'": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -457,13 +597,17 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\"0\": \"value\"}";
+        const string json = """
+        {
+            "0": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['0']" )
+            source.GetPropertyFromPath("$['0']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -476,13 +620,18 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\"$\": \"value\", \"another\": \"entry\"}";
+        const string json = """
+        {
+            "$": "value",
+            "another": "entry"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['$']" )
+            source.GetPropertyFromPath("$['$']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -496,7 +645,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: //none
         //deviation: 42
 
-        const string json = @"{"":@.\""$,*'\\"": 42}"; // property name is => :@.\"$,*'\\
+        const string json = """
+        {
+            ":@.\"$,*'\\": 42
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
@@ -512,7 +665,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: NOT_SUPPORTED
 
-        const string json = "{\"single'quote\":\"value\"}";
+        const string json = """
+        {
+            "single'quote": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
@@ -528,13 +685,18 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\",\": \"value\", \"another\": \"entry\"}";
+        const string json = """
+        {
+            ",": "value",
+            "another": "entry"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[',']" )
+            source.GetPropertyFromPath("$[',']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -547,13 +709,18 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["value"]
 
-        const string json = "{\"*\": \"value\", \"another\": \"entry\"}";
+        const string json = """
+        {
+            "*": "value",
+            "another": "entry"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['*']" )
+            source.GetPropertyFromPath("$['*']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -566,7 +733,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "{\"another\": \"entry\"}";
+        const string json = """
+        {
+            "another": "entry"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -582,13 +753,25 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [2]
 
-        const string json = "{\" a\": 1, \"a\": 2, \" a \": 3, \"a \": 4, \" 'a' \": 5, \" 'a\": 6, \"a' \": 7, \" \\\"a\\\" \": 8, \"\\\"a\\\"\": 9}";
+        const string json = """
+        {
+            " a": 1,
+            "a": 2,
+            " a ": 3,
+            "a ": 4,
+            " 'a' ": 5,
+            " 'a": 6,
+            "a' ": 7,
+            " \"a\" ": 8,
+            "\"a\"": 9
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['a']" )
+            source.GetPropertyFromPath("$['a']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -601,13 +784,19 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [1]
 
-        const string json = "{\"nice\": 42, \"ni.*\": 1, \"mice\": 100}";
+        const string json = """
+        {
+            "nice": 42,
+            "ni.*": 1,
+            "mice": 100
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['ni.*']" )
+            source.GetPropertyFromPath("$['ni.*']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -620,7 +809,19 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: NOT_SUPPORTED
 
-        const string json = "{\"one\": {\"key\": \"value\"},\"two\": {\"some\": \"more\", \"key\": \"other value\"},\"two.some\": \"42\",\"two'.'some\": \"43\"}";
+        const string json = """
+        {
+            "one": {
+                "key": "value"
+            },
+            "two": {
+                "some": "more",
+                "key": "other value"
+            },
+            "two.some": "42",
+            "two'.'some": "43"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
@@ -636,7 +837,18 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: NOT_SUPPORTED
 
-        const string json = "{\"one\": {\"key\": \"value\"},\"two\": {\"some\": \"more\", \"key\": \"other value\"},\"two.some\": \"42\"}";
+        const string json = """
+        {
+            "one": {
+                "key": "value"
+            },
+            "two": {
+                "some": "more",
+                "key": "other value"
+            },
+            "two.some": "42"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
@@ -652,16 +864,22 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [1, 2, "a", "b"]
 
-        const string json = "[[1, 2], [\"a\", \"b\"], [0, 0]]";
+        const string json = """
+        [
+            [1, 2],
+            ["a", "b"],
+            [0, 0]
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0][0]" ),
-            source.GetPropertyFromKey( "$[0][1]" ),
-            source.GetPropertyFromKey( "$[1][0]" ),
-            source.GetPropertyFromKey( "$[1][1]" )
+            source.GetPropertyFromPath("$[0][0]"),
+            source.GetPropertyFromPath("$[0][1]"),
+            source.GetPropertyFromPath("$[1][0]"),
+            source.GetPropertyFromPath("$[1][1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -678,13 +896,19 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [42]
 
-        const string json = "[{\"bar\": [42]}]";
+        const string json = """
+        [
+            {
+                "bar": [42]
+            }
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]['bar'][0]" )
+            source.GetPropertyFromPath("$[0]['bar'][0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -698,19 +922,29 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: ["string", "value", 0, 1, [0, 1], {"complex": "string", "primitives": [0, 1]}]
         //deviation: consensus results/different order //rfc in selector order
 
-        const string json = "{\"key\": \"value\", \"another key\": {\"complex\": \"string\", \"primitives\": [0, 1]}}";
+        const string json = """
+        {
+            "key": "value",
+            "another key": {
+                "complex": "string",
+                "primitives": [0, 1]
+            }
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['key']" ),
-            source.GetPropertyFromKey( "$['another key']" ),
-            source.GetPropertyFromKey( "$['another key']['complex']" ),
-            source.GetPropertyFromKey( "$['another key']['primitives']" ),
-            source.GetPropertyFromKey( "$['another key']['primitives'][0]" ),
-            source.GetPropertyFromKey( "$['another key']['primitives'][1]" )
+            source.GetPropertyFromPath("$['key']"),
+            source.GetPropertyFromPath("$['another key']"),
+            source.GetPropertyFromPath("$['another key']['complex']"),
+            source.GetPropertyFromPath("$['another key']['primitives']"),
+            source.GetPropertyFromPath("$['another key']['primitives'][0]"),
+            source.GetPropertyFromPath("$['another key']['primitives'][1]")
         };
+
+
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
         Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
@@ -728,16 +962,25 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: ["string", 42, {"key": "value"}, [0, 1]]
 
-        const string json = "[\"string\", 42, {\"key\": \"value\"}, [0, 1]]";
+        const string json = """
+        [
+            "string",
+            42,
+            {
+                "key": "value"
+            },
+            [0, 1]
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[3]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]"),
+            source.GetPropertyFromPath("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -750,7 +993,9 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "[]";
+        const string json = """
+        []
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -766,7 +1011,9 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = "{}";
+        const string json = """
+        {}
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -782,15 +1029,21 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: [40, null, 42]
 
-        const string json = "[40, null, 42]";
+        const string json = """
+        [
+            40,
+            null,
+            42
+        ]
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[1]" ),
-            source.GetPropertyFromKey( "$[2]" )
+            source.GetPropertyFromPath("$[0]"),
+            source.GetPropertyFromPath("$[1]"),
+            source.GetPropertyFromPath("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -804,16 +1057,25 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //consensus: ["string", 42, [0, 1], {"key": "value"}]
         //deviation: consensus results/different order //rfc in selector order
 
-        const string json = "{\"some\": \"string\", \"int\": 42, \"object\": {\"key\": \"value\"}, \"array\": [0, 1]}";
+        const string json = """
+        {
+            "some": "string",
+            "int": 42,
+            "object": {
+                "key": "value"
+            },
+            "array": [0, 1]
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['some']" ),
-            source.GetPropertyFromKey( "$['int']" ),
-            source.GetPropertyFromKey( "$['object']" ),
-            source.GetPropertyFromKey( "$['array']" )
+            source.GetPropertyFromPath("$['some']"),
+            source.GetPropertyFromPath("$['int']"),
+            source.GetPropertyFromPath("$['object']"),
+            source.GetPropertyFromPath("$['array']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -826,7 +1088,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: NOT_SUPPORTED
 
-        const string json = "{\"key\": \"value\"}";
+        const string json = """
+        {
+            "key": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>

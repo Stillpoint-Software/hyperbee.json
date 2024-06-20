@@ -29,7 +29,7 @@ public class JsonPathFilterTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[1]" )
+            source.GetPropertyFromPath( "$[1]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -62,10 +62,10 @@ public class JsonPathFilterTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$[0]" ),
-            source.GetPropertyFromKey( "$[2]" ),
-            source.GetPropertyFromKey( "$[3]" ),
-            source.GetPropertyFromKey( "$[6]" )
+            source.GetPropertyFromPath( "$[0]" ),
+            source.GetPropertyFromPath( "$[2]" ),
+            source.GetPropertyFromPath( "$[3]" ),
+            source.GetPropertyFromPath( "$[6]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

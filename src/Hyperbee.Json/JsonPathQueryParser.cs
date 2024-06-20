@@ -33,7 +33,7 @@ public static class JsonPathQueryParser
 {
     private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
-    private enum Scanner
+    private enum State
     {
         Start,
         DotChild,
@@ -46,9 +46,9 @@ public static class JsonPathQueryParser
         Final
     }
 
-    private static string GetSelector( Scanner scanner, ReadOnlySpan<char> buffer, int start, int stop )
+    private static string GetSelector( State state, ReadOnlySpan<char> buffer, int start, int stop )
     {
-        var adjust = scanner == Scanner.Final ? 0 : 1; // non-final states have already advanced to the next character, so we need to subtract 1
+        var adjust = state == State.Final ? 0 : 1; // non-final states have already advanced to the next character, so we need to subtract 1
         var length = stop - start - adjust;
         return length <= 0 ? null : buffer.Slice( start, length ).Trim().ToString();
     }
@@ -95,7 +95,7 @@ public static class JsonPathQueryParser
         var literalDelimiter = '\'';
         var selectors = new List<SelectorDescriptor>();
 
-        var scanner = Scanner.Start;
+        var state = State.Start;
 
         do
         {
@@ -104,9 +104,9 @@ public static class JsonPathQueryParser
             SelectorKind selectorKind;
             string selectorValue;
 
-            switch ( scanner )
+            switch ( state )
             {
-                case Scanner.Start:
+                case State.Start:
                     switch ( c )
                     {
                         case ' ':
@@ -116,7 +116,7 @@ public static class JsonPathQueryParser
                         case '$':
                             if ( i < n && query[i] != '.' && query[i] != '[' )
                                 throw new NotSupportedException( "Invalid character after `$`." );
-                            scanner = Scanner.DotChild;
+                            state = State.DotChild;
                             break;
                         default:
                             throw new NotSupportedException( "`$` expected." );
@@ -124,13 +124,13 @@ public static class JsonPathQueryParser
 
                     break;
 
-                case Scanner.DotChild:
+                case State.DotChild:
                     switch ( c )
                     {
                         case '[':
-                            scanner = Scanner.UnionStart;
+                            state = State.UnionStart;
 
-                            selectorValue = GetSelector( scanner, query, selectorStart, i );
+                            selectorValue = GetSelector( state, query, selectorStart, i );
                             selectorKind = selectorValue switch
                             {
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
@@ -147,7 +147,7 @@ public static class JsonPathQueryParser
                             if ( i == n )
                                 throw new NotSupportedException( $"Missing character after `.` at pos {i - 1}." );
 
-                            selectorValue = GetSelector( scanner, query, selectorStart, i );
+                            selectorValue = GetSelector( state, query, selectorStart, i );
                             selectorKind = selectorValue switch
                             {
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
@@ -174,33 +174,33 @@ public static class JsonPathQueryParser
 
                     break;
 
-                case Scanner.UnionStart:
+                case State.UnionStart:
                     switch ( c )
                     {
                         case ' ':
                         case '\t':
                             break;
                         case '*':
-                            scanner = Scanner.UnionFinal;
+                            state = State.UnionFinal;
                             InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Wildcard, Value = "*" } );
                             break;
                         case '.':
                             if ( i > n || query[i] != '.' )
                                 throw new NotSupportedException( $"Invalid `.` in bracket expression at pos {i - 1}." );
 
-                            scanner = Scanner.UnionFinal;
+                            state = State.UnionFinal;
                             InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Descendant, Value = ".." } );
                             i++;
                             break;
                         case '\'':
                         case '"':
-                            scanner = Scanner.UnionElementQuoted;
+                            state = State.UnionElementQuoted;
                             literalDelimiter = c;
                             selectorStart = i - 1;
                             bracketDepth = 1;
                             break;
                         default:
-                            scanner = Scanner.UnionElement;
+                            state = State.UnionElement;
                             i--; // replay character
                             selectorStart = i;
                             bracketDepth = 1;
@@ -209,19 +209,19 @@ public static class JsonPathQueryParser
 
                     break;
 
-                case Scanner.UnionElementQuoted:
+                case State.UnionElementQuoted:
                     if ( c == '\\' ) // handle escaping
                     {
                         i++; // advance past the escaped character
                     }
                     else if ( c == literalDelimiter )
                     {
-                        scanner = Scanner.UnionElementQuotedFinal;
+                        state = State.UnionElementQuotedFinal;
                     }
 
                     break;
 
-                case Scanner.UnionElementQuotedFinal:
+                case State.UnionElementQuotedFinal:
                     switch ( c )
                     {
                         case ' ':
@@ -229,7 +229,7 @@ public static class JsonPathQueryParser
                             break;
                         case ']':
                         case ',':
-                            scanner = Scanner.UnionElement;
+                            state = State.UnionElement;
                             i--; // replay character
                             break;
                         default: // invalid characters after end of string
@@ -238,7 +238,7 @@ public static class JsonPathQueryParser
 
                     break;
 
-                case Scanner.UnionElement:
+                case State.UnionElement:
                     switch ( c )
                     {
                         case '[': // handle nested `[` (not called for first bracket)
@@ -259,7 +259,7 @@ public static class JsonPathQueryParser
 
                             // get the child item atom
 
-                            selectorValue = GetSelector( scanner, query, selectorStart, i );
+                            selectorValue = GetSelector( state, query, selectorStart, i );
                             selectorStart = i;
 
                             // validate the extracted atom value shape
@@ -285,10 +285,10 @@ public static class JsonPathQueryParser
                             switch ( c )
                             {
                                 case ',':
-                                    scanner = Scanner.UnionNextElement;
+                                    state = State.UnionNextElement;
                                     break;
                                 case ']':
-                                    scanner = Scanner.DotChild;
+                                    state = State.DotChild;
                                     InsertToken( tokens, [.. selectors] );
                                     selectors.Clear();
                                     break;
@@ -299,31 +299,31 @@ public static class JsonPathQueryParser
 
                     break;
 
-                case Scanner.UnionNextElement:
-                case Scanner.UnionFinal:
+                case State.UnionNextElement:
+                case State.UnionFinal:
                     switch ( c )
                     {
                         case ' ':
                         case '\t':
                             break;
                         case ']':
-                            scanner = Scanner.DotChild;
+                            state = State.DotChild;
                             selectorStart = i;
                             break;
                         case '\'':
                         case '"':
-                            if ( scanner != Scanner.UnionNextElement )
+                            if ( state != State.UnionNextElement )
                                 throw new NotSupportedException( $"Invalid bracket syntax at pos {i - 1}." );
 
-                            scanner = Scanner.UnionElementQuoted;
+                            state = State.UnionElementQuoted;
                             literalDelimiter = c;
                             selectorStart = i - 1;
                             break;
                         default:
-                            if ( scanner != Scanner.UnionNextElement )
+                            if ( state != State.UnionNextElement )
                                 throw new NotSupportedException( $"Invalid bracket syntax at pos {i - 1}." );
 
-                            scanner = Scanner.UnionElement;
+                            state = State.UnionElement;
                             i--; // replay character
                             selectorStart = i;
 
@@ -338,9 +338,9 @@ public static class JsonPathQueryParser
         } while ( i < n );
 
         // handle the trailing bits
-        scanner = Scanner.Final;
+        state = State.Final;
 
-        var finalSelector = GetSelector( scanner, query, selectorStart, i );
+        var finalSelector = GetSelector( state, query, selectorStart, i );
 
         if ( finalSelector != null )
         {

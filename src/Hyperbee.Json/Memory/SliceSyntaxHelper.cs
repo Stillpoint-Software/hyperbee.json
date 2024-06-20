@@ -6,15 +6,6 @@ internal static class SliceSyntaxHelper
 {
     public static (int Lower, int Upper, int Step) ParseExpression( ReadOnlySpan<char> sliceExpr, int length, bool reverse = false )
     {
-        // helper to parse string part to an int
-        static int ParsePart( ReadOnlySpan<char> part, int defaultValue )
-        {
-            if ( !part.IsEmpty )
-                return int.TryParse( part, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : defaultValue;
-
-            return defaultValue;
-        }
-
         // parse the slice expression and return normalized bounds
 
         ReadOnlySpan<char> startSpan = default;
@@ -51,10 +42,20 @@ internal static class SliceSyntaxHelper
         var end = ParsePart( endSpan, defaultValue: step > 0 ? length : -length - 1 );
 
         return GetBoundedValues( start, end, step, length, reverse );
+
+        // helper to parse string part to an int
+        
+        static int ParsePart( ReadOnlySpan<char> part, int defaultValue )
+        {
+            if ( !part.IsEmpty )
+                return int.TryParse( part, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : defaultValue;
+
+            return defaultValue;
+        }
     }
 
     // helper to get bounded values 
-    // per draft https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
+    // per https://datatracker.ietf.org/doc/rfc9535/ 2.3.4.2.2.
 
     private static (int Lower, int Upper, int Step) GetBoundedValues( int start, int end, int step, int length, bool reverse )
     {

@@ -20,8 +20,9 @@ internal class JsonElementPositionComparer : IEqualityComparer<JsonElement>
         // idx: is an index used to get the position of the JsonElement in the backing data.
         // parent: is the owning JsonDocument (could be null in an enumeration).
         //
-        // These arguments are stored in private fields and are not exposed. While note ideal, we
-        // will access these fields through dynamic methods to use for our comparison.
+        // These arguments are stored in private fields and are not exposed. While not ideal, we will
+        // directly access these fields through dynamic methods to use for our comparison. If msft
+        // provides Parent and Location in the future we will remove this.
 
         // check parent documents
 

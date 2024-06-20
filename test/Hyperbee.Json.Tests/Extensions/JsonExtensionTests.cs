@@ -38,29 +38,30 @@ public class JsonExtensionTests : JsonTestBase
     public void Should_return_property_value_for_property_path()
     {
         // arrange
-        const string json = @"
+        const string json = """
+        {
+            "message": "The operation was successful",
+            "status": 200,
+            "timestamp": {
+                "$date": "2021-07-24T20:14:06.613Z"
+            },
+            "assets": [
             {
-                ""message"": ""The operation was successful"",
-                ""status"": 200,
-                ""timestamp"": {
-                    ""$date"": ""2021-07-24T20:14:06.613Z""
+                "hash": "22e1ea7a1c694262159271851eb6cff001fb39bf8e5edc795a345a771b2c3ffc",
+                "owners": [],
+                "asset": {
+                    "code": "#load"
                 },
-                ""assets"": [
-                {
-                    ""hash"": ""22e1ea7a1c694262159271851eb6cff001fb39bf8e5edc795a345a771b2c3ffc"",
-                    ""owners"": [],
-                    ""asset"": {
-                        ""code"": ""#load""
-                    },
-                    ""votes"": []
-                }
-                ]
-            }";
+                "votes": []
+            }
+            ]
+        }
+        """;
 
         var document = JsonDocument.Parse( json );
 
         // act
-        var result = document.RootElement.GetPropertyFromKey( "assets[0].asset.['code']" ).GetString();
+        var result = document.RootElement.GetPropertyFromPath( "assets[0].asset.['code']" ).GetString();
 
         // asset
         Assert.AreEqual( "#load", result );

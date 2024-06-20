@@ -4,6 +4,7 @@ using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Validators;
 
 namespace Hyperbee.Json.Benchmark;
@@ -23,6 +24,9 @@ public class Config : ManualConfig
             DefaultColumnProviders.Metrics,
             DefaultColumnProviders.Statistics
         );
+
+        // Customize the summary style to prevent truncation
+        WithSummaryStyle( SummaryStyle.Default.WithMaxParameterColumnWidth( 50 ) );
 
         AddDiagnoser( MemoryDiagnoser.Default );
 

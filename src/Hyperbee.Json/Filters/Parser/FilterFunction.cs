@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using static Hyperbee.Json.Filters.Parser.JsonPathExpression;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -12,24 +11,19 @@ public class FilterFunction
         _implementation = this;
     }
 
-    internal FilterFunction( ReadOnlySpan<char> item, FilterTokenType? type, ParseExpressionContext context )
+    internal FilterFunction( ReadOnlySpan<char> item, FilterExpressionParser.FilterTokenType? type, ParseExpressionContext context )
     {
         if ( TryGetParenFunction( item, type, context, out _implementation ) )
-        {
             return;
-        }
 
         if ( TryGetFilterFunction( item, context, out _implementation ) )
-        {
             return;
-        }
 
         if ( TryGetExtensionFunction( item, context, out _implementation ) )
-        {
             return;
-        }
 
         // No functions not found, try to parse this as a literal value.
+
         var literalFunction = new LiteralFunction();
         _implementation = literalFunction;
     }
@@ -45,14 +39,12 @@ public class FilterFunction
         return Expression.Throw( Expression.Constant( new NotImplementedException() ) );
     }
 
-    private static bool TryGetParenFunction( ReadOnlySpan<char> item, FilterTokenType? type, ParseExpressionContext context, out FilterFunction function )
+    private static bool TryGetParenFunction( ReadOnlySpan<char> item, FilterExpressionParser.FilterTokenType? type, ParseExpressionContext context, out FilterFunction function )
     {
         function = null;
 
-        if ( item.Length != 0 || type != FilterTokenType.OpenParen )
-        {
+        if ( item.Length != 0 || type != FilterExpressionParser.FilterTokenType.OpenParen )
             return false;
-        }
 
         function = new ParenFunction( context );
         return true;
@@ -63,38 +55,29 @@ public class FilterFunction
         switch ( item[0] )
         {
             case '@':
-                function = context.Descriptor.GetFilterFunction( context );
+                function = context.Descriptor.GetSelectFunction( context );
                 return true;
             case '$':
                 // Current becomes root
-                function = context.Descriptor.GetFilterFunction( context with { Current = context.Root } );
+                function = context.Descriptor.GetSelectFunction( context with { Current = context.Root } );
                 return true;
         }
 
         function = null;
         return false;
     }
+
     private static bool TryGetExtensionFunction( ReadOnlySpan<char> item, ParseExpressionContext context, out FilterFunction function )
     {
-        var match = FilterTokenizerRegex.RegexFunction().Match( item.ToString() );
-
-        if ( match.Groups.Count != 3 )
-        {
-            function = null;
-            return false;
-        }
-
-        var method = match.Groups[1].Value;
-        var arguments = match.Groups[2].Value.Split( ',', options: StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries );
-
-        if ( context.Descriptor.Functions.TryGetValue( method.ToLowerInvariant(), out var creator ) )
-        {
-            function = creator( method, arguments, context );
-            return true;
-        }
-
         function = null;
-        return false;
-    }
 
+        var method = item.ToString();
+
+        if ( !context.Descriptor.Functions.TryGetValue( method, out var creator ) )
+            return false;
+
+        function = creator( method, context );
+        return true;
+
+    }
 }

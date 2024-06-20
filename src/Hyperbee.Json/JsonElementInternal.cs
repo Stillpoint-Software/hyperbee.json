@@ -13,10 +13,12 @@ internal static class JsonElementInternal
     {
         // Create DynamicMethod for _idx field
 
-        var idxField = typeof( JsonElement ).GetField( "_idx", BindingFlags.NonPublic | BindingFlags.Instance );
+        const string idxName = "_idx";
+
+        var idxField = typeof( JsonElement ).GetField( idxName, BindingFlags.NonPublic | BindingFlags.Instance );
 
         if ( idxField == null )
-            throw new MissingFieldException( nameof( JsonElement ), "_idx" );
+            throw new MissingFieldException( nameof( JsonElement ), idxName );
 
         var getIdxDynamicMethod = new DynamicMethod( nameof( GetIdx ), typeof( int ), [typeof( JsonElement )], typeof( JsonElement ) );
         var ilIdx = getIdxDynamicMethod.GetILGenerator();
@@ -28,10 +30,12 @@ internal static class JsonElementInternal
 
         // Create DynamicMethod for _parent field 
 
-        var parentField = typeof( JsonElement ).GetField( "_parent", BindingFlags.NonPublic | BindingFlags.Instance );
+        const string parentName = "_parent";
+
+        var parentField = typeof( JsonElement ).GetField( parentName, BindingFlags.NonPublic | BindingFlags.Instance );
 
         if ( parentField == null )
-            throw new MissingFieldException( nameof( JsonElement ), "_parent" );
+            throw new MissingFieldException( nameof( JsonElement ), parentName );
 
         var getParentDynamicMethod = new DynamicMethod( nameof( GetParent ), typeof( JsonDocument ), [typeof( JsonElement )], typeof( JsonElement ) );
         var ilParent = getParentDynamicMethod.GetILGenerator();

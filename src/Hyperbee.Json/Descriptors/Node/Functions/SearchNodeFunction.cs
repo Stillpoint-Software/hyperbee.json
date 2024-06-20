@@ -6,16 +6,16 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class MatchNodeFunction( string methodName, ParseExpressionContext context ) :
-    FilterExtensionFunction( methodName, 2, context )
+public class SearchNodeFunction( string methodName, ParseExpressionContext context )
+    : FilterExtensionFunction( methodName, 2, context )
 {
-    public const string Name = "match";
+    public const string Name = "search";
 
-    private static readonly MethodInfo MatchMethod;
+    private static readonly MethodInfo SearchMethod;
 
-    static MatchNodeFunction()
+    static SearchNodeFunction()
     {
-        MatchMethod = typeof( MatchNodeFunction ).GetMethod( nameof( Match ), [typeof( IEnumerable<JsonNode> ), typeof( string )] );
+        SearchMethod = typeof( SearchNodeFunction ).GetMethod( nameof( Search ), [typeof( IEnumerable<JsonNode> ), typeof( string )] );
     }
 
     public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
@@ -25,10 +25,10 @@ public class MatchNodeFunction( string methodName, ParseExpressionContext contex
             return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
         }
 
-        return Expression.Call( MatchMethod, arguments[0], arguments[1] );
+        return Expression.Call( SearchMethod, arguments[0], arguments[1] );
     }
 
-    public static bool Match( IEnumerable<JsonNode> nodes, string regex )
+    public static bool Search( IEnumerable<JsonNode> nodes, string regex )
     {
         var nodeValue = nodes.FirstOrDefault()?.GetValue<string>();
         if ( nodeValue == null )
@@ -37,8 +37,6 @@ public class MatchNodeFunction( string methodName, ParseExpressionContext contex
         }
 
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        var value = $"^{nodeValue}$";
-
-        return regexPattern.IsMatch( value );
+        return regexPattern.IsMatch( nodeValue );
     }
 }

@@ -15,12 +15,23 @@ public class JsonPathDotNotationTests : JsonTestBase
     [DataRow( "$.[key]", typeof( JsonNode ) )]
     public void DotBracketNotationWithoutQuotes( string query, Type sourceType )
     {
-        const string json = "{\"key\": \"value\",\"other\": {\"key\": [{\"key\": 42}]}}";
+        const string json = """
+        {
+            "key": "value",
+            "other": {
+                "key": [
+                    {
+                        "key": 42
+                    }
+                ]
+            }
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
+            _ = source.Select( query ).ToList();
         } );
     }
 
@@ -29,12 +40,18 @@ public class JsonPathDotNotationTests : JsonTestBase
     [DataRow( "$.", typeof( JsonNode ) )]
     public void DotBracketNotationWithEmptyPath( string query, Type sourceType )
     {
-        const string json = "{\"key\": 42, \"\": 9001, \"''\": \"nice\"}";
+        const string json = """
+        {
+            "key": 42,
+            "": 9001,
+            "''": "nice"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
+            _ = source.Select( query ).ToList();
         } );
     }
 
@@ -43,13 +60,17 @@ public class JsonPathDotNotationTests : JsonTestBase
     [DataRow( "$.屬性", typeof( JsonNode ) )]
     public void DotNotationWithNonAsciiKey( string query, Type sourceType )
     {
-        const string json = "{\"\\u5c6c\\u6027\": \"value\"}";
+        const string json = """
+        {
+            "\u5c6c\u6027": "value"
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromKey( "$['屬性']" )
+            source.GetPropertyFromPath("$['屬性']")
         };
 
         // no consensus
@@ -63,12 +84,17 @@ public class JsonPathDotNotationTests : JsonTestBase
     [DataRow( "$a", typeof( JsonNode ) )]
     public void DotNotationWithoutDot( string query, Type sourceType )
     {
-        const string json = "{\"a\": 1, \"$a\": 2}";
+        const string json = """
+        {
+            "a": 1,
+            "$a": 2
+        }
+        """;
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
+            _ = source.Select( query ).ToList();
         } );
     }
 }

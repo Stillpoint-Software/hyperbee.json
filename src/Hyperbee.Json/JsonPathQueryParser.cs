@@ -6,7 +6,7 @@ namespace Hyperbee.Json;
 // https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
 [Flags]
-internal enum SelectorKind
+public enum SelectorKind
 {
     Undefined = 0x0,
 
@@ -20,40 +20,20 @@ internal enum SelectorKind
 
     // union notation
     Name = 0x10 | Singular,
-    Slice = 0x20 | Group,
-    Filter = 0x40 | Group,
-    Index = 0x80 | Singular,
+    Index = 0x20 | Singular,
+    Slice = 0x40 | Group,
+    Filter = 0x80 | Group,
 
     // 
     Wildcard = 0x100 | Group,
-    Descendant = 0x200 | Group,
-
-    // internal reserved for runtime processing
-    Unspecified = 0x400,
-    UnspecifiedSingular = Unspecified | Singular, // singular selector (root, name or index)
-    UnspecifiedGroup = Unspecified | Group        // non-singular selector
+    Descendant = 0x200 | Group
 }
 
-public static partial class JsonPathQueryTokenizer
+public static class JsonPathQueryParser
 {
     private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
-    [GeneratedRegex( @"^(-?[0-9]*):?(-?[0-9]*):?(-?[0-9]*)$", RegexOptions.ExplicitCapture )]
-    private static partial Regex RegexSlice();
-
-    [GeneratedRegex( @"^\?\(?(.*?)\)?$", RegexOptions.ExplicitCapture )]
-    private static partial Regex RegexFilter();
-
-    [GeneratedRegex( @"^[0-9*]+$" )]
-    private static partial Regex RegexNumber();
-
-    [GeneratedRegex( @"^""(?:[^""\\]|\\.)*""$", RegexOptions.ExplicitCapture )]
-    private static partial Regex RegexQuotedDouble();
-
-    [GeneratedRegex( @"^'(?:[^'\\]|\\.)*'$", RegexOptions.ExplicitCapture )]
-    private static partial Regex RegexQuoted();
-
-    private enum Scanner
+    private enum State
     {
         Start,
         DotChild,
@@ -66,9 +46,9 @@ public static partial class JsonPathQueryTokenizer
         Final
     }
 
-    private static string GetSelector( Scanner scanner, ReadOnlySpan<char> buffer, int start, int stop )
+    private static string GetSelector( State state, ReadOnlySpan<char> buffer, int start, int stop )
     {
-        var adjust = scanner == Scanner.Final ? 0 : 1; // non-final states have already advanced to the next character, so we need to subtract 1
+        var adjust = state == State.Final ? 0 : 1; // non-final states have already advanced to the next character, so we need to subtract 1
         var length = stop - start - adjust;
         return length <= 0 ? null : buffer.Slice( start, length ).Trim().ToString();
     }
@@ -89,12 +69,12 @@ public static partial class JsonPathQueryTokenizer
         tokens.Add( new JsonPathSegment( selectors ) );
     }
 
-    internal static JsonPathSegment Tokenize( string query )
+    internal static JsonPathSegment Parse( string query )
     {
         return JsonPathTokens.GetOrAdd( query, x => TokenFactory( x.AsSpan() ) );
     }
 
-    internal static JsonPathSegment TokenizeNoCache( ReadOnlySpan<char> query )
+    internal static JsonPathSegment ParseNoCache( ReadOnlySpan<char> query )
     {
         return TokenFactory( query );
     }
@@ -115,7 +95,7 @@ public static partial class JsonPathQueryTokenizer
         var literalDelimiter = '\'';
         var selectors = new List<SelectorDescriptor>();
 
-        var scanner = Scanner.Start;
+        var state = State.Start;
 
         do
         {
@@ -124,19 +104,19 @@ public static partial class JsonPathQueryTokenizer
             SelectorKind selectorKind;
             string selectorValue;
 
-            switch ( scanner )
+            switch ( state )
             {
-                case Scanner.Start:
+                case State.Start:
                     switch ( c )
                     {
                         case ' ':
                         case '\t':
                             break;
-                        case '@':  // Technically invalid, but allows `@` to work on sub queries without changing tokenizer 
+                        case '@': // Technically invalid, but allows `@` to work on sub queries without changing tokenizer 
                         case '$':
                             if ( i < n && query[i] != '.' && query[i] != '[' )
                                 throw new NotSupportedException( "Invalid character after `$`." );
-                            scanner = Scanner.DotChild;
+                            state = State.DotChild;
                             break;
                         default:
                             throw new NotSupportedException( "`$` expected." );
@@ -144,13 +124,13 @@ public static partial class JsonPathQueryTokenizer
 
                     break;
 
-                case Scanner.DotChild:
+                case State.DotChild:
                     switch ( c )
                     {
                         case '[':
-                            scanner = Scanner.UnionStart;
+                            state = State.UnionStart;
 
-                            selectorValue = GetSelector( scanner, query, selectorStart, i );
+                            selectorValue = GetSelector( state, query, selectorStart, i );
                             selectorKind = selectorValue switch
                             {
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
@@ -159,11 +139,7 @@ public static partial class JsonPathQueryTokenizer
                                 _ => SelectorKind.Dot
                             };
 
-                            InsertToken( tokens, new SelectorDescriptor
-                            {
-                                SelectorKind = selectorKind,
-                                Value = selectorValue
-                            } );
+                            InsertToken( tokens, new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue } );
 
                             break;
                         case '.':
@@ -171,7 +147,7 @@ public static partial class JsonPathQueryTokenizer
                             if ( i == n )
                                 throw new NotSupportedException( $"Missing character after `.` at pos {i - 1}." );
 
-                            selectorValue = GetSelector( scanner, query, selectorStart, i );
+                            selectorValue = GetSelector( state, query, selectorStart, i );
                             selectorKind = selectorValue switch
                             {
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
@@ -180,19 +156,11 @@ public static partial class JsonPathQueryTokenizer
                                 _ => SelectorKind.Dot
                             };
 
-                            InsertToken( tokens, new SelectorDescriptor
-                            {
-                                SelectorKind = selectorKind,
-                                Value = selectorValue
-                            } );
+                            InsertToken( tokens, new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue } );
 
                             if ( i <= n && query[i] == '.' )
                             {
-                                InsertToken( tokens, new SelectorDescriptor
-                                {
-                                    SelectorKind = SelectorKind.Descendant,
-                                    Value = ".."
-                                } );
+                                InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Descendant, Value = ".." } );
 
                                 i++;
                             }
@@ -206,41 +174,33 @@ public static partial class JsonPathQueryTokenizer
 
                     break;
 
-                case Scanner.UnionStart:
+                case State.UnionStart:
                     switch ( c )
                     {
                         case ' ':
                         case '\t':
                             break;
                         case '*':
-                            scanner = Scanner.UnionFinal;
-                            InsertToken( tokens, new SelectorDescriptor
-                            {
-                                SelectorKind = SelectorKind.Wildcard,
-                                Value = "*"
-                            } );
+                            state = State.UnionFinal;
+                            InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Wildcard, Value = "*" } );
                             break;
                         case '.':
                             if ( i > n || query[i] != '.' )
                                 throw new NotSupportedException( $"Invalid `.` in bracket expression at pos {i - 1}." );
 
-                            scanner = Scanner.UnionFinal;
-                            InsertToken( tokens, new SelectorDescriptor
-                            {
-                                SelectorKind = SelectorKind.Descendant,
-                                Value = ".."
-                            } );
+                            state = State.UnionFinal;
+                            InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Descendant, Value = ".." } );
                             i++;
                             break;
                         case '\'':
                         case '"':
-                            scanner = Scanner.UnionElementQuoted;
+                            state = State.UnionElementQuoted;
                             literalDelimiter = c;
                             selectorStart = i - 1;
                             bracketDepth = 1;
                             break;
                         default:
-                            scanner = Scanner.UnionElement;
+                            state = State.UnionElement;
                             i--; // replay character
                             selectorStart = i;
                             bracketDepth = 1;
@@ -249,19 +209,19 @@ public static partial class JsonPathQueryTokenizer
 
                     break;
 
-                case Scanner.UnionElementQuoted:
+                case State.UnionElementQuoted:
                     if ( c == '\\' ) // handle escaping
                     {
                         i++; // advance past the escaped character
                     }
                     else if ( c == literalDelimiter )
                     {
-                        scanner = Scanner.UnionElementQuotedFinal;
+                        state = State.UnionElementQuotedFinal;
                     }
 
                     break;
 
-                case Scanner.UnionElementQuotedFinal:
+                case State.UnionElementQuotedFinal:
                     switch ( c )
                     {
                         case ' ':
@@ -269,7 +229,7 @@ public static partial class JsonPathQueryTokenizer
                             break;
                         case ']':
                         case ',':
-                            scanner = Scanner.UnionElement;
+                            state = State.UnionElement;
                             i--; // replay character
                             break;
                         default: // invalid characters after end of string
@@ -278,7 +238,7 @@ public static partial class JsonPathQueryTokenizer
 
                     break;
 
-                case Scanner.UnionElement:
+                case State.UnionElement:
                     switch ( c )
                     {
                         case '[': // handle nested `[` (not called for first bracket)
@@ -299,7 +259,7 @@ public static partial class JsonPathQueryTokenizer
 
                             // get the child item atom
 
-                            selectorValue = GetSelector( scanner, query, selectorStart, i );
+                            selectorValue = GetSelector( state, query, selectorStart, i );
                             selectorStart = i;
 
                             // validate the extracted atom value shape
@@ -318,21 +278,17 @@ public static partial class JsonPathQueryTokenizer
                                 selectorValue = Regex.Unescape( selectorValue ); // unescape selector
                             }
 
-                            selectors.Insert( 0, new SelectorDescriptor
-                            {
-                                SelectorKind = selectorKind,
-                                Value = selectorValue
-                            } );
+                            selectors.Insert( 0, new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue } );
 
                             // continue parsing the union
 
                             switch ( c )
                             {
                                 case ',':
-                                    scanner = Scanner.UnionNextElement;
+                                    state = State.UnionNextElement;
                                     break;
                                 case ']':
-                                    scanner = Scanner.DotChild;
+                                    state = State.DotChild;
                                     InsertToken( tokens, [.. selectors] );
                                     selectors.Clear();
                                     break;
@@ -343,31 +299,31 @@ public static partial class JsonPathQueryTokenizer
 
                     break;
 
-                case Scanner.UnionNextElement:
-                case Scanner.UnionFinal:
+                case State.UnionNextElement:
+                case State.UnionFinal:
                     switch ( c )
                     {
                         case ' ':
                         case '\t':
                             break;
                         case ']':
-                            scanner = Scanner.DotChild;
+                            state = State.DotChild;
                             selectorStart = i;
                             break;
                         case '\'':
                         case '"':
-                            if ( scanner != Scanner.UnionNextElement )
+                            if ( state != State.UnionNextElement )
                                 throw new NotSupportedException( $"Invalid bracket syntax at pos {i - 1}." );
 
-                            scanner = Scanner.UnionElementQuoted;
+                            state = State.UnionElementQuoted;
                             literalDelimiter = c;
                             selectorStart = i - 1;
                             break;
                         default:
-                            if ( scanner != Scanner.UnionNextElement )
+                            if ( state != State.UnionNextElement )
                                 throw new NotSupportedException( $"Invalid bracket syntax at pos {i - 1}." );
 
-                            scanner = Scanner.UnionElement;
+                            state = State.UnionElement;
                             i--; // replay character
                             selectorStart = i;
 
@@ -382,9 +338,9 @@ public static partial class JsonPathQueryTokenizer
         } while ( i < n );
 
         // handle the trailing bits
-        scanner = Scanner.Final;
+        state = State.Final;
 
-        var finalSelector = GetSelector( scanner, query, selectorStart, i );
+        var finalSelector = GetSelector( state, query, selectorStart, i );
 
         if ( finalSelector != null )
         {
@@ -395,20 +351,26 @@ public static partial class JsonPathQueryTokenizer
                 _ => SelectorKind.Dot
             };
 
-            InsertToken( tokens, new SelectorDescriptor
-            {
-                SelectorKind = finalKind,
-                Value = finalSelector
-            } );
+            InsertToken( tokens, new SelectorDescriptor { SelectorKind = finalKind, Value = finalSelector } );
         }
 
-        // fixup nameof(Segment.Next) properties
+        // return tokenized query as a segment list
+
+        return TokensAsSegment( tokens );
+    }
+
+    private static JsonPathSegment TokensAsSegment( IList<JsonPathSegment> tokens )
+    {
+        if ( tokens == null || tokens.Count == 0 )
+            return JsonPathSegment.Final;
+
+        // set the next properties
 
         for ( var index = 0; index < tokens.Count; index++ )
         {
-            tokens[index].Next = index == tokens.Count - 1
-                ? JsonPathSegment.Terminal
-                : tokens[index + 1];
+            tokens[index].Next = index != tokens.Count - 1
+                ? tokens[index + 1]
+                : JsonPathSegment.Final;
         }
 
         return tokens.First();
@@ -416,17 +378,17 @@ public static partial class JsonPathQueryTokenizer
 
     private static SelectorKind GetSelectorKind( string selector )
     {
-        if ( RegexFilter().IsMatch( selector ) )
-            return SelectorKind.Filter;
+        if ( IsQuoted( selector ) )
+            return SelectorKind.Name;
 
-        if ( RegexNumber().IsMatch( selector ) )
+        if ( IsIndex( selector ) )
             return SelectorKind.Index;
 
-        if ( RegexSlice().IsMatch( selector ) )
-            return SelectorKind.Slice;
+        if ( IsFilter( selector ) )
+            return SelectorKind.Filter;
 
-        if ( RegexQuotedDouble().IsMatch( selector ) || RegexQuoted().IsMatch( selector ) )
-            return SelectorKind.Name;
+        if ( IsSlice( selector ) )
+            return SelectorKind.Slice;
 
         return selector switch
         {
@@ -434,5 +396,87 @@ public static partial class JsonPathQueryTokenizer
             ".." => SelectorKind.Descendant,
             _ => SelectorKind.Undefined
         };
+    }
+
+    private static bool IsSlice( ReadOnlySpan<char> input )
+    {
+        var index = 0;
+
+        // First part (optional number)
+        if ( !IsOptionalNumber( input, ref index ) )
+            return false;
+
+        // Optional colon
+        if ( index < input.Length && input[index] == ':' )
+        {
+            index++;
+
+            // Second part (optional number)
+            if ( !IsOptionalNumber( input, ref index ) )
+                return false;
+
+            // Optional second colon
+            if ( index < input.Length && input[index] == ':' )
+            {
+                index++;
+
+                // Third part (optional number)
+                if ( !IsOptionalNumber( input, ref index ) )
+                    return false;
+            }
+        }
+
+        var result = index == input.Length;
+        return result;
+
+        static bool IsOptionalNumber( ReadOnlySpan<char> span, ref int idx )
+        {
+            var start = idx;
+
+            if ( idx < span.Length && (span[idx] == '-' || span[idx] == '+') )
+                idx++;
+
+            while ( idx < span.Length && char.IsDigit( span[idx] ) )
+                idx++;
+
+            var isValid = idx > start || start == idx;
+            return isValid; // True if there was a number or just an optional sign
+        }
+    }
+
+    private static bool IsFilter( ReadOnlySpan<char> input )
+    {
+        if ( input.Length < 2 || input[0] != '?' )
+            return false;
+
+        var start = 1;
+        var end = input.Length;
+
+        if ( input[1] == '(' )
+        {
+            start = 2;
+            if ( input[^1] == ')' )
+                end--;
+        }
+
+        var result = start < end;
+
+        return result;
+    }
+
+    private static bool IsIndex( ReadOnlySpan<char> input )
+    {
+        foreach ( var ch in input )
+        {
+            if ( !char.IsDigit( ch ) )
+                return false;
+        }
+
+        return true;
+    }
+
+    private static bool IsQuoted( ReadOnlySpan<char> input )
+    {
+        return (input[0] == '"' && input[^1] == '"') || (input[0] == '\'' && input[^1] == '\'');
     }
 }

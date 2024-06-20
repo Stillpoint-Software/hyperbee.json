@@ -6,6 +6,6 @@ public interface IJsonPathProxy
 {
     object Source { get; }
     IEnumerable<dynamic> Select( string query );
-    dynamic GetPropertyFromKey( string pathLiteral );
+    dynamic GetPropertyFromPath( string pathLiteral );
     IEnumerable<object> ArrayEmpty { get; }
 }

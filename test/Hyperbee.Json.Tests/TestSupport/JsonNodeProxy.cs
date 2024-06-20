@@ -10,7 +10,7 @@ public class JsonNodeProxy( string source ) : IJsonPathProxy
     public object Source => Internal;
     public IEnumerable<dynamic> Select( string query ) => Internal.Select( query );
 
-    public dynamic GetPropertyFromKey( string pathLiteral ) => Internal.GetPropertyFromKey( pathLiteral );
+    public dynamic GetPropertyFromPath( string pathLiteral ) => Internal.GetPropertyFromPath( pathLiteral );
 
     public IEnumerable<object> ArrayEmpty => [];
 }

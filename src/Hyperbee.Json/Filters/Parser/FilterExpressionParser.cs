@@ -1,18 +1,25 @@
-﻿using System.Linq.Expressions;
+﻿#region License
+
+// This code is adapted from an algorithm published in MSDN Magazine, October 2015.
+// Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
+// URL: https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/october/csharp-a-split-and-merge-expression-parser-in-csharp
+//  
+// Adapted for use in this project under the terms of the Microsoft Public License (Ms-PL).
+// https://opensource.org/license/ms-pl-html
+
+#endregion
+
+using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
-// Based off Split-and-Merge Expression Parser
-// https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/october/csharp-a-split-and-merge-expression-parser-in-csharp
-// Handles `filter-selector` in the https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base/blob/main/sourcecode/abnf/jsonpath-collected.abnf#L69
 
-public class JsonPathExpression
+public class FilterExpressionParser
 {
     public const char EndLine = '\n';
     public const char EndArg = ')';
-
-    private static readonly char[] ValidPathParts = ['.', '$', '@'];
+    public const char ArgSeparator = ',';
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
@@ -50,10 +57,7 @@ public class JsonPathExpression
 
         do
         {
-            if ( !TryNext( filter, ref start, ref from, ref quote, out var result ) )
-            {
-                continue;
-            }
+            Next( filter, ref start, ref from, ref quote, out var result );
 
             var (ch, type) = result;
 
@@ -67,10 +71,9 @@ public class JsonPathExpression
             if ( StillCollecting( currentPath, ch, type, to ) )
             {
                 currentPath = filter[start..from].Trim();
+
                 if ( from < filter.Length && filter[from] != to )
-                {
                     continue;
-                }
             }
 
             start = from;
@@ -85,21 +88,24 @@ public class JsonPathExpression
 
             tokens.Add( new FilterToken( expression, filterType ) );
 
+            currentPath = null;
+
         } while ( from < filter.Length && filter[from] != to );
 
         if ( from < filter.Length && (filter[from] == EndArg || filter[from] == to) )
         {
             // This happens when called recursively: move one char forward.
             from++;
+            start = from;
         }
 
         var baseToken = tokens[0];
         var index = 1;
 
-        return Merge( baseToken, ref index, tokens );
+        return Merge( baseToken, ref index, tokens, context );
     }
 
-    private static bool TryNext( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quote, out (char NextChar, FilterTokenType? Type) result )
+    private static void Next( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quote, out (char NextChar, FilterTokenType? Type) result )
     {
         var nextChar = data[from++];
         switch ( nextChar )
@@ -108,65 +114,67 @@ public class JsonPathExpression
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.And);
-                return true;
+                break;
             case '|' when ValidNextCharacter( data, from, '|' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.Or);
-                return true;
+                break;
             case '=' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.Equals);
-                return true;
+                break;
             case '!' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.NotEquals);
-                return true;
+                break;
             case '>' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.GreaterThanOrEqual);
-                return true;
+                break;
             case '<' when ValidNextCharacter( data, from, '=' ):
                 from++;
                 start = from;
                 result = (nextChar, FilterTokenType.LessThanOrEqual);
-                return true;
+                break;
             case '>':
                 start = from;
                 result = (nextChar, FilterTokenType.GreaterThan);
-                return true;
+                break;
             case '<':
                 start = from;
                 result = (nextChar, FilterTokenType.LessThan);
-                return true;
+                break;
             case '!':
                 start = from;
                 result = (nextChar, FilterTokenType.Not);
-                return true;
+                break;
             case '(':
                 result = (nextChar, FilterTokenType.OpenParen);
-                return true;
+                break;
             case ')':
                 result = (nextChar, FilterTokenType.ClosedParen);
-                return true;
+                break;
             case ' ' or '\t' when quote == null:
                 result = (nextChar, null);
-                return false;  // eat whitespace
+                break;
             case '\'' or '\"' when from > 0 && data[from - 1] != '\\':
                 quote = quote == null ? nextChar : null;
                 result = (nextChar, null);
-                return true;
+                break;
             default:
                 result = (nextChar, null);
-                return true;
+                break;
         }
     }
 
-    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected ) =>
-        from < data.Length && data[from] == expected;
+    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected )
+    {
+        return from < data.Length && data[from] == expected;
+    }
 
     private static bool StillCollecting( ReadOnlySpan<char> item, char ch, FilterTokenType? type, char to )
     {
@@ -174,41 +182,41 @@ public class JsonPathExpression
             ? EndArg
             : to;
 
-        return item.Length == 0 && ch == EndArg ||
-               !(ValidType( type ) ||
-                   type == FilterTokenType.OpenParen && (item.Length > 0 && ValidPathParts.Contains( item[0] ) || item.Length == 0)
-                    || ch == stopCollecting);
+        if ( item.Length == 0 && ch == EndArg )
+            return true;
+
+        if ( ValidType( type ) || ch == stopCollecting )
+            return false;
+
+        return type != FilterTokenType.OpenParen;
     }
 
-    private static bool ValidType( FilterTokenType? type ) =>
-        type != null && type switch
-        {
-            FilterTokenType.Not => true,
-            FilterTokenType.Equals => true,
-            FilterTokenType.NotEquals => true,
-            FilterTokenType.GreaterThanOrEqual => true,
-            FilterTokenType.GreaterThan => true,
-            FilterTokenType.LessThanOrEqual => true,
-            FilterTokenType.LessThan => true,
-            FilterTokenType.Or => true,
-            FilterTokenType.And => true,
-            _ => false
-        };
+    private static bool ValidType( FilterTokenType? type )
+    {
+        return type is FilterTokenType.Not or
+            FilterTokenType.Equals or
+            FilterTokenType.NotEquals or
+            FilterTokenType.GreaterThanOrEqual or
+            FilterTokenType.GreaterThan or
+            FilterTokenType.LessThanOrEqual or
+            FilterTokenType.LessThan or
+            FilterTokenType.Or or
+            FilterTokenType.And;
+    }
 
     private static FilterTokenType UpdateType( ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, char to )
     {
         var startType = type;
 
         if ( from >= item.Length || item[from] == EndArg || item[from] == to )
-        {
             return FilterTokenType.ClosedParen;
-        }
 
         var index = from;
         char? quote = null;
+
         while ( !ValidType( startType ) && index < item.Length )
         {
-            TryNext( item, ref start, ref index, ref quote, out var result );
+            Next( item, ref start, ref index, ref quote, out var result );
             startType = result.Type;
         }
 
@@ -219,16 +227,19 @@ public class JsonPathExpression
         return startType!.Value;
     }
 
-    private static Expression Merge( FilterToken current, ref int index, List<FilterToken> listToMerge, bool mergeOneOnly = false )
+    private static Expression Merge( FilterToken current, ref int index, List<FilterToken> listToMerge, ParseExpressionContext context, bool mergeOneOnly = false )
     {
         while ( index < listToMerge.Count )
         {
             var next = listToMerge[index++];
+
             while ( !CanMergeTokens( current, next ) )
             {
-                Merge( next, ref index, listToMerge, true /* mergeOneOnly */);
+                Merge( next, ref index, listToMerge, context, mergeOneOnly: true );
             }
-            MergeTokens( current, next );
+
+            MergeTokens( current, next, context );
+
             if ( mergeOneOnly )
             {
                 return current.Expression;
@@ -237,29 +248,38 @@ public class JsonPathExpression
         return current.Expression;
     }
 
-    private static bool CanMergeTokens( FilterToken left, FilterToken right ) =>
+    private static bool CanMergeTokens( FilterToken left, FilterToken right )
+    {
         // "Not" can never be a right side operator
-        right.Type != FilterTokenType.Not && GetPriority( left.Type ) >= GetPriority( right.Type );
+        return right.Type != FilterTokenType.Not && GetPriority( left.Type ) >= GetPriority( right.Type );
+    }
 
-    private static int GetPriority( FilterTokenType type ) =>
-        type switch
+    private static int GetPriority( FilterTokenType type )
+    {
+        return type switch
         {
             FilterTokenType.Not => 1,
             FilterTokenType.And or FilterTokenType.Or => 2,
             FilterTokenType.Equals or FilterTokenType.NotEquals or FilterTokenType.GreaterThan or FilterTokenType.GreaterThanOrEqual or FilterTokenType.LessThan or FilterTokenType.LessThanOrEqual => 3,
             _ => 0,
         };
+    }
 
-    private static void MergeTokens( FilterToken left, FilterToken right )
+    private static void MergeTokens( FilterToken left, FilterToken right, ParseExpressionContext context )
     {
-        // TODO: clean up handling numerical, string and object comparing. feels messy.
-        var isNumerical = left.Expression != null && IsNumerical( left.Expression.Type ) || IsNumerical( right.Expression.Type );
+        // Ensure both expressions are value expressions
+        left.Expression = context.Descriptor.GetValueExpression( left.Expression );
+        right.Expression = context.Descriptor.GetValueExpression( right.Expression );
+
+        // Determine if we are comparing numerical values so that we can use the correct comparison method
+        bool isNumerical = IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type );
+
         left.Expression = left.Type switch
         {
             FilterTokenType.Equals => CompareConvert( isNumerical ? Expression.Equal : Equal, left.Expression, right.Expression, isNumerical ),
             FilterTokenType.NotEquals => CompareConvert( isNumerical ? Expression.NotEqual : NotEqual, left.Expression, right.Expression, isNumerical ),
 
-            // Assume/force numerical 
+            // Assume/force numerical
             FilterTokenType.GreaterThan => CompareConvert( Expression.GreaterThan, left.Expression, right.Expression ),
             FilterTokenType.GreaterThanOrEqual => CompareConvert( Expression.GreaterThanOrEqual, left.Expression, right.Expression ),
             FilterTokenType.LessThan => CompareConvert( Expression.LessThan, left.Expression, right.Expression ),
@@ -272,13 +292,16 @@ public class JsonPathExpression
             _ => left.Expression
         };
 
-        //TODO: Invalid compares should be false, but is this the best way?
+        // Wrap left expression in a try-catch block to handle exceptions
         left.Expression = left.Expression == null
             ? left.Expression
-            : Expression.TryCatchFinally( left.Expression, null, [Expression.Catch( typeof( Exception ), Expression.Constant( false ) )] );
+            : Expression.TryCatchFinally(
+                left.Expression,
+                Expression.Empty(), // Ensure finally block is present
+                Expression.Catch( typeof( Exception ), Expression.Constant( false ) )
+            );
 
         left.Type = right.Type;
-
         return;
 
         // Use Equal Method vs equal operator
@@ -288,24 +311,24 @@ public class JsonPathExpression
 
     private static Expression CompareConvert( Func<Expression, Expression, Expression> compare, Expression left, Expression right, bool isNumerical = true )
     {
-        // TODO: clean up... I don't like that most of the time the type is an object because it's being boxed to support num/string/ etc
+        if ( isNumerical )
+        {
+            if ( left.Type == typeof( object ) )
+                left = Expression.Convert( left, typeof( float ) );
 
-        // force numerical check for <, >, =<, =>
-        if ( isNumerical && left.Type == typeof( object ) && right.Type == typeof( object ) )
-            return compare( Expression.Convert( left, typeof( float ) ), Expression.Convert( right, typeof( float ) ) );
+            if ( right.Type == typeof( object ) )
+                right = Expression.Convert( right, typeof( float ) );
 
-        if ( left.Type == typeof( float ) && right.Type == typeof( object ) )
-            return compare( left, Expression.Convert( right, typeof( float ) ) );
-        if ( left.Type == typeof( object ) && right.Type == typeof( float ) )
-            return compare( Expression.Convert( left, typeof( float ) ), right );
-        if ( left.Type == typeof( int ) && right.Type == typeof( object ) )
-            return compare( left, Expression.Convert( right, typeof( float ) ) );
-        if ( left.Type == typeof( object ) && right.Type == typeof( int ) )
-            return compare( Expression.Convert( left, typeof( float ) ), right );
-        if ( left.Type == typeof( int ) && right.Type == typeof( int ) )
-            return compare( Expression.Convert( left, typeof( float ) ), Expression.Convert( right, typeof( float ) ) );
+            if ( left.Type == typeof( int ) )
+                left = Expression.Convert( left, typeof( float ) );
+
+            if ( right.Type == typeof( int ) )
+                right = Expression.Convert( right, typeof( float ) );
+        }
+
         if ( left.Type == typeof( object ) && right.Type == typeof( string ) )
             return compare( Expression.Convert( left, typeof( string ) ), right );
+
         if ( left.Type == typeof( string ) && right.Type == typeof( object ) )
             return compare( left, Expression.Convert( right, typeof( string ) ) );
 
@@ -321,17 +344,13 @@ public class JsonPathExpression
     {
         OpenParen,
         ClosedParen,
-
         Not,
-
         Equals,
         NotEquals,
-
         LessThan,
         LessThanOrEqual,
         GreaterThan,
         GreaterThanOrEqual,
-
         Or,
         And
     }

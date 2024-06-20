@@ -16,7 +16,7 @@ public class JsonPathBuilderTests : JsonTestBase
     public void Should_GetPath( string key, string expected )
     {
         var source = GetDocument<JsonDocument>();
-        var target = source.RootElement.GetPropertyFromKey( key );
+        var target = source.RootElement.GetPropertyFromPath( key );
 
         var builder = new JsonPathBuilder( source );
         var result = builder.GetPath( target );

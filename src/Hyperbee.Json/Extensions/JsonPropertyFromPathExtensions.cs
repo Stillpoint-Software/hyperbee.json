@@ -18,14 +18,14 @@ namespace Hyperbee.Json.Extensions;
 //  prop1['prop.2']
 //  prop1.'prop.2'[0].prop3
 
-public static class JsonPropertyKeyExtensions
+public static class JsonPropertyFromPathExtensions
 {
-    public static JsonElement GetPropertyFromKey( this JsonElement jsonElement, ReadOnlySpan<char> propertyPath )
+    public static JsonElement GetPropertyFromPath( this JsonElement jsonElement, ReadOnlySpan<char> propertyPath )
     {
         if ( IsNullOrUndefined( jsonElement ) || propertyPath.IsEmpty )
             return default;
 
-        var splitter = new JsonPropertyKeySplitter( propertyPath );
+        var splitter = new JsonPropertyPathSplitter( propertyPath );
 
         while ( splitter.TryMoveNext( out var name ) )
         {
@@ -46,12 +46,12 @@ public static class JsonPropertyKeyExtensions
         static bool IsNullOrUndefined( JsonElement value ) => value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined;
     }
 
-    public static JsonNode GetPropertyFromKey( this JsonNode jsonNode, ReadOnlySpan<char> propertyPath )
+    public static JsonNode GetPropertyFromPath( this JsonNode jsonNode, ReadOnlySpan<char> propertyPath )
     {
         if ( jsonNode == null || propertyPath.IsEmpty )
             return default;
 
-        var splitter = new JsonPropertyKeySplitter( propertyPath );
+        var splitter = new JsonPropertyPathSplitter( propertyPath );
 
         while ( splitter.TryMoveNext( out var name ) )
         {
@@ -74,9 +74,9 @@ public static class JsonPropertyKeyExtensions
         return jsonNode;
     }
 
-    internal ref struct JsonPropertyKeySplitter  //BF TODO Support escaping of \' and bracket counting in literals. Add to unit tests.
+    private ref struct JsonPropertyPathSplitter  //TODO Support escaping of \' and bracket counting in literals. Add to unit tests.
     {
-        // zero allocation helper that splits a json key path in to parts
+        // zero allocation helper that splits a json path in to parts
 
         // this splitter only works on simple property 'keys' it does not work
         // with complex selectors ( '..', '*', '[a,b,c]' ).
@@ -106,7 +106,7 @@ public static class JsonPropertyKeyExtensions
             Number
         }
 
-        internal JsonPropertyKeySplitter( ReadOnlySpan<char> span )
+        internal JsonPropertyPathSplitter( ReadOnlySpan<char> span )
         {
             if ( span.StartsWith( "$." ) )
                 span = span[2..];

@@ -7,40 +7,42 @@ public class LiteralFunction : FilterFunction
 {
     protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {
-        // strings double or single
-        if ( FilterTokenizerRegex.RegexQuotedDouble().IsMatch( item ) )
-            return Expression.Constant( TrimQuotes( item ).ToString() );
-        if ( FilterTokenizerRegex.RegexQuoted().IsMatch( item ) )
-            return Expression.Constant( TrimQuotes( item ).ToString() );
+        // Check for known literals (true, false, null) first
 
-        // known literals (true, false, null)
-        if ( item.Equals( KnownLiterals.TrueSpan, StringComparison.OrdinalIgnoreCase ) )
+        if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( true );
-        if ( item.Equals( KnownLiterals.FalseSpan, StringComparison.OrdinalIgnoreCase ) )
+
+        if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( false );
-        if ( item.Equals( KnownLiterals.NullSpan, StringComparison.OrdinalIgnoreCase ) )
+
+        if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( null );
 
-        // numbers
+        // Check for quoted strings
+
+        if ( TryRemoveQuotes( ref item ) )
+            return Expression.Constant( item.ToString() );
+
+        // Check for numbers
         // TODO: Currently assuming all numbers are floats since we don't know what's in the data or the other side of the operator yet.
-        return Expression.Constant( float.Parse( item ) );
 
-        static ReadOnlySpan<char> TrimQuotes( ReadOnlySpan<char> input )
+        if ( float.TryParse( item, out float result ) )
+            return Expression.Constant( result );
+
+        throw new ArgumentException( $"Unsupported literal: {item.ToString()}" );
+
+        static bool TryRemoveQuotes( ref ReadOnlySpan<char> input )
         {
-            if ( input.Length < 2 )
-                return input;
+            if ( !IsQuoted( input ) )
+                return false;
 
-            if ( input[0] == '\'' && input[^1] == '\'' || input[0] == '\"' && input[^1] == '\"' )
-                return input[1..^1];
+            input = input[1..^1];
+            return true;
 
-            return input;
+            static bool IsQuoted( ReadOnlySpan<char> input )
+            {
+                return input.Length >= 2 && ((input[0] == '"' && input[^1] == '"') || (input[0] == '\'' && input[^1] == '\''));
+            }
         }
-    }
-
-    internal ref struct KnownLiterals
-    {
-        internal static ReadOnlySpan<char> TrueSpan => "true".AsSpan();
-        internal static ReadOnlySpan<char> FalseSpan => "false".AsSpan();
-        internal static ReadOnlySpan<char> NullSpan => "null".AsSpan();
     }
 }

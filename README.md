@@ -286,7 +286,8 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 - **Cons:**
   - No support for `JsonNode`.
   - Does not return an `IEnumerable` result (no defered query execution).
-  making it less efficient for certain operations.
+  making it less efficient, and more memory intensive, for large result sets.
+  - Descendant segment `..` recursion limit (default is 64).
   
 ### [Json.NET](https://www.newtonsoft.com/json) Newtonsoft
 
@@ -304,6 +305,7 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 - High Performance.
 - Supports both `JsonElement`, and `JsonNode`.
 - Deferred execution queries with `IEnumerable`.
+- Works with documents of any depth.
 - Extendable to support additional JSON document types and functions.
 
 ## Credits

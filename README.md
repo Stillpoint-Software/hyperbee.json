@@ -179,12 +179,9 @@ the syntax `?(<boolean expr>)`, as in:
 
     $.store.book[?(@.price < 10)].title
 
-For a complete guide, see [JSONPath Syntax](./docs/JSONPATH-SYNTAX.md).
+## Additional Documentation
 
-## Additional Classes
-
-Hyperbee.Json also provides additional helpers to facilitate document operations. For more details, 
-refer to our [Additional Classes Documentation](./docs/ADDITIONAL-CLASSES.md).
+Additional documentation can be found in the project's `/docs` folder.
 
 ## Benchmarks
 
@@ -318,8 +315,4 @@ Hyperbee.Json is built upon the great work of several open-source projects. Spec
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for more details.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Stillpoint-Software/Hyperbee.Json/blob/main/CONTRIBUTING.md) for more details.

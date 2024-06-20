@@ -39,7 +39,7 @@ using Hyperbee.Json.Memory;
 
 namespace Hyperbee.Json;
 
-// https://datatracker.ietf.org/doc/rfc9535/
+// https://www.rfc-editor.org/rfc/rfc9535.html
 
 public static class JsonPath<TNode>
 {

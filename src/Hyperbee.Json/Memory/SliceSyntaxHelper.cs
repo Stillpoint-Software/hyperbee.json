@@ -44,7 +44,7 @@ internal static class SliceSyntaxHelper
         return GetBoundedValues( start, end, step, length, reverse );
 
         // helper to parse string part to an int
-        
+
         static int ParsePart( ReadOnlySpan<char> part, int defaultValue )
         {
             if ( !part.IsEmpty )

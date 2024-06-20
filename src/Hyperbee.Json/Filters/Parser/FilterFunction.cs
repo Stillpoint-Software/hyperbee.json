@@ -15,10 +15,10 @@ public class FilterFunction
     {
         if ( TryGetParenFunction( item, type, context, out _implementation ) )
             return;
- 
+
         if ( TryGetFilterFunction( item, context, out _implementation ) )
             return;
-     
+
         if ( TryGetExtensionFunction( item, context, out _implementation ) )
             return;
 

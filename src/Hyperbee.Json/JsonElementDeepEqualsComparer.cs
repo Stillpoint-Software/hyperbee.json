@@ -75,7 +75,7 @@ public class JsonElementDeepEqualsComparer : IEqualityComparer<JsonElement>
                 return x.EnumerateArray().SequenceEqual( y.EnumerateArray(), this );
 
             case JsonValueKind.Object:
-                
+
                 // JsonDocument supports duplicate property names.
                 //
                 // https://tools.ietf.org/html/rfc8259#section-4 indicates such objects are allowed but not

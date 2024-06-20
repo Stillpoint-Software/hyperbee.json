@@ -102,7 +102,7 @@ public static class JsonPath<TNode>
             // reference to the next segment in the list
 
             var segmentCurrent = segmentNext; // get current segment
-            var (selector, selectorKind) = segmentCurrent.Selectors[0]; // first selector in segment;
+            var (selector, selectorKind) = segmentCurrent.Selectors[0]; // first selector in segment
 
             segmentNext = segmentNext.Next;
 
@@ -111,7 +111,7 @@ public static class JsonPath<TNode>
             if ( !accessor.IsObjectOrArray( value ) )
                 throw new InvalidOperationException( "Object or Array expected." );
 
-            // try to access object or array using KEY value
+            // try to access object or array using name or index
 
             if ( segmentCurrent.Singular )
             {

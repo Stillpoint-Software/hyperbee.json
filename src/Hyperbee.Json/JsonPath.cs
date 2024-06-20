@@ -135,16 +135,16 @@ public static class JsonPath<TNode>
                 continue;
 
                 // we can reduce push/pop operations, and related allocations, if we check
-                // segmentNext.IsFinal and directly yielding when true. 
+                // segmentNext.IsFinal and directly yield when true where possible. 
                 //
                 // if ( segmentNext.IsFinal && !childValue.IsObjectOrArray() )
                 //    yield return childValue;
                 // else
-                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)                
+                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) );                 
                 //
-                // unfortunately, this type of optimization impacts result ordering. the rfc states that
-                // the result order should be as close to the json document order as possible. for that
-                // reason, we chose not to implement this type of performance optimization.
+                // unfortunately, this optimization impacts result ordering. the rfc states 
+                // result order should be as close to json document order as possible. for
+                // that reason, we chose not to implement this type of performance optimization.
             }
 
             // descendant

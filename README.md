@@ -286,8 +286,7 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 - **Cons:**
   - No support for `JsonNode`.
   - Does not return an `IEnumerable` result (no defered query execution).
-  making it less efficient, and more memory intensive, for large result sets.
-  - Descendant segment `..` recursion limit (default is 64).
+  making it less efficient, and more memory intensive, for certain operations,
   
 ### [Json.NET](https://www.newtonsoft.com/json) Newtonsoft
 
@@ -303,9 +302,9 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 ### Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json) ?
 
 - High Performance.
+- Focus on consensus implementation.
 - Supports both `JsonElement`, and `JsonNode`.
 - Deferred execution queries with `IEnumerable`.
-- Works with documents of any depth.
 - Extendable to support additional JSON document types and functions.
 
 ## Credits

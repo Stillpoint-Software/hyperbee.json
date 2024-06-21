@@ -10,39 +10,36 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
 {
     private FilterEvaluator<JsonNode> _evaluator;
     private NodeValueAccessor _accessor;
-    public Dictionary<string, FunctionCreator> Functions { get; init; }
+    
+    public FunctionRegistry Functions { get; } = new ();
 
-    public IValueAccessor<JsonNode> Accessor
+    public IValueAccessor<JsonNode> Accessor => 
+        _accessor ??= new NodeValueAccessor();
+
+    public IFilterEvaluator<JsonNode> FilterEvaluator => 
+        _evaluator ??= new FilterEvaluator<JsonNode>( this );
+
+    public NodeTypeDescriptor()
     {
-        get => _accessor ??= new NodeValueAccessor();
+        Functions.Register( CountNodeFunction.Name, context => new CountNodeFunction( context ) );
+        Functions.Register( LengthNodeFunction.Name, context => new LengthNodeFunction( context ) );
+        Functions.Register( MatchNodeFunction.Name, context => new MatchNodeFunction( context ) );
+        Functions.Register( SearchNodeFunction.Name, context => new SearchNodeFunction( context ) );
+        Functions.Register( ValueNodeFunction.Name, context => new ValueNodeFunction( context ) );
     }
 
-    public IFilterEvaluator<JsonNode> FilterEvaluator
+    public FilterFunction GetSelectFunction( ParseExpressionContext context )
     {
-        get => _evaluator ??= new FilterEvaluator<JsonNode>( this );
+        return new SelectNodeFunction( context );
     }
-
-    public FilterFunction GetSelectFunction( ParseExpressionContext context ) =>
-        new SelectNodeFunction( context );
 
     public Expression GetValueExpression( Expression expression )
     {
-        if ( expression is null ) return null;
+        if ( expression is null ) 
+            return null;
 
         return expression.Type == typeof( IEnumerable<JsonNode> )
             ? Expression.Invoke( ValueNodeFunction.ValueExpression, expression )  
             : expression;
-    }
-
-    public NodeTypeDescriptor()
-    {
-        Functions = new Dictionary<string, FunctionCreator>(
-        [
-            new KeyValuePair<string, FunctionCreator>( CountNodeFunction.Name, context => new CountNodeFunction( context ) ),
-            new KeyValuePair<string, FunctionCreator>( LengthNodeFunction.Name, context => new LengthNodeFunction( context ) ),
-            new KeyValuePair<string, FunctionCreator>( MatchNodeFunction.Name, context => new MatchNodeFunction( context ) ),
-            new KeyValuePair<string, FunctionCreator>( SearchNodeFunction.Name, context => new SearchNodeFunction( context ) ),
-            new KeyValuePair<string, FunctionCreator>( ValueNodeFunction.Name, context => new ValueNodeFunction( context ) ),
-        ] );
     }
 }

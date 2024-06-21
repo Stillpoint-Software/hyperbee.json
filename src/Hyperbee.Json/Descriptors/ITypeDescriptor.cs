@@ -8,7 +8,7 @@ public delegate FilterExtensionFunction FunctionCreator( ParseExpressionContext 
 
 public interface ITypeDescriptor
 {
-    public Dictionary<string, FunctionCreator> Functions { get; }
+    public FunctionRegistry Functions { get; }
 
     public FilterFunction GetSelectFunction( ParseExpressionContext context );
 

@@ -73,11 +73,10 @@ public class FilterFunction
 
         var method = item.ToString();
 
-        if ( !context.Descriptor.Functions.TryGetValue( method, out var creator ) )
+        if ( !context.Descriptor.Functions.TryGet( method, out var creator ) )
             return false;
 
         function = creator( context );
         return true;
-
     }
 }

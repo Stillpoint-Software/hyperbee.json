@@ -13,6 +13,7 @@ public abstract class FilterExtensionFunction : FilterFunction
         _context = context;
     }
 
+
     public abstract Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context );
 
     protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
@@ -35,3 +36,4 @@ public abstract class FilterExtensionFunction : FilterFunction
         return GetExtensionExpression( arguments, _context );
     }
 }
+

@@ -7,8 +7,9 @@ namespace Hyperbee.Json.Descriptors.Element.Functions;
 
 public class CountElementFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
 {
-    public const string Name = "count";
     private static readonly Expression CountExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, float>) Count );
+
+    public const string Name = "count";
 
     public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
     {

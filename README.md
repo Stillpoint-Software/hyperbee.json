@@ -240,6 +240,7 @@ Here is a performance comparison of various queries on the standard book store d
 }
 ```
 
+```
 | Method                  | Filter                           | Mean      | Error      | StdDev    | Allocated
 |:----------------------- |:-------------------------------- |:--------- |:---------- |:--------- |:---------
 | Hyperbee_JsonElement    | $..* `First()`                   |  3.042 us |  0.3928 us | 0.0215 us |   3.82 KB
@@ -271,6 +272,7 @@ Here is a performance comparison of various queries on the standard book store d
 | JsonCons_JsonElement    | $.store.book[0]                  |  3.365 us | 10.9259 us | 0.5989 us |   3.21 KB
 | JsonEverything_JsonNode | $.store.book[0]                  |  4.670 us |  0.6449 us | 0.0354 us |   5.96 KB
 | Newtonsoft_JObject      | $.store.book[0]                  |  8.572 us |  1.5455 us | 0.0847 us |  14.56 KB
+```
 
 ## Comparison with Other Libraries
 

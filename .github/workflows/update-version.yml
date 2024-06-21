@@ -35,23 +35,32 @@ jobs:
 
     - name: Check for Existing Release
       run: | 
+        compare_versions() {
+          echo -e "$1\n$2" | sort -V | tail -n 1
+        }
+        
         # Fetch the list of releases
         releases=$(gh release list --json createdAt,tagName --limit 100)
 
         echo -e "$releases"
 
-        # Sort the releases by date and extract the most recent one that matches the version or version-prerelease
-        release_line=$(echo "$releases" | jq -r 'sort_by(.createdAt) | reverse | .[0] | select(.tagName == $version_tag) | .tagName')
+        # Sort the releases by date and extract the most recent one
+        latest_release=$(echo "$releases" | jq -r 'sort_by(.createdAt) | reverse | .[0] | .tagName')
 
-        echo -e "$release_line"
+        echo -e "$latest_release"
 
-        # Check if the version or version-prerelease already exists
-        if [[ -n "$release_line" ]]; then
-          echo "⛔ Prerelease for '$previous_version_tag' already exists, please remove the release or fix the version."
-          echo -e "   - Failed on version: '$release_line'"
-          exit 1
+        greater_version=$(compare_versions $latest_release $version_tag)
+
+        echo -e "$greater_version"
+
+        if [ "$greater_version" = "$version_tag" ]; then
+            echo "✅ $version_tag is greater than $latest_release"
+        elif [ "$greater_version" = "$latest_release" ]; then
+            echo "⛔ $version_tag is less than $latest_release"
+            exit 1
         else
-          echo "✅ $previous_version_tag-prerelease does not exist"
+            echo "⚠️ Versions are equal"
+            exit 1
         fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -3,21 +3,29 @@ name: Create Release
 on:
   workflow_dispatch:
     inputs:
-      is_draft:
-        description: 'Create a draft of the release:'
+      is_prerelease:
+        description: 'Create a prerelease:'
         type: boolean
         required: true
         default: false
+      is_draft:
+        description: 'Set as a draft:'
+        type: boolean
+        required: true
+        default: false
+
+env:
+  ALLOW_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Fail if branch is not main
-      if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+    - name: Check For Valid Prerelease
+      if: env.ALLOW_PRERELEASE == ${{ github.event.inputs.is_prerelease }}
       run: |
-        echo "This workflow should not be triggered with workflow_dispatch on a branch other than main"
+        echo "Prereleases should not be triggered on the main branch, please use development or hotfix"
         exit 1
 
     - name: Checkout Code
@@ -29,14 +37,47 @@ jobs:
       run: |
           Import-Module ./solution-helper.psm1 -Force
           $version = Get-Version
-          echo "version_tag=$version" | Out-File -FilePath $env:GITHUB_ENV -Append 
+          if ("${{ github.event.inputs.is_prerelease }}" -eq "true") {
+            $version_tag = "$version-prerelease"
+            $title = "$version-prerelease"
+          } else {
+            $version_tag = $version
+            $title = $version
+          }
+          echo "version_tag=$version_tag" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "title=$title" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-    - name: Create Release
+    - name: Check if release exists
+      id: check_release
       run: |
-        if [[ ${{ github.event.inputs.is_draft }} ]]; then
-          gh release create ${{ env.version_tag }} --target ${{ github.ref_name }} --title ${{ env.version_tag }} --generate-notes --draft --latest
+        echo "Checking for '${{ env.version_tag }}'"
+        if gh release view ${{ env.version_tag }} > /dev/null 2>&1; then
+          echo "release_exists=true" >> $GITHUB_ENV
         else
-          gh release create ${{ env.version_tag }} --target ${{ github.ref_name }} --title ${{ env.version_tag }} --generate-notes --latest
+          echo "release_exists=false" >> $GITHUB_ENV
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create or edit release
+      run: |
+        if [[ "${{ env.release_exists }}" == "true" ]]; then
+          echo "✏️ Editing release"
+          gh release edit ${{ env.version_tag }} \
+            --target ${{ github.ref_name }} \
+            --title ${{ env.title }} \
+            $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
+            $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
+            $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
+        else
+          echo "🎁 Creating release"
+          gh release create ${{ env.version_tag }} \
+            --target ${{ github.ref_name }} \
+            --title ${{ env.title }} \
+            --generate-notes \
+            $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
+            $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
+            $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
         fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

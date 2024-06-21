@@ -1,4 +1,4 @@
-name: Create Prerelease
+name: Update Version
 
 on:
   workflow_dispatch:
@@ -12,14 +12,6 @@ on:
           - patch
         required: true
         default: 'patch'
-      is_draft:
-        description: 'Create a draft of the release:'
-        type: boolean
-        required: true
-        default: false
-
-env:
-  IS_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
 
 jobs:
   update-version:
@@ -29,12 +21,6 @@ jobs:
       previous_version_tag: ${{ env.previous_version_tag }}
 
     steps:
-    - name: Check For Main
-      if: env.IS_PRERELEASE == false
-      run: |
-        echo "This workflow should not be triggered on the main branch, please use development or hotfix"
-        exit 1
-
     - name: Checkout Code
       uses: actions/checkout@v4
 
@@ -72,26 +58,7 @@ jobs:
 
     - name: Update Version Number
       run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
+        git config --global user.name '${{ github.triggering_actor }}'
+        git config --global user.email '${{ github.triggering_actor }}@users.noreply.github.com'
         git commit -am "Previous version was '${{ env.previous_version_tag }}'. Version now '${{ env.version_tag }}'."
         git push
-  
-  create-release:
-    needs: update-version
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
-    - name: Create Release
-      run: |
-        TAG_NAME="${{ needs.update-version.outputs.version_tag }}-prerelease"
-        if [[ ${{ github.event.inputs.is_draft }} ]]; then
-          gh release create $TAG_NAME --target ${{ github.ref_name }} --title $TAG_NAME --generate-notes --draft --prerelease
-        else 
-          gh release create $TAG_NAME --target ${{ github.ref_name }} --title $TAG_NAME --generate-notes --prerelease
-        fi
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

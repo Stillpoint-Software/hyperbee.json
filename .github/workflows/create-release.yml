@@ -39,14 +39,33 @@ jobs:
           $version = Get-Version
           echo "version_tag=$version" | Out-File -FilePath $env:GITHUB_ENV -Append 
 
-    - name: Create Release
+    - name: Check if release exists
+      id: check_release
       run: |
-        gh release create ${{ env.version_tag }} \
-          --target ${{ github.ref_name }} \
-          --title ${{ env.version_tag }} \
-          --generate-notes \
-          $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
-          $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
-          $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
+        if gh release view ${{ env.version_tag }} > /dev/null 2>&1; then
+          echo "::set-output name=exists::true"
+        else
+          echo "::set-output name=exists::false"
+        fi
+
+    - name: Create or edit release
+      run: |
+        if ${{ steps.check_release.outputs.exists == 'true' }}; then
+          gh release edit ${{ env.version_tag }} \
+            --target ${{ github.ref_name }} \
+            --title ${{ env.version_tag }} \
+            --generate-notes \
+            $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
+            $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
+            $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
+        else
+          gh release create ${{ env.version_tag }} \
+            --target ${{ github.ref_name }} \
+            --title ${{ env.version_tag }} \
+            --generate-notes \
+            $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
+            $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
+            $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
+        fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

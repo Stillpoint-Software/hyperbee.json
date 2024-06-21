@@ -50,20 +50,28 @@ jobs:
 
     - name: Create or edit release
       run: |
-        if ${{ steps.check_release.outputs.release_exists == 'true' }}; then
+        if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then
+          version_tag="${{ env.version_tag }}-prerelease"
+          title="${{ env.version_tag }}-prerelease"
+        else
+          version_tag="${{ env.version_tag }}"
+          title="${{ env.version_tag }}"
+        fi
+
+        if [[ "${{ env.release_exists }}" == "true" ]]; then
           echo "✏️ Editing release"
-          gh release edit ${{ env.version_tag }} \
+          gh release edit "$version_tag" \
             --target ${{ github.ref_name }} \
-            --title ${{ env.version_tag }} \
+            --title "$title" \
             --generate-notes \
             $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
             $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
             $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
         else
           echo "🎁 Creating release"
-          gh release create ${{ env.version_tag }} \
+          gh release create "$version_tag" \
             --target ${{ github.ref_name }} \
-            --title ${{ env.version_tag }} \
+            --title "$title" \
             --generate-notes \
             $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
             $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \

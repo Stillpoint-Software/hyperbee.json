@@ -4,27 +4,36 @@ namespace Hyperbee.Json.Filters.Parser;
 
 public delegate FilterExtensionFunction FunctionCreator( ParseExpressionContext context );
 
-public abstract class FilterExtensionFunction( int argumentCount, ParseExpressionContext context ) : FilterFunction
+public abstract class FilterExtensionFunction : FilterFunction
 {
+    private readonly int _argumentCount;
+    private readonly ParseExpressionContext _context;
+
+    protected FilterExtensionFunction(int argumentCount, ParseExpressionContext context)
+    {
+        _argumentCount = argumentCount;
+        _context = context;
+    }
+
     public abstract Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context );
 
     protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {
-        var arguments = new Expression[argumentCount];
+        var arguments = new Expression[_argumentCount];
 
-        for ( var i = 0; i < argumentCount; i++ )
+        for ( var i = 0; i < _argumentCount; i++ )
         {
             var argument = FilterExpressionParser.Parse( data,
                 ref start,
                 ref from,
-                i == argumentCount - 1
+                i == _argumentCount - 1
                     ? FilterExpressionParser.EndArg
                     : FilterExpressionParser.ArgSeparator,
-                context );
+                _context );
 
             arguments[i] = argument;
         }
 
-        return GetExtensionExpression( arguments, context );
+        return GetExtensionExpression( arguments, _context );
     }
 }

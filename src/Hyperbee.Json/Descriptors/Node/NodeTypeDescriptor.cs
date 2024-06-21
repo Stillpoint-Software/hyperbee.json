@@ -30,7 +30,7 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
         if ( expression is null ) return null;
 
         return expression.Type == typeof( IEnumerable<JsonNode> )
-            ? Expression.Invoke( ValueNodeFunction.ValueExpression, expression )  //Expression.Call( ValueNodeFunction.ValueMethod, expression )
+            ? Expression.Invoke( ValueNodeFunction.ValueExpression, expression )  
             : expression;
     }
 

@@ -23,7 +23,7 @@ public class FilterExpressionParser
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
-    public static Func<TNode, TNode, bool> Compile<TNode>( ReadOnlySpan<char> filter, IJsonTypeDescriptor typeDescriptor )
+    public static Func<TNode, TNode, bool> Compile<TNode>( ReadOnlySpan<char> filter, ITypeDescriptor typeDescriptor )
     {
         var currentParam = Expression.Parameter( typeof( TNode ) );
         var rootParam = Expression.Parameter( typeof( TNode ) );

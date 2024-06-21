@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Descriptors;
 
 public delegate FilterExtensionFunction FunctionCreator( ParseExpressionContext context );
 
-public interface IJsonTypeDescriptor
+public interface ITypeDescriptor
 {
     public Dictionary<string, FunctionCreator> Functions { get; }
 
@@ -15,7 +15,7 @@ public interface IJsonTypeDescriptor
     public Expression GetValueExpression( Expression context );
 }
 
-public interface ITypeDescriptor<TNode> : IJsonTypeDescriptor
+public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
     public IValueAccessor<TNode> Accessor { get; }
     public IFilterEvaluator<TNode> FilterEvaluator { get; }

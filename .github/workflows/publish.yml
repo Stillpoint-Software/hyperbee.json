@@ -22,13 +22,11 @@ jobs:
       if: ${{ env.BRANCH_NAME == 'main' && (github.event.release.prerelease == false || github.event_name == 'workflow_dispatch') }}
       run: |
           echo "BUILD_CONFIGURATION=Release" >> $GITHUB_ENV
-          echo "VERSION_SUFFIX=" >> $GITHUB_ENV 
     
     - name: Debug Configuration
       if: ${{ (github.event.release.prerelease || github.event_name == 'workflow_dispatch') }}
       run: |
           echo "BUILD_CONFIGURATION=Debug" >> $GITHUB_ENV
-          echo "VERSION_SUFFIX=develop.$(date +'%y%m%d%H%M%S')" >> $GITHUB_ENV
 
     - name: Check Build Configuration
       if: ${{ env.BUILD_CONFIGURATION == '' }}
@@ -38,6 +36,24 @@ jobs:
 
     - name: Checkout Code
       uses: actions/checkout@v4
+
+    - name: Get Current Version
+      id: get_version
+      shell: pwsh
+      run: |
+          Import-Module ./solution-helper.psm1 -Force
+          $version = Get-Version
+          echo "version=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Get Version Suffix
+      id: get_version_suffix
+      shell: bash
+      run: |
+        release_info=$(gh release view $version) || exit 1
+        version_suffix=${release_info#*$version}
+        echo "VERSION_SUFFIX=$version_suffix" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4

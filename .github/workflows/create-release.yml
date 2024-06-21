@@ -58,7 +58,9 @@ jobs:
           echo "NOT FOUND"
           echo "release_exists=false" >> $GITHUB_ENV
         fi
-
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
     - name: Create or edit release
       run: |
         if [[ "${{ env.release_exists }}" == "true" ]]; then

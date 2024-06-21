@@ -14,19 +14,19 @@ on:
         required: true
         default: false
 
-# env:
-#   ALLOW_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
+env:
+  ALLOW_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: Check For Valid Prerelease
-    #   if: env.ALLOW_PRERELEASE == ${{ github.event.inputs.is_prerelease }}
-    #   run: |
-    #     echo "Only releases should not be triggered on the main branch, else please use development or hotfix"
-    #     exit 1
+    - name: Check For Valid Prerelease
+      if: env.ALLOW_PRERELEASE == ${{ github.event.inputs.is_prerelease }}
+      run: |
+        echo "Prereleases should not be triggered on the main branch, please use development or hotfix"
+        exit 1
 
     - name: Checkout Code
       uses: actions/checkout@v4
@@ -50,12 +50,10 @@ jobs:
     - name: Check if release exists
       id: check_release
       run: |
-        echo ${{ env.version_tag }}
+        echo "Checking for '${{ env.version_tag }}'"
         if gh release view ${{ env.version_tag }} > /dev/null 2>&1; then
-          echo "FOUND"
           echo "release_exists=true" >> $GITHUB_ENV
         else
-          echo "NOT FOUND"
           echo "release_exists=false" >> $GITHUB_ENV
         fi
       env:

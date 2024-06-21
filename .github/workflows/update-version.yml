@@ -13,6 +13,9 @@ on:
         required: true
         default: 'patch'
 
+env:
+  ALLOW_UPDATES: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
+
 jobs:
   update-version:
     runs-on: ubuntu-latest
@@ -21,6 +24,12 @@ jobs:
       previous_version_tag: ${{ env.previous_version_tag }}
 
     steps:
+    - name: Check For Valid Updates
+      if: env.ALLOW_UPDATES == false
+      run: |
+        echo "Version updates should only be done on development or hotfix"
+        exit 1
+
     - name: Checkout Code
       uses: actions/checkout@v4
 

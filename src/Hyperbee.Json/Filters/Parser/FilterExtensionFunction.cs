@@ -9,7 +9,7 @@ public abstract class FilterExtensionFunction : FilterFunction
     private readonly int _argumentCount;
     private readonly ParseExpressionContext _context;
 
-    protected FilterExtensionFunction(int argumentCount, ParseExpressionContext context)
+    protected FilterExtensionFunction( int argumentCount, ParseExpressionContext context )
     {
         _argumentCount = argumentCount;
         _context = context;

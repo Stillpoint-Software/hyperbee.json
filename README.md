@@ -2,15 +2,15 @@
 # Hyperbee.Json
 
 `Hyperbee.Json` is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`.  
-The library is designed to be quick and extensible, allowing support for other JSON document types.
+The library is designed to be quick and extensible, allowing support for other JSON document types and functions.
 
 ## Features
 
 - **High Performance:** Optimized for performance and efficiency.
 - **Supports:** `JsonElement` and `JsonNode`.
-- **Extensible:** Easily extended to support additional JSON document types.
+- **Extensible:** Easily extended to support additional JSON document types and filter functions.
 - **`IEnumerable` Results:** Deferred execution queries with `IEnumerable`.
-- **Comformant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
+- **Conformant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
 
 ## JSONPath Consensus
 
@@ -137,43 +137,6 @@ var result = JsonPath.Select(root, "$.store.book[0].category");
 Console.WriteLine(result.First()); // Output: "fiction"
 ```
 
-### Custom Extension Functions
-
-`Hyperbee.Json` allows you to extend the JSONPath syntax with custom functions.
-
-#### Example: `JsonNode` Path Function
-```csharp
-public class PathNodeFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
-{
-    public const string Name = "path";
-    private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
-
-    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
-    {
-        return Expression.Invoke( PathExpression, arguments[0] );
-    }
-
-    public static string Path( IEnumerable<JsonNode> nodes )
-    {
-        var node = nodes.FirstOrDefault();
-        return node?.GetPath();
-    }
-}
-```
-
-Register your custom function with the `JsonTypeDescriptorRegistry`.
-
-```csharp
-JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
-    .Register( PathNodeFunction.Name, context => new PathNodeFunction( context ) );
-```
-
-Use your custom function in a JSONPath query.
-
-```csharp
-var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
-```
-
 ## JSONPath Syntax Reference
 
 Here's a quick reference for JSONPath syntax supported by Hyperbee.Json:
@@ -216,11 +179,9 @@ the syntax `?(<boolean expr>)`, as in:
 
     $.store.book[?(@.price < 10)].title
 
-### Supported JSONPath Methods
+### JSONPath Methods
 
-JsonPath expressions support basic methods calls. By default, Hyperbee supports the methods defined in the RFC.
-You can extend the supported funtion set by creating your own functions.
-
+JsonPath expressions support basic methods calls. `Hyperbee` supports the methods defined in the RFC.
 
 | Method     | Description                                            | Example                                                
 |------------|--------------------------------------------------------|------------------------------------------------
@@ -229,6 +190,48 @@ You can extend the supported funtion set by creating your own functions.
 | `match()`  | Returns true if a string matches a regular expression. | `$.store.book[?(@.title.match('.*Century.*'))]`   
 | `search()` | Searches for a string within another string.           | `$.store.book[?(@.title.search('Sword'))]`             
 | `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(@.price.value() < 10)]`                
+
+
+You can extend the supported funtion set by registering your own custom functions.
+
+#### Example: `JsonNode` Path Function
+
+**Step 1:** Create a custom function that returns the path of a `JsonNode`.
+
+```csharp
+public class PathNodeFunction( ParseExpressionContext context ) 
+    : FilterExtensionFunction( argumentCount: 1, context )
+{
+    public const string Name = "path";
+    
+    private static readonly Expression PathExpression = 
+        Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+
+    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    {
+        return Expression.Invoke( PathExpression, arguments[0] );
+    }
+
+    public static string Path( IEnumerable<JsonNode> nodes )
+    {
+        var node = nodes.FirstOrDefault();
+        return node?.GetPath();
+    }
+}
+```
+
+**Step 2:** Register your custom function.
+
+```csharp
+JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
+    .Register( PathNodeFunction.Name, context => new PathNodeFunction( context ) );
+```
+
+**Step 3:** Use your custom function in a JSONPath query.
+
+```csharp
+var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
+```
 
 ## Additional Documentation
 
@@ -355,7 +358,7 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 - Focus on consensus implementation.
 - Supports both `JsonElement`, and `JsonNode`.
 - Deferred execution queries with `IEnumerable`.
-- Extendable to support additional JSON document types and functions.
+- Extendable to support additional JSON document types and filter functions.
 
 ## Credits
 

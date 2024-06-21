@@ -30,7 +30,7 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
         if ( expression is null ) return null;
 
         return expression.Type == typeof( IEnumerable<JsonNode> )
-            ? Expression.Call( ValueNodeFunction.ValueMethod, expression )
+            ? Expression.Invoke( ValueNodeFunction.ValueExpression, expression )  //Expression.Call( ValueNodeFunction.ValueMethod, expression )
             : expression;
     }
 
@@ -38,11 +38,11 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
     {
         Functions = new Dictionary<string, FunctionCreator>(
         [
-            new KeyValuePair<string, FunctionCreator>( CountNodeFunction.Name, ( name, context ) => new CountNodeFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( LengthNodeFunction.Name, ( name, context ) => new LengthNodeFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( MatchNodeFunction.Name, ( name, context ) => new MatchNodeFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( SearchNodeFunction.Name, ( name, context ) => new SearchNodeFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( ValueNodeFunction.Name, ( name, context ) => new ValueNodeFunction( name, context ) ),
+            new KeyValuePair<string, FunctionCreator>( CountNodeFunction.Name, context => new CountNodeFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( LengthNodeFunction.Name, context => new LengthNodeFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( MatchNodeFunction.Name, context => new MatchNodeFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( SearchNodeFunction.Name, context => new SearchNodeFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( ValueNodeFunction.Name, context => new ValueNodeFunction( context ) ),
         ] );
     }
 }

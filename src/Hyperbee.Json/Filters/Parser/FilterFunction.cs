@@ -76,7 +76,7 @@ public class FilterFunction
         if ( !context.Descriptor.Functions.TryGetValue( method, out var creator ) )
             return false;
 
-        function = creator( method, context );
+        function = creator( context );
         return true;
 
     }

@@ -1,31 +1,18 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.Json;
 
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class ValueElementFunction( string methodName, ParseExpressionContext context )
-    : FilterExtensionFunction( methodName, 1, context )
+public class ValueElementFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
 {
     public const string Name = "value";
+    public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, object>) Value );
 
-    public static readonly MethodInfo ValueMethod;
-
-    static ValueElementFunction()
+    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
     {
-        ValueMethod = typeof( ValueElementFunction ).GetMethod( nameof( Value ), [typeof( IEnumerable<JsonElement> )] );
-    }
-
-    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
-    {
-        if ( arguments.Length != 1 )
-        {
-            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
-        }
-
-        return Expression.Call( ValueMethod, arguments[0] );
+        return Expression.Invoke( ValueExpression, arguments[0] );
     }
 
     public static object Value( IEnumerable<JsonElement> elements )

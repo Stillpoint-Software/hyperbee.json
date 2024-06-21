@@ -4,6 +4,7 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 
+public delegate FilterExtensionFunction FunctionCreator( ParseExpressionContext context );
 
 public interface IJsonTypeDescriptor
 {

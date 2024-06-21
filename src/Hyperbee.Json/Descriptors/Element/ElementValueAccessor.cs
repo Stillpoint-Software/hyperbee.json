@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 
 namespace Hyperbee.Json.Descriptors.Element;
 

@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
@@ -7,28 +6,16 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class ValueNodeFunction( string methodName, ParseExpressionContext context )
-    : FilterExtensionFunction( methodName, 1, context )
+public class ValueNodeFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
 {
     public const string Name = "value";
+    public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, object>) Value );
 
-    public static readonly MethodInfo ValueMethod;
 
-    static ValueNodeFunction()
+    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
     {
-        ValueMethod = typeof( ValueNodeFunction ).GetMethod( nameof( Value ), [typeof( IEnumerable<JsonNode> )] );
+        return Expression.Invoke( ValueExpression, arguments[0] );
     }
-
-    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
-    {
-        if ( arguments.Length != 1 )
-        {
-            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
-        }
-
-        return Expression.Call( ValueMethod, arguments[0] );
-    }
-
 
     public static object Value( IEnumerable<JsonNode> nodes )
     {

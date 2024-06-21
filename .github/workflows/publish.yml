@@ -55,7 +55,7 @@ jobs:
         # Filter the releases based on the starting version number, sort them by date, and extract the most recent one
         latest_release=$(echo "$releases" | jq -r --arg version "$version" 'map(select(.tagName | startswith($version))) | sort_by(.createdAt) | reverse | .[0] | .tagName')
 
-        version_suffix=${latest_release#*$version}
+        version_suffix=${latest_release#*$version-}
         echo "VERSION_SUFFIX=$version_suffix" >> $GITHUB_ENV
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

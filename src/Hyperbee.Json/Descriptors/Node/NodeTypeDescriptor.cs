@@ -10,13 +10,13 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
 {
     private FilterEvaluator<JsonNode> _evaluator;
     private NodeValueAccessor _accessor;
-    
-    public FunctionRegistry Functions { get; } = new ();
 
-    public IValueAccessor<JsonNode> Accessor => 
+    public FunctionRegistry Functions { get; } = new();
+
+    public IValueAccessor<JsonNode> Accessor =>
         _accessor ??= new NodeValueAccessor();
 
-    public IFilterEvaluator<JsonNode> FilterEvaluator => 
+    public IFilterEvaluator<JsonNode> FilterEvaluator =>
         _evaluator ??= new FilterEvaluator<JsonNode>( this );
 
     public NodeTypeDescriptor()
@@ -35,7 +35,7 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
 
     public Expression GetValueExpression( Expression expression )
     {
-        if ( expression is null ) 
+        if ( expression is null )
             return null;
 
         return expression.Type == typeof( IEnumerable<JsonNode> )

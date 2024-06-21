@@ -13,10 +13,10 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 
     public FunctionRegistry Functions { get; } = new();
 
-    public IValueAccessor<JsonElement> Accessor => 
+    public IValueAccessor<JsonElement> Accessor =>
         _accessor ??= new ElementValueAccessor();
 
-    public IFilterEvaluator<JsonElement> FilterEvaluator => 
+    public IFilterEvaluator<JsonElement> FilterEvaluator =>
         _evaluator ??= new FilterEvaluator<JsonElement>( this );
 
     public ElementTypeDescriptor()

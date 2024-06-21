@@ -27,10 +27,11 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 
     public Expression GetValueExpression( Expression expression )
     {
-        if ( expression is null ) return null;
+        if ( expression is null ) 
+            return null;
 
         return expression.Type == typeof( IEnumerable<JsonElement> )
-            ? Expression.Call( ValueElementFunction.ValueMethod, expression )
+            ? Expression.Invoke( ValueElementFunction.ValueExpression, expression )
             : expression;
     }
 
@@ -39,11 +40,11 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
     {
         Functions = new Dictionary<string, FunctionCreator>(
         [
-            new KeyValuePair<string, FunctionCreator>( CountElementFunction.Name, ( name, context ) => new CountElementFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( LengthElementFunction.Name, ( name, context ) => new LengthElementFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( MatchElementFunction.Name, ( name, context ) => new MatchElementFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( SearchElementFunction.Name, ( name, context ) => new SearchElementFunction( name, context ) ),
-            new KeyValuePair<string, FunctionCreator>( ValueElementFunction.Name, ( name, context ) => new ValueElementFunction( name, context ) ),
+            new KeyValuePair<string, FunctionCreator>( CountElementFunction.Name, context => new CountElementFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( LengthElementFunction.Name, context => new LengthElementFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( MatchElementFunction.Name, context => new MatchElementFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( SearchElementFunction.Name, context => new SearchElementFunction( context ) ),
+            new KeyValuePair<string, FunctionCreator>( ValueElementFunction.Name, context => new ValueElementFunction( context ) ),
         ] );
     }
 }

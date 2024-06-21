@@ -12,7 +12,7 @@ public sealed class FunctionRegistry
         Functions[name] = context => factory( context );
     }
 
-    public bool TryGet( string name, out FunctionCreator functionCreator )
+    internal bool TryGet( string name, out FunctionCreator functionCreator )
     {
         return Functions.TryGetValue( name, out functionCreator );
     }

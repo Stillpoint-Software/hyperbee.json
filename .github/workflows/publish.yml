@@ -42,8 +42,8 @@ jobs:
       shell: pwsh
       run: |
           Import-Module ./solution-helper.psm1 -Force
-          $version = Get-Version
-          echo "version=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          $build_version = Get-Version
+          echo "build_version=$build_version" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Get Version Suffix
       id: get_version_suffix
@@ -53,9 +53,9 @@ jobs:
         releases=$(gh release list --json createdAt,tagName --limit 100)
 
         # Filter the releases based on the starting version number, sort them by date, and extract the most recent one
-        latest_release=$(echo "$releases" | jq -r --arg version "$version" 'map(select(.tagName | startswith($version))) | sort_by(.createdAt) | reverse | .[0] | .tagName')
+        latest_release=$(echo "$releases" | jq -r --arg build_version "$build_version" 'map(select(.tagName | startswith($build_version))) | sort_by(.createdAt) | reverse | .[0] | .tagName')
 
-        version_suffix=${latest_release#*$version-}
+        version_suffix=${latest_release#*$build_version-}
         echo "VERSION_SUFFIX=$version_suffix" >> $GITHUB_ENV
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

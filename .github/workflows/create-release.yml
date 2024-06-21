@@ -43,14 +43,15 @@ jobs:
       id: check_release
       run: |
         if gh release view ${{ env.version_tag }} > /dev/null 2>&1; then
-          echo "::set-output name=exists::true"
+          echo "release_exists=true" >> $GITHUB_ENV
         else
-          echo "::set-output name=exists::false"
+          echo "release_exists=false" >> $GITHUB_ENV
         fi
 
     - name: Create or edit release
       run: |
-        if ${{ steps.check_release.outputs.exists == 'true' }}; then
+        if ${{ steps.check_release.outputs.release_exists == 'true' }}; then
+          echo "✏️ Editing release"
           gh release edit ${{ env.version_tag }} \
             --target ${{ github.ref_name }} \
             --title ${{ env.version_tag }} \
@@ -59,6 +60,7 @@ jobs:
             $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
             $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
         else
+          echo "🎁 Creating release"
           gh release create ${{ env.version_tag }} \
             --target ${{ github.ref_name }} \
             --title ${{ env.version_tag }} \

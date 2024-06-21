@@ -60,7 +60,7 @@ jobs:
         fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: Create or edit release
       run: |
         if [[ "${{ env.release_exists }}" == "true" ]]; then
@@ -68,7 +68,6 @@ jobs:
           gh release edit ${{ env.version_tag }} \
             --target ${{ github.ref_name }} \
             --title ${{ env.title }} \
-            --generate-notes \
             $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
             $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
             $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)

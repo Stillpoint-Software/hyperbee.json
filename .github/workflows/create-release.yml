@@ -50,9 +50,12 @@ jobs:
     - name: Check if release exists
       id: check_release
       run: |
+        echo ${{ env.version_tag }}
         if gh release view ${{ env.version_tag }} > /dev/null 2>&1; then
+          echo "FOUND"
           echo "release_exists=true" >> $GITHUB_ENV
         else
+          echo "NOT FOUND"
           echo "release_exists=false" >> $GITHUB_ENV
         fi
 

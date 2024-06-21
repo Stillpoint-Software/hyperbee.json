@@ -137,6 +137,43 @@ var result = JsonPath.Select(root, "$.store.book[0].category");
 Console.WriteLine(result.First()); // Output: "fiction"
 ```
 
+### Custom Extension Functions
+
+`Hyperbee.Json` allows you to extend the JSONPath syntax with custom functions.
+
+#### Example: `JsonNode` Path Function
+```csharp
+public class PathNodeFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
+{
+    public const string Name = "path";
+    private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+
+    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    {
+        return Expression.Invoke( PathExpression, arguments[0] );
+    }
+
+    public static string Path( IEnumerable<JsonNode> nodes )
+    {
+        var node = nodes.FirstOrDefault();
+        return node?.GetPath();
+    }
+}
+```
+
+Register your custom function with the `JsonTypeDescriptorRegistry`.
+
+```csharp
+JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
+    .Register( PathNodeFunction.Name, context => new PathNodeFunction( context ) );
+```
+
+Use your custom function in a JSONPath query.
+
+```csharp
+var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
+```
+
 ## JSONPath Syntax Reference
 
 Here's a quick reference for JSONPath syntax supported by Hyperbee.Json:

@@ -41,17 +41,13 @@ jobs:
         
         # Fetch the list of releases
         releases=$(gh release list --json createdAt,tagName --limit 100)
-
         echo -e "$releases"
 
         # Sort the releases by date and extract the most recent one
         latest_release=$(echo "$releases" | jq -r 'sort_by(.createdAt) | reverse | .[0] | .tagName')
-
         echo -e "$latest_release"
 
         greater_version=$(compare_versions $latest_release $version_tag)
-
-        echo -e "$greater_version"
 
         if [ "$greater_version" = "$version_tag" ]; then
             echo "✅ $version_tag is greater than $latest_release"

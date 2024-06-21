@@ -2,8 +2,6 @@
 
 namespace Hyperbee.Json.Filters.Parser;
 
-public delegate FilterExtensionFunction FunctionCreator( ParseExpressionContext context );
-
 public abstract class FilterExtensionFunction : FilterFunction
 {
     private readonly int _argumentCount;

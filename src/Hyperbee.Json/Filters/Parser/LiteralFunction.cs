@@ -3,7 +3,7 @@
 namespace Hyperbee.Json.Filters.Parser;
 
 
-public class LiteralFunction : FilterFunction
+internal class LiteralFunction : FilterFunction
 {
     protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
     {

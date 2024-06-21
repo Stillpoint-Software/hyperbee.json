@@ -37,7 +37,15 @@ jobs:
       run: |
           Import-Module ./solution-helper.psm1 -Force
           $version = Get-Version
-          echo "version_tag=$version" | Out-File -FilePath $env:GITHUB_ENV -Append 
+          if ("${{ github.event.inputs.is_prerelease }}" -eq "true") {
+            $version_tag = "$version-prerelease"
+            $title = "$version-prerelease"
+          } else {
+            $version_tag = $version
+            $title = $version
+          }
+          echo "version_tag=$version_tag" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "title=$title" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Check if release exists
       id: check_release
@@ -50,28 +58,20 @@ jobs:
 
     - name: Create or edit release
       run: |
-        if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then
-          version_tag="${{ env.version_tag }}-prerelease"
-          title="${{ env.version_tag }}-prerelease"
-        else
-          version_tag="${{ env.version_tag }}"
-          title="${{ env.version_tag }}"
-        fi
-
         if [[ "${{ env.release_exists }}" == "true" ]]; then
           echo "✏️ Editing release"
-          gh release edit "$version_tag" \
+          gh release edit ${{ env.version_tag }} \
             --target ${{ github.ref_name }} \
-            --title "$title" \
+            --title ${{ env.title }} \
             --generate-notes \
             $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
             $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \
             $(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "--latest"; fi)
         else
           echo "🎁 Creating release"
-          gh release create "$version_tag" \
+          gh release create ${{ env.version_tag }} \
             --target ${{ github.ref_name }} \
-            --title "$title" \
+            --title ${{ env.title }} \
             --generate-notes \
             $(if [[ "${{ github.event.inputs.is_draft }}" == "true" ]]; then echo "--draft"; fi) \
             $(if [[ "${{ github.event.inputs.is_prerelease }}" == "true" ]]; then echo "--prerelease"; fi) \

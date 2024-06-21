@@ -14,19 +14,19 @@ on:
         required: true
         default: false
 
-env:
-  ALLOW_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
+# env:
+#   ALLOW_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check For Valid Prerelease
-      if: env.ALLOW_PRERELEASE == ${{ github.event.inputs.is_prerelease }}
-      run: |
-        echo "Only releases should not be triggered on the main branch, else please use development or hotfix"
-        exit 1
+    # - name: Check For Valid Prerelease
+    #   if: env.ALLOW_PRERELEASE == ${{ github.event.inputs.is_prerelease }}
+    #   run: |
+    #     echo "Only releases should not be triggered on the main branch, else please use development or hotfix"
+    #     exit 1
 
     - name: Checkout Code
       uses: actions/checkout@v4

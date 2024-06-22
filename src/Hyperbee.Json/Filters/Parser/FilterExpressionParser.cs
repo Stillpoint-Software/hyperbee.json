@@ -46,6 +46,10 @@ public class FilterExpressionParser
 
     internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, ParseExpressionContext context = null )
     {
+        filter = filter.Trim(); //BF talk to Matt about this (added failing tests without it)
+                                //   feel like we should eat whitespace (somewhere) and adjust
+                                //   start and from accordingly
+        
         if ( from >= filter.Length || filter[from] == to )
         {
             throw new ArgumentException( "Invalid filter", nameof( filter ) );
@@ -80,7 +84,7 @@ public class FilterExpressionParser
 
             // get Expression for current path
 
-            var expression = GetExpression( filter, currentPath, ref start, ref from, type, context ); // may recursively call `Parse`
+            var expression = GetExpression( filter, currentPath, ref start, ref from, type, context ); // may cause recursion
 
             var filterType = ValidType( type )
                 ? type!.Value
@@ -105,28 +109,29 @@ public class FilterExpressionParser
         return Merge( baseToken, ref index, tokens, context );
     }
 
-   internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> currentPath, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
+   internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
     {
-        // parens
-        if ( currentPath.Length == 0 && type == FilterTokenType.OpenParen )
-            return Parse( filter, ref start, ref from, EndArg, context ); // causes recursion
+        // parenthesis
+        if ( item.Length == 0 && type == FilterTokenType.OpenParen )
+            return Parse( filter, ref start, ref from, EndArg, context ); // recursive call to `Parse`
 
-        // select function
-        if ( currentPath[0] == '$' || currentPath[0] == '@' )
+        // select 
+        if ( item[0] == '$' || item[0] == '@' )
         {
-            var function = context.Descriptor.GetSelectFunction();
-            return function.GetExpression( filter, currentPath, ref start, ref from, context );
+            return context.Descriptor 
+                .GetSelectFunction()
+                .GetExpression( filter, item, ref start, ref from, context ); // may cause `Select` recursion.
         }
 
-        // extension function
-        if ( context.Descriptor.Functions.TryGetCreator( currentPath.ToString(), out var creator ) )
+        // function
+        if ( context.Descriptor.Functions.TryGetCreator( item.ToString(), out var functionCreator ) )
         {
-            var function = creator();
-            return function.GetExpression( filter, currentPath, ref start, ref from, context );
+            return functionCreator()
+                .GetExpression( filter, item, ref start, ref from, context ); // recursive call(s) to `Parse` for arguments.
         }
 
         // literal
-        return GetLiteralExpression( currentPath );
+        return GetLiteralExpression( item );
     }
 
     private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )

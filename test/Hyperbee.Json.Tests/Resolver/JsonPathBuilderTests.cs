@@ -3,7 +3,7 @@ using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Builder;
+namespace Hyperbee.Json.Tests.Resolver;
 
 [TestClass]
 public class JsonPathBuilderTests : JsonTestBase

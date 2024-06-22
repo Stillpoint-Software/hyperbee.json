@@ -199,10 +199,10 @@ You can extend the supported funtion set by registering your own custom function
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
 ```csharp
-public class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class PathNodeFunction : FilterExtensionFunction( argumentCount: 1 )
 {
-    public const string Name = "path";
     private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+    public const string Name = "path";
 
     public override Expression GetExtensionExpression( Expression[] arguments )
     {
@@ -325,7 +325,7 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 
 - **Cons:**
   - No support for `JsonElement`.
-  - Slower performance and higher memory allocation than other `System.Text.Json` implementations.
+  - Not quite as fast as other `System.Text.Json` implementations.
    
 ### [JsonCons.NET](https://danielaparker.github.io/JsonCons.Net/articles/JsonPath/JsonConsJsonPath.html)
 
@@ -336,26 +336,25 @@ There are excellent options available for RFC-9535 .NET JsonPath.
 - **Cons:**
   - No support for `JsonNode`.
   - Does not return an `IEnumerable` result (no defered query execution).
-  making it less efficient, and more memory intensive, for certain operations,
   
 ### [Json.NET](https://www.newtonsoft.com/json) Newtonsoft
 
 - **Pros:**
   - Comprehensive feature set.
   - Documentation and examples.
+  - Strong community support.
   - Level 2 .NET Foundation Project.
 
 - **Cons:**
   - No support for `JsonElement`, or `JsonNode`.
-  - Slower performance and higher memory allocation than `System.Text.Json`.
 
 ### Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json) ?
 
 - High Performance.
-- Focus on consensus implementation.
 - Supports both `JsonElement`, and `JsonNode`.
 - Deferred execution queries with `IEnumerable`.
 - Extendable to support additional JSON document types and filter functions.
+- Consensus focused JSONPath implementation.
 
 ## Credits
 

@@ -4,7 +4,7 @@ namespace Hyperbee.Json.Filters.Parser;
 
 internal class LiteralFunction : FilterFunction
 {
-    public override Expression GetExpression( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from, ParseExpressionContext context )
+    public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, ParseExpressionContext context )
     {
         // Check for known literals (true, false, null) first
 

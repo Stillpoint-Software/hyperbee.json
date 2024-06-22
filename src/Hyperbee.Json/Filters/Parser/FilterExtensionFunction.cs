@@ -11,16 +11,15 @@ public abstract class FilterExtensionFunction : FilterFunction
         _argumentCount = argumentCount;
     }
 
+    protected abstract Expression GetExtensionExpression( Expression[] arguments );
 
-    public abstract Expression GetExtensionExpression( Expression[] arguments );
-
-    public override Expression GetExpression( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from, ParseExpressionContext context )
+    public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, ParseExpressionContext context )
     {
         var arguments = new Expression[_argumentCount];
 
         for ( var i = 0; i < _argumentCount; i++ )
         {
-            var argument = FilterExpressionParser.Parse( data,
+            var argument = FilterExpressionParser.Parse( filter,
                 ref start,
                 ref from,
                 i == _argumentCount - 1

@@ -39,7 +39,7 @@ public class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
     public const string Name = "path";
     private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
 
-    public override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( PathExpression, arguments[0] );
     }

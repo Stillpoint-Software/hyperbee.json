@@ -197,12 +197,12 @@ You can extend the supported function set by registering your own functions.
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
 ```csharp
-public class PathNodeFunction : FilterExtensionFunction( argumentCount: 1 )
+public class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
-    private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
     public const string Name = "path";
+    private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
 
-    public override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( PathExpression, arguments[0] );
     }

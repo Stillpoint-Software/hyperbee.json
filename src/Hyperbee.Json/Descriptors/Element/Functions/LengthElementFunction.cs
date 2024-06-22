@@ -6,11 +6,10 @@ namespace Hyperbee.Json.Descriptors.Element.Functions;
 
 public class LengthElementFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
+    public const string Name = "length";
     private static readonly Expression LengthExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, float>) Length );
 
-    public const string Name = "length";
-
-    public override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( LengthExpression, arguments[0] );
     }

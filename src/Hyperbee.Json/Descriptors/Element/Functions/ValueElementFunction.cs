@@ -7,11 +7,10 @@ namespace Hyperbee.Json.Descriptors.Element.Functions;
 
 public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
+    public const string Name = "value";
     public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, object>) Value );
 
-    public const string Name = "value";
-
-    public override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( ValueExpression, arguments[0] );
     }

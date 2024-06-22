@@ -51,7 +51,7 @@ public class FilterExpressionParser
             throw new ArgumentException( "Invalid filter", nameof( filter ) );
         }
 
-        var tokens = new List<FilterToken>();
+        var tokens = new List<FilterToken>( 8 );
         ReadOnlySpan<char> currentPath = null;
         char? quote = null;
 

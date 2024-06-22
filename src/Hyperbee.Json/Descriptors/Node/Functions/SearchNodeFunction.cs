@@ -7,11 +7,10 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 
 public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 {
+    public const string Name = "search";
     private static readonly Expression SearchExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string, bool>) Search );
 
-    public const string Name = "search";
-
-    public override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( SearchExpression, arguments[0], arguments[1] );
     }

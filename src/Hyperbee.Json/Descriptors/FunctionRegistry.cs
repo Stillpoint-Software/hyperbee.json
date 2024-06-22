@@ -9,7 +9,7 @@ public sealed class FunctionRegistry
     public void Register<TFunction>( string name, Func<TFunction> factory )
         where TFunction : FilterExtensionFunction
     {
-        Functions[name] = () => factory(); 
+        Functions[name] = () => factory();
     }
 
     internal bool TryGetCreator( string name, out FunctionCreator functionCreator )

@@ -18,7 +18,7 @@ public class JsonPathBuilderTests : JsonTestBase
         var source = GetDocument<JsonDocument>();
         var target = source.RootElement.GetPropertyFromPath( key );
 
-        var builder = new JsonPathBuilder( source );
+        var builder = new JsonPathResolver( source );
         var result = builder.GetPath( target );
 
         Assert.AreEqual( result, expected );

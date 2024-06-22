@@ -2,18 +2,18 @@
 
 namespace Hyperbee.Json;
 
-public class JsonPathBuilder
+public class JsonPathResolver
 {
     private readonly JsonElement _rootElement;
     private readonly JsonElementPositionComparer _comparer = new();
     private readonly Dictionary<int, (int parentId, string segment)> _parentMap = [];
 
-    public JsonPathBuilder( JsonDocument rootDocument )
+    public JsonPathResolver( JsonDocument rootDocument )
         : this( rootDocument.RootElement )
     {
     }
 
-    public JsonPathBuilder( JsonElement rootElement )
+    public JsonPathResolver( JsonElement rootElement )
     {
         _rootElement = rootElement;
 

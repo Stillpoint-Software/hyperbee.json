@@ -23,7 +23,7 @@ public class FilterExtensionFunctionTests : JsonTestBase
         var source = GetDocument<JsonNode>();
 
         JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
-            .Register( PathNodeFunction.Name, context => new PathNodeFunction( context ) );
+            .Register( PathNodeFunction.Name, () => new PathNodeFunction() );
 
         // act
         var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" ).ToList();
@@ -34,12 +34,12 @@ public class FilterExtensionFunctionTests : JsonTestBase
     }
 }
 
-public class PathNodeFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
+public class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "path";
     private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
 
-    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    public override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( PathExpression, arguments[0] );
     }

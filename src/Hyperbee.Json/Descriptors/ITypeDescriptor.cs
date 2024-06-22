@@ -4,13 +4,13 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 
-public delegate FilterExtensionFunction FunctionCreator( ParseExpressionContext context );
+public delegate FilterExtensionFunction FunctionCreator();
 
 public interface ITypeDescriptor
 {
     public FunctionRegistry Functions { get; }
 
-    public FilterFunction GetSelectFunction( ParseExpressionContext context );
+    public FilterFunction GetSelectFunction();
 
     public Expression GetValueExpression( Expression context );
 }

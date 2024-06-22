@@ -21,16 +21,16 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 
     public ElementTypeDescriptor()
     {
-        Functions.Register( CountElementFunction.Name, context => new CountElementFunction( context ) );
-        Functions.Register( LengthElementFunction.Name, context => new LengthElementFunction( context ) );
-        Functions.Register( MatchElementFunction.Name, context => new MatchElementFunction( context ) );
-        Functions.Register( SearchElementFunction.Name, context => new SearchElementFunction( context ) );
-        Functions.Register( ValueElementFunction.Name, context => new ValueElementFunction( context ) );
+        Functions.Register( CountElementFunction.Name, () => new CountElementFunction() );
+        Functions.Register( LengthElementFunction.Name, () => new LengthElementFunction() );
+        Functions.Register( MatchElementFunction.Name, () => new MatchElementFunction() );
+        Functions.Register( SearchElementFunction.Name, () => new SearchElementFunction() );
+        Functions.Register( ValueElementFunction.Name, () => new ValueElementFunction() );
     }
 
-    public FilterFunction GetSelectFunction( ParseExpressionContext context )
+    public FilterFunction GetSelectFunction()
     {
-        return new SelectElementFunction( context );
+        return new SelectElementFunction();
     }
 
     public Expression GetValueExpression( Expression expression )

@@ -80,7 +80,7 @@ public class FilterExpressionParser
 
             // `GetExpression` may call recursively call `Parse` for nested expressions
             var func = new FilterFunction( currentPath, type, context );
-            var expression = func.GetExpression( filter, currentPath, ref start, ref from );
+            var expression = func.GetExpression( filter, currentPath, ref start, ref from, context );
 
             var filterType = ValidType( type )
                 ? type!.Value

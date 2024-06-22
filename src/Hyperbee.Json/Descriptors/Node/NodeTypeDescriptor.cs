@@ -21,16 +21,16 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
 
     public NodeTypeDescriptor()
     {
-        Functions.Register( CountNodeFunction.Name, context => new CountNodeFunction( context ) );
-        Functions.Register( LengthNodeFunction.Name, context => new LengthNodeFunction( context ) );
-        Functions.Register( MatchNodeFunction.Name, context => new MatchNodeFunction( context ) );
-        Functions.Register( SearchNodeFunction.Name, context => new SearchNodeFunction( context ) );
-        Functions.Register( ValueNodeFunction.Name, context => new ValueNodeFunction( context ) );
+        Functions.Register( CountNodeFunction.Name, () => new CountNodeFunction() );
+        Functions.Register( LengthNodeFunction.Name, () => new LengthNodeFunction() );
+        Functions.Register( MatchNodeFunction.Name, () => new MatchNodeFunction() );
+        Functions.Register( SearchNodeFunction.Name, () => new SearchNodeFunction() );
+        Functions.Register( ValueNodeFunction.Name, () => new ValueNodeFunction() );
     }
 
-    public FilterFunction GetSelectFunction( ParseExpressionContext context )
+    public FilterFunction GetSelectFunction()
     {
-        return new SelectNodeFunction( context );
+        return new SelectNodeFunction();
     }
 
     public Expression GetValueExpression( Expression expression )

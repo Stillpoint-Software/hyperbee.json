@@ -4,13 +4,16 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class SelectElementFunction( ParseExpressionContext context ) : FilterFunction
+public class SelectElementFunction : FilterFunction
 {
     private static readonly Expression SelectExpression = Expression.Constant( (Func<JsonElement, JsonElement, string, IEnumerable<JsonElement>>) Select );
 
-    protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from )
+    protected override Expression GetExpressionImpl( ReadOnlySpan<char> data, ReadOnlySpan<char> item, ref int start, ref int from, ParseExpressionContext context )
     {
         var queryExp = Expression.Constant( item.ToString() );
+
+        if ( item[0] == '$' ) // Current becomes root
+            context = context with { Current = context.Root };
 
         return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp );
     }

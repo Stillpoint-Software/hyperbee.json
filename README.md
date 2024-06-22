@@ -199,15 +199,12 @@ You can extend the supported funtion set by registering your own custom function
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
 ```csharp
-public class PathNodeFunction( ParseExpressionContext context ) 
-    : FilterExtensionFunction( argumentCount: 1, context )
+public class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "path";
-    
-    private static readonly Expression PathExpression = 
-        Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+    private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
 
-    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    public override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( PathExpression, arguments[0] );
     }
@@ -224,7 +221,7 @@ public class PathNodeFunction( ParseExpressionContext context )
 
 ```csharp
 JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
-    .Register( PathNodeFunction.Name, context => new PathNodeFunction( context ) );
+    .Register( PathNodeFunction.Name, () => new PathNodeFunction() );
 ```
 
 **Step 3:** Use your custom function in a JSONPath query.

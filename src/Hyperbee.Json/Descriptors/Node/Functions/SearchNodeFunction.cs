@@ -5,12 +5,13 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class SearchNodeFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 2, context )
+public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 {
-    public const string Name = "search";
     private static readonly Expression SearchExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string, bool>) Search );
 
-    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    public const string Name = "search";
+
+    public override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( SearchExpression, arguments[0], arguments[1] );
     }

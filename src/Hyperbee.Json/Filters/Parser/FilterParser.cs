@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -15,7 +15,7 @@ using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
 
-public class FilterExpressionParser
+public class FilterParser
 {
     public const char EndLine = '\n';
     public const char EndArg = ')';
@@ -27,33 +27,34 @@ public class FilterExpressionParser
     {
         var currentParam = Expression.Parameter( typeof( TNode ) );
         var rootParam = Expression.Parameter( typeof( TNode ) );
-        var expressionContext = new ParseExpressionContext( currentParam, rootParam, typeDescriptor );
-        var expression = Parse( filter, expressionContext );
+        var executionContext = new FilterExecutionContext( currentParam, rootParam, typeDescriptor );
+        var expression = Parse( filter, executionContext );
 
         return Expression
             .Lambda<Func<TNode, TNode, bool>>( expression, currentParam, rootParam )
             .Compile();
     }
 
-    public static Expression Parse( ReadOnlySpan<char> filter, ParseExpressionContext context )
+    internal static Expression Parse( ReadOnlySpan<char> filter, FilterExecutionContext executionContext )
     {
         var start = 0;
         var from = 0;
-        var expression = Parse( filter, ref start, ref from, EndLine, context );
+        var expression = Parse( filter, ref start, ref from, EndLine, executionContext );
 
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to = EndLine, ParseExpressionContext context = null )
+    internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to, FilterExecutionContext executionContext )
     {
         filter = filter.Trim(); //BF talk to Matt about this (added failing tests without it)
                                 //   feel like we should eat whitespace (somewhere) and adjust
                                 //   start and from accordingly
-        
+     
+        if ( executionContext == null )
+            throw new ArgumentNullException( nameof( executionContext ) );
+
         if ( from >= filter.Length || filter[from] == to )
-        {
             throw new ArgumentException( "Invalid filter", nameof( filter ) );
-        }
 
         var tokens = new List<FilterToken>( 8 );
         ReadOnlySpan<char> currentPath = null;
@@ -84,7 +85,7 @@ public class FilterExpressionParser
 
             // get Expression for current path
 
-            var expression = GetExpression( filter, currentPath, ref start, ref from, type, context ); // may cause recursion
+            var expression = GetExpression( filter, currentPath, ref start, ref from, type, executionContext ); // may cause recursion
 
             var filterType = ValidType( type )
                 ? type!.Value
@@ -106,28 +107,28 @@ public class FilterExpressionParser
         var baseToken = tokens[0];
         var index = 1;
 
-        return Merge( baseToken, ref index, tokens, context );
+        return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
     }
 
-   internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
+   internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, FilterExecutionContext executionContext )
     {
         // parenthesis
         if ( item.Length == 0 && type == FilterTokenType.OpenParen )
-            return Parse( filter, ref start, ref from, EndArg, context ); // recursive call to `Parse`
+            return Parse( filter, ref start, ref from, EndArg, executionContext ); // recursive call to `Parse`
 
         // select 
         if ( item[0] == '$' || item[0] == '@' )
         {
-            return context.Descriptor 
+            return executionContext.Descriptor 
                 .GetSelectFunction()
-                .GetExpression( filter, item, ref start, ref from, context ); // may cause `Select` recursion.
+                .GetExpression( filter, item, ref start, ref from, executionContext ); // may cause `Select` recursion.
         }
 
         // function
-        if ( context.Descriptor.Functions.TryGetCreator( item.ToString(), out var functionCreator ) )
+        if ( executionContext.Descriptor.Functions.TryGetCreator( item.ToString(), out var functionCreator ) )
         {
             return functionCreator()
-                .GetExpression( filter, item, ref start, ref from, context ); // recursive call(s) to `Parse` for arguments.
+                .GetExpression( filter, item, ref start, ref from, executionContext ); // recursive call(s) to `Parse` for arguments.
         }
 
         // literal
@@ -283,7 +284,7 @@ public class FilterExpressionParser
         return startType!.Value;
     }
 
-    private static Expression Merge( FilterToken current, ref int index, List<FilterToken> listToMerge, ParseExpressionContext context, bool mergeOneOnly = false )
+    private static Expression Merge( FilterToken current, ref int index, List<FilterToken> listToMerge, ITypeDescriptor descriptor, bool mergeOneOnly = false )
     {
         while ( index < listToMerge.Count )
         {
@@ -292,10 +293,10 @@ public class FilterExpressionParser
             while ( !CanMergeTokens( current, next ) )
             {
                 // Merge next token with the following token
-                Merge( next, ref index, listToMerge, context, mergeOneOnly: true ); // recursive call
+                Merge( next, ref index, listToMerge, descriptor, mergeOneOnly: true ); // recursive call
             }
 
-            MergeTokens( current, next, context );
+            MergeTokens( current, next, descriptor );
 
             if ( mergeOneOnly )
             {
@@ -322,11 +323,11 @@ public class FilterExpressionParser
         };
     }
 
-    private static void MergeTokens( FilterToken left, FilterToken right, ParseExpressionContext context )
+    private static void MergeTokens( FilterToken left, FilterToken right, ITypeDescriptor descriptor )
     {
         // Ensure both expressions are value expressions
-        left.Expression = context.Descriptor.GetValueExpression( left.Expression );
-        right.Expression = context.Descriptor.GetValueExpression( right.Expression );
+        left.Expression = descriptor.GetValueExpression( left.Expression );
+        right.Expression = descriptor.GetValueExpression( right.Expression );
 
         // Determine if we are comparing numerical values so that we can use the correct comparison method
         bool isNumerical = IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type );

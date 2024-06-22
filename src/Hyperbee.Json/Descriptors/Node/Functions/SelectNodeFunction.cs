@@ -8,14 +8,14 @@ public class SelectNodeFunction : FilterFunction
 {
     private static readonly Expression SelectExpression = Expression.Constant( (Func<JsonNode, JsonNode, string, IEnumerable<JsonNode>>) Select );
 
-    public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, ParseExpressionContext context )
+    public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterExecutionContext executionContext )
     {
         var queryExp = Expression.Constant( item.ToString() );
 
         if ( item[0] == '$' ) // Current becomes root
-            context = context with { Current = context.Root };
+            executionContext = executionContext with { Current = executionContext.Root };
 
-        return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp );
+        return Expression.Invoke( SelectExpression, executionContext.Current, executionContext.Root, queryExp );
     }
 
     public static IEnumerable<JsonNode> Select( JsonNode current, JsonNode root, string query )

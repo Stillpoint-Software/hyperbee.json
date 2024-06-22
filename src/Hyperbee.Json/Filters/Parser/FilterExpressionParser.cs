@@ -79,9 +79,8 @@ public class FilterExpressionParser
             start = from;
 
             // get Expression for current path
-            // `ParseFilterFunction` may result in recursively call to `Parse` for nested expressions
 
-            var expression = ParseFilterFunction( filter, currentPath, ref start, ref from, type, context );
+            var expression = GetExpression( filter, currentPath, ref start, ref from, type, context ); // may recursively call `Parse`
 
             var filterType = ValidType( type )
                 ? type!.Value
@@ -106,28 +105,55 @@ public class FilterExpressionParser
         return Merge( baseToken, ref index, tokens, context );
     }
 
-    internal static Expression ParseFilterFunction( ReadOnlySpan<char> filter, ReadOnlySpan<char> currentPath, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
+   internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> currentPath, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
     {
-        // Call to `GetExpression` may recursively call `Parse`
+        // parens
+        if ( currentPath.Length == 0 && type == FilterTokenType.OpenParen )
+            return Parse( filter, ref start, ref from, EndArg, context ); // causes recursion
 
-        var function = GetFunction( currentPath, type, context.Descriptor );
-        return function.GetExpression( filter, currentPath, ref start, ref from, context );
-
-        // Parse filter function based on current path and type
-
-        static FilterFunction GetFunction( ReadOnlySpan<char> currentPath, FilterTokenType? type, ITypeDescriptor descriptor )
+        // select function
+        if ( currentPath[0] == '$' || currentPath[0] == '@' )
         {
-            if ( currentPath.Length == 0 && type == FilterTokenType.OpenParen )
-                return new ParenFunction(); // causes recursion
-
-            if ( currentPath[0] == '$' || currentPath[0] == '@' )
-                return descriptor.GetSelectFunction();
-
-            if ( descriptor.Functions.TryGetCreator( currentPath.ToString(), out var creator ) )
-                return creator();
-
-            return new LiteralFunction();
+            var function = context.Descriptor.GetSelectFunction();
+            return function.GetExpression( filter, currentPath, ref start, ref from, context );
         }
+
+        // extension function
+        if ( context.Descriptor.Functions.TryGetCreator( currentPath.ToString(), out var creator ) )
+        {
+            var function = creator();
+            return function.GetExpression( filter, currentPath, ref start, ref from, context );
+        }
+
+        // literal
+        return GetLiteralExpression( currentPath );
+    }
+
+    private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
+    {
+        // Check for known literals (true, false, null) first
+
+        if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
+            return Expression.Constant( true );
+
+        if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
+            return Expression.Constant( false );
+
+        if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
+            return Expression.Constant( null );
+
+        // Check for quoted strings
+
+        if ( item.Length >= 2 && (item[0] == '"' && item[^1] == '"' || item[0] == '\'' && item[^1] == '\'') )
+            return Expression.Constant( item[1..^1].ToString() ); // remove quotes
+
+        // Check for numbers
+        // TODO: Currently assuming all numbers are floats since we don't know what's in the data or the other side of the operator yet.
+
+        if ( float.TryParse( item, out float result ) )
+            return Expression.Constant( result );
+
+        throw new ArgumentException( $"Unsupported literal: {item.ToString()}" );
     }
 
     private static void Next( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quote, out (char NextChar, FilterTokenType? Type) result )
@@ -260,7 +286,8 @@ public class FilterExpressionParser
 
             while ( !CanMergeTokens( current, next ) )
             {
-                Merge( next, ref index, listToMerge, context, mergeOneOnly: true );
+                // Merge next token with the following token
+                Merge( next, ref index, listToMerge, context, mergeOneOnly: true ); // recursive call
             }
 
             MergeTokens( current, next, context );

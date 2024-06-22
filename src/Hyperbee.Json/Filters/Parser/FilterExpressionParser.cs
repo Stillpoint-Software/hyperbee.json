@@ -78,9 +78,10 @@ public class FilterExpressionParser
 
             start = from;
 
-            // `GetExpression` may call recursively call `Parse` for nested expressions
-            var func = new FilterFunction( currentPath, type, context );
-            var expression = func.GetExpression( filter, currentPath, ref start, ref from, context );
+            // get Expression for current path
+            // `ParseFilterFunction` may result in recursively call to `Parse` for nested expressions
+
+            var expression = ParseFilterFunction( filter, currentPath, ref start, ref from, type, context );
 
             var filterType = ValidType( type )
                 ? type!.Value
@@ -103,6 +104,30 @@ public class FilterExpressionParser
         var index = 1;
 
         return Merge( baseToken, ref index, tokens, context );
+    }
+
+    internal static Expression ParseFilterFunction( ReadOnlySpan<char> filter, ReadOnlySpan<char> currentPath, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
+    {
+        // Call to `GetExpression` may recursively call `Parse`
+
+        var function = GetFunction( currentPath, type, context.Descriptor );
+        return function.GetExpression( filter, currentPath, ref start, ref from, context );
+
+        // Parse filter function based on current path and type
+
+        static FilterFunction GetFunction( ReadOnlySpan<char> currentPath, FilterTokenType? type, ITypeDescriptor descriptor )
+        {
+            if ( currentPath.Length == 0 && type == FilterTokenType.OpenParen )
+                return new ParenFunction(); // causes recursion
+
+            if ( currentPath[0] == '$' || currentPath[0] == '@' )
+                return descriptor.GetSelectFunction();
+
+            if ( descriptor.Functions.TryGetCreator( currentPath.ToString(), out var creator ) )
+                return creator();
+
+            return new LiteralFunction();
+        }
     }
 
     private static void Next( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quote, out (char NextChar, FilterTokenType? Type) result )

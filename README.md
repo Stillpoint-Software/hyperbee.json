@@ -8,7 +8,7 @@ The library is designed to be quick and extensible, allowing support for other J
 
 - **High Performance:** Optimized for performance and efficiency.
 - **Supports:** `JsonElement` and `JsonNode`.
-- **Extensible:** Easily extended to support additional JSON document types and filter functions.
+- **Extensible:** Easily extended to support additional JSON document types and functions.
 - **`IEnumerable` Results:** Deferred execution queries with `IEnumerable`.
 - **Conformant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
 
@@ -137,7 +137,7 @@ Console.WriteLine(result.First()); // Output: "fiction"
 
 ## JSONPath Syntax Reference
 
-Here's a quick reference for JSONPath syntax supported by Hyperbee.Json:
+Here's a quick reference for JSONPath syntax:
 
 | JSONPath                                     | Description                                                
 |:---------------------------------------------|:-----------------------------------------------------------
@@ -179,7 +179,7 @@ the syntax `?(<boolean expr>)`, as in:
 
 ### JSONPath Methods
 
-JsonPath expressions support basic methods calls. `Hyperbee` supports the methods defined in the RFC.
+JsonPath expressions support basic methods calls.
 
 | Method     | Description                                            | Example                                                
 |------------|--------------------------------------------------------|------------------------------------------------
@@ -230,7 +230,7 @@ var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
 
 ## Comparison with Other Libraries
 
-There are excellent options available for RFC-9535 .NET JsonPath.
+There are excellent libraries available for RFC-9535 .NET JsonPath.
 
 ### [JsonPath.Net](https://docs.json-everything.net/path/basics/) Json-Everything
 

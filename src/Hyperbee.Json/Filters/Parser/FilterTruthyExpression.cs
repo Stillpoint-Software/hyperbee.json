@@ -6,10 +6,10 @@ namespace Hyperbee.Json.Filters.Parser
 {
     public static class FilterTruthyExpression
     {
-        private static readonly MethodInfo IsTruthyMethodInfo = typeof(FilterTruthyExpression).GetMethod( nameof(IsTruthy) );
+        private static readonly MethodInfo IsTruthyMethodInfo = typeof( FilterTruthyExpression ).GetMethod( nameof( IsTruthy ) );
 
         public static Expression IsTruthyExpression( Expression expression ) =>
-            expression.Type == typeof(bool)
+            expression.Type == typeof( bool )
                 ? expression
                 : Expression.Call( IsTruthyMethodInfo, expression );
 

@@ -15,7 +15,7 @@ public abstract class FilterExtensionFunction : FilterFunction
 
     public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterExecutionContext executionContext )
     {
-        var arguments = new Expression[_argumentCount]; 
+        var arguments = new Expression[_argumentCount];
 
         for ( var i = 0; i < _argumentCount; i++ )
         {

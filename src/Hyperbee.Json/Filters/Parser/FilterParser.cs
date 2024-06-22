@@ -49,7 +49,7 @@ public class FilterParser
         filter = filter.Trim(); //BF talk to Matt about this (added failing tests without it)
                                 //   feel like we should eat whitespace (somewhere) and adjust
                                 //   start and from accordingly
-     
+
         if ( executionContext == null )
             throw new ArgumentNullException( nameof( executionContext ) );
 
@@ -110,7 +110,7 @@ public class FilterParser
         return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
     }
 
-   internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, FilterExecutionContext executionContext )
+    internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, FilterExecutionContext executionContext )
     {
         // parenthesis
         if ( item.Length == 0 && type == FilterTokenType.OpenParen )
@@ -119,7 +119,7 @@ public class FilterParser
         // select 
         if ( item[0] == '$' || item[0] == '@' )
         {
-            return executionContext.Descriptor 
+            return executionContext.Descriptor
                 .GetSelectFunction()
                 .GetExpression( filter, item, ref start, ref from, executionContext ); // may cause `Select` recursion.
         }

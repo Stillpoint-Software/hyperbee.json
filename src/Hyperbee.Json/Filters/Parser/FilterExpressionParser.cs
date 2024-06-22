@@ -105,7 +105,7 @@ public class FilterExpressionParser
         return Merge( baseToken, ref index, tokens, context );
     }
 
-   internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> currentPath, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
+    internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> currentPath, ref int start, ref int from, FilterTokenType? type, ParseExpressionContext context )
     {
         // parens
         if ( currentPath.Length == 0 && type == FilterTokenType.OpenParen )

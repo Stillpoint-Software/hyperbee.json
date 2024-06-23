@@ -306,7 +306,7 @@ public class FilterParser
                 return current.Expression;
             }
         }
-        
+
         return current.Expression;
 
         static bool CanMergeTokens( FilterToken left, FilterToken right )
@@ -320,13 +320,13 @@ public class FilterParser
             return type switch
             {
                 FilterTokenType.Not => 1,
-                FilterTokenType.And or 
+                FilterTokenType.And or
                     FilterTokenType.Or => 2,
-                FilterTokenType.Equals or 
-                    FilterTokenType.NotEquals or 
-                    FilterTokenType.GreaterThan or 
-                    FilterTokenType.GreaterThanOrEqual or 
-                    FilterTokenType.LessThan or 
+                FilterTokenType.Equals or
+                    FilterTokenType.NotEquals or
+                    FilterTokenType.GreaterThan or
+                    FilterTokenType.GreaterThanOrEqual or
+                    FilterTokenType.LessThan or
                     FilterTokenType.LessThanOrEqual => 3,
                 _ => 0,
             };

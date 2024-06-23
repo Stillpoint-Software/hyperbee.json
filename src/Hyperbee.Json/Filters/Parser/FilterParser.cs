@@ -111,7 +111,7 @@ public class FilterParser
         return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
     }
 
-    internal static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, FilterExecutionContext executionContext )
+    private static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, FilterExecutionContext executionContext )
     {
         // parenthesis
         if ( item.Length == 0 && type == FilterTokenType.OpenParen )
@@ -227,11 +227,13 @@ public class FilterParser
                 result = (nextChar, null);
                 break;
         }
-    }
 
-    private static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected )
-    {
-        return from < data.Length && data[from] == expected;
+        return;
+
+        static bool ValidNextCharacter( ReadOnlySpan<char> data, int from, char expected )
+        {
+            return from < data.Length && data[from] == expected;
+        }
     }
 
     private static bool StillCollecting( ReadOnlySpan<char> item, char ch, FilterTokenType? type, char to )
@@ -304,24 +306,31 @@ public class FilterParser
                 return current.Expression;
             }
         }
+        
         return current.Expression;
-    }
 
-    private static bool CanMergeTokens( FilterToken left, FilterToken right )
-    {
-        // "Not" can never be a right side operator
-        return right.Type != FilterTokenType.Not && GetPriority( left.Type ) >= GetPriority( right.Type );
-    }
-
-    private static int GetPriority( FilterTokenType type )
-    {
-        return type switch
+        static bool CanMergeTokens( FilterToken left, FilterToken right )
         {
-            FilterTokenType.Not => 1,
-            FilterTokenType.And or FilterTokenType.Or => 2,
-            FilterTokenType.Equals or FilterTokenType.NotEquals or FilterTokenType.GreaterThan or FilterTokenType.GreaterThanOrEqual or FilterTokenType.LessThan or FilterTokenType.LessThanOrEqual => 3,
-            _ => 0,
-        };
+            // "Not" can never be a right side operator
+            return right.Type != FilterTokenType.Not && GetPriority( left.Type ) >= GetPriority( right.Type );
+        }
+
+        static int GetPriority( FilterTokenType type )
+        {
+            return type switch
+            {
+                FilterTokenType.Not => 1,
+                FilterTokenType.And or 
+                    FilterTokenType.Or => 2,
+                FilterTokenType.Equals or 
+                    FilterTokenType.NotEquals or 
+                    FilterTokenType.GreaterThan or 
+                    FilterTokenType.GreaterThanOrEqual or 
+                    FilterTokenType.LessThan or 
+                    FilterTokenType.LessThanOrEqual => 3,
+                _ => 0,
+            };
+        }
     }
 
     private static void MergeTokens( FilterToken left, FilterToken right, ITypeDescriptor descriptor )
@@ -363,6 +372,8 @@ public class FilterParser
         left.Type = right.Type;
         return;
 
+        static bool IsNumerical( Type type ) => type == typeof( float ) || type == typeof( int );
+
         // Use Equal Method vs equal operator
         static Expression Equal( Expression l, Expression r ) => Expression.Call( ObjectEquals, l, r );
         static Expression NotEqual( Expression l, Expression r ) => Expression.Not( Equal( l, r ) );
@@ -394,12 +405,7 @@ public class FilterParser
         return compare( left, right );
     }
 
-    private static bool IsNumerical( Type type )
-    {
-        return type == typeof( int ) || type == typeof( float );
-    }
-
-    internal enum FilterTokenType
+    private enum FilterTokenType
     {
         OpenParen,
         ClosedParen,
@@ -414,7 +420,7 @@ public class FilterParser
         And
     }
 
-    internal class FilterToken( Expression expression, FilterTokenType type )
+    private class FilterToken( Expression expression, FilterTokenType type )
     {
         public Expression Expression { get; set; } = expression;
         public FilterTokenType Type { get; set; } = type;

@@ -8,7 +8,7 @@ public class SelectElementFunction : FilterFunction
 {
     private static readonly Expression SelectExpression = Expression.Constant( (Func<JsonElement, JsonElement, string, IEnumerable<JsonElement>>) Select );
 
-    public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterExecutionContext executionContext )
+    public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int pos, FilterExecutionContext executionContext )
     {
         var queryExp = Expression.Constant( item.ToString() );
 

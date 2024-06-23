@@ -99,7 +99,7 @@ public class FilterParser
 
             from++;
 
-            while( from < filter.Length && (filter[from] == ' ' || filter[from] == '\t') ) // skip whitespace
+            while ( from < filter.Length && (filter[from] == ' ' || filter[from] == '\t') ) // skip whitespace
                 from++;
 
             start = from;

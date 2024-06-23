@@ -28,7 +28,7 @@ public class FilterParser
         var currentParam = Expression.Parameter( typeof( TNode ) );
         var rootParam = Expression.Parameter( typeof( TNode ) );
         var executionContext = new FilterExecutionContext( currentParam, rootParam, descriptor );
-        
+
         var expression = Parse( filter, executionContext );
 
         return Expression.Lambda<Func<TNode, TNode, bool>>( expression, currentParam, rootParam ).Compile();

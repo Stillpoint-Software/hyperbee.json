@@ -44,63 +44,53 @@ public class FilterParser
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to, FilterExecutionContext executionContext )
+    internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char terminal, FilterExecutionContext executionContext )
     {
         if ( executionContext == null )
             throw new ArgumentNullException( nameof( executionContext ) );
 
-        if ( from >= filter.Length || filter[from] == to )
+        if ( from >= filter.Length || filter[from] == terminal )
             throw new ArgumentException( "Invalid filter", nameof( filter ) );
 
+        // Process tokens
         var tokens = new List<FilterToken>( 8 );
-        ReadOnlySpan<char> currentPath = null;
-        char? quote = null;
 
-        do
+        while ( from < filter.Length && filter[from] != terminal )
         {
-            Next( filter, ref start, ref from, ref quote, out var result );
+            var tokenSpan = GetNextTokenSpan( filter, ref start, ref from, terminal, out var tokenType );
 
-            var (ch, type) = result;
-
-            // special handling for "!"
-            if ( type == FilterTokenType.Not )
+            switch ( tokenType )
             {
-                tokens.Add( new FilterToken( null, type!.Value ) );
-                continue;
+                case FilterTokenType.Not: // special case for "!"
+                    {
+                        tokens.Add( new FilterToken( null, FilterTokenType.Not ) );
+                        break;
+                    }
+                case FilterTokenType.OpenParen when tokenSpan.IsEmpty:
+                    {
+                        var expr = Parse( filter, ref start, ref from, EndArg, executionContext ); // recurse
+                        var nextType = GetNextTokenType( tokenType, filter, ref start, ref from, terminal );
+                        tokens.Add( new FilterToken( expr, nextType ) );
+                        break;
+                    }
+                default:
+                    {
+                        if ( !TryGetFunctionExpression( filter, tokenSpan, ref start, ref from, out var expr, executionContext ) ) // may recurse
+                            expr = GetLiteralExpression( tokenSpan );
+
+                        var nextType = GetNextTokenType( tokenType, filter, ref start, ref from, terminal );
+                        tokens.Add( new FilterToken( expr, nextType ) );
+                        break;
+                    }
             }
+        }
 
-            if ( StillCollecting( currentPath, ch, type, to ) )
-            {
-                currentPath = filter[start..from].Trim();
-
-                if ( from < filter.Length && filter[from] != to )
-                    continue;
-            }
-
-            start = from;
-
-            // get Expression for current path
-
-            var expression = GetExpression( filter, currentPath, ref start, ref from, type, executionContext ); // may cause recursion
-
-            var filterType = ValidType( type )
-                ? type!.Value
-                : UpdateType( filter, ref start, ref from, type, to );
-
-            tokens.Add( new FilterToken( expression, filterType ) );
-
-            currentPath = null;
-
-        } while ( from < filter.Length && filter[from] != to );
-
-        if ( from < filter.Length && (filter[from] == EndArg || filter[from] == to) )
+        // This is needed for recursive calls: advance to next non-whitespace.
+        if ( from < filter.Length && (filter[from] == EndArg || filter[from] == terminal) )
         {
-            // This happens when called recursively: advance to next non-whitespace.
-
-            from++;
-
-            while ( from < filter.Length && (filter[from] == ' ' || filter[from] == '\t') ) // skip whitespace
+            do // skip whitespace
                 from++;
+            while ( from < filter.Length && char.IsWhiteSpace( filter[from] ) );
 
             start = from;
         }
@@ -111,120 +101,154 @@ public class FilterParser
         return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
     }
 
-    private static Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, FilterExecutionContext executionContext )
+    private static ReadOnlySpan<char> GetNextTokenSpan( ReadOnlySpan<char> filter, ref int start, ref int from, char terminal, out FilterTokenType tokenType )
     {
-        // parenthesis
-        if ( item.Length == 0 && type == FilterTokenType.OpenParen )
-            return Parse( filter, ref start, ref from, EndArg, executionContext ); // recursive call to `Parse`
+        char? quote = null;
 
-        // select 
-        if ( item[0] == '$' || item[0] == '@' )
+        // skip leading whitespace
+        while ( from < filter.Length && char.IsWhiteSpace( filter[from] ) )
         {
-            return executionContext.Descriptor
-                .GetSelectFunction()
-                .GetExpression( filter, item, ref start, ref from, executionContext ); // may cause `Select` recursion.
+            start++;
+            from++;
         }
 
-        // function
-        if ( executionContext.Descriptor.Functions.TryGetCreator( item.ToString(), out var functionCreator ) )
+        // check for end of filter
+        if ( from >= filter.Length )
         {
-            return functionCreator()
-                .GetExpression( filter, item, ref start, ref from, executionContext ); // recursive call(s) to `Parse` for arguments.
+            tokenType = FilterTokenType.Unassigned;
+            return [];
         }
 
-        // literal
-        return GetLiteralExpression( item );
+        var tokenStart = from;
+        int tokenFrom;
+
+        while ( true )
+        {
+            tokenFrom = from; // assign before the call to Next
+
+            Next( filter, ref start, ref from, ref quote, out var nextChar, out tokenType );
+
+            if ( IsFinishedCollecting( from - tokenStart, nextChar, tokenType, terminal ) )
+                break;
+
+            if ( from < filter.Length && filter[from] != terminal )
+                continue;
+
+            tokenFrom = from; // include the terminal character
+            break;
+        }
+
+        // Update start to reflect the current position
+        start = from;
+        var value = filter[tokenStart..tokenFrom].TrimEnd();
+        return value;
+
+        static bool IsFinishedCollecting( int collected, char ch, FilterTokenType tokenType, char terminal )
+        {
+            // order of operations matters here
+            if ( collected == 0 && ch == EndArg )
+                return false;
+
+            if ( tokenType != FilterTokenType.Unassigned && tokenType != FilterTokenType.ClosedParen )
+                return true;
+
+            if ( ch == terminal || ch == EndArg || ch == EndLine )
+                return true;
+
+            return false;
+        }
     }
 
-    private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
+    private static FilterTokenType GetNextTokenType( FilterTokenType tokenType, ReadOnlySpan<char> filter, ref int start, ref int from, char terminal )
     {
-        // Check for known literals (true, false, null) first
+        if ( !IsParenOrUnassigned( tokenType ) )
+            return tokenType;
 
-        if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( true );
+        // update
 
-        if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( false );
+        var nextType = tokenType;
 
-        if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( null );
+        if ( from >= filter.Length || filter[from] == EndArg || filter[from] == terminal )
+            return FilterTokenType.ClosedParen;
 
-        // Check for quoted strings
+        var index = from;
+        char? quote = null;
 
-        if ( item.Length >= 2 && (item[0] == '"' && item[^1] == '"' || item[0] == '\'' && item[^1] == '\'') )
-            return Expression.Constant( item[1..^1].ToString() ); // remove quotes
+        while ( IsParenOrUnassigned( nextType ) && index < filter.Length )
+        {
+            Next( filter, ref start, ref index, ref quote, out _, out nextType );
+        }
 
-        // Check for numbers
-        // TODO: Currently assuming all numbers are floats since we don't know what's in the data or the other side of the operator yet.
+        if ( IsParenOrUnassigned( nextType ) )
+            from = index > from ? index - 1 : from;
+        else
+            from = index;
 
-        if ( float.TryParse( item, out float result ) )
-            return Expression.Constant( result );
+        return nextType;
 
-        throw new ArgumentException( $"Unsupported literal: {item.ToString()}" );
+        static bool IsParenOrUnassigned( FilterTokenType tokenType )
+        {
+            return tokenType is FilterTokenType.Unassigned or FilterTokenType.OpenParen or FilterTokenType.ClosedParen;
+        }
     }
 
-    private static void Next( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quote, out (char NextChar, FilterTokenType? Type) result )
+    private static void Next( ReadOnlySpan<char> data, ref int start, ref int from, ref char? quoteChar, out char nextChar, out FilterTokenType tokenType )
     {
-        var nextChar = data[from++];
+        nextChar = data[from++];
+
         switch ( nextChar )
         {
             case '&' when ValidNextCharacter( data, from, '&' ):
-                from++;
-                start = from;
-                result = (nextChar, FilterTokenType.And);
+                start = ++from;
+                tokenType = FilterTokenType.And;
                 break;
             case '|' when ValidNextCharacter( data, from, '|' ):
-                from++;
-                start = from;
-                result = (nextChar, FilterTokenType.Or);
+                start = ++from;
+                tokenType = FilterTokenType.Or;
                 break;
             case '=' when ValidNextCharacter( data, from, '=' ):
-                from++;
-                start = from;
-                result = (nextChar, FilterTokenType.Equals);
+                start = ++from;
+                tokenType = FilterTokenType.Equals;
                 break;
             case '!' when ValidNextCharacter( data, from, '=' ):
-                from++;
-                start = from;
-                result = (nextChar, FilterTokenType.NotEquals);
+                start = ++from;
+                tokenType = FilterTokenType.NotEquals;
                 break;
             case '>' when ValidNextCharacter( data, from, '=' ):
-                from++;
-                start = from;
-                result = (nextChar, FilterTokenType.GreaterThanOrEqual);
+                start = ++from;
+                tokenType = FilterTokenType.GreaterThanOrEqual;
                 break;
             case '<' when ValidNextCharacter( data, from, '=' ):
-                from++;
-                start = from;
-                result = (nextChar, FilterTokenType.LessThanOrEqual);
+                start = ++from;
+                tokenType = FilterTokenType.LessThanOrEqual;
                 break;
             case '>':
                 start = from;
-                result = (nextChar, FilterTokenType.GreaterThan);
+                tokenType = FilterTokenType.GreaterThan;
                 break;
             case '<':
                 start = from;
-                result = (nextChar, FilterTokenType.LessThan);
+                tokenType = FilterTokenType.LessThan;
                 break;
             case '!':
                 start = from;
-                result = (nextChar, FilterTokenType.Not);
+                tokenType = FilterTokenType.Not;
                 break;
             case '(':
-                result = (nextChar, FilterTokenType.OpenParen);
+                tokenType = FilterTokenType.OpenParen;
                 break;
             case ')':
-                result = (nextChar, FilterTokenType.ClosedParen);
+                tokenType = FilterTokenType.ClosedParen;
                 break;
-            case ' ' or '\t' when quote == null:
-                result = (nextChar, null);
+            case ' ' or '\t' when quoteChar == null:
+                tokenType = FilterTokenType.Unassigned;
                 break;
             case '\'' or '\"' when from > 0 && data[from - 1] != '\\':
-                quote = quote == null ? nextChar : null;
-                result = (nextChar, null);
+                quoteChar = quoteChar == null ? nextChar : null;
+                tokenType = FilterTokenType.Unassigned;
                 break;
             default:
-                result = (nextChar, null);
+                tokenType = FilterTokenType.Unassigned;
                 break;
         }
 
@@ -234,57 +258,6 @@ public class FilterParser
         {
             return from < data.Length && data[from] == expected;
         }
-    }
-
-    private static bool StillCollecting( ReadOnlySpan<char> item, char ch, FilterTokenType? type, char to )
-    {
-        var stopCollecting = to is EndArg or EndLine
-            ? EndArg
-            : to;
-
-        if ( item.Length == 0 && ch == EndArg )
-            return true;
-
-        if ( ValidType( type ) || ch == stopCollecting )
-            return false;
-
-        return type != FilterTokenType.OpenParen;
-    }
-
-    private static bool ValidType( FilterTokenType? type )
-    {
-        return type is FilterTokenType.Not or
-            FilterTokenType.Equals or
-            FilterTokenType.NotEquals or
-            FilterTokenType.GreaterThanOrEqual or
-            FilterTokenType.GreaterThan or
-            FilterTokenType.LessThanOrEqual or
-            FilterTokenType.LessThan or
-            FilterTokenType.Or or
-            FilterTokenType.And;
-    }
-
-    private static FilterTokenType UpdateType( ReadOnlySpan<char> item, ref int start, ref int from, FilterTokenType? type, char to )
-    {
-        var startType = type;
-
-        if ( from >= item.Length || item[from] == EndArg || item[from] == to )
-            return FilterTokenType.ClosedParen;
-
-        var index = from;
-        char? quote = null;
-
-        while ( !ValidType( startType ) && index < item.Length )
-        {
-            Next( item, ref start, ref index, ref quote, out var result );
-            startType = result.Type;
-        }
-
-        from = ValidType( startType ) ? index
-            : index > from ? index - 1
-            : from;
-
-        return startType!.Value;
     }
 
     private static Expression Merge( FilterToken current, ref int index, List<FilterToken> listToMerge, ITypeDescriptor descriptor, bool mergeOneOnly = false )
@@ -302,9 +275,7 @@ public class FilterParser
             MergeTokens( current, next, descriptor );
 
             if ( mergeOneOnly )
-            {
                 return current.Expression;
-            }
         }
 
         return current.Expression;
@@ -405,8 +376,60 @@ public class FilterParser
         return compare( left, right );
     }
 
+    private static bool TryGetFunctionExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int start, ref int from, out Expression expression, FilterExecutionContext executionContext )
+    {
+        // select 
+        if ( item[0] == '$' || item[0] == '@' )
+        {
+            expression = executionContext.Descriptor
+                .GetSelectFunction()
+                .GetExpression( filter, item, ref start, ref from, executionContext ); // may cause `Select` recursion.
+            return true;
+        }
+
+        // function
+        if ( executionContext.Descriptor.Functions.TryGetCreator( item.ToString(), out var functionCreator ) )
+        {
+            expression = functionCreator()
+                .GetExpression( filter, item, ref start, ref from, executionContext ); // recursive call(s) to `Parse` for arguments.
+            return true;
+        }
+
+        expression = null;
+        return false;
+    }
+
+    private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
+    {
+        // Check for known literals (true, false, null) first
+
+        if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
+            return Expression.Constant( true );
+
+        if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
+            return Expression.Constant( false );
+
+        if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
+            return Expression.Constant( null );
+
+        // Check for quoted strings
+
+        if ( item.Length >= 2 && (item[0] == '"' && item[^1] == '"' || item[0] == '\'' && item[^1] == '\'') )
+            return Expression.Constant( item[1..^1].ToString() ); // remove quotes
+
+        // Check for numbers
+        // TODO: Currently assuming all numbers are floats since we don't know what's in the data or the other side of the operator yet.
+
+        if ( float.TryParse( item, out float result ) )
+            return Expression.Constant( result );
+
+        throw new ArgumentException( $"Unsupported literal: {item.ToString()}" );
+    }
+
+
     private enum FilterTokenType
     {
+        Unassigned = 0, // used to represent an unassigned token
         OpenParen,
         ClosedParen,
         Not,
@@ -420,9 +443,9 @@ public class FilterParser
         And
     }
 
-    private class FilterToken( Expression expression, FilterTokenType type )
-    {
-        public Expression Expression { get; set; } = expression;
-        public FilterTokenType Type { get; set; } = type;
-    }
+    private record FilterToken( Expression Expression, FilterTokenType Type );
+    //{
+    //    public Expression Expression { get; set; } = Expression;
+    //    public FilterTokenType Type { get; set; } = Type;
+    //}
 }

@@ -396,7 +396,7 @@ public class FilterParser
 
         if ( float.TryParse( item, out float result ) )
             return Expression.Constant( result );
-            
+
         throw new ArgumentException( $"Unsupported literal: {item.ToString()}" );
     }
 

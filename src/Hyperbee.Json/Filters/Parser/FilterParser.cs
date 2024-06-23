@@ -46,10 +46,6 @@ public class FilterParser
 
     internal static Expression Parse( ReadOnlySpan<char> filter, ref int start, ref int from, char to, FilterExecutionContext executionContext )
     {
-        filter = filter.Trim(); //BF talk to Matt about this (added failing tests without it)
-                                //   feel like we should eat whitespace (somewhere) and adjust
-                                //   start and from accordingly
-
         if ( executionContext == null )
             throw new ArgumentNullException( nameof( executionContext ) );
 
@@ -99,8 +95,13 @@ public class FilterParser
 
         if ( from < filter.Length && (filter[from] == EndArg || filter[from] == to) )
         {
-            // This happens when called recursively: move one char forward.
+            // This happens when called recursively: advance to next non-whitespace.
+
             from++;
+
+            while( from < filter.Length && (filter[from] == ' ' || filter[from] == '\t') ) // skip whitespace
+                from++;
+
             start = from;
         }
 

@@ -126,15 +126,17 @@ public class FilterExpressionParserTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "length(@.store.book) == 4", true, typeof( JsonNode ) )]
-    [DataRow( "length(@.store.book) == 4  ", true, typeof( JsonNode ) )]
-    [DataRow( "  length(@.store.book) == 4", true, typeof( JsonNode ) )]
-    [DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonNode ) )]
-    [DataRow( "4 == length(@.store.book)", true, typeof( JsonNode ) )]
-    [DataRow( " 4 == length( @.store.book )  ", true, typeof( JsonNode ) )]
-    [DataRow( "  4 == length(@.store.book)", true, typeof( JsonNode ) )]
-    [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonNode ) )]
-    public void Should_MatchExpectedResult_WhenUsingFunctionsInAnyPosition( string filter, bool expected, Type sourceType )
+    [DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]
+    [DataRow( "length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "  length(@.store.book) == 4", true, typeof( JsonElement ) )]
+    [DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "  length( @.store.book ) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "4 == length(@.store.book)", true, typeof( JsonElement ) )]
+    [DataRow( "4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
+    [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
+    [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
+    [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
+    public void Should_MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
     {
         // arrange & act
         var result = CompileAndExecute( filter, sourceType );

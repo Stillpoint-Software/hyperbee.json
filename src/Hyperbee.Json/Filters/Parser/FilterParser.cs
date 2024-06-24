@@ -82,13 +82,9 @@ public class FilterParser
             }
         }
 
-        // Advance to next non-whitespace for recursive calls.
+        // Advance to next character for recursive calls.
         if ( pos < filter.Length && (filter[pos] == EndArg || filter[pos] == terminal) )
-        {
-            do
-                pos++;
-            while ( pos < filter.Length && char.IsWhiteSpace( filter[pos] ) );
-        }
+            pos++;
 
         var baseToken = tokens[0];
         var index = 1;
@@ -107,7 +103,7 @@ public class FilterParser
         // check for end of filter
         if ( pos >= filter.Length )
         {
-            tokenType = TokenType.Unassigned;
+            tokenType = TokenType.Nop;
             return [];
         }
 
@@ -139,7 +135,7 @@ public class FilterParser
             if ( count == 0 && ch == EndArg )
                 return false;
 
-            if ( tokenType != TokenType.Unassigned && tokenType != TokenType.ClosedParen )
+            if ( tokenType != TokenType.Nop && tokenType != TokenType.ClosedParen )
                 return true;
 
             if ( ch == terminal || ch == EndArg || ch == EndLine )
@@ -151,29 +147,43 @@ public class FilterParser
 
     private static TokenType GetNextTokenType( TokenType tokenType, ReadOnlySpan<char> filter, ref int pos, char terminal )
     {
-        if ( !IsParenOrUnassigned( tokenType ) )
+        if ( IsValid( tokenType ) )
             return tokenType;
 
         var nextType = tokenType;
 
-        if ( pos >= filter.Length || filter[pos] == EndArg || filter[pos] == terminal )
+        if ( pos >= filter.Length )
+            return TokenType.Nop;
+
+        if ( filter[pos] == EndArg || filter[pos] == terminal )
             return TokenType.ClosedParen;
 
         char? quoteChar = null;
         var posTmp = pos;
+        var eof = false;
 
-        while ( IsParenOrUnassigned( nextType ) && posTmp < filter.Length )
+        while ( !IsValid( nextType ) && !eof )
         {
             GetNextCharacter( filter, ref posTmp, out nextType, out _, ref quoteChar );
+
+            if ( posTmp >= filter.Length )
+                eof = true;
         }
 
-        pos = !IsParenOrUnassigned( nextType ) ? posTmp : posTmp > pos ? posTmp - 1 : pos;
+        if ( IsValid( nextType ) || (eof && nextType == TokenType.Nop) ) // Nop here means we are at the end of the filter
+        {
+            pos = posTmp;
+        }
+        else if ( posTmp > pos )
+        {
+            pos = posTmp - 1;
+        }
 
         return nextType;
 
-        static bool IsParenOrUnassigned( TokenType tokenType )
+        static bool IsValid( TokenType tokenType )
         {
-            return tokenType is TokenType.Unassigned or TokenType.OpenParen or TokenType.ClosedParen;
+            return tokenType is not (TokenType.Nop or TokenType.OpenParen or TokenType.ClosedParen);
         }
     }
 
@@ -223,14 +233,14 @@ public class FilterParser
                 tokenType = TokenType.ClosedParen;
                 break;
             case ' ' or '\t' when quoteChar == null:
-                tokenType = TokenType.Unassigned;
+                tokenType = TokenType.Nop;
                 break;
             case '\'' or '\"' when pos > 0 && filter[pos - 1] != '\\':
                 quoteChar = quoteChar == null ? nextChar : null;
-                tokenType = TokenType.Unassigned;
+                tokenType = TokenType.Nop;
                 break;
             default:
-                tokenType = TokenType.Unassigned;
+                tokenType = TokenType.Nop;
                 break;
         }
 
@@ -403,7 +413,7 @@ public class FilterParser
 
     private enum TokenType
     {
-        Unassigned = 0, // used to represent an unassigned token
+        Nop = 0, // used to represent an unassigned token
         OpenParen,
         ClosedParen,
         Not,

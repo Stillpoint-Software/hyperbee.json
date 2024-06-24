@@ -11,6 +11,7 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
@@ -50,49 +51,58 @@ public class FilterParser
         if ( pos >= filter.Length || filter[pos] == terminal )
             throw new ArgumentException( "Invalid filter", nameof( filter ) );
 
-        var tokens = new List<ParserToken>( 8 );
+        var items = new List<ExprItem>( 8 );
 
         while ( pos < filter.Length && filter[pos] != terminal )
         {
-            var tokenSpan = GetNextTokenSpan( filter, ref pos, terminal, out var tokenType );
+            var tokenSpan = GetNextToken( filter, ref pos, terminal, out var tokenType );
 
-            switch ( tokenType )
+            // process token
+
+            if ( tokenType == TokenType.Not )
             {
-                case TokenType.Not:
-                    {
-                        tokens.Add( new ParserToken( null, TokenType.Not ) );
-                        break;
-                    }
-                case TokenType.OpenParen when tokenSpan.IsEmpty:
-                    {
-                        var expr = Parse( filter, ref pos, EndArg, executionContext ); // will recurse.
-                        var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
-                        tokens.Add( new ParserToken( expr, nextType ) );
-                        break;
-                    }
-                default:
-                    {
-                        if ( !TryGetFunctionExpression( filter, tokenSpan, ref pos, out var expr, executionContext ) ) // will recurse for each function argument.
-                            expr = GetLiteralExpression( tokenSpan );
-
-                        var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
-                        tokens.Add( new ParserToken( expr, nextType ) );
-                        break;
-                    }
+                items.Add( new ExprItem( null, TokenType.Not ) );
+                continue;
             }
+
+            if ( TryGetParenExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out var exprItem, executionContext ) )
+            {
+                items.Add( exprItem );
+                continue;
+            }
+
+            if ( TryGetSelectExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out exprItem, executionContext ) )
+            {
+                items.Add( exprItem );
+                continue;
+            }
+
+            if ( TryGetFunctionExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out exprItem, executionContext ) )
+            {
+                items.Add( exprItem );
+                continue;
+            }
+
+            if ( TryGetLiteralExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out exprItem, executionContext ) )
+            {
+                items.Add( exprItem );
+                continue;
+            }
+
+            throw new ArgumentException( $"Unsupported literal: {filter.ToString()}" );
         }
 
         // Advance to next character for recursive calls.
         if ( pos < filter.Length && (filter[pos] == EndArg || filter[pos] == terminal) )
             pos++;
 
-        var baseToken = tokens[0];
+        var baseItem = items[0];
         var index = 1;
 
-        return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
+        return Merge( baseItem, ref index, items, executionContext.Descriptor );
     }
 
-    private static ReadOnlySpan<char> GetNextTokenSpan( ReadOnlySpan<char> filter, ref int pos, char terminal, out TokenType tokenType )
+    private static ReadOnlySpan<char> GetNextToken( ReadOnlySpan<char> filter, ref int pos, char terminal, out TokenType tokenType )
     {
         char? quote = null;
 
@@ -252,7 +262,7 @@ public class FilterParser
         }
     }
 
-    private static Expression Merge( ParserToken current, ref int index, List<ParserToken> tokens, ITypeDescriptor descriptor, bool mergeOneOnly = false )
+    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> tokens, ITypeDescriptor descriptor, bool mergeOneOnly = false )
     {
         while ( index < tokens.Count )
         {
@@ -271,7 +281,7 @@ public class FilterParser
 
         return current.Expression;
 
-        static bool CanMergeTokens( ParserToken left, ParserToken right )
+        static bool CanMergeTokens( ExprItem left, ExprItem right )
         {
             // "Not" can never be a right side operator
             return right.TokenType != TokenType.Not && GetPriority( left.TokenType ) >= GetPriority( right.TokenType );
@@ -289,7 +299,7 @@ public class FilterParser
         }
     }
 
-    private static void MergeTokens( ParserToken left, ParserToken right, ITypeDescriptor descriptor )
+    private static void MergeTokens( ExprItem left, ExprItem right, ITypeDescriptor descriptor )
     {
         // Ensure both expressions are value expressions
         left.Expression = descriptor.GetValueExpression( left.Expression );
@@ -361,6 +371,35 @@ public class FilterParser
         return compare( left, right );
     }
 
+    private static bool TryGetParenExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> tokenSpan, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
+    {
+        if ( tokenType == TokenType.OpenParen && tokenSpan.IsEmpty )
+        {
+            var expression = Parse( filter, ref pos, EndArg, executionContext ); // will recurse.
+            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
+            exprItem = new ExprItem( expression, nextType );
+            return true;
+        }
+
+        exprItem = null;
+        return false;
+    }
+
+    private static bool TryGetLiteralExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> tokenSpan, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
+    {
+        var expr = GetLiteralExpression( tokenSpan );
+
+        if ( expr != null )
+        {
+            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
+            exprItem = new ExprItem( expr, nextType );
+            return true;
+        }
+
+        exprItem = null;
+        return false;
+    }
+
     private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
     {
         // Check for known literals (true, false, null) first
@@ -385,29 +424,39 @@ public class FilterParser
         if ( float.TryParse( item, out float result ) )
             return Expression.Constant( result );
 
-        throw new ArgumentException( $"Unsupported literal: {item.ToString()}" );
+        return null;
     }
 
-    private static bool TryGetFunctionExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int pos, out Expression expression, FilterExecutionContext executionContext )
+    private static bool TryGetSelectExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
     {
-        // select 
         if ( item[0] == '$' || item[0] == '@' )
         {
-            expression = executionContext.Descriptor
+            var expression = executionContext.Descriptor
                 .GetSelectFunction()
                 .GetExpression( filter, item, ref pos, executionContext ); // may cause `Select` recursion.
+
+            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
+            exprItem = new ExprItem( expression, nextType );
             return true;
         }
 
-        // function
+        exprItem = null;
+        return false;
+    }
+
+    private static bool TryGetFunctionExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
+    {
         if ( executionContext.Descriptor.Functions.TryGetCreator( item.ToString(), out var functionCreator ) )
         {
-            expression = functionCreator()
+            var expression = functionCreator()
                 .GetExpression( filter, item, ref pos, executionContext ); // will recurse for each function argument.
+
+            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
+            exprItem = new ExprItem( expression, nextType );
             return true;
         }
 
-        expression = null;
+        exprItem = null;
         return false;
     }
 
@@ -427,7 +476,7 @@ public class FilterParser
         And
     }
 
-    private class ParserToken( Expression expression, TokenType tokenType )
+    private class ExprItem( Expression expression, TokenType tokenType )
     {
         public Expression Expression { get; set; } = expression;
         public TokenType TokenType { get; set; } = tokenType;

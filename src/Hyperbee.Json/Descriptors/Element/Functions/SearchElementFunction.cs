@@ -18,7 +18,7 @@ public class SearchElementFunction() : FilterExtensionFunction( argumentCount: 2
     public static bool Search( IEnumerable<JsonElement> elements, string regex )
     {
         var value = elements.FirstOrDefault().GetString();
-        
+
         if ( value == null )
         {
             return false;

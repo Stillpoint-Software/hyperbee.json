@@ -17,13 +17,14 @@ public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 
     public static bool Search( IEnumerable<JsonNode> nodes, string regex )
     {
-        var nodeValue = nodes.FirstOrDefault()?.GetValue<string>();
-        if ( nodeValue == null )
+        var value = nodes.FirstOrDefault()?.GetValue<string>();
+
+        if ( value == null )
         {
             return false;
         }
 
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        return regexPattern.IsMatch( nodeValue );
+        return regexPattern.IsMatch( value );
     }
 }

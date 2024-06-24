@@ -17,15 +17,14 @@ public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 
     public static bool Match( IEnumerable<JsonNode> nodes, string regex )
     {
-        var nodeValue = nodes.FirstOrDefault()?.GetValue<string>();
-        if ( nodeValue == null )
+        var value = nodes.FirstOrDefault()?.GetValue<string>();
+
+        if ( value == null )
         {
             return false;
         }
 
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        var value = $"^{nodeValue}$";
-
-        return regexPattern.IsMatch( value );
+        return regexPattern.IsMatch( $"^{value}$" );
     }
 }

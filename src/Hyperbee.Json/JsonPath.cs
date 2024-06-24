@@ -32,7 +32,6 @@
 
 #endregion
 
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
@@ -53,12 +52,10 @@ public static class JsonPath<TNode>
         return EnumerateMatches( value, value, query );
     }
 
-    [EditorBrowsable( EditorBrowsableState.Advanced )]
-    public static IEnumerable<TNode> SelectInternal( in TNode value, TNode root, string query )
+    internal static IEnumerable<TNode> SelectInternal( in TNode value, TNode root, string query )
     {
         // this overload is required for reentrant filter select evaluations.
-        // it is intended for use by nameof(ITypeDescriptor<TNode>) implementations
-        // and should not be otherwise called directly by user code.
+        // it is intended for use by nameof(FilterFunction) implementations.
 
         return EnumerateMatches( value, root, query );
     }

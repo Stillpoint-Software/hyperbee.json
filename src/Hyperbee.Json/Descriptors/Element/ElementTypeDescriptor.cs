@@ -30,7 +30,7 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 
     public FilterFunction GetSelectFunction()
     {
-        return new SelectElementFunction();
+        return new SelectFunction<JsonElement>();
     }
 
     public Expression GetValueExpression( Expression expression )

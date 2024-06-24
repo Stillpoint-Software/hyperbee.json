@@ -30,7 +30,7 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
 
     public FilterFunction GetSelectFunction()
     {
-        return new SelectNodeFunction();
+        return new SelectFunction<JsonNode>();
     }
 
     public Expression GetValueExpression( Expression expression )

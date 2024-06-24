@@ -17,13 +17,14 @@ public class SearchElementFunction() : FilterExtensionFunction( argumentCount: 2
 
     public static bool Search( IEnumerable<JsonElement> elements, string regex )
     {
-        var elementValue = elements.FirstOrDefault().GetString();
-        if ( elementValue == null )
+        var value = elements.FirstOrDefault().GetString();
+        
+        if ( value == null )
         {
             return false;
         }
 
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        return regexPattern.IsMatch( elementValue );
+        return regexPattern.IsMatch( value );
     }
 }

@@ -95,72 +95,7 @@ public class FilterParser
 
         return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
     }
-
-    private static void GetNextCharacter( ReadOnlySpan<char> filter, ref int pos, out FilterTokenType tokenType, out char nextChar, ref char? quoteChar )
-    {
-        nextChar = filter[pos++];
-
-        switch ( nextChar )
-        {
-            case '&' when NextCharacter( filter, pos, '&' ):
-                pos++;
-                tokenType = FilterTokenType.And;
-                break;
-            case '|' when NextCharacter( filter, pos, '|' ):
-                pos++;
-                tokenType = FilterTokenType.Or;
-                break;
-            case '=' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = FilterTokenType.Equals;
-                break;
-            case '!' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = FilterTokenType.NotEquals;
-                break;
-            case '>' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = FilterTokenType.GreaterThanOrEqual;
-                break;
-            case '<' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = FilterTokenType.LessThanOrEqual;
-                break;
-            case '>':
-                tokenType = FilterTokenType.GreaterThan;
-                break;
-            case '<':
-                tokenType = FilterTokenType.LessThan;
-                break;
-            case '!':
-                tokenType = FilterTokenType.Not;
-                break;
-            case '(':
-                tokenType = FilterTokenType.OpenParen;
-                break;
-            case ')':
-                tokenType = FilterTokenType.ClosedParen;
-                break;
-            case ' ' or '\t' when quoteChar == null:
-                tokenType = FilterTokenType.Unassigned;
-                break;
-            case '\'' or '\"' when pos > 0 && filter[pos - 1] != '\\':
-                quoteChar = quoteChar == null ? nextChar : null;
-                tokenType = FilterTokenType.Unassigned;
-                break;
-            default:
-                tokenType = FilterTokenType.Unassigned;
-                break;
-        }
-
-        return;
-
-        static bool NextCharacter( ReadOnlySpan<char> filter, int pos, char expected )
-        {
-            return pos < filter.Length && filter[pos] == expected;
-        }
-    }
-
+    
     private static ReadOnlySpan<char> GetNextTokenSpan( ReadOnlySpan<char> filter, ref int pos, char terminal, out FilterTokenType tokenType )
     {
         char? quote = null;
@@ -239,6 +174,71 @@ public class FilterParser
         static bool IsParenOrUnassigned( FilterTokenType tokenType )
         {
             return tokenType is FilterTokenType.Unassigned or FilterTokenType.OpenParen or FilterTokenType.ClosedParen;
+        }
+    }
+
+    private static void GetNextCharacter( ReadOnlySpan<char> filter, ref int pos, out FilterTokenType tokenType, out char nextChar, ref char? quoteChar )
+    {
+        nextChar = filter[pos++];
+
+        switch ( nextChar )
+        {
+            case '&' when NextCharacter( filter, pos, '&' ):
+                pos++;
+                tokenType = FilterTokenType.And;
+                break;
+            case '|' when NextCharacter( filter, pos, '|' ):
+                pos++;
+                tokenType = FilterTokenType.Or;
+                break;
+            case '=' when NextCharacter( filter, pos, '=' ):
+                pos++;
+                tokenType = FilterTokenType.Equals;
+                break;
+            case '!' when NextCharacter( filter, pos, '=' ):
+                pos++;
+                tokenType = FilterTokenType.NotEquals;
+                break;
+            case '>' when NextCharacter( filter, pos, '=' ):
+                pos++;
+                tokenType = FilterTokenType.GreaterThanOrEqual;
+                break;
+            case '<' when NextCharacter( filter, pos, '=' ):
+                pos++;
+                tokenType = FilterTokenType.LessThanOrEqual;
+                break;
+            case '>':
+                tokenType = FilterTokenType.GreaterThan;
+                break;
+            case '<':
+                tokenType = FilterTokenType.LessThan;
+                break;
+            case '!':
+                tokenType = FilterTokenType.Not;
+                break;
+            case '(':
+                tokenType = FilterTokenType.OpenParen;
+                break;
+            case ')':
+                tokenType = FilterTokenType.ClosedParen;
+                break;
+            case ' ' or '\t' when quoteChar == null:
+                tokenType = FilterTokenType.Unassigned;
+                break;
+            case '\'' or '\"' when pos > 0 && filter[pos - 1] != '\\':
+                quoteChar = quoteChar == null ? nextChar : null;
+                tokenType = FilterTokenType.Unassigned;
+                break;
+            default:
+                tokenType = FilterTokenType.Unassigned;
+                break;
+        }
+
+        return;
+
+        static bool NextCharacter( ReadOnlySpan<char> filter, int pos, char expected )
+        {
+            return pos < filter.Length && filter[pos] == expected;
         }
     }
 

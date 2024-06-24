@@ -60,18 +60,18 @@ internal class JsonPathSegment
         }
     }
 
-    public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )
-    {
-        singular = Singular;
-        selectors = Selectors;
-    }
-
     private bool IsSingular()
     {
         if ( Selectors.Length != 1 )
             return false;
 
         return (Selectors[0].SelectorKind & SelectorKind.Singular) == SelectorKind.Singular;
+    }
+
+    public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )
+    {
+        singular = Singular;
+        selectors = Selectors;
     }
 
     internal class SegmentDebugView( JsonPathSegment instance )

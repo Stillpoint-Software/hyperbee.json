@@ -2,8 +2,6 @@
 using System.Text.RegularExpressions;
 
 namespace Hyperbee.Json;
-// https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html
-// https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-base
 
 [Flags]
 public enum SelectorKind

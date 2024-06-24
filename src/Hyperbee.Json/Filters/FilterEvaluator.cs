@@ -7,10 +7,9 @@ namespace Hyperbee.Json.Filters;
 
 public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 {
-    private readonly ITypeDescriptor _typeDescriptor;
-
-    // ReSharper disable once StaticMemberInGenericType
     private static readonly ConcurrentDictionary<string, Func<TNode, TNode, bool>> Compiled = new();
+    
+    private readonly ITypeDescriptor _typeDescriptor;
 
     public FilterEvaluator( ITypeDescriptor<TNode> typeDescriptor )
     {

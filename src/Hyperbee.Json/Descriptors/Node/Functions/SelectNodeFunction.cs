@@ -20,6 +20,6 @@ public class SelectNodeFunction : FilterFunction
 
     public static IEnumerable<JsonNode> Select( JsonNode current, JsonNode root, string query )
     {
-        return JsonPath<JsonNode>.Select( current, root, query );
+        return JsonPath<JsonNode>.SelectInternal( current, root, query );
     }
 }

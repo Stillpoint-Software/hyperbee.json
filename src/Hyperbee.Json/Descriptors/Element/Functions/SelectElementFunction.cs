@@ -20,6 +20,6 @@ public class SelectElementFunction : FilterFunction
 
     public static IEnumerable<JsonElement> Select( JsonElement current, JsonElement root, string query )
     {
-        return JsonPath<JsonElement>.Select( current, root, query );
+        return JsonPath<JsonElement>.SelectInternal( current, root, query );
     }
 }

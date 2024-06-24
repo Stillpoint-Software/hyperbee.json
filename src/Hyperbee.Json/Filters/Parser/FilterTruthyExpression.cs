@@ -26,7 +26,5 @@ namespace Hyperbee.Json.Filters.Parser
                 _ => true
             };
         }
-
-        public static bool IsFalsy( object value ) => !IsTruthy( value );
     }
 }

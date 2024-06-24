@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -95,8 +95,8 @@ public class FilterParser
 
         return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
     }
-    
-    private static ReadOnlySpan<char> GetNextTokenSpan( ReadOnlySpan<char> filter, ref int pos, char terminal, out TokenType tokenType )
+
+    private static ReadOnlySpan<char> GetNextTokenSpan( ReadOnlySpan<char> filter, ref int pos, char terminal, out FilterTokenType tokenType )
     {
         char? quote = null;
 

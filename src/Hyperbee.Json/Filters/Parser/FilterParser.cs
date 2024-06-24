@@ -96,7 +96,7 @@ public class FilterParser
         return Merge( baseToken, ref index, tokens, executionContext.Descriptor );
     }
 
-    private static ReadOnlySpan<char> GetNextTokenSpan( ReadOnlySpan<char> filter, ref int pos, char terminal, out FilterTokenType tokenType )
+    private static ReadOnlySpan<char> GetNextTokenSpan( ReadOnlySpan<char> filter, ref int pos, char terminal, out TokenType tokenType )
     {
         char? quote = null;
 

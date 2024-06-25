@@ -6,8 +6,8 @@ internal class SelectExprItem : IExprItem
     {
         if ( state.Item[0] == '$' || state.Item[0] == '@' )
         {
-            var expression = context.Descriptor
-                .GetSelectFunction()
+            var expression = context
+                .SelectHandler
                 .GetExpression( ref state, context ); // may cause `Select` recursion.
 
             exprItem = exprItemCreator( ref state, expression );

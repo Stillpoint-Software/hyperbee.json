@@ -2,7 +2,7 @@
 
 namespace Hyperbee.Json.Filters.Parser;
 
-public abstract class FilterExtensionFunction : FilterFunction
+public abstract class FilterExtensionFunction
 {
     private readonly int _argumentCount;
 
@@ -13,7 +13,7 @@ public abstract class FilterExtensionFunction : FilterFunction
 
     protected abstract Expression GetExtensionExpression( Expression[] arguments );
 
-    public override Expression GetExpression( ref ParserState state, FilterContext context )
+    internal Expression GetExpression( ref ParserState state, FilterContext context )
     {
         var arguments = new Expression[_argumentCount];
 

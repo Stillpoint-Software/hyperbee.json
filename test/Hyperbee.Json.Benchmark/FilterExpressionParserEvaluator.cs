@@ -2,10 +2,10 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Descriptors.Element;
 using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Filters.Parser;
-using Expression = System.Linq.Expressions.Expression;
 
 namespace Hyperbee.Json.Benchmark;
 
@@ -23,11 +23,13 @@ public class FilterExpressionParserEvaluator
         _nodeExecutionContext = new FilterContext(
             Expression.Parameter( typeof( JsonNode ) ),
             Expression.Parameter( typeof( JsonNode ) ),
+            new SelectExpressionHandler<JsonNode>(),
             new NodeTypeDescriptor() );
 
         _elementExecutionContext = new FilterContext(
             Expression.Parameter( typeof( JsonElement ) ),
             Expression.Parameter( typeof( JsonElement ) ),
+            new SelectExpressionHandler<JsonElement>(),
             new ElementTypeDescriptor() );
     }
 

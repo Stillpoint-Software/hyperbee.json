@@ -80,7 +80,7 @@ public class FilterParser
     private static ExprItem GetExprItem( ref ParserState state, FilterContext context )
     {
         if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
-            return ExprItem( ref state, expression);
+            return ExprItem( ref state, expression );
 
         if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // will recurse.
             return ExprItem( ref state, expression );
@@ -378,7 +378,7 @@ public class FilterParser
         // Helper method to convert numerical types to float
         static Expression ConvertToFloat( Expression expression )
         {
-            if ( expression.Type == typeof(float) ) // quick out
+            if ( expression.Type == typeof( float ) ) // quick out
                 return expression;
 
             if ( expression.Type == typeof( object ) ||

@@ -138,7 +138,7 @@ public class FilterParser
             break;
         }
 
-        state.Item = state.Buffer[itemStart..itemEnd].TrimEnd(); // set item
+        state.SetItem( itemStart, itemEnd );
         return;
 
         // Helper method to determine if item parsing is finished

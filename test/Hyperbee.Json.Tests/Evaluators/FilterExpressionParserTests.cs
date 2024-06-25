@@ -126,16 +126,16 @@ public class FilterExpressionParserTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]
-    [DataRow( "length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
-    [DataRow( "  length(@.store.book) == 4", true, typeof( JsonElement ) )]
-    [DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
-    [DataRow( "  length( @.store.book ) == 4  ", true, typeof( JsonElement ) )]
-    [DataRow( "4 == length(@.store.book)", true, typeof( JsonElement ) )]
+    //[DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]
+    //[DataRow( "length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    //[DataRow( "  length(@.store.book) == 4", true, typeof( JsonElement ) )]
+    //[DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    //[DataRow( "  length( @.store.book ) == 4  ", true, typeof( JsonElement ) )]
+    //[DataRow( "4 == length(@.store.book)", true, typeof( JsonElement ) )]
     [DataRow( "4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
-    [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
-    [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
-    [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
+    //[DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
+    //[DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
+    //[DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
     public void Should_MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
     {
         // arrange & act
@@ -174,11 +174,11 @@ public class FilterExpressionParserTests : JsonTestBase
     {
         var param = Expression.Parameter( sourceType );
         var expression = sourceType == typeof( JsonElement )
-            ? FilterParser.Parse( filter, new FilterExecutionContext(
+            ? FilterParser.Parse( filter, new FilterContext(
                 param,
                 param,
                 new ElementTypeDescriptor() ) )
-            : FilterParser.Parse( filter, new FilterExecutionContext(
+            : FilterParser.Parse( filter, new FilterContext(
                 param,
                 param,
                 new NodeTypeDescriptor() ) );

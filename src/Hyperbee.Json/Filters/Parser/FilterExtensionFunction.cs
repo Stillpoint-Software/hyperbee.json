@@ -13,18 +13,21 @@ public abstract class FilterExtensionFunction : FilterFunction
 
     protected abstract Expression GetExtensionExpression( Expression[] arguments );
 
-    public override Expression GetExpression( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int pos, FilterExecutionContext executionContext )
+    public override Expression GetExpression( ref ParserState state, FilterContext context )
     {
         var arguments = new Expression[_argumentCount];
 
         for ( var i = 0; i < _argumentCount; i++ )
         {
-            var argument = FilterParser.Parse( filter,
-                ref pos,
-                i == _argumentCount - 1
+            var localState = state with
+            {
+                Item = [],
+                Terminal = i == _argumentCount - 1
                     ? FilterParser.EndArg
-                    : FilterParser.ArgSeparator,
-                executionContext );
+                    : FilterParser.ArgSeparator
+            };
+
+            var argument = FilterParser.Parse( ref localState, context );
 
             arguments[i] = argument;
         }

@@ -3,7 +3,7 @@ using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser;
 
-public record FilterExecutionContext(
+public record FilterContext(
     Expression Current,
     Expression Root,
     ITypeDescriptor Descriptor

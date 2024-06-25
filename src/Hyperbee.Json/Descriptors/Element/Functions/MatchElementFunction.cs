@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Hyperbee.Json.Filters.Parser;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 

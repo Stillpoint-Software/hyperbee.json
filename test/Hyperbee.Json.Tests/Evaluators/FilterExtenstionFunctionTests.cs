@@ -10,6 +10,7 @@ using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace Hyperbee.Json.Tests.Evaluators;
 

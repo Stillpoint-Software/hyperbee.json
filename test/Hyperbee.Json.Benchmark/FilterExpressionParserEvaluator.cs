@@ -5,13 +5,14 @@ using BenchmarkDotNet.Attributes;
 using Hyperbee.Json.Descriptors.Element;
 using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Filters.Parser;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace Hyperbee.Json.Benchmark;
 
 public class FilterExpressionParserEvaluator
 {
-    private FilterExecutionContext _nodeExecutionContext;
-    private FilterExecutionContext _elementExecutionContext;
+    private FilterContext _nodeExecutionContext;
+    private FilterContext _elementExecutionContext;
 
     [Params( "(\"world\" == 'world') && (true || false)" )]
     public string Filter;
@@ -19,12 +20,12 @@ public class FilterExpressionParserEvaluator
     [GlobalSetup]
     public void Setup()
     {
-        _nodeExecutionContext = new FilterExecutionContext(
+        _nodeExecutionContext = new FilterContext(
             Expression.Parameter( typeof( JsonNode ) ),
             Expression.Parameter( typeof( JsonNode ) ),
             new NodeTypeDescriptor() );
 
-        _elementExecutionContext = new FilterExecutionContext(
+        _elementExecutionContext = new FilterContext(
             Expression.Parameter( typeof( JsonElement ) ),
             Expression.Parameter( typeof( JsonElement ) ),
             new ElementTypeDescriptor() );

@@ -11,8 +11,8 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Filters.Parser.Expressions;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -28,124 +28,125 @@ public class FilterParser
     {
         var currentParam = Expression.Parameter( typeof( TNode ) );
         var rootParam = Expression.Parameter( typeof( TNode ) );
-        var executionContext = new FilterExecutionContext( currentParam, rootParam, descriptor );
+        var context = new FilterContext( currentParam, rootParam, descriptor );
 
-        var expression = Parse( filter, executionContext );
+        var expression = Parse( filter, context );
 
         return Expression.Lambda<Func<TNode, TNode, bool>>( expression, currentParam, rootParam ).Compile();
     }
 
-    internal static Expression Parse( ReadOnlySpan<char> filter, FilterExecutionContext executionContext )
+    internal static Expression Parse( ReadOnlySpan<char> filter, FilterContext context )
     {
-        var from = 0;
-        var expression = Parse( filter, ref from, EndLine, executionContext );
+        var pos = 0;
+        var state = new ParserState( filter, [], ref pos, Operator.Nop, EndLine );
+
+        var expression = Parse( ref state, context );
 
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse( ReadOnlySpan<char> filter, ref int pos, char terminal, FilterExecutionContext executionContext )
+    internal static Expression Parse( ref ParserState state, FilterContext context )
     {
-        if ( executionContext == null )
-            throw new ArgumentNullException( nameof( executionContext ) );
+        // validate input
+        if ( context == null )
+            throw new ArgumentNullException( nameof( context ) );
 
-        if ( pos >= filter.Length || filter[pos] == terminal )
-            throw new ArgumentException( "Invalid filter", nameof( filter ) );
+        if ( state.EndOfBuffer || state.IsTerminal )
+            throw new ArgumentException( $"Invalid filter: \"{state.Buffer}\"", nameof( state ) );
 
-        var items = new List<ExprItem>( 8 );
+        // parse the expression
+        var items = new List<ExprItem>();
 
-        while ( pos < filter.Length && filter[pos] != terminal )
+        do
         {
-            var tokenSpan = GetNextToken( filter, ref pos, terminal, out var tokenType );
+            MoveNext( ref state );
+            items.Add( GetExpr( ref state, context ) );
 
-            // process token
+        } while ( state.IsParsing );
 
-            if ( tokenType == TokenType.Not )
-            {
-                items.Add( new ExprItem( null, TokenType.Not ) );
-                continue;
-            }
+        // advance to next character for recursive calls.
+        if ( !state.EndOfBuffer && state.IsTerminal )
+            state.Pos++;
 
-            if ( TryGetParenExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out var exprItem, executionContext ) )
-            {
-                items.Add( exprItem );
-                continue;
-            }
-
-            if ( TryGetSelectExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out exprItem, executionContext ) )
-            {
-                items.Add( exprItem );
-                continue;
-            }
-
-            if ( TryGetFunctionExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out exprItem, executionContext ) )
-            {
-                items.Add( exprItem );
-                continue;
-            }
-
-            if ( TryGetLiteralExprItem( filter, tokenSpan, ref pos, tokenType, terminal, out exprItem, executionContext ) )
-            {
-                items.Add( exprItem );
-                continue;
-            }
-
-            throw new ArgumentException( $"Unsupported literal: {filter.ToString()}" );
-        }
-
-        // Advance to next character for recursive calls.
-        if ( pos < filter.Length && (filter[pos] == EndArg || filter[pos] == terminal) )
-            pos++;
-
+        // merge the expressions
         var baseItem = items[0];
         var index = 1;
 
-        return Merge( baseItem, ref index, items, executionContext.Descriptor );
+        return Merge( baseItem, ref index, items, context.Descriptor );
     }
 
-    private static ReadOnlySpan<char> GetNextToken( ReadOnlySpan<char> filter, ref int pos, char terminal, out TokenType tokenType )
+    private static ExprItem GetExpr( ref ParserState state, FilterContext context )
+    {
+        if ( NotExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out var exprItem, context ) )
+            return exprItem;
+
+        if ( ParenExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) ) // will recurse.
+            return exprItem;
+
+        if ( SelectExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) )
+            return exprItem;
+
+        if ( FunctionExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) ) // may recurse for each function argument.
+            return exprItem;
+
+        if ( LiteralExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) )
+            return exprItem;
+
+        throw new ArgumentException( $"Unsupported literal: {state.Buffer.ToString()}" );
+
+        static ExprItem ExprItemFactoryImpl( ref ParserState state, Expression expression )
+        {
+            UpdateOperator( ref state );
+            return new( expression, state.Operator );
+        }
+    }
+
+    private static void MoveNext( ref ParserState state )
     {
         char? quote = null;
 
         // remove leading whitespace
-        while ( pos < filter.Length && char.IsWhiteSpace( filter[pos] ) )
-            pos++;
+        while ( !state.EndOfBuffer && char.IsWhiteSpace( state.Current ) )
+            state.Pos++;
 
-        // check for end of filter
-        if ( pos >= filter.Length )
+        // check for end of buffer
+        if ( state.EndOfBuffer )
         {
-            tokenType = TokenType.Nop;
-            return [];
+            state.Operator = Operator.Nop;
+            state.Item = [];
+            return;
         }
 
-        var tokenStart = pos;
-        int tokenEnd;
+        // read next item
+        var itemStart = state.Pos;
+        int itemEnd;
 
         while ( true )
         {
-            tokenEnd = pos; // assign before the call to Next
+            itemEnd = state.Pos; // assign before the call to NextCharacter
 
-            GetNextCharacter( filter, ref pos, out tokenType, out var nextChar, ref quote );
+            NextCharacter( ref state, out var nextChar, ref quote );
 
-            if ( IsFinishedCollecting( pos - tokenStart, nextChar, tokenType, terminal ) )
+            if ( IsFinished( state.Pos - itemStart, nextChar, state.Operator, state.Terminal ) )
                 break;
 
-            if ( pos < filter.Length && filter[pos] != terminal )
+            if ( !state.EndOfBuffer && !state.IsTerminal )
                 continue;
 
-            tokenEnd = pos; // include the terminal character
+            itemEnd = state.Pos; // fall-through: include the terminal character
             break;
         }
 
-        var value = filter[tokenStart..tokenEnd].TrimEnd();
-        return value;
+        state.Item = state.Buffer[itemStart..itemEnd].TrimEnd(); // set item
+        return;
 
-        static bool IsFinishedCollecting( int count, char ch, TokenType tokenType, char terminal )
+        static bool IsFinished( int count, char ch, Operator op, char terminal )
         {
-            // Order of operations matters here
+            // order of operations matters here
             if ( count == 0 && ch == EndArg )
                 return false;
 
-            if ( tokenType != TokenType.Nop && tokenType != TokenType.ClosedParen )
+            if ( op != Operator.Nop && op != Operator.ClosedParen )
                 return true;
 
             if ( ch == terminal || ch == EndArg || ch == EndLine )
@@ -155,125 +156,117 @@ public class FilterParser
         }
     }
 
-    private static TokenType GetNextTokenType( TokenType tokenType, ReadOnlySpan<char> filter, ref int pos, char terminal )
+    private static void NextCharacter( ref ParserState state, out char nextChar, ref char? quoteChar )
     {
-        if ( IsValid( tokenType ) )
-            return tokenType;
-
-        var nextType = tokenType;
-
-        if ( pos >= filter.Length )
-            return TokenType.Nop;
-
-        if ( filter[pos] == EndArg || filter[pos] == terminal )
-            return TokenType.ClosedParen;
-
-        char? quoteChar = null;
-        var posTmp = pos;
-        var eof = false;
-
-        while ( !IsValid( nextType ) && !eof )
-        {
-            GetNextCharacter( filter, ref posTmp, out nextType, out _, ref quoteChar );
-
-            if ( posTmp >= filter.Length )
-                eof = true;
-        }
-
-        if ( IsValid( nextType ) || (eof && nextType == TokenType.Nop) ) // Nop here means we are at the end of the filter
-        {
-            pos = posTmp;
-        }
-        else if ( posTmp > pos )
-        {
-            pos = posTmp - 1;
-        }
-
-        return nextType;
-
-        static bool IsValid( TokenType tokenType )
-        {
-            return tokenType is not (TokenType.Nop or TokenType.OpenParen or TokenType.ClosedParen);
-        }
-    }
-
-    private static void GetNextCharacter( ReadOnlySpan<char> filter, ref int pos, out TokenType tokenType, out char nextChar, ref char? quoteChar )
-    {
-        nextChar = filter[pos++];
+        nextChar = state.Buffer[state.Pos++];
 
         switch ( nextChar )
         {
-            case '&' when NextCharacter( filter, pos, '&' ):
-                pos++;
-                tokenType = TokenType.And;
+            case '&' when Next( ref state, '&' ):
+                state.Operator = Operator.And;
                 break;
-            case '|' when NextCharacter( filter, pos, '|' ):
-                pos++;
-                tokenType = TokenType.Or;
+            case '|' when Next( ref state, '|' ):
+                state.Operator = Operator.Or;
                 break;
-            case '=' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = TokenType.Equals;
+            case '=' when Next( ref state, '=' ):
+                state.Operator = Operator.Equals;
                 break;
-            case '!' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = TokenType.NotEquals;
+            case '!' when Next( ref state, '=' ):
+                state.Operator = Operator.NotEquals;
                 break;
-            case '>' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = TokenType.GreaterThanOrEqual;
+            case '>' when Next( ref state, '=' ):
+                state.Operator = Operator.GreaterThanOrEqual;
                 break;
-            case '<' when NextCharacter( filter, pos, '=' ):
-                pos++;
-                tokenType = TokenType.LessThanOrEqual;
+            case '<' when Next( ref state, '=' ):
+                state.Operator = Operator.LessThanOrEqual;
                 break;
             case '>':
-                tokenType = TokenType.GreaterThan;
+                state.Operator = Operator.GreaterThan;
                 break;
             case '<':
-                tokenType = TokenType.LessThan;
+                state.Operator = Operator.LessThan;
                 break;
             case '!':
-                tokenType = TokenType.Not;
+                state.Operator = Operator.Not;
                 break;
             case '(':
-                tokenType = TokenType.OpenParen;
+                state.Operator = Operator.OpenParen;
                 break;
             case ')':
-                tokenType = TokenType.ClosedParen;
+                state.Operator = Operator.ClosedParen;
                 break;
             case ' ' or '\t' when quoteChar == null:
-                tokenType = TokenType.Nop;
+                state.Operator = Operator.Nop;
                 break;
-            case '\'' or '\"' when pos > 0 && filter[pos - 1] != '\\':
+            case '\'' or '\"' when state.Pos > 0 && state.Previous != '\\':
                 quoteChar = quoteChar == null ? nextChar : null;
-                tokenType = TokenType.Nop;
+                state.Operator = Operator.Nop;
                 break;
             default:
-                tokenType = TokenType.Nop;
+                state.Operator = Operator.Nop;
                 break;
         }
 
         return;
 
-        static bool NextCharacter( ReadOnlySpan<char> filter, int pos, char expected )
+        static bool Next( ref ParserState state, char expected )
         {
-            return pos < filter.Length && filter[pos] == expected;
+            if ( state.EndOfBuffer || state.Current != expected )
+                return false;
+
+            state.Pos++;
+            return true;
         }
     }
 
-    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> tokens, ITypeDescriptor descriptor, bool mergeOneOnly = false )
+    private static void UpdateOperator( ref ParserState state )
     {
-        while ( index < tokens.Count )
-        {
-            var next = tokens[index++];
+        if ( !IsParenOrNop( state.Operator ) )
+            return;
 
-            while ( !CanMergeTokens( current, next ) )
+        if ( state.EndOfBuffer )
+        {
+            state.Operator = Operator.Nop;
+            return;
+        }
+
+        if ( state.IsTerminal )
+        {
+            state.Operator = Operator.ClosedParen;
+            return;
+        }
+
+        char? quoteChar = null;
+        var startPos = state.Pos;
+
+        while ( IsParenOrNop( state.Operator ) && !state.EndOfBuffer )
+        {
+            NextCharacter( ref state, out _, ref quoteChar );
+        }
+
+        if ( IsParen( state.Operator ) && state.Pos > startPos )
+        {
+            state.Pos--;
+        }
+
+        return;
+
+        static bool IsParenOrNop( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen or Operator.Nop;
+        static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
+    }
+
+    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> items, ITypeDescriptor descriptor, bool mergeOneOnly = false )
+    {
+        while ( index < items.Count )
+        {
+            var next = items[index++];
+
+            while ( !CanMergeItems( current, next ) )
             {
-                Merge( next, ref index, tokens, descriptor, mergeOneOnly: true ); // recursive call
+                Merge( next, ref index, items, descriptor, mergeOneOnly: true ); // recursive call
             }
 
-            MergeTokens( current, next, descriptor );
+            MergeItems( current, next, descriptor );
 
             if ( mergeOneOnly )
                 return current.Expression;
@@ -281,25 +274,25 @@ public class FilterParser
 
         return current.Expression;
 
-        static bool CanMergeTokens( ExprItem left, ExprItem right )
+        static bool CanMergeItems( ExprItem left, ExprItem right )
         {
             // "Not" can never be a right side operator
-            return right.TokenType != TokenType.Not && GetPriority( left.TokenType ) >= GetPriority( right.TokenType );
+            return right.Operator != Operator.Not && GetPriority( left.Operator ) >= GetPriority( right.Operator );
         }
 
-        static int GetPriority( TokenType type )
+        static int GetPriority( Operator type )
         {
             return type switch
             {
-                TokenType.Not => 1,
-                TokenType.And or TokenType.Or => 2,
-                TokenType.Equals or TokenType.NotEquals or TokenType.GreaterThan or TokenType.GreaterThanOrEqual or TokenType.LessThan or TokenType.LessThanOrEqual => 3,
+                Operator.Not => 1,
+                Operator.And or Operator.Or => 2,
+                Operator.Equals or Operator.NotEquals or Operator.GreaterThan or Operator.GreaterThanOrEqual or Operator.LessThan or Operator.LessThanOrEqual => 3,
                 _ => 0,
             };
         }
     }
 
-    private static void MergeTokens( ExprItem left, ExprItem right, ITypeDescriptor descriptor )
+    private static void MergeItems( ExprItem left, ExprItem right, ITypeDescriptor descriptor )
     {
         // Ensure both expressions are value expressions
         left.Expression = descriptor.GetValueExpression( left.Expression );
@@ -308,21 +301,21 @@ public class FilterParser
         // Determine if we are comparing numerical values so that we can use the correct comparison method
         bool isNumerical = IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type );
 
-        left.Expression = left.TokenType switch
+        left.Expression = left.Operator switch
         {
-            TokenType.Equals => CompareConvert( isNumerical ? Expression.Equal : Equal, left.Expression, right.Expression, isNumerical ),
-            TokenType.NotEquals => CompareConvert( isNumerical ? Expression.NotEqual : NotEqual, left.Expression, right.Expression, isNumerical ),
+            Operator.Equals => CompareConvert( isNumerical ? Expression.Equal : Equal, left.Expression, right.Expression, isNumerical ),
+            Operator.NotEquals => CompareConvert( isNumerical ? Expression.NotEqual : NotEqual, left.Expression, right.Expression, isNumerical ),
 
             // Assume/force numerical
-            TokenType.GreaterThan => CompareConvert( Expression.GreaterThan, left.Expression, right.Expression ),
-            TokenType.GreaterThanOrEqual => CompareConvert( Expression.GreaterThanOrEqual, left.Expression, right.Expression ),
-            TokenType.LessThan => CompareConvert( Expression.LessThan, left.Expression, right.Expression ),
-            TokenType.LessThanOrEqual => CompareConvert( Expression.LessThanOrEqual, left.Expression, right.Expression ),
+            Operator.GreaterThan => CompareConvert( Expression.GreaterThan, left.Expression, right.Expression ),
+            Operator.GreaterThanOrEqual => CompareConvert( Expression.GreaterThanOrEqual, left.Expression, right.Expression ),
+            Operator.LessThan => CompareConvert( Expression.LessThan, left.Expression, right.Expression ),
+            Operator.LessThanOrEqual => CompareConvert( Expression.LessThanOrEqual, left.Expression, right.Expression ),
 
-            TokenType.And => Expression.AndAlso( left.Expression!, right.Expression ),
-            TokenType.Or => Expression.OrElse( left.Expression!, right.Expression ),
+            Operator.And => Expression.AndAlso( left.Expression!, right.Expression ),
+            Operator.Or => Expression.OrElse( left.Expression!, right.Expression ),
 
-            TokenType.Not => Expression.Not( right.Expression ),
+            Operator.Not => Expression.Not( right.Expression ),
             _ => left.Expression
         };
 
@@ -335,7 +328,7 @@ public class FilterParser
                 Expression.Catch( typeof( Exception ), Expression.Constant( false ) )
             );
 
-        left.TokenType = right.TokenType;
+        left.Operator = right.Operator;
         return;
 
         static bool IsNumerical( Type type ) => type == typeof( float ) || type == typeof( int );
@@ -369,116 +362,5 @@ public class FilterParser
             return compare( left, Expression.Convert( right, typeof( string ) ) );
 
         return compare( left, right );
-    }
-
-    private static bool TryGetParenExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> tokenSpan, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
-    {
-        if ( tokenType == TokenType.OpenParen && tokenSpan.IsEmpty )
-        {
-            var expression = Parse( filter, ref pos, EndArg, executionContext ); // will recurse.
-            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
-            exprItem = new ExprItem( expression, nextType );
-            return true;
-        }
-
-        exprItem = null;
-        return false;
-    }
-
-    private static bool TryGetLiteralExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> tokenSpan, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
-    {
-        var expr = GetLiteralExpression( tokenSpan );
-
-        if ( expr != null )
-        {
-            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
-            exprItem = new ExprItem( expr, nextType );
-            return true;
-        }
-
-        exprItem = null;
-        return false;
-    }
-
-    private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
-    {
-        // Check for known literals (true, false, null) first
-
-        if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( true );
-
-        if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( false );
-
-        if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( null );
-
-        // Check for quoted strings
-
-        if ( item.Length >= 2 && (item[0] == '"' && item[^1] == '"' || item[0] == '\'' && item[^1] == '\'') )
-            return Expression.Constant( item[1..^1].ToString() ); // remove quotes
-
-        // Check for numbers
-        // TODO: Currently assuming all numbers are floats since we don't know what's in the data or the other side of the operator yet.
-
-        if ( float.TryParse( item, out float result ) )
-            return Expression.Constant( result );
-
-        return null;
-    }
-
-    private static bool TryGetSelectExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
-    {
-        if ( item[0] == '$' || item[0] == '@' )
-        {
-            var expression = executionContext.Descriptor
-                .GetSelectFunction()
-                .GetExpression( filter, item, ref pos, executionContext ); // may cause `Select` recursion.
-
-            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
-            exprItem = new ExprItem( expression, nextType );
-            return true;
-        }
-
-        exprItem = null;
-        return false;
-    }
-
-    private static bool TryGetFunctionExprItem( ReadOnlySpan<char> filter, ReadOnlySpan<char> item, ref int pos, TokenType tokenType, char terminal, out ExprItem exprItem, FilterExecutionContext executionContext )
-    {
-        if ( executionContext.Descriptor.Functions.TryGetCreator( item.ToString(), out var functionCreator ) )
-        {
-            var expression = functionCreator()
-                .GetExpression( filter, item, ref pos, executionContext ); // will recurse for each function argument.
-
-            var nextType = GetNextTokenType( tokenType, filter, ref pos, terminal );
-            exprItem = new ExprItem( expression, nextType );
-            return true;
-        }
-
-        exprItem = null;
-        return false;
-    }
-
-    private enum TokenType
-    {
-        Nop = 0, // used to represent an unassigned token
-        OpenParen,
-        ClosedParen,
-        Not,
-        Equals,
-        NotEquals,
-        LessThan,
-        LessThanOrEqual,
-        GreaterThan,
-        GreaterThanOrEqual,
-        Or,
-        And
-    }
-
-    private class ExprItem( Expression expression, TokenType tokenType )
-    {
-        public Expression Expression { get; set; } = expression;
-        public TokenType TokenType { get; set; } = tokenType;
     }
 }

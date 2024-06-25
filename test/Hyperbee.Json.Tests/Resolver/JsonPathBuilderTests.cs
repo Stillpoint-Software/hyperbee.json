@@ -3,7 +3,7 @@ using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Builder;
+namespace Hyperbee.Json.Tests.Resolver;
 
 [TestClass]
 public class JsonPathBuilderTests : JsonTestBase
@@ -18,7 +18,7 @@ public class JsonPathBuilderTests : JsonTestBase
         var source = GetDocument<JsonDocument>();
         var target = source.RootElement.GetPropertyFromPath( key );
 
-        var builder = new JsonPathBuilder( source );
+        var builder = new JsonPathResolver( source );
         var result = builder.GetPath( target );
 
         Assert.AreEqual( result, expected );

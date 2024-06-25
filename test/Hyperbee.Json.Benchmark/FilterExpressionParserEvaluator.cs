@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Descriptors.Element;
 using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Filters.Parser;
@@ -10,8 +11,8 @@ namespace Hyperbee.Json.Benchmark;
 
 public class FilterExpressionParserEvaluator
 {
-    private ParseExpressionContext _nodeExpressionContext;
-    private ParseExpressionContext _elementExpressionContext;
+    private FilterContext<JsonNode> _nodeExecutionContext;
+    private FilterContext<JsonElement> _elementExecutionContext;
 
     [Params( "(\"world\" == 'world') && (true || false)" )]
     public string Filter;
@@ -19,26 +20,20 @@ public class FilterExpressionParserEvaluator
     [GlobalSetup]
     public void Setup()
     {
-        _nodeExpressionContext = new ParseExpressionContext(
-            Expression.Parameter( typeof( JsonNode ) ),
-            Expression.Parameter( typeof( JsonNode ) ),
-            new NodeTypeDescriptor() );
+        _nodeExecutionContext = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
 
-        _elementExpressionContext = new ParseExpressionContext(
-            Expression.Parameter( typeof( JsonElement ) ),
-            Expression.Parameter( typeof( JsonElement ) ),
-            new ElementTypeDescriptor() );
+        _elementExecutionContext = new FilterContext<JsonElement>( new ElementTypeDescriptor() );
     }
 
     [Benchmark]
     public void JsonPathFilterParser_JsonElement()
     {
-        FilterExpressionParser.Parse( Filter, _elementExpressionContext );
+        FilterParser<JsonElement>.Parse( Filter, _elementExecutionContext );
     }
 
     [Benchmark]
     public void JsonPathFilterParser_JsonNode()
     {
-        FilterExpressionParser.Parse( Filter, _nodeExpressionContext );
+        FilterParser<JsonNode>.Parse( Filter, _nodeExecutionContext );
     }
 }

@@ -65,9 +65,9 @@ Examples of valid path syntax:
 
 ### JsonElement Path
 
-Unlike `JsonNode`, `JsonElement` does not have a `Path` property. `JsonPathBuilder` will find the path
-for a given element.
+Unlike `JsonNode`, `JsonElement` does not have a `Path` property. `JsonPathResolver` will find the path
+for a given `JsonElement`.
 
-| Method                    | Description
-|:--------------------------|:-----------
-| `JsonPathBuilder.GetPath` | Returns the JsonPath location string for a given element
+| Method                     | Description
+|:---------------------------|:-----------
+| `JsonPathResolver.GetPath` | Returns the JsonPath location string for a given element

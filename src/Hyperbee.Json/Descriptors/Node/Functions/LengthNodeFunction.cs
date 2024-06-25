@@ -5,12 +5,12 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class LengthNodeFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
+public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "length";
     private static readonly Expression LengthExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, float>) Length );
 
-    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( LengthExpression, arguments[0] );
     }

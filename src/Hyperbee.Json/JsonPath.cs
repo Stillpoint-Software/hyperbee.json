@@ -52,8 +52,11 @@ public static class JsonPath<TNode>
         return EnumerateMatches( value, value, query );
     }
 
-    internal static IEnumerable<TNode> Select( in TNode value, TNode root, string query )
+    internal static IEnumerable<TNode> SelectInternal( in TNode value, TNode root, string query )
     {
+        // this overload is required for reentrant filter select evaluations.
+        // it is intended for use by nameof(FilterFunction) implementations.
+
         return EnumerateMatches( value, root, query );
     }
 

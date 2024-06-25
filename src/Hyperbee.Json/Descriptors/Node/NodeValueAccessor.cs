@@ -1,6 +1,9 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Descriptors.Node.Functions;
+using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
@@ -116,5 +119,10 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 _ => false
             };
         }
+    }
+
+    public object GetAsValue( IEnumerable<JsonNode> nodes )
+    {
+        return ValueNodeFunction.Value( nodes );
     }
 }

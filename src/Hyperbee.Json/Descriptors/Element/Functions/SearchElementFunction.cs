@@ -5,25 +5,26 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class SearchElementFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 2, context )
+public class SearchElementFunction() : FilterExtensionFunction( argumentCount: 2 )
 {
     public const string Name = "search";
     private static readonly Expression SearchExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, string, bool>) Search );
 
-    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( SearchExpression, arguments[0], arguments[1] );
     }
 
     public static bool Search( IEnumerable<JsonElement> elements, string regex )
     {
-        var elementValue = elements.FirstOrDefault().GetString();
-        if ( elementValue == null )
+        var value = elements.FirstOrDefault().GetString();
+
+        if ( value == null )
         {
             return false;
         }
 
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        return regexPattern.IsMatch( elementValue );
+        return regexPattern.IsMatch( value );
     }
 }

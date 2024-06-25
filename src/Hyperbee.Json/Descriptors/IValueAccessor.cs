@@ -8,4 +8,5 @@ public interface IValueAccessor<TNode>
     bool IsArray( in TNode value, out int length );
     bool IsObject( in TNode value );
     bool TryGetChildValue( in TNode value, string childKey, out TNode childValue );
+    object GetAsValue( IEnumerable<TNode> elements );
 }

@@ -1,16 +1,15 @@
 ﻿using System.Linq.Expressions;
 using System.Text.Json;
-
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class ValueElementFunction( ParseExpressionContext context ) : FilterExtensionFunction( argumentCount: 1, context )
+public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "value";
     public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, object>) Value );
 
-    public override Expression GetExtensionExpression( Expression[] arguments, ParseExpressionContext context )
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
         return Expression.Invoke( ValueExpression, arguments[0] );
     }
@@ -31,15 +30,15 @@ public class ValueElementFunction( ParseExpressionContext context ) : FilterExte
             JsonValueKind.Undefined => false,
             _ => false
         };
-    }
 
-    private static bool IsNotEmpty( JsonElement element )
-    {
-        return element.ValueKind switch
+        static bool IsNotEmpty( JsonElement element )
         {
-            JsonValueKind.Array => element.EnumerateArray().Any(),
-            JsonValueKind.Object => element.EnumerateObject().Any(),
-            _ => false
-        };
+            return element.ValueKind switch
+            {
+                JsonValueKind.Array => element.EnumerateArray().Any(),
+                JsonValueKind.Object => element.EnumerateObject().Any(),
+                _ => false
+            };
+        }
     }
 }

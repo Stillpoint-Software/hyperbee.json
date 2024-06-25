@@ -6,7 +6,7 @@ namespace Hyperbee.Json;
 
 public class JsonTypeDescriptorRegistry
 {
-    private static readonly Dictionary<Type, IJsonTypeDescriptor> Descriptors = [];
+    private static readonly Dictionary<Type, ITypeDescriptor> Descriptors = [];
 
     static JsonTypeDescriptorRegistry()
     {

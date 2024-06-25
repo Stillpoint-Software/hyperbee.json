@@ -2,15 +2,15 @@
 # Hyperbee.Json
 
 `Hyperbee.Json` is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`.  
-The library is designed to be quick and extensible, allowing support for other JSON document types.
+The library is designed to be quick and extensible, allowing support for other JSON document types and functions.
 
 ## Features
 
 - **High Performance:** Optimized for performance and efficiency.
 - **Supports:** `JsonElement` and `JsonNode`.
-- **Extensible:** Easily extended to support additional JSON document types.
+- **Extensible:** Easily extended to support additional JSON document types and functions.
 - **`IEnumerable` Results:** Deferred execution queries with `IEnumerable`.
-- **Comformant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
+- **Conformant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
 
 ## JSONPath Consensus
 
@@ -80,8 +80,6 @@ foreach (var item in result)
 }
 ```
 
-### Advanced Examples
-
 #### Filtering
 
 ```csharp
@@ -139,7 +137,7 @@ Console.WriteLine(result.First()); // Output: "fiction"
 
 ## JSONPath Syntax Reference
 
-Here's a quick reference for JSONPath syntax supported by Hyperbee.Json:
+Here's a quick reference for JSONPath syntax:
 
 | JSONPath                                     | Description                                                
 |:---------------------------------------------|:-----------------------------------------------------------
@@ -179,11 +177,9 @@ the syntax `?(<boolean expr>)`, as in:
 
     $.store.book[?(@.price < 10)].title
 
-### Supported JSONPath Methods
+### JSONPath Methods
 
-JsonPath expressions support basic methods calls. By default, Hyperbee supports the methods defined in the RFC.
-You can extend the supported funtion set by creating your own functions.
-
+JsonPath expressions support basic methods calls.
 
 | Method     | Description                                            | Example                                                
 |------------|--------------------------------------------------------|------------------------------------------------
@@ -193,11 +189,91 @@ You can extend the supported funtion set by creating your own functions.
 | `search()` | Searches for a string within another string.           | `$.store.book[?(@.title.search('Sword'))]`             
 | `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(@.price.value() < 10)]`                
 
-## Additional Documentation
 
-Additional documentation can be found in the project's `/docs` folder.
+You can extend the supported function set by registering your own functions.
 
-## Benchmarks
+#### Example: `JsonNode` Path Function
+
+**Step 1:** Create a custom function that returns the path of a `JsonNode`.
+
+```csharp
+public class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+{
+    public const string Name = "path";
+    private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+
+    protected override Expression GetExtensionExpression( Expression[] arguments )
+    {
+        return Expression.Invoke( PathExpression, arguments[0] );
+    }
+
+    public static string Path( IEnumerable<JsonNode> nodes )
+    {
+        var node = nodes.FirstOrDefault();
+        return node?.GetPath();
+    }
+}
+```
+
+**Step 2:** Register your custom function.
+
+```csharp
+JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
+    .Register( PathNodeFunction.Name, () => new PathNodeFunction() );
+```
+
+**Step 3:** Use your custom function in a JSONPath query.
+
+```csharp
+var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
+```
+
+## Comparison with Other Libraries
+
+There are excellent libraries available for RFC-9535 .NET JsonPath.
+
+### [JsonPath.Net](https://docs.json-everything.net/path/basics/) Json-Everything
+
+- **Pros:**
+  - Extensive JSON ecosystem.
+  - Comprehensive feature set.
+  - Deferred execution queries with `IEnumerable`.
+  - Strong community support.
+
+- **Cons:**
+  - No support for `JsonElement`.
+  - Not quite as fast as other `System.Text.Json` implementations.
+   
+### [JsonCons.NET](https://danielaparker.github.io/JsonCons.Net/articles/JsonPath/JsonConsJsonPath.html)
+
+- **Pros:**
+  - High performance.
+  - Enhanced JsonPath syntax.
+
+- **Cons:**
+  - No support for `JsonNode`.
+  - Does not return an `IEnumerable` result (no defered query execution).
+  
+### [Json.NET](https://www.newtonsoft.com/json) Newtonsoft
+
+- **Pros:**
+  - Comprehensive feature set.
+  - Documentation and examples.
+  - Strong community support.
+  - Level 2 .NET Foundation Project.
+
+- **Cons:**
+  - No support for `JsonElement`, or `JsonNode`.
+
+### Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json) ?
+
+- High Performance.
+- Supports both `JsonElement`, and `JsonNode`.
+- Deferred execution queries with `IEnumerable`.
+- Extendable to support additional JSON document types and functions.
+- Consensus focused JSONPath implementation.
+
+- ## Benchmarks
 
 Here is a performance comparison of various queries on the standard book store document.
 
@@ -240,6 +316,7 @@ Here is a performance comparison of various queries on the standard book store d
 }
 ```
 
+```
 | Method                  | Filter                           | Mean      | Error      | StdDev    | Allocated
 |:----------------------- |:-------------------------------- |:--------- |:---------- |:--------- |:---------
 | Hyperbee_JsonElement    | $..* `First()`                   |  3.042 us |  0.3928 us | 0.0215 us |   3.82 KB
@@ -271,52 +348,11 @@ Here is a performance comparison of various queries on the standard book store d
 | JsonCons_JsonElement    | $.store.book[0]                  |  3.365 us | 10.9259 us | 0.5989 us |   3.21 KB
 | JsonEverything_JsonNode | $.store.book[0]                  |  4.670 us |  0.6449 us | 0.0354 us |   5.96 KB
 | Newtonsoft_JObject      | $.store.book[0]                  |  8.572 us |  1.5455 us | 0.0847 us |  14.56 KB
+```
 
-## Comparison with Other Libraries
+## Additional Documentation
 
-There are excellent options available for RFC-9535 .NET JsonPath.
-
-### [JsonPath.Net](https://docs.json-everything.net/path/basics/) Json-Everything
-
-- **Pros:**
-  - Extensive JSON ecosystem.
-  - Comprehensive feature set.
-  - Deferred execution queries with `IEnumerable`.
-  - Strong community support.
-
-- **Cons:**
-  - No support for `JsonElement`.
-  - Slower performance and higher memory allocation than other `System.Text.Json` implementations.
-   
-### [JsonCons.NET](https://danielaparker.github.io/JsonCons.Net/articles/JsonPath/JsonConsJsonPath.html)
-
-- **Pros:**
-  - High performance.
-  - Enhanced JsonPath syntax.
-
-- **Cons:**
-  - No support for `JsonNode`.
-  - Does not return an `IEnumerable` result (no defered query execution).
-  making it less efficient, and more memory intensive, for certain operations,
-  
-### [Json.NET](https://www.newtonsoft.com/json) Newtonsoft
-
-- **Pros:**
-  - Comprehensive feature set.
-  - Documentation and examples.
-  - Level 2 .NET Foundation Project.
-
-- **Cons:**
-  - No support for `JsonElement`, or `JsonNode`.
-  - Slower performance and higher memory allocation than `System.Text.Json`.
-
-### Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json) ?
-
-- High Performance.
-- Focus on consensus implementation.
-- Supports both `JsonElement`, and `JsonNode`.
-- Deferred execution queries with `IEnumerable`.
-- Extendable to support additional JSON document types and functions.
+Additional documentation can be found in the project's `/docs` folder.
 
 ## Credits
 

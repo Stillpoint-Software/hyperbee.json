@@ -24,11 +24,13 @@ public class FilterParser
 
     private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 
-    public static Func<TNode, TNode, bool> Compile<TNode>( ReadOnlySpan<char> filter, ITypeDescriptor descriptor )
+    public static Func<TNode, TNode, bool> Compile<TNode>( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
         var currentParam = Expression.Parameter( typeof( TNode ) );
         var rootParam = Expression.Parameter( typeof( TNode ) );
-        var context = new FilterContext( currentParam, rootParam, descriptor );
+        var selectExpressionHandler = new SelectExpressionHandler<TNode>();
+
+        var context = new FilterContext( currentParam, rootParam, selectExpressionHandler, descriptor );
 
         var expression = Parse( filter, context );
 

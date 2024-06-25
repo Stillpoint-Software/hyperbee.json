@@ -28,11 +28,6 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
         Functions.Register( ValueNodeFunction.Name, () => new ValueNodeFunction() );
     }
 
-    public FilterFunction GetSelectFunction()
-    {
-        return new SelectFunction<JsonNode>();
-    }
-
     public Expression GetValueExpression( Expression expression )
     {
         if ( expression is null )

@@ -28,11 +28,6 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
         Functions.Register( ValueElementFunction.Name, () => new ValueElementFunction() );
     }
 
-    public FilterFunction GetSelectFunction()
-    {
-        return new SelectFunction<JsonElement>();
-    }
-
     public Expression GetValueExpression( Expression expression )
     {
         if ( expression is null )

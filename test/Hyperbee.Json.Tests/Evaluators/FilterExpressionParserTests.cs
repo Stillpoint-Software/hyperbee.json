@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Descriptors.Element;
 using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Extensions;
@@ -177,10 +178,12 @@ public class FilterExpressionParserTests : JsonTestBase
             ? FilterParser.Parse( filter, new FilterContext(
                 param,
                 param,
+                new SelectExpressionHandler<JsonElement>(),
                 new ElementTypeDescriptor() ) )
             : FilterParser.Parse( filter, new FilterContext(
                 param,
                 param,
+                new SelectExpressionHandler<JsonNode>(),
                 new NodeTypeDescriptor() ) );
 
         return (expression, param);

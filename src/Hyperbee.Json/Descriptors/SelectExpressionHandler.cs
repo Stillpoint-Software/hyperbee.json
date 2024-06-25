@@ -3,18 +3,23 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 
-public class SelectFunction<TNode> : FilterFunction
+internal abstract class FilterExpressionHandler
+{
+    internal abstract Expression GetExpression( ref ParserState state, FilterContext executionContext );
+}
+
+internal class SelectExpressionHandler<TNode> : FilterExpressionHandler
 {
     private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, IEnumerable<TNode>>) Select );
 
-    public override Expression GetExpression( ref ParserState state, FilterContext context )
+    internal override Expression GetExpression( ref ParserState state, FilterContext executionContext )
     {
         var queryExp = Expression.Constant( state.Item.ToString() );
 
         if ( state.Item[0] == '$' ) // Current becomes root
-            context = context with { Current = context.Root };
+            executionContext = executionContext with { Current = executionContext.Root };
 
-        return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp );
+        return Expression.Invoke( SelectExpression, executionContext.Current, executionContext.Root, queryExp );
     }
 
     public static IEnumerable<TNode> Select( TNode current, TNode root, string query )

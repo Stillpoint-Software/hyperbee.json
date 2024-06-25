@@ -10,8 +10,6 @@ public interface ITypeDescriptor
 {
     public FunctionRegistry Functions { get; }
 
-    public FilterFunction GetSelectFunction();
-
     public Expression GetValueExpression( Expression context );
 }
 

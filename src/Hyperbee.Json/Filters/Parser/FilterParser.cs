@@ -94,6 +94,7 @@ public class FilterParser
 
         throw new ArgumentException( $"Unsupported literal: {state.Buffer.ToString()}" );
 
+        // Helper method to create an expression item
         static ExprItem ExprItemFactoryImpl( ref ParserState state, Expression expression )
         {
             UpdateOperator( ref state );
@@ -140,6 +141,7 @@ public class FilterParser
         state.Item = state.Buffer[itemStart..itemEnd].TrimEnd(); // set item
         return;
 
+        // Helper method to determine if item parsing is finished
         static bool IsFinished( int count, char ch, Operator op, char terminal )
         {
             // order of operations matters here
@@ -209,6 +211,7 @@ public class FilterParser
 
         return;
 
+        // Helper method to check if the next character is the expected character
         static bool Next( ref ParserState state, char expected )
         {
             if ( state.EndOfBuffer || state.Current != expected )
@@ -251,6 +254,7 @@ public class FilterParser
 
         return;
 
+        // Helper method to determine if an operator is a parenthesis or a no-op
         static bool IsParenOrNop( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen or Operator.Nop;
         static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
     }
@@ -274,19 +278,27 @@ public class FilterParser
 
         return current.Expression;
 
+        // Helper method to determine if two items can be merged
         static bool CanMergeItems( ExprItem left, ExprItem right )
         {
             // "Not" can never be a right side operator
             return right.Operator != Operator.Not && GetPriority( left.Operator ) >= GetPriority( right.Operator );
         }
 
+        // Helper method to get the priority of an operator
         static int GetPriority( Operator type )
         {
             return type switch
             {
                 Operator.Not => 1,
-                Operator.And or Operator.Or => 2,
-                Operator.Equals or Operator.NotEquals or Operator.GreaterThan or Operator.GreaterThanOrEqual or Operator.LessThan or Operator.LessThanOrEqual => 3,
+                Operator.And or 
+                    Operator.Or => 2,
+                Operator.Equals or 
+                    Operator.NotEquals or 
+                    Operator.GreaterThan or 
+                    Operator.GreaterThanOrEqual or 
+                    Operator.LessThan or 
+                    Operator.LessThanOrEqual => 3,
                 _ => 0,
             };
         }
@@ -331,9 +343,10 @@ public class FilterParser
         left.Operator = right.Operator;
         return;
 
+        // Helper method to determine if a type is numerical
         static bool IsNumerical( Type type ) => type == typeof( float ) || type == typeof( int );
 
-        // Use Equal Method vs equal operator
+        // Helper methods to create comparison expressions
         static Expression Equal( Expression l, Expression r ) => Expression.Call( ObjectEquals, l, r );
         static Expression NotEqual( Expression l, Expression r ) => Expression.Not( Equal( l, r ) );
     }
@@ -342,25 +355,38 @@ public class FilterParser
     {
         if ( isNumerical )
         {
-            if ( left.Type == typeof( object ) )
-                left = Expression.Convert( left, typeof( float ) );
+            left = ConvertNumericalToFloat( left );
+            right = ConvertNumericalToFloat( right );
+        }
+        else
+        {
+            // Handle object to string conversion
+            if ( left.Type == typeof(object) && right.Type == typeof(string) )
+                return compare( Convert<string>( left ), right );
 
-            if ( right.Type == typeof( object ) )
-                right = Expression.Convert( right, typeof( float ) );
-
-            if ( left.Type == typeof( int ) )
-                left = Expression.Convert( left, typeof( float ) );
-
-            if ( right.Type == typeof( int ) )
-                right = Expression.Convert( right, typeof( float ) );
+            if ( left.Type == typeof(string) && right.Type == typeof(object) )
+                return compare( left, Convert<string>( right ) );
         }
 
-        if ( left.Type == typeof( object ) && right.Type == typeof( string ) )
-            return compare( Expression.Convert( left, typeof( string ) ), right );
-
-        if ( left.Type == typeof( string ) && right.Type == typeof( object ) )
-            return compare( left, Expression.Convert( right, typeof( string ) ) );
-
         return compare( left, right );
+
+        // Helper method to convert an expression to a specified type
+        static Expression Convert<TType>( Expression expression ) => Expression.Convert( expression, typeof(TType) );
+
+        // Helper method to convert numerical types to float
+        static Expression ConvertNumericalToFloat( Expression expression )
+        {
+            if ( expression.Type == typeof(object) ||
+                 expression.Type == typeof(int) ||
+                 expression.Type == typeof(short) ||
+                 expression.Type == typeof(long) ||
+                 expression.Type == typeof(double) ||
+                 expression.Type == typeof(decimal) )
+            {
+                return Convert<float>( expression );
+            }
+
+            return expression;
+        }
     }
 }

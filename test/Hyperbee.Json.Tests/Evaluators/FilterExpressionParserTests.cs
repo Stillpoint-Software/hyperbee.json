@@ -178,12 +178,12 @@ public class FilterExpressionParserTests : JsonTestBase
             ? FilterParser.Parse( filter, new FilterContext(
                 param,
                 param,
-                new SelectExpressionHandler<JsonElement>(),
+                new SelectExpressionFactory<JsonElement>(),
                 new ElementTypeDescriptor() ) )
             : FilterParser.Parse( filter, new FilterContext(
                 param,
                 param,
-                new SelectExpressionHandler<JsonNode>(),
+                new SelectExpressionFactory<JsonNode>(),
                 new NodeTypeDescriptor() ) );
 
         return (expression, param);

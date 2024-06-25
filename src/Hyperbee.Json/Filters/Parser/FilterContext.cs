@@ -6,6 +6,6 @@ namespace Hyperbee.Json.Filters.Parser;
 internal record FilterContext(
     Expression Current,
     Expression Root,
-    FilterExpressionHandler SelectHandler,
+    FilterExpressionFactory SelectFactory,
     ITypeDescriptor Descriptor
 );

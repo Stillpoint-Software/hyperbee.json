@@ -23,13 +23,13 @@ public class FilterExpressionParserEvaluator
         _nodeExecutionContext = new FilterContext(
             Expression.Parameter( typeof( JsonNode ) ),
             Expression.Parameter( typeof( JsonNode ) ),
-            new SelectExpressionHandler<JsonNode>(),
+            new SelectExpressionFactory<JsonNode>(),
             new NodeTypeDescriptor() );
 
         _elementExecutionContext = new FilterContext(
             Expression.Parameter( typeof( JsonElement ) ),
             Expression.Parameter( typeof( JsonElement ) ),
-            new SelectExpressionHandler<JsonElement>(),
+            new SelectExpressionFactory<JsonElement>(),
             new ElementTypeDescriptor() );
     }
 

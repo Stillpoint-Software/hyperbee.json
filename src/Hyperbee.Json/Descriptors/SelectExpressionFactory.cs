@@ -3,12 +3,12 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 
-internal abstract class FilterExpressionHandler
+internal abstract class FilterExpressionFactory
 {
     internal abstract Expression GetExpression( ref ParserState state, FilterContext executionContext );
 }
 
-internal class SelectExpressionHandler<TNode> : FilterExpressionHandler
+internal class SelectExpressionFactory<TNode> : FilterExpressionFactory
 {
     private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, IEnumerable<TNode>>) Select );
 

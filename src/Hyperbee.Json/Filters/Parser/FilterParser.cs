@@ -28,9 +28,9 @@ public class FilterParser
     {
         var currentParam = Expression.Parameter( typeof( TNode ) );
         var rootParam = Expression.Parameter( typeof( TNode ) );
-        var selectExpressionHandler = new SelectExpressionHandler<TNode>();
+        var selectFactory = new SelectExpressionFactory<TNode>();
 
-        var context = new FilterContext( currentParam, rootParam, selectExpressionHandler, descriptor );
+        var context = new FilterContext( currentParam, rootParam, selectFactory, descriptor );
 
         var expression = Parse( filter, context );
 
@@ -62,7 +62,7 @@ public class FilterParser
         do
         {
             MoveNext( ref state );
-            items.Add( GetExpr( ref state, context ) );
+            items.Add( GetExprItem( ref state, context ) );
 
         } while ( state.IsParsing );
 
@@ -77,27 +77,27 @@ public class FilterParser
         return Merge( baseItem, ref index, items, context.Descriptor );
     }
 
-    private static ExprItem GetExpr( ref ParserState state, FilterContext context )
+    private static ExprItem GetExprItem( ref ParserState state, FilterContext context )
     {
-        if ( NotExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out var exprItem, context ) )
-            return exprItem;
+        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
+            return ExprItem( ref state, expression);
 
-        if ( ParenExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) ) // will recurse.
-            return exprItem;
+        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // will recurse.
+            return ExprItem( ref state, expression );
 
-        if ( SelectExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) )
-            return exprItem;
+        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, context ) )
+            return ExprItem( ref state, expression );
 
-        if ( FunctionExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) ) // may recurse for each function argument.
-            return exprItem;
+        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // may recurse for each function argument.
+            return ExprItem( ref state, expression );
 
-        if ( LiteralExprItem.TryGetItem( ref state, ExprItemFactoryImpl, out exprItem, context ) )
-            return exprItem;
+        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, context ) )
+            return ExprItem( ref state, expression );
 
         throw new ArgumentException( $"Unsupported literal: {state.Buffer.ToString()}" );
 
         // Helper method to create an expression item
-        static ExprItem ExprItemFactoryImpl( ref ParserState state, Expression expression )
+        static ExprItem ExprItem( ref ParserState state, Expression expression )
         {
             UpdateOperator( ref state );
             return new( expression, state.Operator );
@@ -357,8 +357,8 @@ public class FilterParser
     {
         if ( isNumerical )
         {
-            left = ConvertNumericalToFloat( left );
-            right = ConvertNumericalToFloat( right );
+            left = ConvertToFloat( left );
+            right = ConvertToFloat( right );
         }
         else
         {
@@ -376,8 +376,11 @@ public class FilterParser
         static Expression Convert<TType>( Expression expression ) => Expression.Convert( expression, typeof( TType ) );
 
         // Helper method to convert numerical types to float
-        static Expression ConvertNumericalToFloat( Expression expression )
+        static Expression ConvertToFloat( Expression expression )
         {
+            if ( expression.Type == typeof(float) ) // quick out
+                return expression;
+
             if ( expression.Type == typeof( object ) ||
                  expression.Type == typeof( int ) ||
                  expression.Type == typeof( short ) ||
@@ -390,5 +393,11 @@ public class FilterParser
 
             return expression;
         }
+    }
+
+    private class ExprItem( Expression expression, Operator op )
+    {
+        public Expression Expression { get; set; } = expression;
+        public Operator Operator { get; set; } = op;
     }
 }

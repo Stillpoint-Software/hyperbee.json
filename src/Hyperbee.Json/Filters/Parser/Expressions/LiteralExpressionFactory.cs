@@ -2,20 +2,12 @@
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
-internal class LiteralExprItem : IExprItem
+internal class LiteralExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetItem( ref ParserState state, ExprItemFactory exprItemCreator, out ExprItem exprItem, FilterContext context )
+    public static bool TryGetExpression( ref ParserState state, out Expression expression, FilterContext context )
     {
-        var expression = GetLiteralExpression( state.Item );
-
-        if ( expression != null )
-        {
-            exprItem = exprItemCreator( ref state, expression );
-            return true;
-        }
-
-        exprItem = null;
-        return false;
+        expression = GetLiteralExpression( state.Item );
+        return expression != null;
     }
 
     private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )

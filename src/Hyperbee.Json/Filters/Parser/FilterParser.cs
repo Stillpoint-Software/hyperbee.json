@@ -291,13 +291,13 @@ public class FilterParser
             return type switch
             {
                 Operator.Not => 1,
-                Operator.And or 
+                Operator.And or
                     Operator.Or => 2,
-                Operator.Equals or 
-                    Operator.NotEquals or 
-                    Operator.GreaterThan or 
-                    Operator.GreaterThanOrEqual or 
-                    Operator.LessThan or 
+                Operator.Equals or
+                    Operator.NotEquals or
+                    Operator.GreaterThan or
+                    Operator.GreaterThanOrEqual or
+                    Operator.LessThan or
                     Operator.LessThanOrEqual => 3,
                 _ => 0,
             };
@@ -361,27 +361,27 @@ public class FilterParser
         else
         {
             // Handle object to string conversion
-            if ( left.Type == typeof(object) && right.Type == typeof(string) )
+            if ( left.Type == typeof( object ) && right.Type == typeof( string ) )
                 return compare( Convert<string>( left ), right );
 
-            if ( left.Type == typeof(string) && right.Type == typeof(object) )
+            if ( left.Type == typeof( string ) && right.Type == typeof( object ) )
                 return compare( left, Convert<string>( right ) );
         }
 
         return compare( left, right );
 
         // Helper method to convert an expression to a specified type
-        static Expression Convert<TType>( Expression expression ) => Expression.Convert( expression, typeof(TType) );
+        static Expression Convert<TType>( Expression expression ) => Expression.Convert( expression, typeof( TType ) );
 
         // Helper method to convert numerical types to float
         static Expression ConvertNumericalToFloat( Expression expression )
         {
-            if ( expression.Type == typeof(object) ||
-                 expression.Type == typeof(int) ||
-                 expression.Type == typeof(short) ||
-                 expression.Type == typeof(long) ||
-                 expression.Type == typeof(double) ||
-                 expression.Type == typeof(decimal) )
+            if ( expression.Type == typeof( object ) ||
+                 expression.Type == typeof( int ) ||
+                 expression.Type == typeof( short ) ||
+                 expression.Type == typeof( long ) ||
+                 expression.Type == typeof( double ) ||
+                 expression.Type == typeof( decimal ) )
             {
                 return Convert<float>( expression );
             }

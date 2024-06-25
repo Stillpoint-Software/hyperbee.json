@@ -18,7 +18,7 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 
     public object Evaluate( string filter, TNode current, TNode root )
     {
-        var compiled = Compiled.GetOrAdd( filter, _ => FilterParser.Compile( filter, _typeDescriptor ) );
+        var compiled = Compiled.GetOrAdd( filter, _ => FilterParser<TNode>.Compile( filter, _typeDescriptor ) );
 
         try
         {

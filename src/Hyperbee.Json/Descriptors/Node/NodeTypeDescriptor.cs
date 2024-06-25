@@ -1,8 +1,6 @@
-﻿using System.Linq.Expressions;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node.Functions;
 using Hyperbee.Json.Filters;
-using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
@@ -26,15 +24,5 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
         Functions.Register( MatchNodeFunction.Name, () => new MatchNodeFunction() );
         Functions.Register( SearchNodeFunction.Name, () => new SearchNodeFunction() );
         Functions.Register( ValueNodeFunction.Name, () => new ValueNodeFunction() );
-    }
-
-    public Expression GetValueExpression( Expression expression )
-    {
-        if ( expression is null )
-            return null;
-
-        return expression.Type == typeof( IEnumerable<JsonNode> )
-            ? Expression.Invoke( ValueNodeFunction.ValueExpression, expression )
-            : expression;
     }
 }

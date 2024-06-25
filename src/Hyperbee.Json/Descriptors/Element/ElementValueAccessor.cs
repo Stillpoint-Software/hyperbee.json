@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using Hyperbee.Json.Descriptors.Element.Functions;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
@@ -112,5 +113,10 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 _ => false
             };
         }
+    }
+
+    public object GetAsValue( IEnumerable<JsonElement> elements )
+    {
+        return ValueElementFunction.Value( elements );
     }
 }

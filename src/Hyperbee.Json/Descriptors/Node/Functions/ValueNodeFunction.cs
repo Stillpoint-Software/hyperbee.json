@@ -32,15 +32,16 @@ public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
             JsonValueKind.Undefined => false,
             _ => false
         };
+
+        static bool IsNotEmpty( JsonNode node )
+        {
+            return node.GetValueKind() switch
+            {
+                JsonValueKind.Array => node.AsArray().Count != 0,
+                JsonValueKind.Object => node.AsObject().Count != 0,
+                _ => false
+            };
+        }
     }
 
-    private static bool IsNotEmpty( JsonNode node )
-    {
-        return node.GetValueKind() switch
-        {
-            JsonValueKind.Array => node.AsArray().Count != 0,
-            JsonValueKind.Object => node.AsObject().Count != 0,
-            _ => false
-        };
-    }
 }

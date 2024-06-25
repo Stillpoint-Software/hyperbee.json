@@ -13,7 +13,7 @@ public abstract class FilterExtensionFunction
 
     protected abstract Expression GetExtensionExpression( Expression[] arguments );
 
-    internal Expression GetExpression( ref ParserState state, FilterContext context )
+    internal Expression GetExpression<TNode>( ref ParserState state, FilterContext<TNode> context )
     {
         var arguments = new Expression[_argumentCount];
 
@@ -27,7 +27,7 @@ public abstract class FilterExtensionFunction
                     : FilterParser.ArgSeparator
             };
 
-            var argument = FilterParser.Parse( ref localState, context );
+            var argument = FilterParser<TNode>.Parse( ref localState, context );
 
             arguments[i] = argument;
         }

@@ -16,28 +16,27 @@ using Hyperbee.Json.Filters.Parser.Expressions;
 
 namespace Hyperbee.Json.Filters.Parser;
 
-public class FilterParser
+public abstract class FilterParser
 {
     public const char EndLine = '\n';
     public const char EndArg = ')';
     public const char ArgSeparator = ',';
 
-    private static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
+    protected static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
+}
 
-    public static Func<TNode, TNode, bool> Compile<TNode>( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
+public class FilterParser<TNode> : FilterParser
+{
+    public static Func<TNode, TNode, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
-        var currentParam = Expression.Parameter( typeof( TNode ) );
-        var rootParam = Expression.Parameter( typeof( TNode ) );
-        var selectFactory = new SelectExpressionFactory<TNode>();
-
-        var context = new FilterContext( currentParam, rootParam, selectFactory, descriptor );
+        var context = new FilterContext<TNode>( descriptor );
 
         var expression = Parse( filter, context );
 
-        return Expression.Lambda<Func<TNode, TNode, bool>>( expression, currentParam, rootParam ).Compile();
+        return Expression.Lambda<Func<TNode, TNode, bool>>( expression, context.Current, context.Root ).Compile();
     }
 
-    internal static Expression Parse( ReadOnlySpan<char> filter, FilterContext context )
+    internal static Expression Parse( ReadOnlySpan<char> filter, FilterContext<TNode> context )
     {
         var pos = 0;
         var state = new ParserState( filter, [], ref pos, Operator.Nop, EndLine );
@@ -47,7 +46,7 @@ public class FilterParser
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse( ref ParserState state, FilterContext context )
+    internal static Expression Parse( ref ParserState state, FilterContext<TNode> context )
     {
         // validate input
         if ( context == null )
@@ -77,7 +76,7 @@ public class FilterParser
         return Merge( baseItem, ref index, items, context.Descriptor );
     }
 
-    private static ExprItem GetExprItem( ref ParserState state, FilterContext context )
+    private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
     {
         if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
             return ExprItem( ref state, expression );
@@ -100,7 +99,7 @@ public class FilterParser
         static ExprItem ExprItem( ref ParserState state, Expression expression )
         {
             UpdateOperator( ref state );
-            return new( expression, state.Operator );
+            return new ExprItem( expression, state.Operator );
         }
     }
 
@@ -261,7 +260,7 @@ public class FilterParser
         static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
     }
 
-    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> items, ITypeDescriptor descriptor, bool mergeOneOnly = false )
+    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> items, ITypeDescriptor<TNode> descriptor, bool mergeOneOnly = false )
     {
         while ( index < items.Count )
         {
@@ -306,29 +305,48 @@ public class FilterParser
         }
     }
 
-    private static void MergeItems( ExprItem left, ExprItem right, ITypeDescriptor descriptor )
+    private static void MergeItems( ExprItem left, ExprItem right, ITypeDescriptor<TNode> descriptor )
     {
         // Ensure both expressions are value expressions
-        left.Expression = descriptor.GetValueExpression( left.Expression );
-        right.Expression = descriptor.GetValueExpression( right.Expression );
-
-        // Determine if we are comparing numerical values so that we can use the correct comparison method
-        bool isNumerical = IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type );
+        left.Expression = ExpressionConverter.ConvertToValue( descriptor.Accessor, left.Expression );
+        right.Expression = ExpressionConverter.ConvertToValue( descriptor.Accessor, right.Expression );
 
         left.Expression = left.Operator switch
         {
-            Operator.Equals => CompareConvert( isNumerical ? Expression.Equal : Equal, left.Expression, right.Expression, isNumerical ),
-            Operator.NotEquals => CompareConvert( isNumerical ? Expression.NotEqual : NotEqual, left.Expression, right.Expression, isNumerical ),
+            Operator.Equals when IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type ) =>
+                Expression.Equal(
+                    ExpressionConverter.ConvertToNumber( left.Expression ),
+                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
 
-            // Assume/force numerical
-            Operator.GreaterThan => CompareConvert( Expression.GreaterThan, left.Expression, right.Expression ),
-            Operator.GreaterThanOrEqual => CompareConvert( Expression.GreaterThanOrEqual, left.Expression, right.Expression ),
-            Operator.LessThan => CompareConvert( Expression.LessThan, left.Expression, right.Expression ),
-            Operator.LessThanOrEqual => CompareConvert( Expression.LessThanOrEqual, left.Expression, right.Expression ),
+            Operator.NotEquals when IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type ) =>
+                Expression.NotEqual(
+                    ExpressionConverter.ConvertToNumber( left.Expression ),
+                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
 
+            Operator.GreaterThan =>
+                Expression.GreaterThan(
+                    ExpressionConverter.ConvertToNumber( left.Expression ),
+                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+
+            Operator.GreaterThanOrEqual =>
+                Expression.GreaterThanOrEqual(
+                    ExpressionConverter.ConvertToNumber( left.Expression ),
+                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+
+            Operator.LessThan =>
+                Expression.LessThan(
+                    ExpressionConverter.ConvertToNumber( left.Expression ),
+                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+
+            Operator.LessThanOrEqual =>
+                Expression.LessThanOrEqual(
+                    ExpressionConverter.ConvertToNumber( left.Expression ),
+                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+
+            Operator.Equals => Equal( left.Expression, right.Expression ),
+            Operator.NotEquals => NotEqual( left.Expression, right.Expression ),
             Operator.And => Expression.AndAlso( left.Expression!, right.Expression ),
             Operator.Or => Expression.OrElse( left.Expression!, right.Expression ),
-
             Operator.Not => Expression.Not( right.Expression ),
             _ => left.Expression
         };
@@ -349,34 +367,50 @@ public class FilterParser
         static bool IsNumerical( Type type ) => type == typeof( float ) || type == typeof( int );
 
         // Helper methods to create comparison expressions
-        static Expression Equal( Expression l, Expression r ) => Expression.Call( ObjectEquals, l, r );
+        static Expression Equal( Expression l, Expression r ) => Expression.Call( FilterParser.ObjectEquals, l, r );
         static Expression NotEqual( Expression l, Expression r ) => Expression.Not( Equal( l, r ) );
     }
 
-    private static Expression CompareConvert( Func<Expression, Expression, Expression> compare, Expression left, Expression right, bool isNumerical = true )
+    private static class ExpressionConverter
     {
-        if ( isNumerical )
+        // Cache the MethodInfo for GetAsValue method
+        private static readonly MethodInfo GetAsValueMethodInfo = typeof( IValueAccessor<TNode> )
+            .GetMethod( nameof( IValueAccessor<TNode>.GetAsValue ) );
+
+        // Cache the compiled delegate for calling GetAsValue method
+        private static readonly Func<IValueAccessor<TNode>, IEnumerable<TNode>, object> GetAsValueDelegate;
+
+        static ExpressionConverter()
         {
-            left = ConvertToFloat( left );
-            right = ConvertToFloat( right );
+            // Create parameters for the expression
+            var accessorParam = Expression.Parameter( typeof( IValueAccessor<TNode> ), "accessor" );
+            var expressionParam = Expression.Parameter( typeof( IEnumerable<TNode> ), "expression" );
+
+            // Create the expression to call the GetAsValue method
+            var callExpression = Expression.Call( accessorParam, GetAsValueMethodInfo, expressionParam );
+
+            // Compile the expression into a delegate
+            GetAsValueDelegate = Expression.Lambda<Func<IValueAccessor<TNode>, IEnumerable<TNode>, object>>(
+                callExpression, accessorParam, expressionParam ).Compile();
         }
-        else
+
+        public static Expression ConvertToValue( IValueAccessor<TNode> accessor, Expression expression )
         {
-            // Handle object to string conversion
-            if ( left.Type == typeof( object ) && right.Type == typeof( string ) )
-                return compare( Convert<string>( left ), right );
+            if ( expression == null )
+                return null;
 
-            if ( left.Type == typeof( string ) && right.Type == typeof( object ) )
-                return compare( left, Convert<string>( right ) );
+            if ( expression.Type != typeof( IEnumerable<TNode> ) )
+                return expression;
+
+            // Create an expression representing the instance of the descriptor
+            var accessorExpression = Expression.Constant( accessor );
+
+            // Use the compiled delegate to create an expression to call the GetAsValue method
+            return Expression.Invoke( Expression.Constant( GetAsValueDelegate ), accessorExpression, expression );
         }
-
-        return compare( left, right );
-
-        // Helper method to convert an expression to a specified type
-        static Expression Convert<TType>( Expression expression ) => Expression.Convert( expression, typeof( TType ) );
 
         // Helper method to convert numerical types to float
-        static Expression ConvertToFloat( Expression expression )
+        public static Expression ConvertToNumber( Expression expression )
         {
             if ( expression.Type == typeof( float ) ) // quick out
                 return expression;
@@ -388,11 +422,12 @@ public class FilterParser
                  expression.Type == typeof( double ) ||
                  expression.Type == typeof( decimal ) )
             {
-                return Convert<float>( expression );
+                return Expression.Convert( expression, typeof( float ) );
             }
 
             return expression;
         }
+
     }
 
     private class ExprItem( Expression expression, Operator op )

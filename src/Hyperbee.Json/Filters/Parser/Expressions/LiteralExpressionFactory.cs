@@ -4,7 +4,7 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class LiteralExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression( ref ParserState state, out Expression expression, FilterContext context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, FilterContext<TNode> context )
     {
         expression = GetLiteralExpression( state.Item );
         return expression != null;

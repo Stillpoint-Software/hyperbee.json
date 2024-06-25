@@ -4,17 +4,32 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression( ref ParserState state, out Expression expression, FilterContext context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, FilterContext<TNode> context )
     {
-        if ( state.Item[0] == '$' || state.Item[0] == '@' )
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, context );
+        return expression != null;
+    }
+
+    static class ExpressionHelper<TNode>
+    {
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, IEnumerable<TNode>>) Select );
+
+        public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context )
         {
-            expression = context
-                .SelectFactory
-                .GetExpression( ref state, context ); // may cause `Select` recursion.
-            return true;
+            if ( item[0] != '$' && item[0] != '@' )
+                return null;
+
+            var queryExp = Expression.Constant( item.ToString() );
+
+            if ( item[0] == '$' ) // Current becomes root
+                context = context with { Current = context.Root };
+
+            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp );
         }
 
-        expression = null;
-        return false;
+        private static IEnumerable<TNode> Select( TNode current, TNode root, string query )
+        {
+            return JsonPath<TNode>.SelectInternal( current, root, query );
+        }
     }
 }

@@ -30,15 +30,15 @@ public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 
             JsonValueKind.Undefined => false,
             _ => false
         };
-    }
 
-    private static bool IsNotEmpty( JsonElement element )
-    {
-        return element.ValueKind switch
+        static bool IsNotEmpty( JsonElement element )
         {
-            JsonValueKind.Array => element.EnumerateArray().Any(),
-            JsonValueKind.Object => element.EnumerateObject().Any(),
-            _ => false
-        };
+            return element.ValueKind switch
+            {
+                JsonValueKind.Array => element.EnumerateArray().Any(),
+                JsonValueKind.Object => element.EnumerateObject().Any(),
+                _ => false
+            };
+        }
     }
 }

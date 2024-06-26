@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // C# Implementation of JSONPath[1]
 //
@@ -111,13 +111,18 @@ public static class JsonPath<TNode>
 
             // make sure we have a complex value
 
-            if ( !accessor.IsObjectOrArray( value ) )
-                throw new InvalidOperationException( "Object or Array expected." );
+            var nodeKind = accessor.GetNodeKind( value );
+
+            if ( nodeKind == NodeKind.Value )
+                continue;
 
             // try to access object or array using name or index
 
             if ( segmentCurrent.Singular )
             {
+                if ( nodeKind == NodeKind.Object && selectorKind == SelectorKind.Index )
+                    continue; // don't allow indexing in to objects
+
                 if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
                 {
                     Push( stack, childValue, segmentNext );
@@ -132,11 +137,11 @@ public static class JsonPath<TNode>
             {
                 foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                 {
-                    // optimization: quicker return for IsFinal and non-object/array values
+                    // optimization: quicker return for final 
                     //
                     // the parser will work without this check, but we would be forcing it
                     // to push and pop values onto the stack that we know will not be used.
-                    if ( IsTailValue( accessor, childValue, segmentNext ) )
+                    if ( segmentNext.IsFinal )
                     {
                         // theoretically, we should yield here, but we can't because we need to
                         // preserve the order of the results as per the RFC. so we push the
@@ -182,8 +187,8 @@ public static class JsonPath<TNode>
 
                         if ( Truthy( result ) )
                         {
-                            // optimization: quicker return for IsFinal and non-object/array values
-                            if ( IsTailValue( accessor, childValue, segmentNext ) )
+                            // optimization: quicker return for tail values
+                            if ( segmentNext.IsFinal )
                             {
                                 Push( stack, childValue, segmentNext );
                                 continue;
@@ -198,7 +203,7 @@ public static class JsonPath<TNode>
 
                 // array [name1,name2,...] or [#,#,...] or [start:end:step]
 
-                if ( accessor.IsArray( value, out var length ) )
+                if ( nodeKind == NodeKind.Array )
                 {
                     // [#,#,...] 
 
@@ -219,18 +224,11 @@ public static class JsonPath<TNode>
                     // [name1,name2,...]
 
                     var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                    var length = accessor.GetArrayLength( value );
 
                     for ( var index = length - 1; index >= 0; index-- )
                     {
                         var childValue = accessor.GetElementAt( value, index );
-
-                        // optimize for final segment and non-object/array values
-                        if ( IsTailValue( accessor, childValue, segmentNext ) )
-                        {
-                            Push( stack, childValue, segmentNext );
-                            continue;
-                        }
-
                         Push( stack, childValue, indexSegment );
                     }
 
@@ -239,7 +237,7 @@ public static class JsonPath<TNode>
 
                 // object [name1,name2,...]
 
-                if ( accessor.IsObject( value ) )
+                if ( nodeKind == NodeKind.Object )
                 {
                     if ( selectorKind == SelectorKind.Slice || selectorKind == SelectorKind.Index )
                         continue;
@@ -250,12 +248,6 @@ public static class JsonPath<TNode>
             }
 
         } while ( stack.TryPop( out args ) );
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static bool IsTailValue( IValueAccessor<TNode> accessor, in TNode value, in JsonPathSegment segment )
-    {
-        return segment.IsFinal && !accessor.IsObjectOrArray( value );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -272,7 +264,9 @@ public static class JsonPath<TNode>
 
     private static void ProcessSlice( Stack<NodeArgs> stack, TNode value, string sliceExpr, JsonPathSegment segmentNext, IValueAccessor<TNode> accessor )
     {
-        if ( !accessor.IsArray( value, out var length ) )
+        var length = accessor.GetArrayLength( value );
+
+        if ( length == 0 )
             return;
 
         var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );

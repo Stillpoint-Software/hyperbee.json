@@ -48,41 +48,35 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObjectOrArray( in JsonElement value )
+    public NodeKind GetNodeKind( in JsonElement value )
     {
-        return value.ValueKind is JsonValueKind.Array or JsonValueKind.Object;
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsArray( in JsonElement value, out int length )
-    {
-        if ( value.ValueKind == JsonValueKind.Array )
+        return value.ValueKind switch
         {
-            length = value.GetArrayLength();
-            return true;
-        }
-
-        length = 0;
-        return false;
+            JsonValueKind.Object => NodeKind.Object,
+            JsonValueKind.Array => NodeKind.Array,
+            _ => NodeKind.Value
+        };
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObject( in JsonElement value )
+    public int GetArrayLength( in JsonElement value )
     {
-        return value.ValueKind is JsonValueKind.Object;
+        return value.ValueKind == JsonValueKind.Array 
+            ? value.GetArrayLength() 
+            : 0;
     }
 
-    public bool TryGetChildValue( in JsonElement value, string childKey, out JsonElement childValue )
+    public bool TryGetChildValue( in JsonElement value, string childSelector, out JsonElement childValue )
     {
         switch ( value.ValueKind )
         {
             case JsonValueKind.Object:
-                if ( value.TryGetProperty( childKey, out childValue ) )
+                if ( value.TryGetProperty( childSelector, out childValue ) )
                     return true;
                 break;
 
             case JsonValueKind.Array:
-                if ( int.TryParse( childKey, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
+                if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
                     if ( index >= 0 && index < value.GetArrayLength() )
                     {
@@ -94,8 +88,8 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 break;
 
             default:
-                if ( !IsPathOperator( childKey ) )
-                    throw new ArgumentException( $"Invalid child type '{childKey}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
+                if ( !IsPathOperator( childSelector ) )
+                    throw new ArgumentException( $"Invalid child type '{childSelector}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
                 break;
         }
 

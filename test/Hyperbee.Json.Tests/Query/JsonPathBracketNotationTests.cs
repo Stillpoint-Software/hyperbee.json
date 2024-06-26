@@ -368,7 +368,6 @@ public class JsonPathBracketNotationTests : JsonTestBase
     public void BracketNotationWithNumberOnObject( string query, Type sourceType )
     {
         //consensus: []
-        //deviation: ["value"]
 
         const string json = """
         {
@@ -378,10 +377,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.GetPropertyFromPath("$['0']")
-        };
+        var expected = source.ArrayEmpty;
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }

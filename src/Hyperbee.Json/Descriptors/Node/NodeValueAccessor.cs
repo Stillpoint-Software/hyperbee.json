@@ -48,44 +48,39 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObjectOrArray( in JsonNode value )
+    public NodeKind GetNodeKind( in JsonNode value )
     {
-        return value is JsonObject or JsonArray;
+        return value switch
+        {
+            JsonArray => NodeKind.Array,
+            JsonObject => NodeKind.Object,
+            _ => NodeKind.Value
+        };
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsArray( in JsonNode value, out int length )
+    public int GetArrayLength( in JsonNode value )
     {
         if ( value is JsonArray jsonArray )
-        {
-            length = jsonArray.Count;
-            return true;
-        }
+            return jsonArray.Count;
 
-        length = 0;
-        return false;
+        return 0;
     }
 
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool IsObject( in JsonNode value )
-    {
-        return value is JsonObject;
-    }
-
-    public bool TryGetChildValue( in JsonNode value, string childKey, out JsonNode childValue )
+    public bool TryGetChildValue( in JsonNode value, string childSelector, out JsonNode childValue )
     {
         switch ( value )
         {
             case JsonObject valueObject:
                 {
-                    if ( valueObject.TryGetPropertyValue( childKey, out childValue ) )
+                    if ( valueObject.TryGetPropertyValue( childSelector, out childValue ) )
                         return true;
 
                     break;
                 }
             case JsonArray valueArray:
                 {
-                    if ( int.TryParse( childKey, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
+                    if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                     {
                         if ( index >= 0 && index < valueArray.Count )
                         {
@@ -98,8 +93,8 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 }
             default:
                 {
-                    if ( !IsPathOperator( childKey ) )
-                        throw new ArgumentException( $"Invalid child type '{childKey}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
+                    if ( !IsPathOperator( childSelector ) )
+                        throw new ArgumentException( $"Invalid child type '{childSelector}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
 
                     break;
                 }

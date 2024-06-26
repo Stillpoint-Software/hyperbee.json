@@ -10,10 +10,10 @@ using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Evaluators;
+namespace Hyperbee.Json.Tests.Parsers;
 
 [TestClass]
-public class FilterExpressionParserTests : JsonTestBase
+public class FilterParserTests : JsonTestBase
 {
     [DataTestMethod]
     [DataRow( "((\"world\" == 'world') && (1 == 1))", true, typeof( JsonElement ) )]
@@ -126,13 +126,13 @@ public class FilterExpressionParserTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]
     [DataRow( "length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "length (@.store.book) == 4  ", true, typeof(JsonElement) )]
     [DataRow( "  length(@.store.book) == 4", true, typeof( JsonElement ) )]
     [DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
     [DataRow( "  length( @.store.book ) == 4  ", true, typeof( JsonElement ) )]
-    [DataRow( "4 == length(@.store.book)", true, typeof( JsonElement ) )]
     [DataRow( "4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
+    [DataRow( "4 == length ( @.store.book )  ", true, typeof(JsonElement) )]
     [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
@@ -192,7 +192,8 @@ public class FilterExpressionParserTests : JsonTestBase
 
             return func( new JsonElement() );
         }
-        else if ( sourceType == typeof( JsonNode ) )
+        
+        if ( sourceType == typeof( JsonNode ) )
         {
             var func = Expression
                 .Lambda<Func<JsonNode, bool>>( expression, param )
@@ -200,10 +201,8 @@ public class FilterExpressionParserTests : JsonTestBase
 
             return func( JsonNode.Parse( "{}" ) );
         }
-        else
-        {
-            throw new NotImplementedException();
-        }
+
+        throw new NotImplementedException();
     }
 
     private static bool CompileAndExecute( string filter, Type sourceType )

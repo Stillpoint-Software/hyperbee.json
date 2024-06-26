@@ -45,9 +45,6 @@ public class JsonTestBase
         if ( type == typeof( JsonDocument ) )
             return (TType) (object) ReadJsonDocument( filename );
 
-        //if ( type == typeof(JsonElement) )
-        //    return (TType)(object) ReadJsonDocument( filename )?.RootElement;
-
         if ( type == typeof( JsonNode ) )
             return (TType) (object) ReadJsonNode( filename );
 
@@ -58,9 +55,6 @@ public class JsonTestBase
     {
         if ( target == typeof( JsonDocument ) )
             return GetDocument<JsonDocument>( filename );
-
-        //if ( target == typeof(JsonElement) )
-        //    return GetDocument<JsonDocument>( filename )?.RootElement;
 
         if ( target == typeof( JsonNode ) )
             return GetDocument<JsonNode>( filename );

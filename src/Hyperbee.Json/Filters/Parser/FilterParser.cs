@@ -46,7 +46,7 @@ public class FilterParser<TNode> : FilterParser
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse( ref ParserState state, FilterContext<TNode> context )
+    internal static Expression Parse( ref ParserState state, FilterContext<TNode> context ) // recursion entrypoint
     {
         // validate input
         if ( context == null )
@@ -373,36 +373,30 @@ public class FilterParser<TNode> : FilterParser
 
     private static class ExpressionConverter
     {
-        // Cache the MethodInfo for GetAsValue method
-        private static readonly MethodInfo GetAsValueMethodInfo = typeof( IValueAccessor<TNode> )
-            .GetMethod( nameof( IValueAccessor<TNode>.GetAsValue ) );
+        // Cached delegate for calling IValueAccessor<TNode>GetAsValue( IEnumerable<TNode> nodes ) 
 
-        // Cache the compiled delegate for calling GetAsValue method
         private static readonly Func<IValueAccessor<TNode>, IEnumerable<TNode>, object> GetAsValueDelegate;
 
         static ExpressionConverter()
         {
-            // Create parameters for the expression
+            // Pre-compile the delegate to call the GetAsValue method
+
             var accessorParam = Expression.Parameter( typeof( IValueAccessor<TNode> ), "accessor" );
             var expressionParam = Expression.Parameter( typeof( IEnumerable<TNode> ), "expression" );
 
-            // Create the expression to call the GetAsValue method
-            var callExpression = Expression.Call( accessorParam, GetAsValueMethodInfo, expressionParam );
+            var methodInfo = typeof(IValueAccessor<TNode>).GetMethod( nameof( IValueAccessor<TNode>.GetAsValue ) );
+            var callExpression = Expression.Call( accessorParam, methodInfo!, expressionParam );
 
-            // Compile the expression into a delegate
             GetAsValueDelegate = Expression.Lambda<Func<IValueAccessor<TNode>, IEnumerable<TNode>, object>>(
                 callExpression, accessorParam, expressionParam ).Compile();
         }
 
         public static Expression ConvertToValue( IValueAccessor<TNode> accessor, Expression expression )
         {
-            if ( expression == null )
-                return null;
-
-            if ( expression.Type != typeof( IEnumerable<TNode> ) )
+            if ( expression == null || expression.Type != typeof( IEnumerable<TNode> ) )
                 return expression;
 
-            // Create an expression representing the instance of the descriptor
+            // Create an expression representing the instance of the accessor
             var accessorExpression = Expression.Constant( accessor );
 
             // Use the compiled delegate to create an expression to call the GetAsValue method
@@ -427,7 +421,6 @@ public class FilterParser<TNode> : FilterParser
 
             return expression;
         }
-
     }
 
     private class ExprItem( Expression expression, Operator op )

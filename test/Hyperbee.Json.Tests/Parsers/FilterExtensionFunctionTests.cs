@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Descriptors.Element;
-using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Expression = System.Linq.Expressions.Expression;
 
-namespace Hyperbee.Json.Tests.Evaluators;
+namespace Hyperbee.Json.Tests.Parsers;
 
 [TestClass]
 public class FilterExtensionFunctionTests : JsonTestBase

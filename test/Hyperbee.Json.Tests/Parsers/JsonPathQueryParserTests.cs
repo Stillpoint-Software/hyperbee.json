@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Tokenizer;
+namespace Hyperbee.Json.Tests.Parsers;
 
 [TestClass]
-public class JsonPathQueryTokenizerTests
+public class JsonPathQueryParserTests
 {
     [DataTestMethod]
     [DataRow( "$", "{$|s}" )]
@@ -33,20 +33,20 @@ public class JsonPathQueryTokenizerTests
     public void Should_tokenize_json_path( string jsonPath, string expected )
     {
         // act
-        var tokens = JsonPathQueryParser.Parse( jsonPath );
+        var pathSegment = JsonPathQueryParser.Parse( jsonPath );
 
         // arrange
-        var result = TokensToString( tokens );
+        var result = SegmentsToString( pathSegment );
 
         // assert
         Assert.AreEqual( expected, result );
         return;
 
-        static string TokensToString( JsonPathSegment segment )
+        static string SegmentsToString( JsonPathSegment segment )
         {
-            return string.Join( ';', segment.AsEnumerable().Select( TokenToString ) );
+            return string.Join( ';', segment.AsEnumerable().Select( SegmentToString ) );
 
-            static string TokenToString( JsonPathSegment segment )
+            static string SegmentToString( JsonPathSegment segment )
             {
                 var (singular, selectors) = segment;
                 var selectorType = singular ? "s" : "g"; // s:singular, g:group

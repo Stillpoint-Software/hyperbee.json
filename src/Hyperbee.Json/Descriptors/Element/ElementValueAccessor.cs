@@ -61,8 +61,8 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public int GetArrayLength( in JsonElement value )
     {
-        return value.ValueKind == JsonValueKind.Array 
-            ? value.GetArrayLength() 
+        return value.ValueKind == JsonValueKind.Array
+            ? value.GetArrayLength()
             : 0;
     }
 

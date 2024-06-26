@@ -83,6 +83,8 @@ public static class JsonPathQueryParser
 
         var tokens = new List<JsonPathSegment>();
 
+        query = query.Trim();
+
         var i = 0;
         var n = query.Length;
 
@@ -114,6 +116,10 @@ public static class JsonPathQueryParser
                         case '$':
                             if ( i < n && query[i] != '.' && query[i] != '[' )
                                 throw new NotSupportedException( "Invalid character after `$`." );
+
+                            if ( query[^1] == '.' && query[^2] == '.' )
+                                throw new NotSupportedException( "`..` cannot be the last segment." );
+
                             state = State.DotChild;
                             break;
                         default:

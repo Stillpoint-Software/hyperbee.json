@@ -354,9 +354,9 @@ public class FilterParser<TNode> : FilterParser
         // Wrap left expression in a try-catch block to handle exceptions
         left.Expression = left.Expression == null
             ? left.Expression
-            : Expression.TryCatchFinally(
+            : Expression.TryCatch(
                 left.Expression,
-                Expression.Empty(), // Ensure finally block is present
+                Expression.Catch( typeof( NotSupportedException ), Expression.Rethrow( left.Expression.Type ) ),
                 Expression.Catch( typeof( Exception ), Expression.Constant( false ) )
             );
 

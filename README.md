@@ -319,35 +319,35 @@ Here is a performance comparison of various queries on the standard book store d
 ```
 | Method                  | Filter                           | Mean      | Error      | StdDev    | Allocated
 |:----------------------- |:-------------------------------- |:--------- |:---------- |:--------- |:---------
-| Hyperbee_JsonElement    | $..* `First()`                   |  3.042 us |  0.3928 us | 0.0215 us |   3.82 KB
-| JsonEverything_JsonNode | $..* `First()`                   |  3.201 us |  0.9936 us | 0.0545 us |   3.53 KB
-| Hyperbee_JsonNode       | $..* `First()`                   |  3.206 us |  1.8335 us | 0.1005 us |   3.11 KB
-| JsonCons_JsonElement    | $..* `First()`                   |  5.666 us |  0.7342 us | 0.0402 us |   8.48 KB
-| Newtonsoft_JObject      | $..* `First()`                   |  8.741 us |  1.7537 us | 0.0961 us |  14.22 KB
+| Hyperbee_JsonElement    | $..* `First()`                   |  3.020 us |  0.7611 us | 0.0417 us |   3.72 KB
+| Hyperbee_JsonNode       | $..* `First()`                   |  3.148 us |  1.0104 us | 0.0554 us |   3.01 KB
+| JsonEverything_JsonNode | $..* `First()`                   |  3.247 us |  1.6351 us | 0.0896 us |   3.53 KB
+| JsonCons_JsonElement    | $..* `First()`                   |  5.718 us |  2.0059 us | 0.1099 us |   8.48 KB
+| Newtonsoft_JObject      | $..* `First()`                   |  8.642 us |  1.3128 us | 0.0720 us |  14.22 KB
 |                         |                                  |           |            |           |          
-| JsonCons_JsonElement    | $..*                             |  5.599 us |  1.1146 us | 0.0611 us |   8.45 KB
-| Hyperbee_JsonElement    | $..*                             |  9.511 us |  0.6130 us | 0.0336 us |  13.97 KB
-| Newtonsoft_JObject      | $..*                             | 10.082 us |  1.0318 us | 0.0566 us |  14.86 KB
-| Hyperbee_JsonNode       | $..*                             | 12.051 us |  5.3268 us | 0.2920 us |  13.92 KB
-| JsonEverything_JsonNode | $..*                             | 22.612 us | 16.0118 us | 0.8777 us |  36.81 KB
+| JsonCons_JsonElement    | $..*                             |  5.759 us |  0.2896 us | 0.0159 us |   8.45 KB
+| Hyperbee_JsonElement    | $..*                             |  7.886 us |  0.9024 us | 0.0495 us |  11.13 KB
+| Hyperbee_JsonNode       | $..*                             |  9.990 us |  1.0810 us | 0.0593 us |  11.08 KB
+| Newtonsoft_JObject      | $..*                             | 10.705 us |  5.3687 us | 0.2943 us |  14.86 KB
+| JsonEverything_JsonNode | $..*                             | 21.326 us | 10.2403 us | 0.5613 us |  36.81 KB
 |                         |                                  |           |            |           |          
-| Hyperbee_JsonElement    | $..price                         |  4.930 us |  3.3771 us | 0.1851 us |   6.58 KB
-| JsonCons_JsonElement    | $..price                         |  4.934 us |  1.0796 us | 0.0592 us |   5.65 KB
-| Hyperbee_JsonNode       | $..price                         |  7.784 us |  1.7326 us | 0.0950 us |   9.13 KB
-| Newtonsoft_JObject      | $..price                         |  9.913 us |  2.6681 us | 0.1462 us |   14.4 KB
-| JsonEverything_JsonNode | $..price                         | 16.365 us |  4.0688 us | 0.2230 us |  27.63 KB
+| Hyperbee_JsonElement    | $..price                         |  4.513 us |  0.5512 us | 0.0302 us |   5.77 KB
+| JsonCons_JsonElement    | $..price                         |  5.027 us |  2.6859 us | 0.1472 us |   5.65 KB
+| Hyperbee_JsonNode       | $..price                         |  7.421 us |  2.5169 us | 0.1380 us |   8.31 KB
+| Newtonsoft_JObject      | $..price                         |  9.660 us |  1.2874 us | 0.0706 us |   14.4 KB
+| JsonEverything_JsonNode | $..price                         | 16.285 us |  6.5585 us | 0.3595 us |  27.63 KB
 |                         |                                  |           |            |           |          
-| Hyperbee_JsonElement    | $.store.book[?(@.price == 8.99)] |  4.062 us |  0.2682 us | 0.0147 us |   6.08 KB
-| JsonCons_JsonElement    | $.store.book[?(@.price == 8.99)] |  4.959 us |  0.5051 us | 0.0277 us |   5.05 KB
-| Hyperbee_JsonNode       | $.store.book[?(@.price == 8.99)] |  6.775 us |  1.3945 us | 0.0764 us |   8.34 KB
-| Newtonsoft_JObject      | $.store.book[?(@.price == 8.99)] | 10.050 us |  5.3711 us | 0.2944 us |  15.84 KB
-| JsonEverything_JsonNode | $.store.book[?(@.price == 8.99)] | 11.223 us |  0.5535 us | 0.0303 us |  15.85 KB
+| Hyperbee_JsonElement    | $.store.book[?(@.price == 8.99)] |  4.118 us |  1.1089 us | 0.0608 us |   6.08 KB
+| JsonCons_JsonElement    | $.store.book[?(@.price == 8.99)] |  5.370 us |  5.2138 us | 0.2858 us |   5.05 KB
+| Hyperbee_JsonNode       | $.store.book[?(@.price == 8.99)] |  6.696 us |  0.3701 us | 0.0203 us |   8.34 KB
+| Newtonsoft_JObject      | $.store.book[?(@.price == 8.99)] |  9.631 us |  1.3277 us | 0.0728 us |  15.84 KB
+| JsonEverything_JsonNode | $.store.book[?(@.price == 8.99)] | 10.955 us |  0.4881 us | 0.0268 us |  15.85 KB
 |                         |                                  |           |            |           |          
-| Hyperbee_JsonElement    | $.store.book[0]                  |  2.812 us |  0.5097 us | 0.0279 us |   2.81 KB
-| Hyperbee_JsonNode       | $.store.book[0]                  |  3.259 us |  0.1929 us | 0.0106 us |   3.12 KB
-| JsonCons_JsonElement    | $.store.book[0]                  |  3.365 us | 10.9259 us | 0.5989 us |   3.21 KB
-| JsonEverything_JsonNode | $.store.book[0]                  |  4.670 us |  0.6449 us | 0.0354 us |   5.96 KB
-| Newtonsoft_JObject      | $.store.book[0]                  |  8.572 us |  1.5455 us | 0.0847 us |  14.56 KB
+| Hyperbee_JsonElement    | $.store.book[0]                  |  2.733 us |  0.3048 us | 0.0167 us |   2.81 KB
+| JsonCons_JsonElement    | $.store.book[0]                  |  3.004 us |  0.9151 us | 0.0502 us |   3.21 KB
+| Hyperbee_JsonNode       | $.store.book[0]                  |  3.223 us |  0.3897 us | 0.0214 us |   3.12 KB
+| JsonEverything_JsonNode | $.store.book[0]                  |  4.643 us |  2.3457 us | 0.1286 us |   5.96 KB
+| Newtonsoft_JObject      | $.store.book[0]                  |  8.499 us |  0.1148 us | 0.0063 us |  14.56 KB
 ```
 
 ## Additional Documentation

@@ -130,34 +130,35 @@ public static class JsonPath<TNode>
 
             if ( selectorKind == SelectorKind.Wildcard )
             {
-                foreach ( var (_, childKey, childKind) in accessor.EnumerateChildren( value ) )
+                foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                 {
+                    // optimization: quicker return for IsFinal and non-object/array values
+                    //
+                    // the parser will work without this check, but we would be forcing it
+                    // to push and pop values onto the stack that we know will not be used.
+                    if ( IsTailValue( accessor, childValue, segmentNext ) )
+                    {
+                        // theoretically, we should yield here, but we can't because we need to
+                        // preserve the order of the results as per the RFC. so we push the
+                        // value onto the stack without prepending the childKey or childKind
+                        // to set up for an immediate return on the next iteration.
+                        Push( stack, childValue, segmentNext ); 
+                        continue;
+                    }
+
                     Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                 }
 
                 continue;
-
-                // we can reduce push/pop operations, and related allocations, if we check
-                // segmentNext.IsFinal and directly yield when true where possible. 
-                //
-                // if ( segmentNext.IsFinal && !childValue.IsObjectOrArray() )
-                //    yield return childValue;
-                // else
-                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) );                 
-                //
-                // unfortunately, this optimization impacts result ordering. the rfc states 
-                // result order should be as close to json document order as possible. for
-                // that reason, we chose not to implement this type of performance optimization.
             }
 
             // descendant
 
             if ( selectorKind == SelectorKind.Descendant )
             {
-                var descendantSegment = segmentNext.Prepend( "..", SelectorKind.Descendant );
                 foreach ( var (childValue, _, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
-                    Push( stack, childValue, descendantSegment ); // Descendant
+                    Push( stack, childValue, segmentCurrent ); // Descendant
                 }
 
                 Push( stack, value, segmentNext ); // process the current value
@@ -180,7 +181,16 @@ public static class JsonPath<TNode>
                         var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove leading '?'
 
                         if ( Truthy( result ) )
+                        {
+                            // optimization: quicker return for IsFinal and non-object/array values
+                            if ( IsTailValue( accessor, childValue, segmentNext ) )
+                            {
+                                Push( stack, childValue, segmentNext );
+                                continue;
+                            }
+
                             Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                        }
                     }
 
                     continue;
@@ -209,9 +219,19 @@ public static class JsonPath<TNode>
                     // [name1,name2,...]
 
                     var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                    
                     for ( var index = length - 1; index >= 0; index-- )
                     {
-                        Push( stack, accessor.GetElementAt( value, index ), indexSegment );
+                        var childValue = accessor.GetElementAt( value, index );
+                        
+                        // optimize for final segment and non-object/array values
+                        if ( IsTailValue( accessor, childValue, segmentNext ) )
+                        {
+                            Push( stack, childValue, segmentNext );
+                            continue;
+                        }
+
+                        Push( stack, childValue, indexSegment );
                     }
 
                     continue;
@@ -230,6 +250,12 @@ public static class JsonPath<TNode>
             }
 
         } while ( stack.TryPop( out args ) );
+    }
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    private static bool IsTailValue( IValueAccessor<TNode> accessor, in TNode value, in JsonPathSegment segment )
+    {
+        return segment.IsFinal && !accessor.IsObjectOrArray( value );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

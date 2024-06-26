@@ -384,7 +384,7 @@ public class FilterParser<TNode> : FilterParser
             var accessorParam = Expression.Parameter( typeof( IValueAccessor<TNode> ), "accessor" );
             var expressionParam = Expression.Parameter( typeof( IEnumerable<TNode> ), "expression" );
 
-            var methodInfo = typeof(IValueAccessor<TNode>).GetMethod( nameof( IValueAccessor<TNode>.GetAsValue ) );
+            var methodInfo = typeof( IValueAccessor<TNode> ).GetMethod( nameof( IValueAccessor<TNode>.GetAsValue ) );
             var callExpression = Expression.Call( accessorParam, methodInfo!, expressionParam );
 
             GetAsValueDelegate = Expression.Lambda<Func<IValueAccessor<TNode>, IEnumerable<TNode>, object>>(

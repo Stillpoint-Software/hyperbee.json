@@ -127,12 +127,12 @@ public class FilterParserTests : JsonTestBase
 
     [DataTestMethod]
     [DataRow( "length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
-    [DataRow( "length (@.store.book) == 4  ", true, typeof(JsonElement) )]
+    [DataRow( "length (@.store.book) == 4  ", true, typeof( JsonElement ) )]
     [DataRow( "  length(@.store.book) == 4", true, typeof( JsonElement ) )]
     [DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
     [DataRow( "  length( @.store.book ) == 4  ", true, typeof( JsonElement ) )]
     [DataRow( "4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
-    [DataRow( "4 == length ( @.store.book )  ", true, typeof(JsonElement) )]
+    [DataRow( "4 == length ( @.store.book )  ", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
@@ -192,7 +192,7 @@ public class FilterParserTests : JsonTestBase
 
             return func( new JsonElement() );
         }
-        
+
         if ( sourceType == typeof( JsonNode ) )
         {
             var func = Expression

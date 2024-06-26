@@ -62,9 +62,10 @@ public static class JsonPath<TNode>
 
     private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query )
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace( query );
+        // quick outs
 
-        // quick out
+        if ( string.IsNullOrWhiteSpace( query ) )
+            return [];
 
         if ( query == "$" || query == "@" )
             return [value];

@@ -142,7 +142,7 @@ public static class JsonPath<TNode>
                         // preserve the order of the results as per the RFC. so we push the
                         // value onto the stack without prepending the childKey or childKind
                         // to set up for an immediate return on the next iteration.
-                        Push( stack, childValue, segmentNext ); 
+                        Push( stack, childValue, segmentNext );
                         continue;
                     }
 
@@ -219,11 +219,11 @@ public static class JsonPath<TNode>
                     // [name1,name2,...]
 
                     var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
-                    
+
                     for ( var index = length - 1; index >= 0; index-- )
                     {
                         var childValue = accessor.GetElementAt( value, index );
-                        
+
                         // optimize for final segment and non-object/array values
                         if ( IsTailValue( accessor, childValue, segmentNext ) )
                         {

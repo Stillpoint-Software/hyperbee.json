@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -182,13 +182,13 @@ public class JsonPathUnionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[] 
-        { 
-            source.GetPropertyFromPath( "$[0].c" ), 
-            source.GetPropertyFromPath( "$[0].d" ),            
-            source.GetPropertyFromPath( "$[1].c" ), 
-            source.GetPropertyFromPath( "$[1].child.d" ),            
-            source.GetPropertyFromPath( "$[2].c" ), 
+        var expected = new[]
+        {
+            source.GetPropertyFromPath( "$[0].c" ),
+            source.GetPropertyFromPath( "$[0].d" ),
+            source.GetPropertyFromPath( "$[1].c" ),
+            source.GetPropertyFromPath( "$[1].child.d" ),
+            source.GetPropertyFromPath( "$[2].c" ),
             source.GetPropertyFromPath( "$[3].d" ),
             source.GetPropertyFromPath( "$[4].child.c" )
 

@@ -28,7 +28,7 @@ public class JsonTestBase
 
     public static TType GetDocument<TType>( string filename = null )
     {
-        return (TType) GetDocument( typeof(TType), filename );
+        return (TType) GetDocument( typeof( TType ), filename );
     }
 
     public static IJsonPathSource GetDocument( Type target, string filename = null )

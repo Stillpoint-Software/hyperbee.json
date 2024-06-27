@@ -148,8 +148,8 @@ public class JsonPathUnionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$..['c','d']", typeof(JsonDocument) )]
-    [DataRow( "$..['c','d']", typeof(JsonNode) )]
+    [DataRow( "$..['c','d']", typeof( JsonDocument ) )]
+    [DataRow( "$..['c','d']", typeof( JsonNode ) )]
     public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )
     {
         const string json = """
@@ -182,13 +182,13 @@ public class JsonPathUnionTests : JsonTestBase
         var source = GetDocumentProxyFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        var expected = new[] 
-        { 
-            source.GetPropertyFromPath( "$[0].c" ), 
-            source.GetPropertyFromPath( "$[0].d" ),            
-            source.GetPropertyFromPath( "$[1].c" ), 
-            source.GetPropertyFromPath( "$[1].child.d" ),            
-            source.GetPropertyFromPath( "$[2].c" ), 
+        var expected = new[]
+        {
+            source.GetPropertyFromPath( "$[0].c" ),
+            source.GetPropertyFromPath( "$[0].d" ),
+            source.GetPropertyFromPath( "$[1].c" ),
+            source.GetPropertyFromPath( "$[1].child.d" ),
+            source.GetPropertyFromPath( "$[2].c" ),
             source.GetPropertyFromPath( "$[3].d" ),
             source.GetPropertyFromPath( "$[4].child.c" )
 
@@ -200,6 +200,6 @@ public class JsonPathUnionTests : JsonTestBase
         var equals = matches.OrderBy( x => x.ToString() )
             .SequenceEqual( expected.OrderBy( x => x.ToString() ) );
 
-        Assert.IsTrue(  equals );
+        Assert.IsTrue( equals );
     }
 }

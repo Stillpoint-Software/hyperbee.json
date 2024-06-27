@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -28,14 +28,14 @@ public class JsonTestBase
 
     public static TType GetDocument<TType>( string filename = null )
     {
-        var type = typeof(TType);
+        var type = typeof( TType );
 
         var stream = GetManifestStream( filename );
 
-        if ( type == typeof(JsonDocument) )
+        if ( type == typeof( JsonDocument ) )
             return (TType) (object) JsonDocument.Parse( stream! );
 
-        if ( type == typeof(JsonNode) )
+        if ( type == typeof( JsonNode ) )
             return (TType) (object) JsonNode.Parse( stream! );
 
         throw new NotSupportedException();

@@ -20,7 +20,7 @@ public class JsonPathUnionTests : JsonTestBase
           "a"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -44,7 +44,7 @@ public class JsonPathUnionTests : JsonTestBase
           "a": 1
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -77,7 +77,7 @@ public class JsonPathUnionTests : JsonTestBase
           { "key": 4 }
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -106,7 +106,7 @@ public class JsonPathUnionTests : JsonTestBase
           "another": "entry"
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -132,7 +132,7 @@ public class JsonPathUnionTests : JsonTestBase
           "thing1": "thing2"
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -179,9 +179,9 @@ public class JsonPathUnionTests : JsonTestBase
         ]
         """;
 
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
-        var matches = source.Select( query ).ToList();
+        var matches = source.Select( query );
         var expected = new[] 
         { 
             source.GetPropertyFromPath( "$[0].c" ), 

@@ -10,18 +10,6 @@ public class JsonTestBase
 {
     protected static string DocumentDefault { get; set; } = "JsonPath.json";
 
-    protected static JsonDocument ReadJsonDocument( string filename = null )
-    {
-        using var stream = GetManifestStream( filename );
-        return JsonDocument.Parse( stream! );
-    }
-
-    protected static JsonNode ReadJsonNode( string filename = null )
-    {
-        using var stream = GetManifestStream( filename );
-        return JsonNode.Parse( stream! );
-    }
-
     protected static string ReadJsonString( string filename = null )
     {
         using var stream = GetManifestStream( filename );
@@ -40,41 +28,22 @@ public class JsonTestBase
 
     public static TType GetDocument<TType>( string filename = null )
     {
-        var type = typeof( TType );
-
-        if ( type == typeof( JsonDocument ) )
-            return (TType) (object) ReadJsonDocument( filename );
-
-        if ( type == typeof( JsonNode ) )
-            return (TType) (object) ReadJsonNode( filename );
-
-        throw new NotSupportedException();
+        return (TType) GetDocument( typeof(TType), filename );
     }
 
-    public static object GetDocument( Type target, string filename = null )
-    {
-        if ( target == typeof( JsonDocument ) )
-            return GetDocument<JsonDocument>( filename );
-
-        if ( target == typeof( JsonNode ) )
-            return GetDocument<JsonNode>( filename );
-
-        throw new NotSupportedException();
-    }
-
-    public static IJsonPathProxy GetDocumentProxy( Type target, string filename = null )
+    public static IJsonPathSource GetDocument( Type target, string filename = null )
     {
         var source = ReadJsonString( filename );
-        return GetDocumentProxyFromSource( target, source );
+        return GetDocumentFromSource( target, source );
     }
 
-    public static IJsonPathProxy GetDocumentProxyFromSource( Type target, string source )
+    public static IJsonPathSource GetDocumentFromSource( Type target, string source )
     {
         if ( target == typeof( JsonDocument ) )
-            return new JsonDocumentProxy( source );
+            return new JsonDocumentSource( source );
 
         if ( target == typeof( JsonNode ) )
-            return new JsonNodeProxy( source );
+            return new JsonNodeSource( source );
 
         throw new NotSupportedException();
     }

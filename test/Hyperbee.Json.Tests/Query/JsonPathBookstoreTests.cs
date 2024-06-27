@@ -15,7 +15,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$", typeof( JsonNode ) )]
     public void TheRootOfEverything( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -30,7 +30,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$.store.book[*].author", typeof( JsonNode ) )]
     public void TheAuthorsOfAllBooksInTheStore( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -48,7 +48,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$..author", typeof( JsonNode ) )]
     public void AllAuthors( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -66,7 +66,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$.store.*", typeof( JsonNode ) )]
     public void AllThingsInStoreWhichAreSomeBooksAndOneRedBicycle( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -82,7 +82,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$.store..price", typeof( JsonNode ) )]
     public void ThePriceOfEverythingInTheStore( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -101,7 +101,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$..book[2]", typeof( JsonNode ) )]
     public void TheThirdBook( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var match = source.Select( query ).ToList();
         var expected = source.GetPropertyFromPath( "$['store']['book'][2]" );
 
@@ -114,7 +114,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$..book[-1:]", typeof( JsonNode ) )]
     public void TheLastBookInOrder( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var match = source.Select( query ).Single();
         var expected = source.GetPropertyFromPath( "$['store']['book'][3]" );
 
@@ -130,7 +130,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$.store.book[0,1]", typeof( JsonNode ) )]
     public void TheFirstTwoBooks( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -146,7 +146,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$..book['category','author']", typeof( JsonNode ) )]
     public void TheCategoriesAndAuthorsOfAllBooks( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -170,7 +170,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$..book[?(@.isbn)]", typeof( JsonNode ) )]
     public void FilterAllBooksWithIsbnNumber( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -188,7 +188,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$..book[?@.price<10]", typeof( JsonNode ) )]
     public void FilterAllBooksCheaperThan10( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -204,7 +204,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( "$..*", typeof( JsonNode ) )]
     public void AllMembersOfJsonStructure( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var matches = source.Select( query );
         var expected = new[]
         {
@@ -247,7 +247,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( @"$..book[?@.price == 8.99 && @.category == ""fiction""]", typeof( JsonNode ) )]
     public void FilterAllBooksUsingLogicalAndInScript( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var match = source.Select( query ).Single();
         var expected = source.GetPropertyFromPath( "$['store']['book'][2]" );
 
@@ -260,7 +260,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     [DataRow( @"$..book[?@.price == 8.99 && (@.category == ""fiction"")]", typeof( JsonNode ) )]
     public void FilterWithUnevenParentheses( string query, Type sourceType )
     {
-        var source = GetDocumentProxy( sourceType );
+        var source = GetDocument( sourceType );
         var match = source.Select( query ).Single();
         var expected = source.GetPropertyFromPath( "$['store']['book'][2]" );
 

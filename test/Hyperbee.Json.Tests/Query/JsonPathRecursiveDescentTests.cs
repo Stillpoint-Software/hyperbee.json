@@ -25,7 +25,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         ]
         """;
 
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         _ = source.Select( query ).ToList();
     }
@@ -42,7 +42,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         ]
         """;
 
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[] { source.GetPropertyFromPath( "$[0]" ), source.GetPropertyFromPath( "$[1]" ), source.GetPropertyFromPath( "$[0][0]" ), source.GetPropertyFromPath( "$[1][0]" ) };
@@ -68,7 +68,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         }
         """;
 
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         _ = source.Select( query ).ToList();
     }

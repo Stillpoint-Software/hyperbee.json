@@ -41,6 +41,7 @@ using Hyperbee.Json.Memory;
 namespace Hyperbee.Json;
 
 // https://www.rfc-editor.org/rfc/rfc9535.html
+// https://www.rfc-editor.org/rfc/rfc9535.html#appendix-A
 
 public static class JsonPath<TNode>
 {
@@ -72,7 +73,7 @@ public static class JsonPath<TNode>
     {
         // quick outs
 
-        if ( string.IsNullOrWhiteSpace( query ) )
+        if ( string.IsNullOrWhiteSpace( query ) ) // per Consensus, empty query returns empty array
             return [];
 
         if ( query == "$" || query == "@" )
@@ -264,8 +265,6 @@ public static class JsonPath<TNode>
                         Push( stack, childValue, segmentNext );
                 }
             }
-
-            //valuesOnlyArrayUnion = false;
 
         } while ( stack.TryPop( out args ) );
     }

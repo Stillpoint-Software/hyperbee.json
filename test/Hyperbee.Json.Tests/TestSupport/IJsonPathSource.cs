@@ -2,9 +2,8 @@
 
 namespace Hyperbee.Json.Tests.TestSupport;
 
-public interface IJsonPathProxy
+public interface IJsonPathSource
 {
     IEnumerable<dynamic> Select( string query );
     dynamic GetPropertyFromPath( string pathLiteral );
-    IEnumerable<object> ArrayEmpty { get; }
 }

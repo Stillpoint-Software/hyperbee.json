@@ -9,6 +9,8 @@ namespace Hyperbee.Json.Tests.Dynamic;
 [TestClass]
 public class JsonDynamicTests : JsonTestBase
 {
+    static readonly JsonSerializerOptions SerializerOptions = new() { Converters = { new DynamicJsonConverter() } };
+
     private enum Thing
     {
         ThisThing,
@@ -16,7 +18,7 @@ public class JsonDynamicTests : JsonTestBase
     }
 
     [TestMethod]
-    public void Dynamic_json_element_should_return_correct_results()
+    public void DynamicJsonElementShouldReturnCorrectResults()
     {
         var source = GetDocument<JsonDocument>();
         var element = source.ToDynamic();
@@ -30,18 +32,13 @@ public class JsonDynamicTests : JsonTestBase
     }
 
     [TestMethod]
-    public void Dynamic_json_converter_should_return_correct_results()
+    public void DynamicJsonConverterShouldReturnCorrectResults()
     {
-        var serializerOptions = new JsonSerializerOptions
-        {
-            Converters = { new DynamicJsonConverter() }
-        };
-
-        var jobject = JsonSerializer.Deserialize<dynamic>( ReadJsonString(), serializerOptions );
+        var jobject = JsonSerializer.Deserialize<dynamic>( ReadJsonString(), SerializerOptions );
 
         jobject!.store.thing = Thing.ThatThing;
 
-        var output = JsonSerializer.Serialize<dynamic>( jobject, serializerOptions ) as string;
+        var output = JsonSerializer.Serialize<dynamic>( jobject, SerializerOptions ) as string;
 
         Assert.IsTrue( jobject.store.bicycle.color == "red" );
         Assert.IsTrue( jobject.store.thing == Thing.ThatThing );

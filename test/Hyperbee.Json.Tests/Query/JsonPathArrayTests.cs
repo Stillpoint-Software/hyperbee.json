@@ -26,9 +26,9 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
-        var matches = source.Select( query );
+        var matches = source.Select( query ).ToList();
         var expected = new[]
         {
             source.GetPropertyFromPath("$[1]"),
@@ -54,7 +54,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -85,10 +85,10 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -110,10 +110,10 @@ public class JsonPathArrayTests : JsonTestBase
             "1:3": "nice"
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -132,7 +132,7 @@ public class JsonPathArrayTests : JsonTestBase
             "third"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -160,7 +160,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -190,7 +190,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -219,7 +219,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -248,7 +248,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -277,10 +277,10 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -302,10 +302,10 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -327,7 +327,7 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -357,10 +357,10 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -382,10 +382,10 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -407,7 +407,7 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -435,7 +435,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -464,10 +464,10 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -489,7 +489,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -517,7 +517,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -546,7 +546,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -577,7 +577,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -607,7 +607,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -632,7 +632,7 @@ public class JsonPathArrayTests : JsonTestBase
             "second"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -657,10 +657,10 @@ public class JsonPathArrayTests : JsonTestBase
             "more": "string"
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -682,7 +682,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -711,10 +711,10 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -736,10 +736,10 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -761,7 +761,7 @@ public class JsonPathArrayTests : JsonTestBase
             "nice"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -787,10 +787,10 @@ public class JsonPathArrayTests : JsonTestBase
             "forth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -808,10 +808,10 @@ public class JsonPathArrayTests : JsonTestBase
             "second"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -829,7 +829,7 @@ public class JsonPathArrayTests : JsonTestBase
             "second"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -854,7 +854,7 @@ public class JsonPathArrayTests : JsonTestBase
             "third"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -879,7 +879,7 @@ public class JsonPathArrayTests : JsonTestBase
             "third"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -905,7 +905,7 @@ public class JsonPathArrayTests : JsonTestBase
             "third"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -934,7 +934,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -963,10 +963,10 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = source.ArrayEmpty;
+        var expected = Enumerable.Empty<object>();
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -987,7 +987,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -1008,7 +1008,7 @@ public class JsonPathArrayTests : JsonTestBase
         //consensus: [10, 20]
 
         const string json = "[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]";
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -1036,7 +1036,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -1064,7 +1064,7 @@ public class JsonPathArrayTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]

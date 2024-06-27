@@ -24,7 +24,7 @@ public class JsonPathFilterTests : JsonTestBase
               {"key": "value"}
             ]
             """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -57,7 +57,7 @@ public class JsonPathFilterTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]

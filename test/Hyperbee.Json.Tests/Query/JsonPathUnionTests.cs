@@ -146,4 +146,60 @@ public class JsonPathUnionTests : JsonTestBase
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
+
+    [DataTestMethod]
+    [DataRow( "$..['c','d']", typeof(JsonDocument) )]
+    [DataRow( "$..['c','d']", typeof(JsonNode) )]
+    public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )
+    {
+        const string json = """
+        [
+          {
+            "c": "cc1",
+            "d": "dd1",
+            "e": "ee1"
+          },
+          {
+            "c": "cc2",
+            "child": {
+              "d": "dd2"
+             }
+          },
+          {
+            "c": "cc3"
+          },
+          {
+            "d": "dd4"
+          },
+          {
+            "child": {
+              "c": "cc5"
+            }
+          }
+        ]
+        """;
+
+        var source = GetDocumentProxyFromSource( sourceType, json );
+
+        var matches = source.Select( query ).ToList();
+        var expected = new[] 
+        { 
+            source.GetPropertyFromPath( "$[0].c" ), 
+            source.GetPropertyFromPath( "$[0].d" ),            
+            source.GetPropertyFromPath( "$[1].c" ), 
+            source.GetPropertyFromPath( "$[1].child.d" ),            
+            source.GetPropertyFromPath( "$[2].c" ), 
+            source.GetPropertyFromPath( "$[3].d" ),
+            source.GetPropertyFromPath( "$[4].child.c" )
+
+        };
+
+        // consensus: ["cc1", "cc2", "cc3", "cc5", "dd1", "dd2", "dd4"]
+        // consensus: any order
+
+        var equals = matches.OrderBy( x => x.ToString() )
+            .SequenceEqual( expected.OrderBy( x => x.ToString() ) );
+
+        Assert.IsTrue(  equals );
+    }
 }

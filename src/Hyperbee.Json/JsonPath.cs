@@ -32,6 +32,7 @@
 
 #endregion
 
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
@@ -43,7 +44,14 @@ namespace Hyperbee.Json;
 
 public static class JsonPath<TNode>
 {
-    private record struct NodeArgs( in TNode Value, in JsonPathSegment Segment );
+    [DebuggerDisplay( "Value = {Value}, First = ({Segment?.Selectors?[0]}), Singular = {Segment?.Singular}, Count = {Segment?.Selectors?.Length}" )]
+    private record struct NodeArgs( TNode Value, JsonPathSegment Segment, NodeFlags Flags = NodeFlags.None );
+
+    private enum NodeFlags
+    {
+        None = 0,
+        AfterDescent = 1
+    }
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
@@ -94,7 +102,7 @@ public static class JsonPath<TNode>
         {
             // deconstruct next args
 
-            var (value, segmentNext) = args;
+            var (value, segmentNext, flags ) = args;
 
             if ( segmentNext.IsFinal )
             {
@@ -167,7 +175,12 @@ public static class JsonPath<TNode>
                     Push( stack, childValue, segmentCurrent ); // Descendant
                 }
 
-                Push( stack, value, segmentNext ); // process the current value
+                // set values only flag for arrays to avoid duplicate processing
+                var nodeFlags = nodeKind == NodeKind.Array
+                   ? NodeFlags.AfterDescent
+                   : NodeFlags.None;
+
+                Push( stack, value, segmentNext, nodeFlags ); // process the current value
                 continue;
             }
 
@@ -230,6 +243,10 @@ public static class JsonPath<TNode>
                     for ( var index = length - 1; index >= 0; index-- )
                     {
                         var childValue = accessor.GetElementAt( value, index );
+
+                        if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
+                            continue;
+
                         Push( stack, childValue, indexSegment );
                     }
 
@@ -248,13 +265,15 @@ public static class JsonPath<TNode>
                 }
             }
 
+            //valuesOnlyArrayUnion = false;
+
         } while ( stack.TryPop( out args ) );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void Push( Stack<NodeArgs> stack, in TNode value, in JsonPathSegment segment )
+    private static void Push( Stack<NodeArgs> stack, in TNode value, in JsonPathSegment segment, NodeFlags flags = NodeFlags.None )
     {
-        stack.Push( new NodeArgs( value, segment ) );
+        stack.Push( new NodeArgs( value, segment, flags ) );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

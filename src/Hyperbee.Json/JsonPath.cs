@@ -103,7 +103,7 @@ public static class JsonPath<TNode>
         {
             // deconstruct next args
 
-            var (value, segmentNext, flags ) = args;
+            var (value, segmentNext, flags) = args;
 
             if ( segmentNext.IsFinal )
             {

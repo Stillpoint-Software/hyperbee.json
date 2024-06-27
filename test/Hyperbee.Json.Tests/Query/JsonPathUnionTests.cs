@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -148,8 +148,8 @@ public class JsonPathUnionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$..['c','d']", typeof(JsonDocument) )]
-    [DataRow( "$..['c','d']", typeof(JsonNode) )]
+    [DataRow( "$..['c','d']", typeof( JsonDocument ) )]
+    [DataRow( "$..['c','d']", typeof( JsonNode ) )]
     public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )
     {
         const string json = """
@@ -200,6 +200,6 @@ public class JsonPathUnionTests : JsonTestBase
         var equals = matches.OrderBy( x => x.ToString() )
             .SequenceEqual( expected.OrderBy( x => x.ToString() ) );
 
-        Assert.IsTrue(  equals );
+        Assert.IsTrue( equals );
     }
 }

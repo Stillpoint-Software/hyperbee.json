@@ -406,15 +406,15 @@ public class FilterParser<TNode> : FilterParser
         public static Expression GetComparer( IValueAccessor<TNode> accessor, Expression expression )
         {
             // Handles Not operator since it maybe not have a left side.
-            if ( expression == null ) 
+            if ( expression == null )
                 return null;
 
             // Create an expression representing the instance of the accessor
             var accessorExpression = Expression.Constant( accessor );
 
             // Use the compiled delegate to create an expression to call the GetAsValue method
-            return Expression.Invoke( Expression.Constant( GetJsonValueDelegate ), accessorExpression, 
-                Expression.Convert( expression, typeof(object) ) );
+            return Expression.Invoke( Expression.Constant( GetJsonValueDelegate ), accessorExpression,
+                Expression.Convert( expression, typeof( object ) ) );
         }
 
         public class JsonComparer
@@ -422,7 +422,7 @@ public class FilterParser<TNode> : FilterParser
             private readonly IValueAccessor<TNode> _accessor;
             private readonly object _value;
 
-            public static JsonComparer Create( IValueAccessor<TNode> accessor, object value ) => new ( accessor, value );
+            public static JsonComparer Create( IValueAccessor<TNode> accessor, object value ) => new( accessor, value );
 
             public JsonComparer( IValueAccessor<TNode> accessor, object value )
             {
@@ -534,6 +534,21 @@ public class FilterParser<TNode> : FilterParser
                         _ => FilterTruthyExpression.IsTruthy( first ).CompareTo( FilterTruthyExpression.IsTruthy( second ) )
                     };
                 }
+            }
+
+            public override bool Equals( object obj )
+            {
+                if ( ReferenceEquals( this, obj ) )
+                {
+                    return true;
+                }
+
+                if ( ReferenceEquals( obj, null ) )
+                {
+                    return false;
+                }
+
+                throw new NotImplementedException();
             }
         }
     }

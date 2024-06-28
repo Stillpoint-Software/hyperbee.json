@@ -45,12 +45,12 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        var expected = new[] 
-        { 
-            source.GetPropertyFromPath( "$[0]" ), 
-            source.GetPropertyFromPath( "$[1]" ), 
-            source.GetPropertyFromPath( "$[0][0]" ), 
-            source.GetPropertyFromPath( "$[1][0]" ) 
+        var expected = new[]
+        {
+            source.GetPropertyFromPath( "$[0]" ),
+            source.GetPropertyFromPath( "$[1]" ),
+            source.GetPropertyFromPath( "$[0][0]" ),
+            source.GetPropertyFromPath( "$[1][0]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -80,8 +80,8 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$..[1].key", typeof(JsonDocument) )]
-    [DataRow( "$..[1].key", typeof(JsonNode) )]
+    [DataRow( "$..[1].key", typeof( JsonDocument ) )]
+    [DataRow( "$..[1].key", typeof( JsonNode ) )]
     public void DotNotationAfterBracketNotationAfterRecursiveDescent( string query, Type sourceType )
     {
         // consensus: [200, 42, 500]
@@ -130,8 +130,8 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        var expected = new[] 
-        { 
+        var expected = new[]
+        {
             source.GetPropertyFromPath( "$['k'][1]['key']" ),
             source.GetPropertyFromPath( "$['kk'][0][1]['key']" ),
             source.GetPropertyFromPath( "$['kk'][1][1]['key']" ),

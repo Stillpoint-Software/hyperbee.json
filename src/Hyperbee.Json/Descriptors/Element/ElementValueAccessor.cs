@@ -119,7 +119,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonElement> elements )
     {
         var bytes = Encoding.UTF8.GetBytes( item.ToArray() );
-        var reader = new Utf8JsonReader( bytes );        
+        var reader = new Utf8JsonReader( bytes );
 
         try
         {

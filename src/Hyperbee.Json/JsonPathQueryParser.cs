@@ -27,7 +27,7 @@ public enum SelectorKind
     Descendant = 0x200 | Group
 }
 
-public static class JsonPathQueryParser
+internal static class JsonPathQueryParser
 {
     private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
@@ -83,7 +83,7 @@ public static class JsonPathQueryParser
 
         var tokens = new List<JsonPathSegment>();
 
-        query = query.Trim();
+        query = query.TrimEnd();
 
         var i = 0;
         var n = query.Length;
@@ -360,10 +360,10 @@ public static class JsonPathQueryParser
 
         // return tokenized query as a segment list
 
-        return TokensAsSegment( tokens );
+        return TokensToSegment( tokens );
     }
 
-    private static JsonPathSegment TokensAsSegment( IList<JsonPathSegment> tokens )
+    private static JsonPathSegment TokensToSegment( IList<JsonPathSegment> tokens )
     {
         if ( tokens == null || tokens.Count == 0 )
             return JsonPathSegment.Final;

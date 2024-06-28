@@ -64,7 +64,7 @@ public static class JsonPath<TNode>
     internal static IEnumerable<TNode> SelectInternal( in TNode value, TNode root, string query )
     {
         // this overload is required for reentrant filter select evaluations.
-        // it is intended for use by nameof(FilterFunction) implementations.
+        // it is intended for use by `SelectExpressionFactory` implementations.
 
         return EnumerateMatches( value, root, query );
     }
@@ -73,7 +73,7 @@ public static class JsonPath<TNode>
     {
         // quick outs
 
-        if ( string.IsNullOrWhiteSpace( query ) ) // per Consensus, empty query returns empty array
+        if ( string.IsNullOrWhiteSpace( query ) ) // Consensus: empty query returns empty array
             return [];
 
         if ( query == "$" || query == "@" )

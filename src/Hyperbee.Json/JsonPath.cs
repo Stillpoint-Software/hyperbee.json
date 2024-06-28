@@ -296,17 +296,17 @@ public static class JsonPath<TNode>
         switch ( step )
         {
             case > 0:
-            {
-                for ( var index = lower; index < upper; index += step )
-                    yield return index;
-                break;
-            }
+                {
+                    for ( var index = lower; index < upper; index += step )
+                        yield return index;
+                    break;
+                }
             case < 0:
-            {
-                for ( var index = upper; index > lower; index += step )
-                    yield return index;
-                break;
-            }
+                {
+                    for ( var index = upper; index > lower; index += step )
+                        yield return index;
+                    break;
+                }
         }
     }
 }

@@ -45,7 +45,13 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        var expected = new[] { source.GetPropertyFromPath( "$[0]" ), source.GetPropertyFromPath( "$[1]" ), source.GetPropertyFromPath( "$[0][0]" ), source.GetPropertyFromPath( "$[1][0]" ) };
+        var expected = new[] 
+        { 
+            source.GetPropertyFromPath( "$[0]" ), 
+            source.GetPropertyFromPath( "$[1]" ), 
+            source.GetPropertyFromPath( "$[0][0]" ), 
+            source.GetPropertyFromPath( "$[1][0]" ) 
+        };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -71,5 +77,66 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         _ = source.Select( query ).ToList();
+    }
+
+    [DataTestMethod]
+    [DataRow( "$..[1].key", typeof(JsonDocument) )]
+    [DataRow( "$..[1].key", typeof(JsonNode) )]
+    public void DotNotationAfterBracketNotationAfterRecursiveDescent( string query, Type sourceType )
+    {
+        // consensus: [200, 42, 500]
+
+        const string json = """
+        {
+          "k": [
+            {
+              "key": "some value"
+            },
+            {
+              "key": 42
+            }
+          ],
+          "kk": [
+            [
+              {
+                "key": 100
+              },
+              {
+                "key": 200
+              },
+              {
+                "key": 300
+              }
+            ],
+            [
+              {
+                "key": 400
+              },
+              {
+                "key": 500
+              },
+              {
+                "key": 600
+              }
+            ]
+          ],
+          "key": [
+            0,
+            1
+          ]
+        }
+        """;
+
+        var source = GetDocumentFromSource( sourceType, json );
+
+        var matches = source.Select( query ).ToList();
+        var expected = new[] 
+        { 
+            source.GetPropertyFromPath( "$['k'][1]['key']" ),
+            source.GetPropertyFromPath( "$['kk'][0][1]['key']" ),
+            source.GetPropertyFromPath( "$['kk'][1][1]['key']" ),
+        };
+
+        Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 }

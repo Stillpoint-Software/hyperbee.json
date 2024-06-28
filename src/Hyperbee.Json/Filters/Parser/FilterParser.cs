@@ -93,6 +93,9 @@ public class FilterParser<TNode> : FilterParser
         if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, context ) )
             return ExprItem( ref state, expression );
 
+        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, context ) )
+            return ExprItem( ref state, expression );
+
         throw new ArgumentException( $"Unsupported literal: {state.Buffer.ToString()}" );
 
         // Helper method to create an expression item
@@ -307,49 +310,68 @@ public class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right, ITypeDescriptor<TNode> descriptor )
     {
-        // Ensure both expressions are value expressions
-        left.Expression = ExpressionConverter.ConvertToValue( descriptor.Accessor, left.Expression );
-        right.Expression = ExpressionConverter.ConvertToValue( descriptor.Accessor, right.Expression );
-
-        left.Expression = left.Operator switch
+        switch ( left.Operator )
         {
-            Operator.Equals when IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type ) =>
-                Expression.Equal(
-                    ExpressionConverter.ConvertToNumber( left.Expression ),
-                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+            case Operator.Equals:
+                left.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, left.Expression );
+                right.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, right.Expression );
 
-            Operator.NotEquals when IsNumerical( left.Expression?.Type ) || IsNumerical( right.Expression.Type ) =>
-                Expression.NotEqual(
-                    ExpressionConverter.ConvertToNumber( left.Expression ),
-                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+                left.Expression = Expression.Equal( left.Expression, right.Expression );
+                break;
+            case Operator.NotEquals:
+                left.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, left.Expression );
+                right.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, right.Expression );
 
-            Operator.GreaterThan =>
-                Expression.GreaterThan(
-                    ExpressionConverter.ConvertToNumber( left.Expression ),
-                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+                left.Expression = Expression.NotEqual( left.Expression, right.Expression );
+                break;
+            case Operator.GreaterThan:
+                left.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, left.Expression );
+                right.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, right.Expression );
 
-            Operator.GreaterThanOrEqual =>
-                Expression.GreaterThanOrEqual(
-                    ExpressionConverter.ConvertToNumber( left.Expression ),
-                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+                left.Expression = Expression.GreaterThan( left.Expression, right.Expression );
+                break;
+            case Operator.GreaterThanOrEqual:
+                left.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, left.Expression );
+                right.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, right.Expression );
 
-            Operator.LessThan =>
-                Expression.LessThan(
-                    ExpressionConverter.ConvertToNumber( left.Expression ),
-                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+                left.Expression = Expression.GreaterThanOrEqual( left.Expression, right.Expression );
+                break;
+            case Operator.LessThan:
+                left.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, left.Expression );
+                right.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, right.Expression );
 
-            Operator.LessThanOrEqual =>
-                Expression.LessThanOrEqual(
-                    ExpressionConverter.ConvertToNumber( left.Expression ),
-                    ExpressionConverter.ConvertToNumber( right.Expression ) ),
+                left.Expression = Expression.LessThan( left.Expression, right.Expression );
+                break;
+            case Operator.LessThanOrEqual:
+                left.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, left.Expression );
+                right.Expression = JsonComparerExpressionFactory.GetComparer( descriptor.Accessor, right.Expression );
 
-            Operator.Equals => Equal( left.Expression, right.Expression ),
-            Operator.NotEquals => NotEqual( left.Expression, right.Expression ),
-            Operator.And => Expression.AndAlso( left.Expression!, right.Expression ),
-            Operator.Or => Expression.OrElse( left.Expression!, right.Expression ),
-            Operator.Not => Expression.Not( right.Expression ),
-            _ => left.Expression
-        };
+                left.Expression = Expression.LessThanOrEqual( left.Expression, right.Expression );
+                break;
+            case Operator.And:
+                left.Expression = Expression.AndAlso(
+                    FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
+                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
+                );
+                break;
+            case Operator.Or:
+                left.Expression = Expression.OrElse(
+                    FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
+                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
+                );
+                break;
+            case Operator.Not:
+                left.Expression = Expression.Not(
+                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
+                );
+                break;
+            case Operator.Nop:
+            case Operator.OpenParen:
+            case Operator.ClosedParen:
+            default:
+                left.Expression = left.Expression;
+                break;
+        }
 
         // Wrap left expression in a try-catch block to handle exceptions
         left.Expression = left.Expression == null
@@ -361,65 +383,158 @@ public class FilterParser<TNode> : FilterParser
             );
 
         left.Operator = right.Operator;
-        return;
-
-        // Helper method to determine if a type is numerical
-        static bool IsNumerical( Type type ) => type == typeof( float ) || type == typeof( int );
-
-        // Helper methods to create comparison expressions
-        static Expression Equal( Expression l, Expression r ) => Expression.Call( FilterParser.ObjectEquals, l, r );
-        static Expression NotEqual( Expression l, Expression r ) => Expression.Not( Equal( l, r ) );
     }
 
-    private static class ExpressionConverter
+    internal static class JsonComparerExpressionFactory
     {
-        // Cached delegate for calling IValueAccessor<TNode>GetAsValue( IEnumerable<TNode> nodes ) 
+        private static readonly Func<IValueAccessor<TNode>, object, JsonComparer> GetJsonValueDelegate;
 
-        private static readonly Func<IValueAccessor<TNode>, IEnumerable<TNode>, object> GetAsValueDelegate;
-
-        static ExpressionConverter()
+        static JsonComparerExpressionFactory()
         {
-            // Pre-compile the delegate to call the GetAsValue method
+            // Pre-compile the delegate to call the JsonComparer.Create method
 
             var accessorParam = Expression.Parameter( typeof( IValueAccessor<TNode> ), "accessor" );
-            var expressionParam = Expression.Parameter( typeof( IEnumerable<TNode> ), "expression" );
+            var valueParam = Expression.Parameter( typeof( object ), "value" );
 
-            var methodInfo = typeof( IValueAccessor<TNode> ).GetMethod( nameof( IValueAccessor<TNode>.GetAsValue ) );
-            var callExpression = Expression.Call( accessorParam, methodInfo!, expressionParam );
+            var methodInfo = typeof( JsonComparer ).GetMethod( nameof( JsonComparer.Create ) );
+            var callExpression = Expression.Call( methodInfo!, accessorParam, valueParam );
 
-            GetAsValueDelegate = Expression.Lambda<Func<IValueAccessor<TNode>, IEnumerable<TNode>, object>>(
-                callExpression, accessorParam, expressionParam ).Compile();
+            GetJsonValueDelegate = Expression.Lambda<Func<IValueAccessor<TNode>, object, JsonComparer>>(
+                callExpression, accessorParam, valueParam ).Compile();
         }
 
-        public static Expression ConvertToValue( IValueAccessor<TNode> accessor, Expression expression )
+        public static Expression GetComparer( IValueAccessor<TNode> accessor, Expression expression )
         {
-            if ( expression == null || expression.Type != typeof( IEnumerable<TNode> ) )
-                return expression;
+            // Handles Not operator since it maybe not have a left side.
+            if ( expression == null ) 
+                return null;
 
             // Create an expression representing the instance of the accessor
             var accessorExpression = Expression.Constant( accessor );
 
             // Use the compiled delegate to create an expression to call the GetAsValue method
-            return Expression.Invoke( Expression.Constant( GetAsValueDelegate ), accessorExpression, expression );
+            return Expression.Invoke( Expression.Constant( GetJsonValueDelegate ), accessorExpression, 
+                Expression.Convert( expression, typeof(object) ) );
         }
 
-        // Helper method to convert numerical types to float
-        public static Expression ConvertToNumber( Expression expression )
+        public class JsonComparer
         {
-            if ( expression.Type == typeof( float ) ) // quick out
-                return expression;
+            private readonly IValueAccessor<TNode> _accessor;
+            private readonly object _value;
 
-            if ( expression.Type == typeof( object ) ||
-                 expression.Type == typeof( int ) ||
-                 expression.Type == typeof( short ) ||
-                 expression.Type == typeof( long ) ||
-                 expression.Type == typeof( double ) ||
-                 expression.Type == typeof( decimal ) )
+            public static JsonComparer Create( IValueAccessor<TNode> accessor, object value ) => new ( accessor, value );
+
+            public JsonComparer( IValueAccessor<TNode> accessor, object value )
             {
-                return Expression.Convert( expression, typeof( float ) );
+                _accessor = accessor;
+                _value = value;
             }
 
-            return expression;
+            public static bool operator ==( JsonComparer left, JsonComparer right )
+            {
+                return Compare( left, right ) == 0;
+            }
+
+            public static bool operator !=( JsonComparer left, JsonComparer right )
+            {
+                return Compare( left, right ) != 0;
+            }
+
+            public static bool operator <( JsonComparer left, JsonComparer right )
+            {
+                return Compare( left, right ) < 0;
+            }
+
+            public static bool operator >( JsonComparer left, JsonComparer right )
+            {
+                return Compare( left, right ) > 0;
+            }
+
+            public static bool operator <=( JsonComparer left, JsonComparer right )
+            {
+                return Compare( left, right ) <= 0;
+            }
+
+            public static bool operator >=( JsonComparer left, JsonComparer right )
+            {
+                return Compare( left, right ) >= 0;
+            }
+
+            static int Compare( JsonComparer left, JsonComparer right )
+            {
+                var isLeftJsonEnumerable = left._value is IEnumerable<TNode>;
+                var isRightJsonEnumerable = right._value is IEnumerable<TNode>;
+
+                if ( isRightJsonEnumerable && isLeftJsonEnumerable )
+                {
+                    return left._accessor.DeepEquals(
+                        ((IEnumerable<TNode>) left._value).FirstOrDefault(),
+                        ((IEnumerable<TNode>) right._value).FirstOrDefault() ) ? 0 : -1;
+                }
+
+                var leftType = left._value.GetType();
+                var rightType = right._value.GetType();
+
+                if ( leftType == rightType )
+                {
+                    if ( TryCompare( left._value, right._value, out var result ) )
+                    {
+                        return result!.Value;
+                    }
+                }
+
+                if ( isRightJsonEnumerable )
+                {
+                    var rightValue = right._accessor.GetAsValue( (IEnumerable<TNode>) right._value );
+                    if ( TryCompare( rightValue, left._value, out var result ) )
+                    {
+                        return result!.Value;
+                    }
+                    return CompareTruthy( rightValue, left._value );
+                }
+
+                if ( isLeftJsonEnumerable )
+                {
+                    var leftValue = right._accessor.GetAsValue( (IEnumerable<TNode>) left._value );
+                    if ( TryCompare( leftValue, right._value, out var result ) )
+                    {
+                        return result!.Value;
+                    }
+                    return CompareTruthy( leftValue, right._value );
+                }
+
+                return -1;
+
+                static bool TryCompare( object left, object right, out int? compare )
+                {
+                    switch ( left )
+                    {
+                        case bool boolValue:
+                            compare = boolValue.CompareTo( (bool) right );
+                            return true;
+                        case float floatValue:
+                            compare = floatValue.CompareTo( (float) right );
+                            return true;
+                        case string strValue:
+                            compare = string.Compare( strValue, (string) right, StringComparison.Ordinal );
+                            return true;
+                    }
+
+                    compare = null;
+                    return false;
+                }
+
+                static int CompareTruthy( object first, object second )
+                {
+                    return first switch
+                    {
+                        bool boolValue => boolValue.CompareTo( (bool) second ),
+                        float floatValue => floatValue.CompareTo( (float) second ),
+                        string strValue => string.Compare( strValue, (string) second, StringComparison.Ordinal ),
+                        _ => FilterTruthyExpression.IsTruthy( first ).CompareTo( FilterTruthyExpression.IsTruthy( second ) )
+                    };
+                }
+            }
         }
     }
 

@@ -6,11 +6,11 @@ internal class LiteralExpressionFactory : IExpressionFactory
 {
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, FilterContext<TNode> context )
     {
-        expression = GetLiteralExpression( state.Item );
+        expression = GetLiteralExpression( state.Item, context );
         return expression != null;
     }
 
-    private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
+    private static ConstantExpression GetLiteralExpression<TNode>( ReadOnlySpan<char> item, FilterContext<TNode> context )
     {
         // Check for known literals (true, false, null) first
 
@@ -30,7 +30,6 @@ internal class LiteralExpressionFactory : IExpressionFactory
 
         // Check for numbers
         // TODO: Currently assuming all numbers are floats since we don't know what's in the data or the other side of the operator yet.
-
         if ( float.TryParse( item, out float result ) )
             return Expression.Constant( result );
 

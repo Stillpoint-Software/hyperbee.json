@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using Hyperbee.Json.Descriptors.Element.Functions;
+using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
@@ -112,5 +114,32 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     public object GetAsValue( IEnumerable<JsonElement> elements )
     {
         return ValueElementFunction.Value( elements );
+    }
+
+    public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonElement> elements )
+    {
+        var bytes = Encoding.UTF8.GetBytes( item.ToArray() );
+        var reader = new Utf8JsonReader( bytes );        
+
+        try
+        {
+            if ( JsonDocument.TryParseValue( ref reader, out var document ) )
+            {
+                elements = [document.RootElement];
+                return true;
+            }
+        }
+        catch
+        {
+            // ignored
+        }
+
+        elements = default;
+        return false;
+    }
+
+    public bool DeepEquals( JsonElement left, JsonElement right )
+    {
+        return left.DeepEquals( right );
     }
 }

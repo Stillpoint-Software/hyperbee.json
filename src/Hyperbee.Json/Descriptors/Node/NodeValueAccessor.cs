@@ -1,9 +1,7 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node.Functions;
-using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
@@ -119,5 +117,25 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     public object GetAsValue( IEnumerable<JsonNode> nodes )
     {
         return ValueNodeFunction.Value( nodes );
+    }
+
+    public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonNode> nodes )
+    {
+        try
+        {
+            var json = JsonNode.Parse( item.ToString() );
+            nodes = [json];
+            return true;
+        }
+        catch
+        {
+            nodes = [];
+            return false;
+        }
+    }
+
+    public bool DeepEquals( JsonNode left, JsonNode right )
+    {
+        return JsonNode.DeepEquals( left, right );
     }
 }

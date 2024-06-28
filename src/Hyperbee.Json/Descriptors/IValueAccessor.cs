@@ -15,4 +15,6 @@ public interface IValueAccessor<TNode>
     int GetArrayLength( in TNode value );
     bool TryGetChildValue( in TNode value, string childSelector, out TNode childValue );
     object GetAsValue( IEnumerable<TNode> elements );
+    bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<TNode> elements );
+    bool DeepEquals( TNode left, TNode right );
 }

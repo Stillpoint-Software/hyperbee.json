@@ -116,6 +116,24 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         return ValueElementFunction.Value( elements );
     }
 
+    public object GetAsValueOther( IEnumerable<JsonElement> elements )
+    {
+        var element = elements.FirstOrDefault();
+
+        return element.ValueKind switch
+        {
+            JsonValueKind.Number => element.GetSingle(),
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Object => element,
+            JsonValueKind.Array => element,
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Null => null,
+            JsonValueKind.Undefined => false,
+            _ => false
+        };
+    }
+
     public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonElement> elements )
     {
         var bytes = Encoding.UTF8.GetBytes( item.ToArray() );

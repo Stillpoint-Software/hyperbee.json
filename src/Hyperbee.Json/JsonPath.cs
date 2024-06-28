@@ -232,7 +232,10 @@ public static class JsonPath<TNode>
 
                     if ( selectorKind == SelectorKind.Slice )
                     {
-                        ProcessSlice( stack, value, selector, segmentNext, accessor );
+                        foreach ( var index in EnumerateSlice( value, selector, accessor ) )
+                        {
+                            Push( stack, accessor.GetElementAt( value, index ), segmentNext );
+                        }
                         continue;
                     }
 
@@ -281,35 +284,29 @@ public static class JsonPath<TNode>
         return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
     }
 
-    private static void ProcessSlice( Stack<NodeArgs> stack, TNode value, string sliceExpr, JsonPathSegment segmentNext, IValueAccessor<TNode> accessor )
+    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
     {
         var length = accessor.GetArrayLength( value );
 
         if ( length == 0 )
-            return;
+            yield break;
 
         var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
         switch ( step )
         {
             case > 0:
-                {
-                    for ( var index = lower; index < upper; index += step )
-                    {
-                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
-                    }
-
-                    break;
-                }
+            {
+                for ( var index = lower; index < upper; index += step )
+                    yield return index;
+                break;
+            }
             case < 0:
-                {
-                    for ( var index = upper; index > lower; index += step )
-                    {
-                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
-                    }
-
-                    break;
-                }
+            {
+                for ( var index = upper; index > lower; index += step )
+                    yield return index;
+                break;
+            }
         }
     }
 }

@@ -940,11 +940,9 @@ public class JsonPathBracketNotationTests : JsonTestBase
             source.GetPropertyFromPath("$['another key']['primitives'][1]")
         };
 
-
-
         Assert.IsTrue( expected.SequenceEqual( matches ) );
         Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[1], minify: true ) == JsonValueHelper.MinifyJsonString( "{\"complex\": \"string\", \"primitives\": [0,1]}" ) );
+        Assert.IsTrue( JsonValueHelper.GetString( matches[1], minify: true ) == JsonValueHelper.MinifyJson( """{"complex": "string", "primitives": [0,1]}""" ) );
         Assert.IsTrue( JsonValueHelper.GetString( matches[2] ) == "string" );
         Assert.IsTrue( JsonValueHelper.GetString( matches[3], minify: true ) == "[0,1]" );
         Assert.IsTrue( JsonValueHelper.GetInt32( matches[4] ) == 0 );

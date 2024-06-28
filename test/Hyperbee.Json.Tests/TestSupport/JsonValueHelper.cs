@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Runtime.InteropServices.JavaScript;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
@@ -20,13 +22,11 @@ internal static class JsonValueHelper
 
     public static string GetString( JsonElement value, bool minify = false )
     {
-        if ( value.ValueKind == JsonValueKind.Object || value.ValueKind == JsonValueKind.Array )
-        {
-            var result = value.ToString();
-            return minify ? MinifyJsonString( result ) : result;
-        }
+        if ( value.ValueKind != JsonValueKind.Object && value.ValueKind != JsonValueKind.Array )
+            return value.GetString();
 
-        return value.GetString();
+        var result = value.ToString();
+        return minify ? MinifyJson( result ) : result;
     }
 
     // JsonNode Values
@@ -37,25 +37,57 @@ internal static class JsonValueHelper
 
     public static string GetString( JsonNode value, bool minify = false )
     {
-        if ( value is JsonObject || value is JsonArray )
-        {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = false
-            };
+        if ( value is not JsonObject && value is not JsonArray )
+            return value.AsValue().GetValue<string>();
 
-            var result = value.ToJsonString( options );
-            return minify ? MinifyJsonString( result ) : result;
-        }
+        var options = new JsonSerializerOptions { WriteIndented = false };
 
-        return value.AsValue().GetValue<string>();
+        var result = value.ToJsonString( options );
+        return minify ? MinifyJson( result ) : result;
     }
 
     // Json string helpers
 
-    public static string MinifyJsonString( string json )
+    public static string MinifyJson( ReadOnlySpan<char> input )
     {
-        const string minifyPattern = "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+";
-        return Regex.Replace( json, minifyPattern, "$1" );
+        Span<char> buffer = new char[input.Length];
+        int bufferIndex = 0;
+        bool insideString = false;
+        bool escapeNext = false;
+
+        foreach ( char ch in input )
+        {
+            switch ( ch )
+            {
+                case '\\':
+                    if ( insideString ) escapeNext = !escapeNext;
+                    buffer[bufferIndex++] = ch;
+                    break;
+
+                case '\"':
+                    if ( !escapeNext )
+                        insideString = !insideString;
+
+                    escapeNext = false;
+                    buffer[bufferIndex++] = ch;
+                    break;
+
+                case '\r':
+                case '\n':
+                case '\t':
+                case ' ':
+                    if ( insideString )
+                        buffer[bufferIndex++] = ch;
+
+                    break;
+
+                default:
+                    escapeNext = false;
+                    buffer[bufferIndex++] = ch;
+                    break;
+            }
+        }
+
+        return new string( buffer[..bufferIndex] );
     }
 }

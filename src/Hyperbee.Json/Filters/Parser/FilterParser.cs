@@ -506,7 +506,7 @@ public class FilterParser<TNode> : FilterParser
                 {
                     switch ( left )
                     {
-                        case null :
+                        case null:
                             compare = right == null ? 0 : -1;
                             return true;
                         case bool boolValue:
@@ -551,6 +551,11 @@ public class FilterParser<TNode> : FilterParser
                     return false;
                 }
 
+                throw new NotImplementedException();
+            }
+
+            public override int GetHashCode()
+            {
                 throw new NotImplementedException();
             }
         }

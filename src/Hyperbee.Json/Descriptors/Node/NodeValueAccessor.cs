@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node.Functions;
 
@@ -117,6 +118,32 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     public object GetAsValue( IEnumerable<JsonNode> nodes )
     {
         return ValueNodeFunction.Value( nodes );
+    }
+
+    public object GetAsValueOther( IEnumerable<JsonNode> nodes )
+    {
+        var node = nodes.FirstOrDefault();
+
+        switch ( node?.GetValueKind() )
+        {
+            case JsonValueKind.Number:
+                var floatValue = node.GetValue<float>();
+                return floatValue;
+            case JsonValueKind.String:
+                var stringValue = node.GetValue<string>();
+                return stringValue;
+            case JsonValueKind.Object:
+            case JsonValueKind.Array:
+                return node;
+            case JsonValueKind.True:
+                return true;
+            case JsonValueKind.Null:
+                return null;
+            case JsonValueKind.False:
+            case JsonValueKind.Undefined:
+            default:
+                return false;
+        }
     }
 
     public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonNode> nodes )

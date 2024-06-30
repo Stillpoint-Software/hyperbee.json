@@ -96,7 +96,7 @@ public class FilterParser<TNode> : FilterParser
         if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, context ) )
             return ExprItem( ref state, expression );
 
-        throw new ArgumentException( $"Unsupported literal: {state.Buffer.ToString()}" );
+        throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
 
         // Helper method to create an expression item
         static ExprItem ExprItem( ref ParserState state, Expression expression )
@@ -430,10 +430,7 @@ public class FilterParser<TNode> : FilterParser
                 _value = value;
             }
 
-            public static bool operator ==( JsonComparer left, JsonComparer right )
-            {
-                return Compare( left, right ) == 0;
-            }
+            public static bool operator ==( JsonComparer left, JsonComparer right ) => Compare( left, right ) == 0;
 
             public static bool operator !=( JsonComparer left, JsonComparer right )
             {
@@ -472,8 +469,8 @@ public class FilterParser<TNode> : FilterParser
                         ((IEnumerable<TNode>) right._value).FirstOrDefault() ) ? 0 : -1;
                 }
 
-                var leftType = left._value.GetType();
-                var rightType = right._value.GetType();
+                var leftType = left._value?.GetType();
+                var rightType = right._value?.GetType();
 
                 if ( leftType == rightType )
                 {
@@ -485,7 +482,7 @@ public class FilterParser<TNode> : FilterParser
 
                 if ( isRightJsonEnumerable )
                 {
-                    var rightValue = right._accessor.GetAsValue( (IEnumerable<TNode>) right._value );
+                    var rightValue = right._accessor.GetAsValueOther( (IEnumerable<TNode>) right._value );
                     if ( TryCompare( rightValue, left._value, out var result ) )
                     {
                         return result!.Value;
@@ -495,7 +492,7 @@ public class FilterParser<TNode> : FilterParser
 
                 if ( isLeftJsonEnumerable )
                 {
-                    var leftValue = right._accessor.GetAsValue( (IEnumerable<TNode>) left._value );
+                    var leftValue = right._accessor.GetAsValueOther( (IEnumerable<TNode>) left._value );
                     if ( TryCompare( leftValue, right._value, out var result ) )
                     {
                         return result!.Value;
@@ -509,6 +506,9 @@ public class FilterParser<TNode> : FilterParser
                 {
                     switch ( left )
                     {
+                        case null:
+                            compare = right == null ? 0 : -1;
+                            return true;
                         case bool boolValue:
                             compare = boolValue.CompareTo( (bool) right );
                             return true;
@@ -517,6 +517,9 @@ public class FilterParser<TNode> : FilterParser
                             return true;
                         case string strValue:
                             compare = string.Compare( strValue, (string) right, StringComparison.Ordinal );
+                            return true;
+                        case TNode node:
+                            compare = node.Equals( right ) ? 0 : -1;
                             return true;
                     }
 
@@ -548,6 +551,11 @@ public class FilterParser<TNode> : FilterParser
                     return false;
                 }
 
+                throw new NotImplementedException();
+            }
+
+            public override int GetHashCode()
+            {
                 throw new NotImplementedException();
             }
         }

@@ -8,7 +8,7 @@ namespace Hyperbee.Json.Tests.TestSupport;
 
 public class JsonTestBase
 {
-    protected static string DocumentDefault { get; set; } = "JsonPath.json";
+    protected static string DocumentDefault { get; set; } = "BookStore.json";
 
     protected static string ReadJsonString( string filename = null )
     {

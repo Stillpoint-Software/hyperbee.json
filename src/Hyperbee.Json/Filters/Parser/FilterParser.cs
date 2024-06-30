@@ -9,6 +9,7 @@
 
 #endregion
 
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
@@ -417,6 +418,7 @@ public class FilterParser<TNode> : FilterParser
                 Expression.Convert( expression, typeof( object ) ) );
         }
 
+        [DebuggerDisplay( "Value = {_value}" )]
         public class JsonComparer
         {
             private readonly IValueAccessor<TNode> _accessor;

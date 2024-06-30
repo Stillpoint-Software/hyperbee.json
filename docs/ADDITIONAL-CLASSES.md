@@ -37,7 +37,7 @@ numeric values during the deserialization process.
 | Method                             | Description
 |:-----------------------------------|:-----------
 | `JsonElement.DeepEquals`           | Performs a deep equals comparison on two `JsonElements`
-| `JsonElementEqualityDeepComparer`  | A deep equals equality comparer that compares two `JsonElements`
+| `JsonElementDeepEqualityComparer`  | A deep equals equality comparer that compares two `JsonElements`
 
 ### Property Diving
 

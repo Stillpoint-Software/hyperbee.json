@@ -29,16 +29,16 @@ public static class JsonPathSelectExtensions
     {
         var pathBuilder = new JsonPathBuilder( element );
 
-        foreach ( var node in JsonPath<JsonElement>.Select( element, query, NodeProcessor ) )
+        foreach ( var result in JsonPath<JsonElement>.Select( element, query, NodeProcessor ) )
         {
-            yield return (node, pathBuilder.GetPath( node ));
+            yield return (result, pathBuilder.GetPath( result ));
         }
 
         yield break;
 
         void NodeProcessor( in JsonElement parent, in JsonElement value, string key, in JsonPathSegment segment )
         {
-            pathBuilder.InsertItem( parent, value, key ); // seed the pathBuilder with the parent and value
+            pathBuilder.InsertItem( parent, value, key ); // seed the path builder with the parent and value
         }
     }
 }

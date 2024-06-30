@@ -634,7 +634,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
     [DataTestMethod]
     [DataRow( """$[':@.\"$,*\'\\']""", typeof( JsonDocument ) )]
-    [DataRow( """$[':@.\"$,*\'\\']""", typeof( JsonNode ) )] 
+    [DataRow( """$[':@.\"$,*\'\\']""", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedSpecialCharactersCombined( string query, Type sourceType )
     {
         //consensus: //none

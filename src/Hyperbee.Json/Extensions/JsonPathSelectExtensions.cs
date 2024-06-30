@@ -25,7 +25,7 @@ public static class JsonPathSelectExtensions
         return document.RootElement.SelectPath( query );
     }
 
-    public static IEnumerable<(JsonElement Node,string Path)> SelectPath( this JsonElement element, string query )
+    public static IEnumerable<(JsonElement Node, string Path)> SelectPath( this JsonElement element, string query )
     {
         var pathBuilder = new JsonPathBuilder( element );
 

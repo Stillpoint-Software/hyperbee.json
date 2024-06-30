@@ -101,7 +101,7 @@ public static class JsonPath<TNode>
             // call node processor if it exists and the `key` is not null.
             // the key is null when a descent has re-pushed the descent target.
             // this should be safe to skip; we will see its values later.
-            if ( key != null ) 
+            if ( key != null )
                 processor?.Invoke( parent, value, key, segmentNext );
 
             // yield matches
@@ -179,7 +179,7 @@ public static class JsonPath<TNode>
 
                 // Union Processing After Descent: If a union operator follows a descent operator,
                 // either directly or after intermediary selectors, it should only process simple values. 
-                
+
                 stack.Push( parent, value, default, segmentNext, NodeFlags.AfterDescent ); // process the current value
                 continue;
             }
@@ -310,7 +310,7 @@ public static class JsonPath<TNode>
 
     private sealed class NodeArgsStack( int capacity = 16 )
     {
-        private readonly Stack<NodeArgs> _stack = new(capacity);
+        private readonly Stack<NodeArgs> _stack = new( capacity );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public void Push( in TNode parent, in TNode value, string key, in JsonPathSegment segment, NodeFlags flags = NodeFlags.None )

@@ -67,7 +67,7 @@ public class JsonPathSegment
     {
         // singular is one selector that is not a group
 
-        if ( Selectors.Length != 1 ) 
+        if ( Selectors.Length != 1 )
             return false;
 
         return (Selectors[0].SelectorKind & SelectorKind.Singular) == SelectorKind.Singular;

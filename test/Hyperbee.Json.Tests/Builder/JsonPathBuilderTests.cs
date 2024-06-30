@@ -16,7 +16,7 @@ public class JsonPathBuilderTests : JsonTestBase
     public void Should_GetPath( string key, string expected )
     {
         var source = GetDocument<JsonDocument>();
-        var target = source.RootElement.FromJsonPathPointer( key ); 
+        var target = source.RootElement.FromJsonPathPointer( key );
 
         var builder = new JsonPathBuilder( source );
         var result = builder.GetPath( target );
@@ -27,4 +27,4 @@ public class JsonPathBuilderTests : JsonTestBase
 
         Assert.AreEqual( expected, resultCached );
     }
- }
+}

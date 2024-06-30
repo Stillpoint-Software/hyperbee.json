@@ -35,7 +35,7 @@ public class JsonTestBase
         if ( type == typeof( JsonDocument ) )
             return (TType) (object) JsonDocument.Parse( stream! );
 
-        if ( type == typeof(JsonElement) )
+        if ( type == typeof( JsonElement ) )
             return (TType) (object) JsonDocument.Parse( stream! ).RootElement;
 
         if ( type == typeof( JsonNode ) )

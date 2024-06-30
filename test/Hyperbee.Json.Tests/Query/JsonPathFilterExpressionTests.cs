@@ -32,7 +32,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[1]" )
+            source.FromJsonPathPointer( "$[1]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -57,7 +57,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['another']" )
+            source.FromJsonPathPointer( "$['another']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -90,10 +90,10 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" ),
-            source.GetPropertyFromPath( "$[2]" ),
-            source.GetPropertyFromPath( "$[3]" ),
-            source.GetPropertyFromPath( "$[6]" )
+            source.FromJsonPathPointer( "$[0]" ),
+            source.FromJsonPathPointer( "$[2]" ),
+            source.FromJsonPathPointer( "$[3]" ),
+            source.FromJsonPathPointer( "$[6]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -145,9 +145,9 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]['complex']['more']" ),
-            source.GetPropertyFromPath( "$[0]['complex']['one'][2]" ),
-            source.GetPropertyFromPath( "$[0]['complex']['one'][3]" )
+            source.FromJsonPathPointer( "$[0]['complex']['more']" ),
+            source.FromJsonPathPointer( "$[0]['complex']['one'][2]" ),
+            source.FromJsonPathPointer( "$[0]['complex']['one'][3]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -195,9 +195,9 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[1]" ),
-            source.GetPropertyFromPath( "$[2]" ),
-            source.GetPropertyFromPath( "$[4]" )
+            source.FromJsonPathPointer( "$[1]" ),
+            source.FromJsonPathPointer( "$[2]" ),
+            source.FromJsonPathPointer( "$[4]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -251,11 +251,11 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" ),
-            source.GetPropertyFromPath( "$[1]" ),
-            source.GetPropertyFromPath( "$[2]" ),
-            source.GetPropertyFromPath( "$[3]" ),
-            source.GetPropertyFromPath( "$[6]" )
+            source.FromJsonPathPointer( "$[0]" ),
+            source.FromJsonPathPointer( "$[1]" ),
+            source.FromJsonPathPointer( "$[2]" ),
+            source.FromJsonPathPointer( "$[3]" ),
+            source.FromJsonPathPointer( "$[6]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -328,7 +328,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" )
+            source.FromJsonPathPointer( "$[0]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -359,7 +359,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var expected = Enumerable.Empty<object>();
         // var expected = new[]
         // {
-        //     source.GetPropertyFromPath( "$[1]" )
+        //     source.FromJsonPathPointer( "$[1]" )
         // };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -417,8 +417,8 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" ),
-            source.GetPropertyFromPath( "$[2]" )
+            source.FromJsonPathPointer( "$[0]" ),
+            source.FromJsonPathPointer( "$[2]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -517,7 +517,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[2]" )
+            source.FromJsonPathPointer( "$[2]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -578,7 +578,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[2]" )
+            source.FromJsonPathPointer( "$[2]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -638,7 +638,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[3]" )
+            source.FromJsonPathPointer( "$[3]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

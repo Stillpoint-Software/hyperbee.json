@@ -5,5 +5,5 @@ namespace Hyperbee.Json.Tests.TestSupport;
 public interface IJsonPathSource
 {
     IEnumerable<dynamic> Select( string query );
-    dynamic GetPropertyFromPath( string pathLiteral );
+    dynamic FromJsonPathPointer( string pathLiteral );
 }

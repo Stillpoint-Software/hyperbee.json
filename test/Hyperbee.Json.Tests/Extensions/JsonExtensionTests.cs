@@ -61,7 +61,7 @@ public class JsonExtensionTests : JsonTestBase
         var document = JsonDocument.Parse( json );
 
         // act
-        var result = document.RootElement.GetPropertyFromPath( "assets[0].asset.['code']" ).GetString();
+        var result = document.RootElement.FromJsonPathPointer( "assets[0].asset.['code']" ).GetString();
 
         // asset
         Assert.AreEqual( "#load", result );

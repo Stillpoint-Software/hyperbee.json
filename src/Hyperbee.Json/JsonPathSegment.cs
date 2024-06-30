@@ -3,7 +3,7 @@
 namespace Hyperbee.Json;
 
 [DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
-internal record SelectorDescriptor
+public record SelectorDescriptor
 {
     public SelectorKind SelectorKind { get; init; }
     public string Value { get; init; }
@@ -16,14 +16,14 @@ internal record SelectorDescriptor
 }
 
 [DebuggerTypeProxy( typeof( SegmentDebugView ) )]
-[DebuggerDisplay( "First = ({Selectors?[0]}), Singular = {Singular}, Count = {Selectors?.Length}" )]
-internal class JsonPathSegment
+[DebuggerDisplay( "First = ({Selectors?[0]}), IsSingular = {IsSingular}, Count = {Selectors?.Length}" )]
+public class JsonPathSegment
 {
     internal static readonly JsonPathSegment Final = new(); // special end node
 
     public bool IsFinal => Next == null;
 
-    public bool Singular { get; } // singular is true when the selector resolves to one and only one element
+    public bool IsSingular { get; } // singular is true when the selector resolves to one and only one element
 
     public JsonPathSegment Next { get; set; }
     public SelectorDescriptor[] Selectors { get; init; }
@@ -37,13 +37,13 @@ internal class JsonPathSegment
         [
             new SelectorDescriptor { SelectorKind = kind, Value = selector }
         ];
-        Singular = IsSingular();
+        IsSingular = InitIsSingular();
     }
 
     public JsonPathSegment( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
-        Singular = IsSingular();
+        IsSingular = InitIsSingular();
     }
 
     public JsonPathSegment Prepend( string selector, SelectorKind kind )
@@ -63,9 +63,11 @@ internal class JsonPathSegment
         }
     }
 
-    private bool IsSingular()
+    private bool InitIsSingular()
     {
-        if ( Selectors.Length != 1 )
+        // singular is one selector that is not a group
+
+        if ( Selectors.Length != 1 ) 
             return false;
 
         return (Selectors[0].SelectorKind & SelectorKind.Singular) == SelectorKind.Singular;
@@ -73,7 +75,7 @@ internal class JsonPathSegment
 
     public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )
     {
-        singular = Singular;
+        singular = IsSingular;
         selectors = Selectors;
     }
 

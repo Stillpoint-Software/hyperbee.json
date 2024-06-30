@@ -25,8 +25,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" ),
-            source.GetPropertyFromPath( "$[0]" )
+            source.FromJsonPathPointer( "$[0]" ),
+            source.FromJsonPathPointer( "$[0]" )
         };
 
         // consensus: ["a", "a"]
@@ -49,8 +49,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['a']" ),
-            source.GetPropertyFromPath( "$['a']" )
+            source.FromJsonPathPointer( "$['a']" ),
+            source.FromJsonPathPointer( "$['a']" )
         };
 
         // no consensus
@@ -82,12 +82,12 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" ), // key: 1
-            source.GetPropertyFromPath( "$[5]" ), // key: 2
+            source.FromJsonPathPointer( "$[0]" ), // key: 1
+            source.FromJsonPathPointer( "$[5]" ), // key: 2
 
-            source.GetPropertyFromPath( "$[1]" ), // key: 8 
-            source.GetPropertyFromPath( "$[3]" ), // key: 10
-            source.GetPropertyFromPath( "$[4]" ) // key: 7 
+            source.FromJsonPathPointer( "$[1]" ), // key: 8 
+            source.FromJsonPathPointer( "$[3]" ), // key: 10
+            source.FromJsonPathPointer( "$[4]" ) // key: 7 
         };
 
         // no consensus
@@ -111,8 +111,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['key']" ),
-            source.GetPropertyFromPath( "$['another']" )
+            source.FromJsonPathPointer( "$['key']" ),
+            source.FromJsonPathPointer( "$['another']" )
         };
 
         // consensus: ["value", "entry"]
@@ -137,9 +137,9 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['key']" ),
-            source.GetPropertyFromPath( "$['another']" ),
-            source.GetPropertyFromPath( "$['thing1']" )
+            source.FromJsonPathPointer( "$['key']" ),
+            source.FromJsonPathPointer( "$['another']" ),
+            source.FromJsonPathPointer( "$['thing1']" )
         };
 
         // consensus: ["value", "entry"]
@@ -184,13 +184,13 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0].c" ),
-            source.GetPropertyFromPath( "$[0].d" ),
-            source.GetPropertyFromPath( "$[1].c" ),
-            source.GetPropertyFromPath( "$[1].child.d" ),
-            source.GetPropertyFromPath( "$[2].c" ),
-            source.GetPropertyFromPath( "$[3].d" ),
-            source.GetPropertyFromPath( "$[4].child.c" )
+            source.FromJsonPathPointer( "$[0].c" ),
+            source.FromJsonPathPointer( "$[0].d" ),
+            source.FromJsonPathPointer( "$[1].c" ),
+            source.FromJsonPathPointer( "$[1].child.d" ),
+            source.FromJsonPathPointer( "$[2].c" ),
+            source.FromJsonPathPointer( "$[3].d" ),
+            source.FromJsonPathPointer( "$[4].child.c" )
 
         };
 

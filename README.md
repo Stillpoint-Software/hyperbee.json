@@ -112,6 +112,31 @@ foreach (var item in result)
 }
 ```
 
+#### Working with (JsonElement, Path) pairs
+```csharp
+using Hyperbee.JsonPath;
+using System.Text.Json;
+
+var json = """
+{ 
+  "store": { 
+    "book": [
+      { "category": "fiction" }, 
+      { "category": "science" } 
+    ] 
+  } 
+}
+""";
+
+var root = JsonDocument.Parse(json);
+var result = JsonPath.SelectPath(root, "$.store.book[0].category");
+
+var (node, path) = result.First();
+
+Console.WriteLine(node); // Output: "fiction"
+Console.WriteLine(path); // Output: "$.store.book[0].category
+```
+
 #### Working with JsonNode
 
 ```csharp

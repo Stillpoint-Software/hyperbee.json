@@ -21,7 +21,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$" )
+            source.FromJsonPathPointer( "$" )
         };
 
         // no consensus
@@ -41,7 +41,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$" )
+            source.FromJsonPathPointer( "$" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -59,7 +59,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$" )
+            source.FromJsonPathPointer( "$" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

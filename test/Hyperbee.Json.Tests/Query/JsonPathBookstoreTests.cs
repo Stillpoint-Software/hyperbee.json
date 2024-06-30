@@ -19,7 +19,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$" )
+            source.FromJsonPathPointer( "$" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -34,10 +34,10 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book'][0]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['author']" )
+            source.FromJsonPathPointer( "$['store']['book'][0]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['author']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -52,10 +52,10 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book'][0]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['author']" )
+            source.FromJsonPathPointer( "$['store']['book'][0]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['author']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -70,8 +70,8 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book']" ),
-            source.GetPropertyFromPath( "$['store']['bicycle']" )
+            source.FromJsonPathPointer( "$['store']['book']" ),
+            source.FromJsonPathPointer( "$['store']['bicycle']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -86,11 +86,11 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book'][0]['price']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['price']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['price']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['price']" ),
-            source.GetPropertyFromPath( "$['store']['bicycle']['price']" )
+            source.FromJsonPathPointer( "$['store']['book'][0]['price']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['price']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['price']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['price']" ),
+            source.FromJsonPathPointer( "$['store']['bicycle']['price']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -103,7 +103,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     {
         var source = GetDocumentFromResource( sourceType );
         var match = source.Select( query ).ToList();
-        var expected = source.GetPropertyFromPath( "$['store']['book'][2]" );
+        var expected = source.FromJsonPathPointer( "$['store']['book'][2]" );
 
         Assert.IsTrue( match.Count == 1 );
         Assert.AreEqual( expected, match[0] );
@@ -116,7 +116,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     {
         var source = GetDocumentFromResource( sourceType );
         var match = source.Select( query ).Single();
-        var expected = source.GetPropertyFromPath( "$['store']['book'][3]" );
+        var expected = source.FromJsonPathPointer( "$['store']['book'][3]" );
 
         Assert.AreEqual( expected, match );
     }
@@ -134,8 +134,8 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book'][0]" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]" )
+            source.FromJsonPathPointer( "$['store']['book'][0]" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -150,14 +150,14 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book'][0]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][0]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['author']" )
+            source.FromJsonPathPointer( "$['store']['book'][0]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][0]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['author']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -174,8 +174,8 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book'][2]" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]" )
+            source.FromJsonPathPointer( "$['store']['book'][2]" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -192,8 +192,8 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']['book'][0]" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]" )
+            source.FromJsonPathPointer( "$['store']['book'][0]" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -208,33 +208,33 @@ public class JsonPathBookstoreTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['store']" ),
-            source.GetPropertyFromPath( "$['store']['book']" ),
-            source.GetPropertyFromPath( "$['store']['bicycle']" ),
-            source.GetPropertyFromPath( "$['store']['book'][0]" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]" ),
-            source.GetPropertyFromPath( "$['store']['book'][0]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][0]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][0]['title']" ),
-            source.GetPropertyFromPath( "$['store']['book'][0]['price']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['title']" ),
-            source.GetPropertyFromPath( "$['store']['book'][1]['price']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['title']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['isbn']" ),
-            source.GetPropertyFromPath( "$['store']['book'][2]['price']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['category']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['author']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['title']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['isbn']" ),
-            source.GetPropertyFromPath( "$['store']['book'][3]['price']" ),
-            source.GetPropertyFromPath( "$['store']['bicycle']['color']" ),
-            source.GetPropertyFromPath( "$['store']['bicycle']['price']" )
+            source.FromJsonPathPointer( "$['store']" ),
+            source.FromJsonPathPointer( "$['store']['book']" ),
+            source.FromJsonPathPointer( "$['store']['bicycle']" ),
+            source.FromJsonPathPointer( "$['store']['book'][0]" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]" ),
+            source.FromJsonPathPointer( "$['store']['book'][0]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][0]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][0]['title']" ),
+            source.FromJsonPathPointer( "$['store']['book'][0]['price']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['title']" ),
+            source.FromJsonPathPointer( "$['store']['book'][1]['price']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['title']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['isbn']" ),
+            source.FromJsonPathPointer( "$['store']['book'][2]['price']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['category']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['author']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['title']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['isbn']" ),
+            source.FromJsonPathPointer( "$['store']['book'][3]['price']" ),
+            source.FromJsonPathPointer( "$['store']['bicycle']['color']" ),
+            source.FromJsonPathPointer( "$['store']['bicycle']['price']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -249,7 +249,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     {
         var source = GetDocumentFromResource( sourceType );
         var match = source.Select( query ).Single();
-        var expected = source.GetPropertyFromPath( "$['store']['book'][2]" );
+        var expected = source.FromJsonPathPointer( "$['store']['book'][2]" );
 
         Assert.AreEqual( expected, match );
     }
@@ -262,7 +262,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     {
         var source = GetDocumentFromResource( sourceType );
         var match = source.Select( query ).Single();
-        var expected = source.GetPropertyFromPath( "$['store']['book'][2]" );
+        var expected = source.FromJsonPathPointer( "$['store']['book'][2]" );
 
         Assert.AreEqual( expected, match );
     }

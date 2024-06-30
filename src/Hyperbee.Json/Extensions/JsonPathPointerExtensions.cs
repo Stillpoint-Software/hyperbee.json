@@ -18,14 +18,14 @@ namespace Hyperbee.Json.Extensions;
 //  prop1['prop.2']
 //  prop1.'prop.2'[0].prop3
 
-public static class JsonPropertyFromPathExtensions
+public static class JsonPathPointerExtensions
 {
-    public static JsonElement GetPropertyFromPath( this JsonElement jsonElement, ReadOnlySpan<char> propertyPath )
+    public static JsonElement FromJsonPathPointer( this JsonElement jsonElement, ReadOnlySpan<char> pointer )
     {
-        if ( IsNullOrUndefined( jsonElement ) || propertyPath.IsEmpty )
+        if ( IsNullOrUndefined( jsonElement ) || pointer.IsEmpty )
             return default;
 
-        var splitter = new JsonPropertyPathSplitter( propertyPath );
+        var splitter = new JsonPathPointerSplitter( pointer );
 
         while ( splitter.TryMoveNext( out var name ) )
         {
@@ -46,12 +46,12 @@ public static class JsonPropertyFromPathExtensions
         static bool IsNullOrUndefined( JsonElement value ) => value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined;
     }
 
-    public static JsonNode GetPropertyFromPath( this JsonNode jsonNode, ReadOnlySpan<char> propertyPath )
+    public static JsonNode FromJsonPathPointer( this JsonNode jsonNode, ReadOnlySpan<char> pointer )
     {
-        if ( jsonNode == null || propertyPath.IsEmpty )
+        if ( jsonNode == null || pointer.IsEmpty )
             return default;
 
-        var splitter = new JsonPropertyPathSplitter( propertyPath );
+        var splitter = new JsonPathPointerSplitter( pointer );
 
         while ( splitter.TryMoveNext( out var name ) )
         {
@@ -74,7 +74,7 @@ public static class JsonPropertyFromPathExtensions
         return jsonNode;
     }
 
-    private ref struct JsonPropertyPathSplitter  //TODO Support escaping of \' and bracket counting in literals. Add to unit tests.
+    private ref struct JsonPathPointerSplitter  //TODO Support escaping of \' and bracket counting in literals. Add to unit tests.
     {
         // zero allocation helper that splits a json path in to parts
 
@@ -106,7 +106,7 @@ public static class JsonPropertyFromPathExtensions
             Number
         }
 
-        internal JsonPropertyPathSplitter( ReadOnlySpan<char> span )
+        internal JsonPathPointerSplitter( ReadOnlySpan<char> span )
         {
             if ( span.StartsWith( "$." ) )
                 span = span[2..];

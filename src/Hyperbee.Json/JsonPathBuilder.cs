@@ -1,19 +1,21 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.Json;
 
 namespace Hyperbee.Json;
 
-public class JsonPathResolver
+public class JsonPathBuilder
 {
     private readonly JsonElement _rootElement;
     private readonly JsonElementPositionComparer _comparer = new();
     private readonly Dictionary<int, (int parentId, string segment)> _parentMap = [];
 
-    public JsonPathResolver( JsonDocument rootDocument )
+    public JsonPathBuilder( JsonDocument rootDocument )
         : this( rootDocument.RootElement )
     {
     }
 
-    public JsonPathResolver( JsonElement rootElement )
+    public JsonPathBuilder( JsonElement rootElement )
     {
         _rootElement = rootElement;
 
@@ -49,26 +51,27 @@ public class JsonPathResolver
                 case JsonValueKind.Object:
                     foreach ( var property in currentElement.EnumerateObject() )
                     {
-                        var childElementId = GetUniqueId( property.Value );
+                        var itemId = GetUniqueId( property.Value );
 
-                        if ( !_parentMap.ContainsKey( childElementId ) )
-                            _parentMap[childElementId] = (elementId, $".{property.Name}");
+                        if ( _parentMap.ContainsKey( itemId ) )
+                            continue;
 
+                        _parentMap[itemId] = (elementId, $".{property.Name}");
                         stack.Push( property.Value );
                     }
                     break;
 
                 case JsonValueKind.Array:
                     var arrayIdx = 0;
-                    foreach ( var element in currentElement.EnumerateArray() )
+                    foreach ( var item in currentElement.EnumerateArray() )
                     {
-                        var childElementId = GetUniqueId( element );
+                        var itemId = GetUniqueId( item );
 
-                        if ( !_parentMap.ContainsKey( childElementId ) )
-                            _parentMap[childElementId] = (elementId, $"[{arrayIdx}]");
+                        if ( _parentMap.ContainsKey( itemId ) )
+                            continue;
 
-                        stack.Push( element );
-                        arrayIdx++;
+                        _parentMap[itemId] = (elementId, $"[{arrayIdx++}]");
+                        stack.Push( item );
                     }
                     break;
             }
@@ -77,6 +80,28 @@ public class JsonPathResolver
         return null; // target not found
     }
 
+    // This method is called by `SelectPath` to pre-seed the parent map.
+    // This is an optimization that allows us to leverage the select path
+    // walk so that we won't have to walk again when `BuildPath` is called.
+    internal void InsertItem( in JsonElement parentElement, in JsonElement itemElement, string itemKey )
+    {
+        var itemId = GetUniqueId( itemElement );
+
+        if ( _parentMap.ContainsKey( itemId ) )
+            return;
+
+        var parentId = parentElement.ValueKind == JsonValueKind.Undefined
+            ? GetUniqueId( _rootElement )
+            : GetUniqueId( parentElement );
+
+        itemKey = parentElement.ValueKind == JsonValueKind.Array
+            ? $"[{itemKey}]"
+            : $".{itemKey}";
+
+        _parentMap[itemId] = (parentId, itemKey);
+    }
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static int GetUniqueId( in JsonElement element )
     {
         return JsonElementInternal.GetIdx( element );
@@ -84,23 +109,27 @@ public class JsonPathResolver
 
     private static string BuildPath( in int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
     {
-        var pathSegments = new Stack<string>();
-        var currentId = elementId;
+        var pathBuilder = new StringBuilder( 64 );
 
-        while ( currentId != -1 )
+        RecursiveBuildPath( elementId );
+
+        return pathBuilder.ToString();
+
+        void RecursiveBuildPath( int currentId )
         {
-            var (parentId, segment) = parentMap[currentId];
-            pathSegments.Push( segment );
-            currentId = parentId;
-        }
+            if ( currentId == -1 )
+                return;
 
-        return string.Join( string.Empty, pathSegments );
+            var (parentId, segment) = parentMap[currentId];
+            RecursiveBuildPath( parentId );
+            pathBuilder.Append( segment );
+        }
     }
 
     // We want a fast comparer that will tell us if two JsonElements point to the same exact
     // backing data in the parent JsonDocument. JsonElement is a struct, and a value comparison
-    // for equality won't give us reliable results and would be expensive.
-    //
+    // for equality won't give us reliable results and would be operationally expensive.
+
     private class JsonElementPositionComparer : IEqualityComparer<JsonElement>
     {
         public bool Equals( JsonElement x, JsonElement y )
@@ -120,9 +149,6 @@ public class JsonPathResolver
             // provides Parent and Location in the future we will remove this.
 
             // check parent documents
-
-            // The JsonElement ctor notes that parent may be null in some enumeration conditions.
-            // This check may not be reliable. If so, should be ok to remove the parent check.
 
             var xParent = JsonElementInternal.GetParent( x );
             var yParent = JsonElementInternal.GetParent( y );

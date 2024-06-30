@@ -9,5 +9,5 @@ public class JsonDocumentSource( string source ) : IJsonPathSource
 {
     protected JsonDocument Internal { get; set; } = JsonDocument.Parse( source );
     public IEnumerable<dynamic> Select( string query ) => Internal.Select( query ).Cast<object>();
-    public dynamic GetPropertyFromPath( string pathLiteral ) => Internal.RootElement.GetPropertyFromPath( pathLiteral );
+    public dynamic FromJsonPathPointer( string pathLiteral ) => Internal.RootElement.FromJsonPathPointer( pathLiteral );
 }

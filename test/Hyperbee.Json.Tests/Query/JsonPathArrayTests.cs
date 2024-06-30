@@ -31,8 +31,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -59,11 +59,11 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]"),
-            source.GetPropertyFromPath("$[3]"),
-            source.GetPropertyFromPath("$[4]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]"),
+            source.FromJsonPathPointer("$[3]"),
+            source.FromJsonPathPointer("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -137,8 +137,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -165,9 +165,9 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[2]"),
-            source.GetPropertyFromPath("$[3]"),
-            source.GetPropertyFromPath("$[4]")
+            source.FromJsonPathPointer("$[2]"),
+            source.FromJsonPathPointer("$[3]"),
+            source.FromJsonPathPointer("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -195,9 +195,9 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[2]"),
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[0]")
+            source.FromJsonPathPointer("$[2]"),
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -224,8 +224,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[1]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -253,8 +253,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[4]"),
-            source.GetPropertyFromPath("$[3]")
+            source.FromJsonPathPointer("$[4]"),
+            source.FromJsonPathPointer("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -332,7 +332,7 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[2]")
 
 
         };
@@ -412,7 +412,7 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -440,8 +440,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[3]"),
-            source.GetPropertyFromPath("$[1]")
+            source.FromJsonPathPointer("$[3]"),
+            source.FromJsonPathPointer("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -494,7 +494,7 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[4]")
+            source.FromJsonPathPointer("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -522,9 +522,9 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[4]"),
-            source.GetPropertyFromPath("$[2]"),
-            source.GetPropertyFromPath("$[0]")
+            source.FromJsonPathPointer("$[4]"),
+            source.FromJsonPathPointer("$[2]"),
+            source.FromJsonPathPointer("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -551,10 +551,10 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]"),
-            source.GetPropertyFromPath("$[3]"),
-            source.GetPropertyFromPath("$[4]")
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]"),
+            source.FromJsonPathPointer("$[3]"),
+            source.FromJsonPathPointer("$[4]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -582,10 +582,10 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[3]"),
-            source.GetPropertyFromPath("$[2]"),
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[0]")
+            source.FromJsonPathPointer("$[3]"),
+            source.FromJsonPathPointer("$[2]"),
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -612,8 +612,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[1]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -637,8 +637,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[1]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[1]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -687,8 +687,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[4]"),
-            source.GetPropertyFromPath("$[3]")
+            source.FromJsonPathPointer("$[4]"),
+            source.FromJsonPathPointer("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -766,7 +766,7 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[3]")
+            source.FromJsonPathPointer("$[3]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -834,7 +834,7 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]")
+            source.FromJsonPathPointer("$[0]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -859,7 +859,7 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -884,8 +884,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -910,9 +910,9 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -939,8 +939,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -992,9 +992,9 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -1013,8 +1013,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[10]"),
-            source.GetPropertyFromPath("$[20]")
+            source.FromJsonPathPointer("$[10]"),
+            source.FromJsonPathPointer("$[20]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -1041,8 +1041,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[0]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[0]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -1069,8 +1069,8 @@ public class JsonPathArrayTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath("$[1]"),
-            source.GetPropertyFromPath("$[2]")
+            source.FromJsonPathPointer("$[1]"),
+            source.FromJsonPathPointer("$[2]")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

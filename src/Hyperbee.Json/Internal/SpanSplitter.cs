@@ -1,4 +1,4 @@
-﻿namespace Hyperbee.Json.Memory;
+﻿namespace Hyperbee.Json.Internal;
 // copied here from Hyperbee.Core to prevent additional assembly dependency
 
 /*

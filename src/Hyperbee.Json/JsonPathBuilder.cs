@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json;
 
@@ -104,7 +105,7 @@ public class JsonPathBuilder
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static int GetUniqueId( in JsonElement element )
     {
-        return JsonElementInternal.GetIdx( element );
+        return JsonElementAccessor.GetIdx( element );
     }
 
     private static string BuildPath( in int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
@@ -150,21 +151,21 @@ public class JsonPathBuilder
 
             // check parent documents
 
-            var xParent = JsonElementInternal.GetParent( x );
-            var yParent = JsonElementInternal.GetParent( y );
+            var xParent = JsonElementAccessor.GetParent( x );
+            var yParent = JsonElementAccessor.GetParent( y );
 
             if ( !ReferenceEquals( xParent, yParent ) )
                 return false;
 
             // check idx values
 
-            return JsonElementInternal.GetIdx( x ) == JsonElementInternal.GetIdx( y );
+            return JsonElementAccessor.GetIdx( x ) == JsonElementAccessor.GetIdx( y );
         }
 
         public int GetHashCode( JsonElement obj )
         {
-            var parent = JsonElementInternal.GetParent( obj );
-            var idx = JsonElementInternal.GetIdx( obj );
+            var parent = JsonElementAccessor.GetParent( obj );
+            var idx = JsonElementAccessor.GetIdx( obj );
 
             return HashCode.Combine( parent, idx );
         }

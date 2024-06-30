@@ -2,9 +2,9 @@
 using System.Reflection.Emit;
 using System.Text.Json;
 
-namespace Hyperbee.Json;
+namespace Hyperbee.Json.Internal;
 
-internal static class JsonElementInternal
+internal static class JsonElementAccessor
 {
     // We need to identify an element's location in the document to establish instance identity.
     // Deeply nested elements can have the same value but different locations in the document.
@@ -33,7 +33,7 @@ internal static class JsonElementInternal
     internal static readonly Func<JsonElement, int> GetIdx;
     internal static readonly Func<JsonElement, JsonDocument> GetParent;
 
-    static JsonElementInternal()
+    static JsonElementAccessor()
     {
         // Create DynamicMethod for _idx field
         const string idxName = "_idx";

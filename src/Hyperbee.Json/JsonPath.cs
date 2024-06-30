@@ -36,7 +36,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
-using Hyperbee.Json.Memory;
 
 // https://www.rfc-editor.org/rfc/rfc9535.html
 // https://www.rfc-editor.org/rfc/rfc9535.html#appendix-A
@@ -287,7 +286,7 @@ public static class JsonPath<TNode>
         if ( length == 0 )
             yield break;
 
-        var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
+        var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
         switch ( step )
         {

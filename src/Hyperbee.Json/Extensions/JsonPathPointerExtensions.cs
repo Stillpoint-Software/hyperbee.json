@@ -4,11 +4,11 @@ using System.Text.Json.Nodes;
 namespace Hyperbee.Json.Extensions;
 
 // DISTINCT from JsonPath these extensions are intended to facilitate 'diving' for Json Properties using
-// absolute singular paths. similar to JsonPointer but uses JsonPath notation.
+// absolute singular paths. similar to JsonPointer but using JsonPath notation.
 //
 // syntax supports singular paths; dotted notation, quoted names, and simple bracketed array accessors only.
 //
-// Json path style '$', wildcard '*', '..', and '[a,b]' multi-result selector notations are NOT supported.
+// Json path style wildcard '*', '..', and '[a,b]' multi-result selector notations are NOT supported.
 //
 // examples:
 //  prop1.prop2

@@ -1,12 +1,5 @@
 ﻿namespace Hyperbee.Json.Descriptors;
 
-public enum NodeKind
-{
-    Object,
-    Array,
-    Value
-}
-
 public interface IValueAccessor<TNode>
 {
     IEnumerable<(TNode, string, SelectorKind)> EnumerateChildren( TNode value, bool includeValues = true );

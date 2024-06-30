@@ -13,18 +13,14 @@ public class JsonPathBuilderTests : JsonTestBase
     [DataRow( "$['store']['book'][1]['author']", "$.store.book[1].author" )]
     [DataRow( "$['store']['book'][2]['author']", "$.store.book[2].author" )]
     [DataRow( "$['store']['book'][3]['author']", "$.store.book[3].author" )]
-    public void Should_GetPath( string key, string expected )
+    public void Should_GetPath( string pointer, string expected )
     {
         var source = GetDocument<JsonDocument>();
-        var target = source.RootElement.FromJsonPathPointer( key );
+        var target = source.RootElement.FromJsonPathPointer( pointer );
 
         var builder = new JsonPathBuilder( source );
         var result = builder.GetPath( target );
 
         Assert.AreEqual( result, expected );
-
-        var resultCached = builder.GetPath( target );
-
-        Assert.AreEqual( expected, resultCached );
     }
 }

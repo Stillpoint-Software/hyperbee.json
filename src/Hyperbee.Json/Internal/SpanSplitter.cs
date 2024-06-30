@@ -2,11 +2,11 @@
 // copied here from Hyperbee.Core to prevent additional assembly dependency
 
 /*
-   var splitter = new SpanSplitter( span, ',', SpanSplitOptions.RemoveEmptyEntries );
-   while ( splitter.TryMoveNext(out var slice) )
-   {
-       // ...
-   }
+    var splitter = new SpanSplitter( span, ',', SpanSplitOptions.RemoveEmptyEntries );
+    while ( splitter.TryMoveNext(out var slice) )
+    {
+        // ...
+    }
 */
 
 internal ref struct SpanSplitter<T> where T : IEquatable<T>

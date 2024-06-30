@@ -132,9 +132,9 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.FromJsonPathPointer( "$['k'][1]['key']" ),
-            source.FromJsonPathPointer( "$['kk'][0][1]['key']" ),
-            source.FromJsonPathPointer( "$['kk'][1][1]['key']" ),
+            source.FromJsonPathPointer( "$.k[1].key" ),
+            source.FromJsonPathPointer( "$.kk[0][1].key" ),
+            source.FromJsonPathPointer( "$.kk[1][1].key" ),
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

@@ -184,8 +184,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
-
+            _ = source.Select( query ).ToList();
         }, "Invalid bracket expression syntax. Bracket expression cannot be empty." );
     }
 
@@ -412,7 +411,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         //deviation: NOT_SUPPORTED //JsonDocument can't parse
 
         const string json = "Hello World";
-        var source = GetDocumentProxyFromSource(sourceType, json);
+        var source = GetDocumentFromSource(sourceType, json);
     }
     */
 
@@ -634,8 +633,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( @"$[':@.\""$,*\'\\']", typeof( JsonDocument ) )] // $[':@.\"$,*'\\']
-    [DataRow( @"$[':@.\""$,*\'\\']", typeof( JsonNode ) )] // $[':@.\"$,*'\\']
+    [DataRow( """$[':@.\"$,*\'\\']""", typeof( JsonDocument ) )]
+    [DataRow( """$[':@.\"$,*\'\\']""", typeof( JsonNode ) )] 
     public void BracketNotationWithQuotedSpecialCharactersCombined( string query, Type sourceType )
     {
         //consensus: //none
@@ -670,7 +669,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
+            _ = source.Select( query ).ToList();
         } );
     }
 
@@ -822,7 +821,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
+            _ = source.Select( query ).ToList();
         } );
     }
 
@@ -849,7 +848,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
+            _ = source.Select( query ).ToList();
         } );
     }
 
@@ -987,9 +986,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = """
-        []
-        """;
+        const string json = "[]";
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -1005,9 +1002,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
     {
         //consensus: []
 
-        const string json = """
-        {}
-        """;
+        const string json = "{}";
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
@@ -1091,7 +1086,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var _ = source.Select( query ).ToList();
+            _ = source.Select( query ).ToList();
         } );
     }
 }

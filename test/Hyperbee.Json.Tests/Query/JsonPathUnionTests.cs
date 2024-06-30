@@ -49,8 +49,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.FromJsonPathPointer( "$['a']" ),
-            source.FromJsonPathPointer( "$['a']" )
+            source.FromJsonPathPointer( "$.a" ),
+            source.FromJsonPathPointer( "$.a" )
         };
 
         // no consensus
@@ -111,8 +111,8 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.FromJsonPathPointer( "$['key']" ),
-            source.FromJsonPathPointer( "$['another']" )
+            source.FromJsonPathPointer( "$.key" ),
+            source.FromJsonPathPointer( "$.another" )
         };
 
         // consensus: ["value", "entry"]
@@ -137,9 +137,9 @@ public class JsonPathUnionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.FromJsonPathPointer( "$['key']" ),
-            source.FromJsonPathPointer( "$['another']" ),
-            source.FromJsonPathPointer( "$['thing1']" )
+            source.FromJsonPathPointer( "$.key" ),
+            source.FromJsonPathPointer( "$.another" ),
+            source.FromJsonPathPointer( "$.thing1" )
         };
 
         // consensus: ["value", "entry"]

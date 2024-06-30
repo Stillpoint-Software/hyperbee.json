@@ -145,9 +145,9 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.FromJsonPathPointer( "$[0]['complex']['more']" ),
-            source.FromJsonPathPointer( "$[0]['complex']['one'][2]" ),
-            source.FromJsonPathPointer( "$[0]['complex']['one'][3]" )
+            source.FromJsonPathPointer( "$[0].complex.more" ),
+            source.FromJsonPathPointer( "$[0].complex.one[2]" ),
+            source.FromJsonPathPointer( "$[0].complex.one[3]" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

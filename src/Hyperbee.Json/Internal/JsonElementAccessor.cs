@@ -10,25 +10,25 @@ internal static class JsonElementAccessor
     // Deeply nested elements can have the same value but different locations in the document.
     // Deep compare is not sufficient to establish instance identity in such cases from either a
     // correctness or performance perspective. We can use the private _idx field of JsonElement
-    // to identify the element's location in the document.
+    // to identify the element's unique location in the document.
     // 
     // The justifications for this usage are:
     //
-    // Performance Necessity: We need to access internal details to significantly improve performance
-    // and there is no viable public API that provides the required functionality.
+    // Performance Necessity: We need to access internal details to significantly improve
+    // performance and there is no viable public API that provides the required functionality.
     //
     // Lack of Alternatives: The desired functionality is not exposed by the public API and no
     // alternative methods are available to achieve the same result.
     //
     // Low Risk: The usage is low risk because the internal field is only used to identify the
-    // unique location of the element in the document. The field is not modified and the document
-    // is not mutated. The field is read-only and the document is immutable. Furthermore, the field
+    // uniqueness of the element in the document. The field is not modified and the document is
+    // not mutated. The field is read-only and the document is immutable. Furthermore, the field
     // is only accessed through a delegate that is created once and reused for all instances of
-    // JsonElement. The delegate is created using a DynamicMethod and is not exposed to the public
-    // API. The delegate is used to access the field in a safe and controlled manner.
+    // JsonElement. The delegate is created using a DynamicMethod and is not exposed to the
+    // public API. The delegate is used to access the field in a safe and controlled manner.
     //
-    // The internal field is critical to Microsoft's internal performance optimizations and is
-    // unlikely to change in future versions.
+    // The internal field is critical to Microsoft's internal implementation and is unlikely to
+    // change.
 
     internal static readonly Func<JsonElement, int> GetIdx;
     internal static readonly Func<JsonElement, JsonDocument> GetParent;

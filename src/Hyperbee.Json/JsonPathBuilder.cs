@@ -82,8 +82,8 @@ public class JsonPathBuilder
     }
 
     // This method is called by `SelectPath` to pre-seed the parent map.
-    // This is an optimization that allows us to leverage the select path
-    // walk so that we won't have to walk again when `BuildPath` is called.
+    // This optimization allows us to leverage the select path walk, so
+    // we won't have to walk again when `BuildPath` is called.
     internal void InsertItem( in JsonElement parentElement, in JsonElement itemElement, string itemKey )
     {
         var itemId = GetUniqueId( itemElement );
@@ -108,28 +108,33 @@ public class JsonPathBuilder
         return JsonElementAccessor.GetIdx( element );
     }
 
-    private static string BuildPath( in int elementId, Dictionary<int, (int parentId, string segment)> parentMap )
+    private static string BuildPath( in int currentId, Dictionary<int, (int parentId, string segment)> parentMap )
     {
-        var pathBuilder = new StringBuilder( 64 );
+        // use recursion to reduce allocations by avoiding a stack
 
-        RecursiveBuildPath( elementId );
+        var builder = new StringBuilder( 64 );
 
-        return pathBuilder.ToString();
+        RecursiveBuildPath( parentMap, currentId, builder );
 
-        void RecursiveBuildPath( int currentId )
+        return builder.ToString();
+
+        // Helper to build path from its parts
+
+        static void RecursiveBuildPath( Dictionary<int, (int parentId, string segment)> parentMap, int currentId, StringBuilder builder )
         {
             if ( currentId == -1 )
                 return;
 
             var (parentId, segment) = parentMap[currentId];
-            RecursiveBuildPath( parentId );
-            pathBuilder.Append( segment );
+            RecursiveBuildPath( parentMap, parentId, builder );
+            builder.Append( segment );
         }
     }
 
-    // We want a fast comparer that will tell us if two JsonElements point to the same exact
-    // backing data in the parent JsonDocument. JsonElement is a struct, and a value comparison
-    // for equality won't give us reliable results and would be operationally expensive.
+    // We want a fast comparer that will tell us if two JsonElements point to the same 
+    // location in the JsonDocument. JsonElement is a struct, and a value comparison
+    // for equality won't give us reliable results and a deep compare would be
+    // operationally expensive.
 
     private class JsonElementPositionComparer : IEqualityComparer<JsonElement>
     {
@@ -140,9 +145,10 @@ public class JsonPathBuilder
             if ( x.ValueKind != y.ValueKind )
                 return false;
 
-            // The internal JsonElement constructor takes parent and idx arguments that are saved as fields.
+            // The internal JsonElement constructor takes parent and idx arguments that are saved as
+            // immutable fields.
             // 
-            // idx: is an index used to get the position of the JsonElement in the backing data.
+            // idx: is an index used to get the unique position of the JsonElement in the backing metadata.
             // parent: is the owning JsonDocument (could be null in an enumeration).
             //
             // These arguments are stored in private fields and are not exposed. While not ideal, we will

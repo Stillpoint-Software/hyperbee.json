@@ -136,7 +136,7 @@ public static class JsonPath<TNode>
 
                 if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
                 {
-                    stack.Push( value, childValue, selector, segmentNext, flags );
+                    stack.Push( value, childValue, selector, segmentNext );
                 }
 
                 continue;
@@ -159,11 +159,11 @@ public static class JsonPath<TNode>
                         // value onto the stack without prepending the childKey or childKind
                         // to set up for an immediate return on the next iteration.
                         //Push( stack, value, childValue, childKey, segmentNext );
-                        stack.Push( value, childValue, childKey, segmentNext, flags );
+                        stack.Push( value, childValue, childKey, segmentNext );
                         continue;
                     }
 
-                    stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ), flags ); // (Name | Index)
+                    stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                 }
 
                 continue;
@@ -175,7 +175,7 @@ public static class JsonPath<TNode>
             {
                 foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
-                    stack.Push( value, childValue, childKey, segmentCurrent, NodeFlags.AfterDescent ); // Descendant
+                    stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
                 }
 
                 // Union Processing After Descent: If a union operator follows a descent operator,
@@ -206,11 +206,11 @@ public static class JsonPath<TNode>
                         // optimization: quicker return for tail values
                         if ( segmentNext.IsFinal )
                         {
-                            stack.Push( value, childValue, childKey, segmentNext, flags );
+                            stack.Push( value, childValue, childKey, segmentNext );
                             continue;
                         }
 
-                        stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ), flags ); // (Name | Index)
+                        stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                     }
 
                     continue;
@@ -224,7 +224,7 @@ public static class JsonPath<TNode>
 
                     if ( selectorKind == SelectorKind.Index )
                     {
-                        stack.Push( value, accessor.GetElementAt( value, int.Parse( selector ) ), selector, segmentNext, flags );
+                        stack.Push( value, accessor.GetElementAt( value, int.Parse( selector ) ), selector, segmentNext );
                         continue;
                     }
 
@@ -234,7 +234,7 @@ public static class JsonPath<TNode>
                     {
                         foreach ( var index in EnumerateSlice( value, selector, accessor ) )
                         {
-                            stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext, flags );
+                            stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext );
                         }
                         continue;
                     }
@@ -251,7 +251,7 @@ public static class JsonPath<TNode>
                         if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
                             continue;
 
-                        stack.Push( value, childValue, index.ToString(), indexSegment, flags );
+                        stack.Push( value, childValue, index.ToString(), indexSegment );
                     }
 
                     continue;
@@ -266,7 +266,7 @@ public static class JsonPath<TNode>
 
                     if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
                     {
-                        stack.Push( value, childValue, selector, segmentNext, flags );
+                        stack.Push( value, childValue, selector, segmentNext );
                     }
                 }
             }
@@ -314,7 +314,7 @@ public static class JsonPath<TNode>
         private readonly Stack<NodeArgs> _stack = new( capacity );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public void Push( in TNode parent, in TNode value, string key, in JsonPathSegment segment, NodeFlags flags )
+        public void Push( in TNode parent, in TNode value, string key, in JsonPathSegment segment, NodeFlags flags = NodeFlags.Default )
         {
             _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
         }

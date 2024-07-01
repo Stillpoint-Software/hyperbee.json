@@ -15,10 +15,9 @@ The library is designed to be quick and extensible, allowing support for other J
 ## JSONPath Consensus
 
 Hyperbee.Json aims to follow the RFC and to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
-standard where possible. This standardization effort is critical for ensuring consistent behavior across different 
-implementations of JSONPath. However, where the consensus is ambiguous or not aligned with the RFC, or our performance and 
-usability goals, we may deviate. Our goal is always to provide a robust and performant library while keeping an eye on 
-standardization progress.
+when the RFC is unopinionated. When the RFC is unopinionated and where the consensus is ambiguous or not aligned with our 
+performance and usability goals, we may deviate. Our goal is always to provide a robust and performant library while  
+strengthening our alignment with the RFC.
 
 ## Installation
 

@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // C# Implementation of JSONPath[1]
 //

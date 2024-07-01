@@ -115,7 +115,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonNode ) )]
     public void FilterExpressionAfterDoNotationWithWildcardAfterRecursiveDecent( string query, Type sourceType )
     {
-        /// consensus	[{"id": 3, "name": "another"}, {"id": 4, "name": "more"}, {"id": 5, "name": "next to last"}]
+        // consensus	[{"id": 3, "name": "another"}, {"id": 4, "name": "more"}, {"id": 5, "name": "next to last"}]
 
         const string json =
             """

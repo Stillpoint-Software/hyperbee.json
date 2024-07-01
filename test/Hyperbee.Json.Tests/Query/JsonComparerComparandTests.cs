@@ -109,5 +109,27 @@ public class JsonComparerComparandTests : JsonTestBase
 
         Assert.AreEqual( areEqual, result );
     }
+
+
+    [TestMethod]
+    public void ComparandWithEmpty()
+    {
+        var accessor = new NodeValueAccessor();
+
+        var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, new List<JsonNode>() );
+        var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, 1 );
+
+        Assert.IsFalse( a < b );
+        Assert.IsFalse( a <= b );
+
+        Assert.IsFalse( a > b );
+        Assert.IsFalse( a >= b );
+
+        Assert.IsFalse( a == b );
+        Assert.IsTrue( a != b );
+    }
+
+
+
 }
 

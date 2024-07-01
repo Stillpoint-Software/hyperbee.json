@@ -55,9 +55,9 @@ public static class JsonComparerExpressionFactory<TNode>
 
         public static bool operator ==( Comparand left, Comparand right ) => Compare( left, right ) == 0;
         public static bool operator !=( Comparand left, Comparand right ) => Compare( left, right ) != 0;
-        public static bool operator <( Comparand left, Comparand right ) => Compare( left, right ) < 0;
+        public static bool operator <( Comparand left, Comparand right ) => Compare( left, right, lessThan: true ) < 0;
         public static bool operator >( Comparand left, Comparand right ) => Compare( left, right ) > 0;
-        public static bool operator <=( Comparand left, Comparand right ) => Compare( left, right ) <= 0;
+        public static bool operator <=( Comparand left, Comparand right ) => Compare( left, right, lessThan: true ) <= 0;
         public static bool operator >=( Comparand left, Comparand right ) => Compare( left, right ) >= 0;
 
         public override int GetHashCode()
@@ -118,7 +118,7 @@ public static class JsonComparerExpressionFactory<TNode>
          * - Check if one is a NodeList and the other is a Value.
          * - Compare directly if both are Values.
          */
-        private static int Compare( Comparand left, Comparand right )
+        private static int Compare( Comparand left, Comparand right, bool lessThan = false )
         {
             if ( left.Value is IEnumerable<TNode> leftEnumerable && right.Value is IEnumerable<TNode> rightEnumerable )
             {
@@ -128,12 +128,20 @@ public static class JsonComparerExpressionFactory<TNode>
             if ( left.Value is IEnumerable<TNode> leftEnumerable1 )
             {
                 var compare = CompareEnumerableToValue( left.Accessor, leftEnumerable1, right.Value, out var count );
+
+                if ( compare == int.MinValue )
+                    return lessThan ? 1 : -1; // If the list is empty, return 1 for less than, -1 for greater than
+
                 return count == 1 ? compare : compare * -1; // If only one element in the list, return the comparison result
             }
 
             if ( right.Value is IEnumerable<TNode> rightEnumerable1 )
             {
                 var compare = CompareEnumerableToValue( left.Accessor, rightEnumerable1, left.Value, out var count );
+
+                if ( compare == int.MinValue )
+                    return lessThan ? 1 : -1; // If the list is empty, return 1 for less than, -1 for greater than
+
                 return count == 1 ? compare : compare * -1; // If only one element in the list, return the comparison result
             }
 
@@ -177,7 +185,7 @@ public static class JsonComparerExpressionFactory<TNode>
             }
 
             if ( count == 0 )
-                return -1; // Return -1 if the list is empty (no elements match the value)
+                return int.MinValue; // Return min if the list is empty (no elements match the value)
 
             // if only one element in the list, return the comparison result as is
             return count == 1 ? lastCompare : -count;

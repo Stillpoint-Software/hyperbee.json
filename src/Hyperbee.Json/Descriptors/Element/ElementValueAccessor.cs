@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-using Hyperbee.Json.Descriptors.Element.Functions;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
@@ -111,29 +110,6 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         }
     }
 
-    public object GetAsValue( IEnumerable<JsonElement> elements )
-    {
-        return ValueElementFunction.Value( elements );
-    }
-
-    public object GetAsValueOther( IEnumerable<JsonElement> elements )
-    {
-        var element = elements.FirstOrDefault();
-
-        return element.ValueKind switch
-        {
-            JsonValueKind.Number => element.GetSingle(),
-            JsonValueKind.String => element.GetString(),
-            JsonValueKind.Object => element,
-            JsonValueKind.Array => element,
-            JsonValueKind.True => true,
-            JsonValueKind.False => false,
-            JsonValueKind.Null => null,
-            JsonValueKind.Undefined => false,
-            _ => false
-        };
-    }
-
     public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonElement> elements )
     {
         var bytes = Encoding.UTF8.GetBytes( item.ToArray() );
@@ -159,5 +135,32 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     public bool DeepEquals( JsonElement left, JsonElement right )
     {
         return left.DeepEquals( right );
+    }
+
+    public bool TryGetValueFromNode( JsonElement element, out object value )
+    {
+        switch ( element.ValueKind )
+        {
+            case JsonValueKind.String:
+                value = element.GetString();
+                break;
+            case JsonValueKind.Number:
+                value = element.GetSingle();
+                break;
+            case JsonValueKind.True:
+                value = true;
+                break;
+            case JsonValueKind.False:
+                value = false;
+                break;
+            case JsonValueKind.Null:
+                value = null;
+                break;
+            default:
+                value = false;
+                return false;
+        }
+
+        return true;
     }
 }

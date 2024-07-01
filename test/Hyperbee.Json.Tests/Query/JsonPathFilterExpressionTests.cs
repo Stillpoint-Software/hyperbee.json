@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Descriptors.Node;
-using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -23,17 +20,14 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         const string json =
             """
             [
-              {"some": "some value"}, 
+              {"some": "some value"},
               {"key": "value"}
             ]
             """;
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[1]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[1]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -55,10 +49,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$['another']" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$['another']" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -73,14 +64,14 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         const string json =
             """
             [
-              {"key": 0}, 
-              {"key": 42}, 
-              {"key": -1}, 
-              {"key": 41}, 
-              {"key": 43}, 
-              {"key": 42.0001}, 
-              {"key": 41.9999}, 
-              {"key": 100}, 
+              {"key": 0},
+              {"key": 42},
+              {"key": -1},
+              {"key": 41},
+              {"key": 43},
+              {"key": 42.0001},
+              {"key": 41.9999},
+              {"key": 100},
               {"some": "value"}
             ]
             """;
@@ -88,12 +79,32 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
+        var expected = new[] { source.FromJsonPathPointer( "$[0]" ), source.FromJsonPathPointer( "$[2]" ), source.FromJsonPathPointer( "$[3]" ), source.FromJsonPathPointer( "$[6]" ) };
+
+        Assert.IsTrue( expected.SequenceEqual( matches ) );
+    }
+
+    [DataTestMethod]
+    [DataRow( "$[?($..key)==2]", typeof( JsonDocument ) )]
+    [DataRow( "$[?($..key)==2]", typeof( JsonNode ) )]
+    public void FilterExpressionWithContainsArray( string query, Type sourceType )
+    {
+        const string json =
+            """
+            { 
+                "values": [
+                    { "key": 1, "value": 10 },
+                    { "key": 2, "value": 20 }
+                ]
+            }
+            """;
+
+        var source = GetDocumentFromSource( sourceType, json );
+
+        var matches = source.Select( query );
         var expected = new[]
         {
-            source.FromJsonPathPointer( "$[0]" ),
-            source.FromJsonPathPointer( "$[2]" ),
-            source.FromJsonPathPointer( "$[3]" ),
-            source.FromJsonPathPointer( "$[6]" )
+            source.FromJsonPathPointer( "$['values']" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -104,6 +115,8 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonNode ) )]
     public void FilterExpressionAfterDoNotationWithWildcardAfterRecursiveDecent( string query, Type sourceType )
     {
+        /// consensus	[{"id": 3, "name": "another"}, {"id": 4, "name": "more"}, {"id": 5, "name": "next to last"}]
+
         const string json =
             """
             [
@@ -187,18 +200,13 @@ public class JsonPathFilterExpressionTests : JsonTestBase
               {
                 "b": true
               }
-            ]        
+            ]
             """;
 
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[1]" ),
-            source.FromJsonPathPointer( "$[2]" ),
-            source.FromJsonPathPointer( "$[4]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[1]" ), source.FromJsonPathPointer( "$[2]" ), source.FromJsonPathPointer( "$[4]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -243,20 +251,13 @@ public class JsonPathFilterExpressionTests : JsonTestBase
               },
               {}
             ]
-            
+
             """;
 
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[0]" ),
-            source.FromJsonPathPointer( "$[1]" ),
-            source.FromJsonPathPointer( "$[2]" ),
-            source.FromJsonPathPointer( "$[3]" ),
-            source.FromJsonPathPointer( "$[6]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[0]" ), source.FromJsonPathPointer( "$[1]" ), source.FromJsonPathPointer( "$[2]" ), source.FromJsonPathPointer( "$[3]" ), source.FromJsonPathPointer( "$[6]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -326,10 +327,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[0]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[0]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -345,10 +343,10 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var json =
             """
             [
-                [1, 2, 3], 
-                [1], 
-                [2, 3], 
-                1, 
+                [1, 2, 3],
+                [1],
+                [2, 3],
+                1,
                 2
             ]
             """;
@@ -376,13 +374,13 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var json =
             """
             [
-                [1,2], 
-                [2,3], 
-                [1], 
-                [2], 
-                [1, 2, 3], 
-                1, 
-                2, 
+                [1,2],
+                [2,3],
+                [1],
+                [2],
+                [1, 2, 3],
+                1,
+                2,
                 3
             ]
             """;
@@ -415,11 +413,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[0]" ),
-            source.FromJsonPathPointer( "$[2]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[0]" ), source.FromJsonPathPointer( "$[2]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -487,7 +481,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
                 "d": "[\"v1\",\"v2\"]"
               }
             ]
-            
+
             """;
 
         var source = GetDocumentFromSource( sourceType, json );
@@ -506,8 +500,8 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var json =
             """
             [
-                {"key": 42}, 
-                {"key": 43}, 
+                {"key": 42},
+                {"key": 43},
                 {"key": 44}
             ]
             """;
@@ -515,10 +509,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[2]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[2]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -570,16 +561,13 @@ public class JsonPathFilterExpressionTests : JsonTestBase
                 "key": []
               }
             ]
-            
+
             """;
 
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[2]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[2]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -636,80 +624,9 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[3]" )
-        };
+        var expected = new[] { source.FromJsonPathPointer( "$[3]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
-    }
-
-
-
-    // TODO:  Move these JsonComparer tests
-
-    [DataTestMethod]
-    [DataRow( true, true, true )]
-    [DataRow( false, false, true )]
-    [DataRow( false, true, false )]
-    [DataRow( true, false, false )]
-    [DataRow( "hello", "hello", true )]
-    [DataRow( 10F, 10F, true )]
-    [DataRow( "hello", "world", false )]
-    [DataRow( 99F, 11F, false )]
-    [DataRow( "hello", 11F, false )]
-    [DataRow( false, 11F, false )]
-    [DataRow( true, 11F, false )]
-    public void ValueEqualResults( object left, object right, bool areEqual )
-    {
-        var accessor = new NodeValueAccessor();
-
-        var a = new FilterParser<JsonNode>.JsonComparerExpressionFactory.JsonComparer( accessor, left );
-        var b = new FilterParser<JsonNode>.JsonComparerExpressionFactory.JsonComparer( accessor, right );
-
-        var result = a == b;
-
-        Assert.AreEqual( areEqual, result );
-    }
-
-    [DataTestMethod]
-    [DataRow( true, true, true )]
-    [DataRow( false, false, true )]
-    [DataRow( false, true, false )]
-    [DataRow( true, false, true )]
-    [DataRow( "hello", "hello", true )]
-    [DataRow( 10F, 10F, true )]
-    [DataRow( 14F, 10F, true )]
-    [DataRow( 1F, 14F, false )]
-    public void ValueGreaterResults( object left, object right, bool areEqual )
-    {
-        var accessor = new NodeValueAccessor();
-
-        var a = new FilterParser<JsonNode>.JsonComparerExpressionFactory.JsonComparer( accessor, left );
-        var b = new FilterParser<JsonNode>.JsonComparerExpressionFactory.JsonComparer( accessor, right );
-
-        var result = a >= b;
-
-        Assert.AreEqual( areEqual, result );
-    }
-
-    [DataTestMethod]
-    [DataRow( """{ "value": 1 }""", 99F, false )]
-    [DataRow( """{ "value": 99 }""", 99F, true )]
-    [DataRow( """{ "value": "hello" }""", "world", false )]
-    [DataRow( """{ "value": "hello" }""", "hello", true )]
-    [DataRow( """{ "value": { "child": 5 } }""", "hello", false )]
-    public void JsonElementValueResults( string left, object right, bool areEqual )
-    {
-        var accessor = new NodeValueAccessor();
-        var node = new List<JsonNode> { JsonNode.Parse( left )["value"] };
-
-        var a = new FilterParser<JsonNode>.JsonComparerExpressionFactory.JsonComparer( accessor, node );
-        var b = new FilterParser<JsonNode>.JsonComparerExpressionFactory.JsonComparer( accessor, right );
-
-        var result = a == b;
-
-        Assert.AreEqual( areEqual, result );
     }
 }
 

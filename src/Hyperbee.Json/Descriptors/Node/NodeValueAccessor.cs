@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Descriptors.Node.Functions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
@@ -115,36 +114,6 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         }
     }
 
-    public object GetAsValue( IEnumerable<JsonNode> nodes )
-    {
-        return ValueNodeFunction.Value( nodes );
-    }
-
-    public object GetAsValueOther( IEnumerable<JsonNode> nodes )
-    {
-        var node = nodes.FirstOrDefault();
-
-        switch ( node?.GetValueKind() )
-        {
-            case JsonValueKind.Number:
-                var floatValue = node.GetValue<float>();
-                return floatValue;
-            case JsonValueKind.String:
-                var stringValue = node.GetValue<string>();
-                return stringValue;
-            case JsonValueKind.Object:
-            case JsonValueKind.Array:
-                return node;
-            case JsonValueKind.True:
-                return true;
-            case JsonValueKind.Null:
-                return null;
-            case JsonValueKind.False:
-            case JsonValueKind.Undefined:
-            default:
-                return false;
-        }
-    }
 
     public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonNode> nodes )
     {
@@ -164,5 +133,33 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     public bool DeepEquals( JsonNode left, JsonNode right )
     {
         return JsonNode.DeepEquals( left, right );
+    }
+
+    public bool TryGetValueFromNode( JsonNode node, out object value )
+    {
+        switch ( node?.GetValueKind() )
+        {
+            case JsonValueKind.String:
+                value = node.GetValue<string>();
+                break;
+            case JsonValueKind.Number:
+                value = node.GetValue<float>();
+                break;
+            case JsonValueKind.True:
+                value = true;
+                break;
+            case JsonValueKind.False:
+                value = false;
+                break;
+            case JsonValueKind.Null:
+            case null:
+                value = null;
+                break;
+            default:
+                value = false;
+                return false;
+        }
+
+        return true;
     }
 }

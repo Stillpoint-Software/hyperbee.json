@@ -447,7 +447,7 @@ public class FilterParser<TNode> : FilterParser
             {
                 if ( Value == null )
                     return 0;
-                
+
                 var valueHash = Value switch
                 {
                     IConvertible convertible => convertible.GetHashCode(),

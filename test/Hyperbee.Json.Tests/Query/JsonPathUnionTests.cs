@@ -197,8 +197,7 @@ public class JsonPathUnionTests : JsonTestBase
         // consensus: ["cc1", "cc2", "cc3", "cc5", "dd1", "dd2", "dd4"]
         // consensus: any order
 
-        var equals = matches.OrderBy( x => x.ToString() )
-            .SequenceEqual( expected.OrderBy( x => x.ToString() ) );
+        var equals = matches.SequenceEqual( expected );
 
         Assert.IsTrue( equals );
     }

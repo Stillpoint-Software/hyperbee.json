@@ -18,7 +18,7 @@ public class JsonDynamicTests : JsonTestBase
     }
 
     [TestMethod]
-    public void DynamicJsonElementShouldReturnCorrectResults()
+    public void DynamicJsonElement_ShouldReturnCorrectResults()
     {
         var source = GetDocument<JsonDocument>();
         var element = source.ToDynamic();
@@ -32,7 +32,7 @@ public class JsonDynamicTests : JsonTestBase
     }
 
     [TestMethod]
-    public void DynamicJsonConverterShouldReturnCorrectResults()
+    public void DynamicJsonConverter_ShouldReturnCorrectResults()
     {
         var jobject = JsonSerializer.Deserialize<dynamic>( ReadJsonString(), SerializerOptions );
 

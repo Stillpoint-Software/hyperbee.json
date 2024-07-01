@@ -21,11 +21,9 @@ public abstract class FilterParser
     public const char EndLine = '\n';
     public const char EndArg = ')';
     public const char ArgSeparator = ',';
-
-    protected static readonly MethodInfo ObjectEquals = typeof( object ).GetMethod( "Equals", [typeof( object ), typeof( object )] );
 }
 
-public partial class FilterParser<TNode> : FilterParser
+public class FilterParser<TNode> : FilterParser
 {
     public static Func<TNode, TNode, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {

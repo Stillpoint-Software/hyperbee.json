@@ -65,7 +65,7 @@ public class JsonComparerComparandTests : JsonTestBase
     public void ComparandWithJsonObjectResults( string left, object right, bool areEqual )
     {
         var accessor = new NodeValueAccessor();
-        var node = new List<JsonNode> { JsonNode.Parse( left )["value"] };
+        var node = new List<JsonNode> { JsonNode.Parse( left )!["value"] };
 
         var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, node );
         var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
@@ -110,7 +110,6 @@ public class JsonComparerComparandTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-
     [TestMethod]
     public void ComparandWithEmpty()
     {
@@ -128,8 +127,5 @@ public class JsonComparerComparandTests : JsonTestBase
         Assert.IsFalse( a == b );
         Assert.IsTrue( a != b );
     }
-
-
-
 }
 

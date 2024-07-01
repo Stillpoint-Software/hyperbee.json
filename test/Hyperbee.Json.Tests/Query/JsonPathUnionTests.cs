@@ -15,6 +15,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$[0,0]", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromArray( string query, Type sourceType )
     {
+        // consensus: ["a", "a"]
+        
         const string json = """
         [
           "a"
@@ -29,8 +31,6 @@ public class JsonPathUnionTests : JsonTestBase
             source.FromJsonPathPointer( "$[0]" )
         };
 
-        // consensus: ["a", "a"]
-
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -39,6 +39,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['a','a']", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromObject( string query, Type sourceType )
     {
+        // consensus: none
+
         const string json = """
         {
           "a": 1
@@ -53,8 +55,6 @@ public class JsonPathUnionTests : JsonTestBase
             source.FromJsonPathPointer( "$.a" )
         };
 
-        // no consensus
-
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -65,6 +65,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$[?@.key<3,?@.key>6]", typeof( JsonNode ) )]
     public void UnionWithFilter( string query, Type sourceType )
     {
+        // consensus: none
+
         const string json = """
         [
           { "key": 1 },
@@ -90,8 +92,6 @@ public class JsonPathUnionTests : JsonTestBase
             source.FromJsonPathPointer( "$[4]" ) // key: 7 
         };
 
-        // no consensus
-
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -100,6 +100,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['key','another']", typeof( JsonNode ) )]
     public void UnionWithKeys( string query, Type sourceType )
     {
+        // consensus: ["value", "entry"]
+
         const string json = """
         {
           "key": "value",
@@ -115,8 +117,6 @@ public class JsonPathUnionTests : JsonTestBase
             source.FromJsonPathPointer( "$.another" )
         };
 
-        // consensus: ["value", "entry"]
-
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -125,6 +125,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['key','another','thing1']", typeof( JsonNode ) )]
     public void UnionWithMultipleKeys( string query, Type sourceType )
     {
+        // consensus: ["value", "entry"]
+
         const string json = """
         {
           "key": "value",
@@ -142,8 +144,6 @@ public class JsonPathUnionTests : JsonTestBase
             source.FromJsonPathPointer( "$.thing1" )
         };
 
-        // consensus: ["value", "entry"]
-
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -152,6 +152,9 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$..['c','d']", typeof( JsonNode ) )]
     public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )
     {
+        // consensus: ["cc1", "cc2", "cc3", "cc5", "dd1", "dd2", "dd4"]
+        //            any order
+
         const string json = """
         [
           {
@@ -193,9 +196,6 @@ public class JsonPathUnionTests : JsonTestBase
             source.FromJsonPathPointer( "$[4].child.c" )
 
         };
-
-        // consensus: ["cc1", "cc2", "cc3", "cc5", "dd1", "dd2", "dd4"]
-        // consensus: any order
 
         var equals = matches.SequenceEqual( expected );
 

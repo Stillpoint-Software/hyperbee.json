@@ -7,7 +7,7 @@ public interface IValueAccessor<TNode>
     NodeKind GetNodeKind( in TNode value );
     int GetArrayLength( in TNode value );
     bool TryGetChildValue( in TNode value, string childSelector, out TNode childValue );
-    bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<TNode> elements );
+    bool TryGetNodeList( ReadOnlySpan<char> item, out IEnumerable<TNode> elements );
     bool DeepEquals( TNode left, TNode right );
     bool TryGetValueFromNode( TNode item, out object o );
 }

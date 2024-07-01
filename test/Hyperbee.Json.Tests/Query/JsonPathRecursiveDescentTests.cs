@@ -16,7 +16,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
     [ExpectedException( typeof( NotSupportedException ) )]
     public void RecursiveDescent( string query, Type sourceType )
     {
-        // no consensus
+        // consensus: none
 
         const string json = """
         [
@@ -62,7 +62,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
     [ExpectedException( typeof( NotSupportedException ) )]
     public void RecursiveDescentAfterDotNotation( string query, Type sourceType )
     {
-        //consensus: NOT_SUPPORTED
+        // consensus: NOT_SUPPORTED
 
         const string json = """
         {

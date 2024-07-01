@@ -15,6 +15,8 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalar( string query, Type sourceType )
     {
+        // consensus: none
+
         const string json = "42";
         var source = GetDocumentFromSource( sourceType, json );
 
@@ -23,8 +25,6 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         {
             source.FromJsonPathPointer( "$" )
         };
-
-        // no consensus
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
         Assert.IsTrue( JsonValueHelper.GetInt32( matches.First() ) == 42 );

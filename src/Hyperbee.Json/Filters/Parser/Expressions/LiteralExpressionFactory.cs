@@ -29,10 +29,12 @@ internal class LiteralExpressionFactory : IExpressionFactory
             return Expression.Constant( item[1..^1].ToString() ); // remove quotes
 
         // Check for numbers
-        // TODO: Currently assuming all numbers are floats since we don't know what's in the data or the other side of the operator yet.
-        if ( float.TryParse( item, out float result ) )
-            return Expression.Constant( result );
-
-        return null;
+        //
+        // The current design treats all numbers are floats since we don't
+        // know what's in the data or the other side of the operator yet.
+        
+        return float.TryParse( item, out float result ) 
+            ? Expression.Constant( result ) 
+            : null;
     }
 }

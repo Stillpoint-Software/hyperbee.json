@@ -60,6 +60,8 @@ public class JsonPathDotNotationTests : JsonTestBase
     [DataRow( "$.屬性", typeof( JsonNode ) )]
     public void DotNotationWithNonAsciiKey( string query, Type sourceType )
     {
+        // consensus: none
+
         const string json = """
         {
             "\u5c6c\u6027": "value"
@@ -72,8 +74,6 @@ public class JsonPathDotNotationTests : JsonTestBase
         {
             source.FromJsonPathPointer("$['屬性']")
         };
-
-        // no consensus
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
         Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );

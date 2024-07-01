@@ -115,7 +115,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonNode ) )]
     public void FilterExpressionAfterDoNotationWithWildcardAfterRecursiveDecent( string query, Type sourceType )
     {
-        // consensus	[{"id": 3, "name": "another"}, {"id": 4, "name": "more"}, {"id": 5, "name": "next to last"}]
+        // consensus: [{"id": 3, "name": "another"}, {"id": 4, "name": "more"}, {"id": 5, "name": "next to last"}]
 
         const string json =
             """
@@ -337,8 +337,8 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$[?(@[0:1]==[1])]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsArrayForSliceWithRange1( string query, Type sourceType )
     {
-        // consensus	NOT_SUPPORTED
-        // deviation	[] ??? should return [1]?
+        // consensus: NOT_SUPPORTED
+        // deviation: [] ??? should return [1]?
 
         var json =
             """
@@ -368,8 +368,8 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$[?(@.*==[1,2])]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsArrayForDotNotationWithStart( string query, Type sourceType )
     {
-        // consensus	NOT_SUPPORTED
-        // deviation	[]
+        // consensus: NOT_SUPPORTED
+        // deviation: []
 
         var json =
             """
@@ -398,8 +398,8 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$[?(@.d==[\"v1\",\"v2\"] || (@.d == true))]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsArrayOrEqualsTrue( string query, Type sourceType )
     {
-        // consensus	NOT_SUPPORTED 
-        // deviation	[{"d":["v1","v2"]},{"d":true}]
+        // consensus: NOT_SUPPORTED 
+        // deviation: [{"d":["v1","v2"]},{"d":true}]
 
         var json =
             """
@@ -424,7 +424,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [ExpectedException( typeof( NotSupportedException ) )]
     public void FilterExpressionWithEqualsArrayWithSingleQuotes( string query, Type sourceType )
     {
-        //consensus	NOT_SUPPORTED
+        // consensus: NOT_SUPPORTED
 
         var json =
             """
@@ -494,8 +494,8 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$[?((@.key<44)==false)]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsBooleanExpressionValue( string query, Type sourceType )
     {
-        // consensus	NOT_SUPPORTED
-        // deviation	[{"key":44}] as per rfc
+        // consensus: NOT_SUPPORTED
+        // deviation: [{"key":44}] as per rfc
 
         var json =
             """
@@ -519,7 +519,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$[?(@.key==false)]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsFalse( string query, Type sourceType )
     {
-        // consensus	[{"key": false}]
+        // consensus: [{"key": false}]
 
         var json =
             """
@@ -577,7 +577,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataRow( "$[?(@.key==null)]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsNull( string query, Type sourceType )
     {
-        // consensus	[{"key": null}]
+        // consensus: [{"key": null}]
 
         var json =
             """

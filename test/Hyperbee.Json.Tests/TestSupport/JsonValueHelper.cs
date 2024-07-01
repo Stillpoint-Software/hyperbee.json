@@ -4,11 +4,10 @@ using System.Text.Json.Nodes;
 
 namespace Hyperbee.Json.Tests.TestSupport;
 
-// test helper to assist with getting, and normalizing, json values
+// Test helper to assist with getting, and normalizing, json values
 //
 // JsonElement and JsonNode return values differently.
-// this helper provides a common interface for value
-// retrieval that simplifies unit testing.
+// Provide a common interface for value retrieval to simplify unit tests.
 
 internal static class JsonValueHelper
 {

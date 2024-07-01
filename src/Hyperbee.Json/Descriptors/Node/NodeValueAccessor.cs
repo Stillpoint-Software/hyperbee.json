@@ -114,8 +114,13 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         }
     }
 
+    public bool DeepEquals( JsonNode left, JsonNode right )
+    {
+        return JsonNode.DeepEquals( left, right );
+    }
 
-    public bool TryGetObjects( ReadOnlySpan<char> item, out IEnumerable<JsonNode> nodes )
+
+    public bool TryGetNodeList( ReadOnlySpan<char> item, out IEnumerable<JsonNode> nodes )
     {
         try
         {
@@ -128,11 +133,6 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
             nodes = [];
             return false;
         }
-    }
-
-    public bool DeepEquals( JsonNode left, JsonNode right )
-    {
-        return JsonNode.DeepEquals( left, right );
     }
 
     public bool TryGetValueFromNode( JsonNode node, out object value )

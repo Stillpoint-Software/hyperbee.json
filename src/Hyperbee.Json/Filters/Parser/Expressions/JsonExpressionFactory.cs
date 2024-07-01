@@ -6,7 +6,7 @@ internal class JsonExpressionFactory : IExpressionFactory
 {
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, FilterContext<TNode> context )
     {
-        if ( context.Descriptor.Accessor.TryGetObjects( state.Item.ToString(), out var json ) )
+        if ( context.Descriptor.Accessor.TryGetNodeList( state.Item.ToString(), out var json ) )
         {
             expression = Expression.Constant( json );
             return true;

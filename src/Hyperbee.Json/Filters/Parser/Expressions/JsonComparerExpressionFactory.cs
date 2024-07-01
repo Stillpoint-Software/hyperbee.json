@@ -141,18 +141,20 @@ public static class JsonComparerExpressionFactory<TNode>
 
             static int NormalizeResult( int compare, int count, bool lessThan )
             {
-                // When comparing a NodeList to a Value, greater than and less than
-                // operators only have meaning when the NodeList has a single element
+                // When comparing a NodeList to a Value, ('<', '<=', '>', '>=') operators only
+                // have meaning when the NodeList has a single element.
                 //
-                // When there is a single element, the comparison is based on the unwrapped value.
+                // When there is a single element, the comparison is based on the unwrapped mode value. 
+                // This results in a meaningful value comparison for equality and for greater-than and less-than.
                 //
-                // When there is more than on element or an empty list the equality is based on finding the value in the
-                // set and greater than and less are not meaningful. In those cases we want to normalize the result so
-                // that greater than and less than always return false.
+                // When there is more than on element, or an empty list, equality is based on finding the value
+                // in the set. In the case of comparing a value to a set, greater-than and less-than operations
+                // are not meaningful. In those cases we want to normalize the result so that greater-than and
+                // less-than always return false, regardless of the order of the comparands.
 
-                if ( lessThan && count != 1 )
+                if ( lessThan && count != 1 ) // Test for a set comparison
                 {
-                    // invert the comparison to make sure less than and greater than return false
+                    // invert the comparison result to make sure less-than and greater-than return false
                     return -compare;
                 }
 
@@ -193,14 +195,15 @@ public static class JsonComparerExpressionFactory<TNode>
                     continue; // Skip if value cannot be extracted
 
                 lastCompare = CompareValues( itemValue, value );
+                
                 if ( lastCompare == 0 )
                     return 0; // Return 0 if any element matches the value
             }
 
             if ( count == 0 )
-                return -1; // Return -1 the list is empty (no elements match the value)
+                return -1; // Return -1 if the list is empty (no elements match the value)
 
-            return count != 1 ? -1 : lastCompare;
+            return count != 1 ? -1 : lastCompare; // Return the last comparison if there is only one element
         }
 
         private static int CompareValues( object left, object right )

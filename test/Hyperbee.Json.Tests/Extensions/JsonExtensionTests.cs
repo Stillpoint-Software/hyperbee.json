@@ -15,7 +15,7 @@ public class JsonExtensionTests : JsonTestBase
     }
 
     [TestMethod]
-    public void Should_serialize_json_element_to_object()
+    public void Should_SerializeJsonElement_ToObject()
     {
         // arrange
         var source = new TestItem
@@ -35,7 +35,7 @@ public class JsonExtensionTests : JsonTestBase
     }
 
     [TestMethod]
-    public void Should_return_property_value_for_property_path()
+    public void Should_ReturnPropertyValue_ForJsonPathPointer()
     {
         // arrange
         const string json = """
@@ -61,7 +61,7 @@ public class JsonExtensionTests : JsonTestBase
         var document = JsonDocument.Parse( json );
 
         // act
-        var result = document.RootElement.FromJsonPathPointer( "assets[0].asset.['code']" ).GetString();
+        var result = document.RootElement.FromJsonPathPointer( "$.assets[0].asset.['code']" ).GetString();
 
         // asset
         Assert.AreEqual( "#load", result );

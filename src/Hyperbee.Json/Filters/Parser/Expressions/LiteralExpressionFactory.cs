@@ -32,9 +32,9 @@ internal class LiteralExpressionFactory : IExpressionFactory
         //
         // The current design treats all numbers are floats since we don't
         // know what's in the data or the other side of the operator yet.
-        
-        return float.TryParse( item, out float result ) 
-            ? Expression.Constant( result ) 
+
+        return float.TryParse( item, out float result )
+            ? Expression.Constant( result )
             : null;
     }
 }

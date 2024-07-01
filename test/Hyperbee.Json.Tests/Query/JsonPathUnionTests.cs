@@ -16,7 +16,7 @@ public class JsonPathUnionTests : JsonTestBase
     public void UnionWithDuplicationFromArray( string query, Type sourceType )
     {
         // consensus: ["a", "a"]
-        
+
         const string json = """
         [
           "a"

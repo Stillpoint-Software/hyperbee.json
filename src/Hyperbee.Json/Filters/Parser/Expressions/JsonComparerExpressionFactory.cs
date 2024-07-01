@@ -195,7 +195,7 @@ public static class JsonComparerExpressionFactory<TNode>
                     continue; // Skip if value cannot be extracted
 
                 lastCompare = CompareValues( itemValue, value );
-                
+
                 if ( lastCompare == 0 )
                     return 0; // Return 0 if any element matches the value
             }

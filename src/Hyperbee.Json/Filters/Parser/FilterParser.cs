@@ -460,12 +460,12 @@ public class FilterParser<TNode> : FilterParser
             }
 
             /*
-             * Comparison Rules (according to JsonPath RFC):
+             * Comparison Rules (according to JSONPath RFC 9535):
              *
              * 1. Compare Value to Value:
              *    - Two values are equal if they are of the same type and have the same value.
              *    - For float comparisons, use a tolerance to handle precision issues.
-             *    - Truthy values are considered equal if both are truthy, and falsy values are equal if both are falsy.
+             *    - Comparisons between different types yield false.
              *
              * 2. Compare Node to Node:
              *    - Since a Node is essentially an enumerable with a single item, compare the single items directly.
@@ -490,16 +490,17 @@ public class FilterParser<TNode> : FilterParser
              * 6. Compare Node to NodeList and vice versa:
              *    - Since Node is a single item enumerable, treat it similarly to Value in comparison to NodeList.
              *
-             * Truthiness Rules:
-             * - Falsy values: null, false, 0, "", undefined, NaN.
-             * - Truthy values: Anything not falsy, including non-empty strings, non-zero numbers, true, arrays, and objects.
+             * 7. Truthiness Rules:
+             *    - Falsy values: null, false, 0, "", NaN.
+             *    - Truthy values: Anything not falsy, including non-empty strings, non-zero numbers, true, arrays, and objects.
+             *    - Truthiness is generally not used for comparison operators (==, <) in filter expressions.
+             *    - Type mismatches (e.g., string vs. number) result in false for equality (==) and true for inequality (!=).
              *
              * Order of Operations:
              * - Check if both are NodeLists.
              * - Check if one is a NodeList and the other is a Value.
              * - Compare directly if both are Values.
              */
-
             private static int Compare( Comparand left, Comparand right )
             {
                 if ( left.Value is IEnumerable<JsonElement> leftEnumerable && right.Value is IEnumerable<JsonElement> rightEnumerable )

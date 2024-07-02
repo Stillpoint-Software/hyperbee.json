@@ -1,30 +1,17 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.Json;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class LengthElementFunction( string methodName, ParseExpressionContext context )
-    : FilterExtensionFunction( methodName, 1, context )
+public class LengthElementFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "length";
+    private static readonly Expression LengthExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, float>) Length );
 
-    private static readonly MethodInfo LengthMethod;
-
-    static LengthElementFunction()
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
-        LengthMethod = typeof( LengthElementFunction ).GetMethod( nameof( Length ), [typeof( IEnumerable<JsonElement> )] );
-    }
-
-    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
-    {
-        if ( arguments.Length != 1 )
-        {
-            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
-        }
-
-        return Expression.Call( LengthMethod, arguments[0] );
+        return Expression.Invoke( LengthExpression, arguments[0] );
     }
 
     public static float Length( IEnumerable<JsonElement> elements )

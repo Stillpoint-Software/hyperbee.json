@@ -7,10 +7,9 @@ namespace Hyperbee.Json.Filters;
 
 public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 {
-    private readonly IJsonTypeDescriptor _typeDescriptor;
-
-    // ReSharper disable once StaticMemberInGenericType
     private static readonly ConcurrentDictionary<string, Func<TNode, TNode, bool>> Compiled = new();
+
+    private readonly ITypeDescriptor<TNode> _typeDescriptor;
 
     public FilterEvaluator( ITypeDescriptor<TNode> typeDescriptor )
     {
@@ -19,7 +18,7 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 
     public object Evaluate( string filter, TNode current, TNode root )
     {
-        var compiled = Compiled.GetOrAdd( filter, _ => FilterExpressionParser.Compile<TNode>( filter, _typeDescriptor ) );
+        var compiled = Compiled.GetOrAdd( filter, _ => FilterParser<TNode>.Compile( filter, _typeDescriptor ) );
 
         try
         {

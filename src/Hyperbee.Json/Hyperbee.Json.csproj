@@ -23,6 +23,9 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>$(AssemblyName).Tests</_Parameter1>
     </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>$(AssemblyName).Benchmark</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
   <ItemGroup>
@@ -33,14 +36,9 @@
     <None Include="..\..\assets\icon.png" Pack="true" Visible="false" PackagePath="/" />
     <None Include="..\..\README.md" Pack="true" Visible="true" PackagePath="/" />
     <None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="/" />
-    <None Include="..\..\CONTRIBUTING.md" Pack="true" Visible="false" PackagePath="/" />
-    <None Include="..\..\docs\JSONPATH-SYNTAX.md" Pack="true" Visible="false" PackagePath="docs/" />
-    <None Include="..\..\docs\ADDITIONAL-CLASSES.md" Pack="true" Visible="false" PackagePath="docs/" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.10.0" />
   </ItemGroup>
 </Project>

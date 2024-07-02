@@ -1,4 +1,4 @@
-﻿namespace Hyperbee.Json.Memory;
+﻿namespace Hyperbee.Json.Internal;
 
 [Flags]
 internal enum SpanSplitOptions

@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
+using Hyperbee.Json.Internal;
 
-namespace Hyperbee.Json.Memory;
+namespace Hyperbee.Json;
 
-internal static class SliceSyntaxHelper
+internal static class JsonPathSliceSyntaxHelper
 {
     public static (int Lower, int Upper, int Step) ParseExpression( ReadOnlySpan<char> sliceExpr, int length, bool reverse = false )
     {

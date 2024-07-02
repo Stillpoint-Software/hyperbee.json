@@ -1,20 +1,16 @@
-﻿using System.Linq.Expressions;
-using Hyperbee.Json.Filters;
+﻿using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 
+public delegate FilterExtensionFunction FunctionCreator();
 
-public interface IJsonTypeDescriptor
+public interface ITypeDescriptor
 {
-    public Dictionary<string, FunctionCreator> Functions { get; }
-
-    public FilterFunction GetSelectFunction( ParseExpressionContext context );
-
-    public Expression GetValueExpression( Expression context );
+    public FunctionRegistry Functions { get; }
 }
 
-public interface ITypeDescriptor<TNode> : IJsonTypeDescriptor
+public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
     public IValueAccessor<TNode> Accessor { get; }
     public IFilterEvaluator<TNode> FilterEvaluator { get; }

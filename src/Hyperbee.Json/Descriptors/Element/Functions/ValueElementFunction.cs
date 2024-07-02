@@ -1,31 +1,17 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.Json;
-
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class ValueElementFunction( string methodName, ParseExpressionContext context )
-    : FilterExtensionFunction( methodName, 1, context )
+public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "value";
+    public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, object>) Value );
 
-    public static readonly MethodInfo ValueMethod;
-
-    static ValueElementFunction()
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
-        ValueMethod = typeof( ValueElementFunction ).GetMethod( nameof( Value ), [typeof( IEnumerable<JsonElement> )] );
-    }
-
-    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
-    {
-        if ( arguments.Length != 1 )
-        {
-            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
-        }
-
-        return Expression.Call( ValueMethod, arguments[0] );
+        return Expression.Invoke( ValueExpression, arguments[0] );
     }
 
     public static object Value( IEnumerable<JsonElement> elements )
@@ -44,15 +30,15 @@ public class ValueElementFunction( string methodName, ParseExpressionContext con
             JsonValueKind.Undefined => false,
             _ => false
         };
-    }
 
-    private static bool IsNotEmpty( JsonElement element )
-    {
-        return element.ValueKind switch
+        static bool IsNotEmpty( JsonElement element )
         {
-            JsonValueKind.Array => element.EnumerateArray().Any(),
-            JsonValueKind.Object => element.EnumerateObject().Any(),
-            _ => false
-        };
+            return element.ValueKind switch
+            {
+                JsonValueKind.Array => element.EnumerateArray().Any(),
+                JsonValueKind.Object => element.EnumerateObject().Any(),
+                _ => false
+            };
+        }
     }
 }

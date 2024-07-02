@@ -32,66 +32,72 @@
 
 #endregion
 
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
-using Hyperbee.Json.Memory;
+
+// https://www.rfc-editor.org/rfc/rfc9535.html
+// https://www.rfc-editor.org/rfc/rfc9535.html#appendix-A
 
 namespace Hyperbee.Json;
 
-// https://datatracker.ietf.org/doc/rfc9535/
+public delegate void NodeProcessorDelegate<TNode>( in TNode parent, in TNode value, string key, in JsonPathSegment segment );
 
 public static class JsonPath<TNode>
 {
-    private record struct NodeArgs( in TNode Value, in JsonPathSegment Segment );
+    [Flags]
+    internal enum NodeFlags
+    {
+        Default = 0,
+        AfterDescent = 1
+    }
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
-    public static IEnumerable<TNode> Select( in TNode value, string query )
+    public static IEnumerable<TNode> Select( in TNode value, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        return EnumerateMatches( value, value, query );
+        return EnumerateMatches( value, value, query, processor );
     }
 
-    internal static IEnumerable<TNode> Select( in TNode value, TNode root, string query )
+    internal static IEnumerable<TNode> SelectInternal( in TNode value, TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        return EnumerateMatches( value, root, query );
+        return EnumerateMatches( value, root, query, processor );
     }
 
-    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query )
+    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace( query );
+        if ( string.IsNullOrWhiteSpace( query ) ) // invalid per the RFC ABNF
+            return []; // Consensus: return empty array for empty query
 
-        // quick out
-
-        if ( query == "$" || query == "@" )
+        if ( query == "$" || query == "@" ) // quick out for everything
             return [value];
 
-        // tokenize
+        var segmentNext = JsonPathQueryParser.Parse( query ).Next; // The first segment is always the root; skip it
 
-        var segmentNext = JsonPathQueryParser.Parse( query );
-
-        if ( !segmentNext.IsFinal )
-        {
-            var selector = segmentNext.Selectors[0].Value; // first selector in segment
-
-            if ( selector == "$" || selector == "@" )
-                segmentNext = segmentNext.Next;
-        }
-
-        return EnumerateMatches( root, new NodeArgs( value, segmentNext ) );
+        return EnumerateMatches( root, new NodeArgs( default, value, default, segmentNext, NodeFlags.Default ), processor );
     }
 
-    private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args )
+    private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args, NodeProcessorDelegate<TNode> processor = null )
     {
-        var stack = new Stack<NodeArgs>( 16 );
+        var stack = new NodeArgsStack();
+
         var (accessor, filterEvaluator) = Descriptor;
 
         do
         {
             // deconstruct next args
 
-            var (value, segmentNext) = args;
+            var (parent, value, key, segmentNext, flags) = args;
 
+            // call node processor if it exists and the `key` is not null.
+            // the key is null when a descent has re-pushed the descent target.
+            // this should be safe to skip; we will see its values later.
+
+            if ( key != null )
+                processor?.Invoke( parent, value, key, segmentNext );
+
+            // yield matches
             if ( segmentNext.IsFinal )
             {
                 yield return value;
@@ -108,16 +114,21 @@ public static class JsonPath<TNode>
 
             // make sure we have a complex value
 
-            if ( !accessor.IsObjectOrArray( value ) )
-                throw new InvalidOperationException( "Object or Array expected." );
+            var nodeKind = accessor.GetNodeKind( value );
+
+            if ( nodeKind == NodeKind.Value )
+                continue;
 
             // try to access object or array using name or index
 
-            if ( segmentCurrent.Singular )
+            if ( segmentCurrent.IsSingular )
             {
+                if ( nodeKind == NodeKind.Object && selectorKind == SelectorKind.Index )
+                    continue; // don't allow indexing in to objects
+
                 if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
                 {
-                    Push( stack, childValue, segmentNext );
+                    stack.Push( value, childValue, selector, segmentNext );
                 }
 
                 continue;
@@ -127,37 +138,42 @@ public static class JsonPath<TNode>
 
             if ( selectorKind == SelectorKind.Wildcard )
             {
-                foreach ( var (_, childKey, childKind) in accessor.EnumerateChildren( value ) )
+                foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                 {
-                    Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                    // optimization: quicker return for final 
+                    //
+                    // the parser will work without this check, but we would be forcing it
+                    // to push and pop values onto the stack that we know will not be used.
+                    if ( segmentNext.IsFinal )
+                    {
+                        // theoretically, we should yield here, but we can't because we need to
+                        // preserve the order of the results as per the RFC. so we push the
+                        // value onto the stack without prepending the childKey or childKind
+                        // to set up for an immediate return on the next iteration.
+                        //Push( stack, value, childValue, childKey, segmentNext );
+                        stack.Push( value, childValue, childKey, segmentNext );
+                        continue;
+                    }
+
+                    stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                 }
 
                 continue;
-
-                // we can reduce push/pop operations, and related allocations, if we check
-                // segmentNext.IsFinal and directly yield when true where possible. 
-                //
-                // if ( segmentNext.IsFinal && !childValue.IsObjectOrArray() )
-                //    yield return childValue;
-                // else
-                //    Push( stack, value, segmentNext.Prepend( childKey, childKind ) );                 
-                //
-                // unfortunately, this optimization impacts result ordering. the rfc states 
-                // result order should be as close to json document order as possible. for
-                // that reason, we chose not to implement this type of performance optimization.
             }
 
             // descendant
 
             if ( selectorKind == SelectorKind.Descendant )
             {
-                var descendantSegment = segmentNext.Prepend( "..", SelectorKind.Descendant );
-                foreach ( var (childValue, _, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
+                foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                 {
-                    Push( stack, childValue, descendantSegment ); // Descendant
+                    stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
                 }
 
-                Push( stack, value, segmentNext ); // process the current value
+                // Union Processing After Descent: If a union operator follows a descent operator,
+                // either directly or after intermediary selectors, it should only process simple values. 
+
+                stack.Push( parent, value, null, segmentNext, NodeFlags.AfterDescent ); // process the current value
                 continue;
             }
 
@@ -176,8 +192,17 @@ public static class JsonPath<TNode>
                     {
                         var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove leading '?'
 
-                        if ( Truthy( result ) )
-                            Push( stack, value, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                        if ( !Truthy( result ) )
+                            continue;
+
+                        // optimization: quicker return for tail values
+                        if ( segmentNext.IsFinal )
+                        {
+                            stack.Push( value, childValue, childKey, segmentNext );
+                            continue;
+                        }
+
+                        stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                     }
 
                     continue;
@@ -185,13 +210,13 @@ public static class JsonPath<TNode>
 
                 // array [name1,name2,...] or [#,#,...] or [start:end:step]
 
-                if ( accessor.IsArray( value, out var length ) )
+                if ( nodeKind == NodeKind.Array )
                 {
                     // [#,#,...] 
 
                     if ( selectorKind == SelectorKind.Index )
                     {
-                        Push( stack, accessor.GetElementAt( value, int.Parse( selector ) ), segmentNext );
+                        stack.Push( value, accessor.GetElementAt( value, int.Parse( selector ) ), selector, segmentNext );
                         continue;
                     }
 
@@ -199,16 +224,26 @@ public static class JsonPath<TNode>
 
                     if ( selectorKind == SelectorKind.Slice )
                     {
-                        ProcessSlice( stack, value, selector, segmentNext, accessor );
+                        foreach ( var index in EnumerateSlice( value, selector, accessor ) )
+                        {
+                            stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext );
+                        }
                         continue;
                     }
 
                     // [name1,name2,...]
 
                     var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                    var length = accessor.GetArrayLength( value );
+
                     for ( var index = length - 1; index >= 0; index-- )
                     {
-                        Push( stack, accessor.GetElementAt( value, index ), indexSegment );
+                        var childValue = accessor.GetElementAt( value, index );
+
+                        if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
+                            continue;
+
+                        stack.Push( value, childValue, index.ToString(), indexSegment );
                     }
 
                     continue;
@@ -216,23 +251,19 @@ public static class JsonPath<TNode>
 
                 // object [name1,name2,...]
 
-                if ( accessor.IsObject( value ) )
+                if ( nodeKind == NodeKind.Object )
                 {
                     if ( selectorKind == SelectorKind.Slice || selectorKind == SelectorKind.Index )
                         continue;
 
                     if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
-                        Push( stack, childValue, segmentNext );
+                    {
+                        stack.Push( value, childValue, selector, segmentNext );
+                    }
                 }
             }
 
         } while ( stack.TryPop( out args ) );
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void Push( Stack<NodeArgs> stack, in TNode value, in JsonPathSegment segment )
-    {
-        stack.Push( new NodeArgs( value, segment ) );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -241,33 +272,49 @@ public static class JsonPath<TNode>
         return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
     }
 
-    private static void ProcessSlice( Stack<NodeArgs> stack, TNode value, string sliceExpr, JsonPathSegment segmentNext, IValueAccessor<TNode> accessor )
+    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
     {
-        if ( !accessor.IsArray( value, out var length ) )
-            return;
+        var length = accessor.GetArrayLength( value );
 
-        var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
+        if ( length == 0 )
+            yield break;
+
+        var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
         switch ( step )
         {
             case > 0:
                 {
                     for ( var index = lower; index < upper; index += step )
-                    {
-                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
-                    }
-
+                        yield return index;
                     break;
                 }
             case < 0:
                 {
                     for ( var index = upper; index > lower; index += step )
-                    {
-                        Push( stack, accessor.GetElementAt( value, index ), segmentNext );
-                    }
-
+                        yield return index;
                     break;
                 }
+        }
+    }
+
+    [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, First = ({Segment?.Selectors?[0]}), IsSingular = {Segment?.IsSingular}, Count = {Segment?.Selectors?.Length}" )]
+    private record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
+
+    private sealed class NodeArgsStack( int capacity = 16 )
+    {
+        private readonly Stack<NodeArgs> _stack = new( capacity );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public void Push( in TNode parent, in TNode value, string key, in JsonPathSegment segment, NodeFlags flags = NodeFlags.Default )
+        {
+            _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
+        }
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public bool TryPop( out NodeArgs args )
+        {
+            return _stack.TryPop( out args );
         }
     }
 }

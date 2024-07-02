@@ -1,42 +1,30 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class SearchNodeFunction( string methodName, ParseExpressionContext context )
-    : FilterExtensionFunction( methodName, 2, context )
+public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 {
     public const string Name = "search";
+    private static readonly Expression SearchExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string, bool>) Search );
 
-    private static readonly MethodInfo SearchMethod;
-
-    static SearchNodeFunction()
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
-        SearchMethod = typeof( SearchNodeFunction ).GetMethod( nameof( Search ), [typeof( IEnumerable<JsonNode> ), typeof( string )] );
-    }
-
-    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
-    {
-        if ( arguments.Length != 2 )
-        {
-            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
-        }
-
-        return Expression.Call( SearchMethod, arguments[0], arguments[1] );
+        return Expression.Invoke( SearchExpression, arguments[0], arguments[1] );
     }
 
     public static bool Search( IEnumerable<JsonNode> nodes, string regex )
     {
-        var nodeValue = nodes.FirstOrDefault()?.GetValue<string>();
-        if ( nodeValue == null )
+        var value = nodes.FirstOrDefault()?.GetValue<string>();
+
+        if ( value == null )
         {
             return false;
         }
 
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        return regexPattern.IsMatch( nodeValue );
+        return regexPattern.IsMatch( value );
     }
 }

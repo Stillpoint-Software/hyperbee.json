@@ -1,44 +1,30 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class MatchNodeFunction( string methodName, ParseExpressionContext context ) :
-    FilterExtensionFunction( methodName, 2, context )
+public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 {
     public const string Name = "match";
+    private static readonly Expression MatchExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string, bool>) Match );
 
-    private static readonly MethodInfo MatchMethod;
-
-    static MatchNodeFunction()
+    protected override Expression GetExtensionExpression( Expression[] arguments )
     {
-        MatchMethod = typeof( MatchNodeFunction ).GetMethod( nameof( Match ), [typeof( IEnumerable<JsonNode> ), typeof( string )] );
-    }
-
-    public override Expression GetExtensionExpression( string methodName, Expression[] arguments, ParseExpressionContext context )
-    {
-        if ( arguments.Length != 2 )
-        {
-            return Expression.Throw( Expression.Constant( new ArgumentException( $"{Name} function has invalid parameter count." ) ) );
-        }
-
-        return Expression.Call( MatchMethod, arguments[0], arguments[1] );
+        return Expression.Invoke( MatchExpression, arguments[0], arguments[1] );
     }
 
     public static bool Match( IEnumerable<JsonNode> nodes, string regex )
     {
-        var nodeValue = nodes.FirstOrDefault()?.GetValue<string>();
-        if ( nodeValue == null )
+        var value = nodes.FirstOrDefault()?.GetValue<string>();
+
+        if ( value == null )
         {
             return false;
         }
 
         var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        var value = $"^{nodeValue}$";
-
-        return regexPattern.IsMatch( value );
+        return regexPattern.IsMatch( $"^{value}$" );
     }
 }

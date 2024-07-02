@@ -10,10 +10,10 @@ using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Evaluators;
+namespace Hyperbee.Json.Tests.Parsers;
 
 [TestClass]
-public class FilterExpressionParserTests : JsonTestBase
+public class FilterParserTests : JsonTestBase
 {
     [DataTestMethod]
     [DataRow( "((\"world\" == 'world') && (1 == 1))", true, typeof( JsonElement ) )]
@@ -51,7 +51,15 @@ public class FilterExpressionParserTests : JsonTestBase
 
     [DataTestMethod]
     [DataRow( "@.store.bicycle.price < 10", false, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price <= 10", false, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price < 20", true, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price <= 20", true, typeof( JsonElement ) )]
     [DataRow( "@.store.bicycle.price > 15", true, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price >= 15", true, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price > 20", false, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price >= 20", false, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price == 19.95", true, typeof( JsonElement ) )]
+    [DataRow( "@.store.bicycle.price != 19.95", false, typeof( JsonElement ) )]
     [DataRow( "@.store.book[0].category == \"reference\"", true, typeof( JsonElement ) )]
     [DataRow( "@.store.book[0].category == 'reference'", true, typeof( JsonElement ) )]
     [DataRow( "@.store.book[0].category == @.store.book[1].category", false, typeof( JsonElement ) )]
@@ -126,6 +134,26 @@ public class FilterExpressionParserTests : JsonTestBase
     }
 
     [DataTestMethod]
+    [DataRow( "length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "length (@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "  length(@.store.book) == 4", true, typeof( JsonElement ) )]
+    [DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "  length( @.store.book ) == 4  ", true, typeof( JsonElement ) )]
+    [DataRow( "4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
+    [DataRow( "4 == length ( @.store.book )  ", true, typeof( JsonElement ) )]
+    [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
+    [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
+    [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
+    public void Should_MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
+    {
+        // arrange & act
+        var result = CompileAndExecute( filter, sourceType );
+
+        // assert
+        Assert.AreEqual( expected, result );
+    }
+
+    [DataTestMethod]
     [DataRow( "unknown_literal", typeof( JsonElement ) )]
     [DataRow( "'unbalanced string\"", typeof( JsonElement ) )]
     [DataRow( " \t ", typeof( JsonElement ) )]
@@ -152,18 +180,14 @@ public class FilterExpressionParserTests : JsonTestBase
 
     private static (Expression, ParameterExpression) GetExpression( string filter, Type sourceType )
     {
-        var param = Expression.Parameter( sourceType );
-        var expression = sourceType == typeof( JsonElement )
-            ? FilterExpressionParser.Parse( filter, new ParseExpressionContext(
-                param,
-                param,
-                new ElementTypeDescriptor() ) )
-            : FilterExpressionParser.Parse( filter, new ParseExpressionContext(
-                param,
-                param,
-                new NodeTypeDescriptor() ) );
+        if ( sourceType == typeof( JsonElement ) )
+        {
+            var elementContext = new FilterContext<JsonElement>( new ElementTypeDescriptor() );
+            return (FilterParser<JsonElement>.Parse( filter, elementContext ), elementContext.Root);
+        }
 
-        return (expression, param);
+        var nodeContext = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        return (FilterParser<JsonNode>.Parse( filter, nodeContext ), nodeContext.Root);
     }
 
     private static bool Execute( Expression expression, ParameterExpression param, Type sourceType )
@@ -176,7 +200,8 @@ public class FilterExpressionParserTests : JsonTestBase
 
             return func( new JsonElement() );
         }
-        else if ( sourceType == typeof( JsonNode ) )
+
+        if ( sourceType == typeof( JsonNode ) )
         {
             var func = Expression
                 .Lambda<Func<JsonNode, bool>>( expression, param )
@@ -184,10 +209,8 @@ public class FilterExpressionParserTests : JsonTestBase
 
             return func( JsonNode.Parse( "{}" ) );
         }
-        else
-        {
-            throw new NotImplementedException();
-        }
+
+        throw new NotImplementedException();
     }
 
     private static bool CompileAndExecute( string filter, Type sourceType )
@@ -195,7 +218,7 @@ public class FilterExpressionParserTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var source = GetDocument<JsonDocument>();
-            var func = FilterExpressionParser.Compile<JsonElement>( filter, new ElementTypeDescriptor() );
+            var func = FilterParser<JsonElement>.Compile( filter, new ElementTypeDescriptor() );
 
             return func( source.RootElement, source.RootElement );
         }
@@ -203,7 +226,7 @@ public class FilterExpressionParserTests : JsonTestBase
         {
             // arrange 
             var source = GetDocument<JsonNode>();
-            var func = FilterExpressionParser.Compile<JsonNode>( filter, new NodeTypeDescriptor() );
+            var func = FilterParser<JsonNode>.Compile( filter, new NodeTypeDescriptor() );
 
             // act
             return func( source, source );

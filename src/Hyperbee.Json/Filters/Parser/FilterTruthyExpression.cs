@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Hyperbee.Json.Filters.Parser
@@ -7,10 +8,10 @@ namespace Hyperbee.Json.Filters.Parser
     {
         private static readonly MethodInfo IsTruthyMethodInfo = typeof( FilterTruthyExpression ).GetMethod( nameof( IsTruthy ) );
 
-        public static System.Linq.Expressions.Expression IsTruthyExpression( System.Linq.Expressions.Expression expression ) =>
+        public static Expression IsTruthyExpression( Expression expression ) =>
             expression.Type == typeof( bool )
                 ? expression
-                : System.Linq.Expressions.Expression.Call( IsTruthyMethodInfo, expression );
+                : Expression.Call( IsTruthyMethodInfo, expression );
 
         public static bool IsTruthy( object value )
         {

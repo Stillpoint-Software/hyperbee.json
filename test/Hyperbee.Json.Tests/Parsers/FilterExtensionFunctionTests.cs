@@ -19,7 +19,9 @@ public class FilterExtensionFunctionTests : JsonTestBase
         // arrange 
         var source = GetDocument<JsonNode>();
 
-        JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
+        JsonTypeDescriptorRegistry
+            .GetDescriptor<JsonNode>()
+            .Functions
             .Register( PathNodeFunction.Name, () => new PathNodeFunction() );
 
         // act

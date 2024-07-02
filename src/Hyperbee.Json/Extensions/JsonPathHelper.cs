@@ -2,7 +2,7 @@
 
 namespace Hyperbee.Json.Extensions;
 
-public static class JsonHelper
+public static class JsonPathHelper
 {
     // conversion
 

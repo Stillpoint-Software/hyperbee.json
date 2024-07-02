@@ -47,7 +47,7 @@ public static class JsonElementExtensions
         if ( strB == null )
             return false;
 
-        var comparer = new JsonElementDeepEqualsComparer( options.MaxDepth );
+        var comparer = new JsonElementDeepEqualityComparer( options.MaxDepth );
         using var docB = JsonDocument.Parse( strB, options );
 
         return comparer.Equals( elmA, docB.RootElement );
@@ -55,7 +55,7 @@ public static class JsonElementExtensions
 
     public static bool DeepEquals( this JsonElement elmA, JsonElement elmB, JsonDocumentOptions options = default )
     {
-        var comparer = new JsonElementDeepEqualsComparer( options.MaxDepth );
+        var comparer = new JsonElementDeepEqualityComparer( options.MaxDepth );
         return comparer.Equals( elmA, elmB );
     }
 

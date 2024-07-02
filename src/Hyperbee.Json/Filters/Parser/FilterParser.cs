@@ -311,38 +311,38 @@ public class FilterParser<TNode> : FilterParser
         switch ( left.Operator )
         {
             case Operator.Equals:
-                left.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
 
                 left.Expression = Expression.Equal( left.Expression, right.Expression );
                 break;
             case Operator.NotEquals:
-                left.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
 
                 left.Expression = Expression.NotEqual( left.Expression, right.Expression );
                 break;
             case Operator.GreaterThan:
-                left.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
 
                 left.Expression = Expression.GreaterThan( left.Expression, right.Expression );
                 break;
             case Operator.GreaterThanOrEqual:
-                left.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
 
                 left.Expression = Expression.GreaterThanOrEqual( left.Expression, right.Expression );
                 break;
             case Operator.LessThan:
-                left.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
 
                 left.Expression = Expression.LessThan( left.Expression, right.Expression );
                 break;
             case Operator.LessThanOrEqual:
-                left.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = JsonComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
 
                 left.Expression = Expression.LessThanOrEqual( left.Expression, right.Expression );
                 break;

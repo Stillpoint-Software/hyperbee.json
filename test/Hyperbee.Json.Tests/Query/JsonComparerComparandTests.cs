@@ -26,8 +26,8 @@ public class JsonComparerComparandTests : JsonTestBase
     {
         var accessor = new NodeValueAccessor();
 
-        var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
-        var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
 
         var result = a == b;
 
@@ -48,8 +48,8 @@ public class JsonComparerComparandTests : JsonTestBase
     {
         var accessor = new NodeValueAccessor();
 
-        var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
-        var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
 
         var result = a >= b;
 
@@ -67,8 +67,8 @@ public class JsonComparerComparandTests : JsonTestBase
         var accessor = new NodeValueAccessor();
         var node = new List<JsonNode> { JsonNode.Parse( left )!["value"] };
 
-        var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, node );
-        var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, node );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
 
         var result = a == b;
 
@@ -85,8 +85,8 @@ public class JsonComparerComparandTests : JsonTestBase
     {
         var accessor = new NodeValueAccessor();
 
-        var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, JsonNode.Parse( left ) );
-        var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, JsonNode.Parse( left ) );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
 
         var result = a == b;
 
@@ -102,8 +102,8 @@ public class JsonComparerComparandTests : JsonTestBase
     {
         var accessor = new NodeValueAccessor();
 
-        var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
-        var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, JsonNode.Parse( right ) );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, JsonNode.Parse( right ) );
 
         var result = a == b;
 
@@ -115,8 +115,8 @@ public class JsonComparerComparandTests : JsonTestBase
     {
         var accessor = new NodeValueAccessor();
 
-        var a = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, new List<JsonNode>() );
-        var b = new JsonComparerExpressionFactory<JsonNode>.Comparand( accessor, 1 );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, new List<JsonNode>() );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, 1 );
 
         Assert.IsFalse( a < b );
         Assert.IsFalse( a <= b );

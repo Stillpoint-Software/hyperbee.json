@@ -115,7 +115,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         return left.DeepEquals( right );
     }
 
-    public bool TryGetNodeList( ReadOnlySpan<char> item, out IEnumerable<JsonElement> elements )
+    public bool TryParseNode( ReadOnlySpan<char> item, out JsonElement element )
     {
         var bytes = Encoding.UTF8.GetBytes( item.ToArray() );
         var reader = new Utf8JsonReader( bytes );
@@ -124,7 +124,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         {
             if ( JsonDocument.TryParseValue( ref reader, out var document ) )
             {
-                elements = [document.RootElement];
+                element = document.RootElement;
                 return true;
             }
         }
@@ -133,7 +133,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
             // ignored: fall through
         }
 
-        elements = [];
+        element = default;
         return false;
     }
 

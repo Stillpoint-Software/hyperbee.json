@@ -120,17 +120,16 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
 
-    public bool TryGetNodeList( ReadOnlySpan<char> item, out IEnumerable<JsonNode> nodes )
+    public bool TryParseNode( ReadOnlySpan<char> item, out JsonNode node )
     {
         try
         {
-            var json = JsonNode.Parse( item.ToString() );
-            nodes = [json];
+            node = JsonNode.Parse( item.ToString() );
             return true;
         }
         catch
         {
-            nodes = [];
+            node = null;
             return false;
         }
     }

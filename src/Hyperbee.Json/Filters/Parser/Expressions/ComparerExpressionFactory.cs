@@ -1,16 +1,15 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Text.Json;
 using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
-public static class JsonComparerExpressionFactory<TNode>
+public static class ComparerExpressionFactory<TNode>
 {
     // ReSharper disable once StaticMemberInGenericType
     private static readonly ConstantExpression CreateComparandExpression;
 
-    static JsonComparerExpressionFactory()
+    static ComparerExpressionFactory()
     {
         // Pre-compile the delegate to call the Comparand constructor
 
@@ -68,8 +67,7 @@ public static class JsonComparerExpressionFactory<TNode>
             var valueHash = Value switch
             {
                 IConvertible convertible => convertible.GetHashCode(),
-                IEnumerable<JsonElement> enumerable => enumerable.GetHashCode(),
-                JsonElement jsonElement => jsonElement.ValueKind.GetHashCode(),
+                IEnumerable<TNode> enumerable => enumerable.GetHashCode(),
                 _ => Value.GetHashCode()
             };
 
@@ -90,16 +88,16 @@ public static class JsonComparerExpressionFactory<TNode>
          *
          * 3. Compare NodeList to NodeList:
          *    - Two NodeLists are equal if they are sequence equal.
-         *    - Sequence equality should consider deep equality of JsonElement items.
+         *    - Sequence equality should consider deep equality of Node items.
          *    - Return 0 if sequences are equal.
          *    - Return -1 if the left sequence is less.
          *    - Return 1 if the left sequence is greater.
          *
          * 4. Compare NodeList to Value:
-         *    - A NodeList is equal to a value if any element in the NodeList matches the value.
-         *    - Return 0 if any element matches the value.
-         *    - Return -1 if the value is less than all elements.
-         *    - Return 1 if the value is greater than all elements.
+         *    - A NodeList is equal to a value if any node in the NodeList matches the value.
+         *    - Return 0 if any node matches the value.
+         *    - Return -1 if the value is less than all nodes.
+         *    - Return 1 if the value is greater than all nodes.
          *
          * 5. Compare Value to NodeList:
          *    - Similar to the above, true if the value is found in the NodeList.
@@ -206,11 +204,11 @@ public static class JsonComparerExpressionFactory<TNode>
                 lastCompare = CompareValues( itemValue, value );
 
                 if ( lastCompare == 0 )
-                    return 0; // Return 0 if any element matches the value
+                    return 0; // Return 0 if any node matches the value
             }
 
             if ( nodeCount == 0 )
-                return -1; // Return -1 if the list is empty (no elements match the value)
+                return -1; // Return -1 if the list is empty (no nodes match the value)
 
             return nodeCount != 1 ? -1 : lastCompare; // Return the last comparison if there is only one node
         }

@@ -30,7 +30,7 @@ public class JsonPathQueryParserTests
     [DataRow( "$..*", "{$|s};{..|g};{*|g}" )]
     [DataRow( """$.store.book[?(@path !== "$['store']['book'][0]")]""", """{$|s};{store|s};{book|s};{?(@path !== "$['store']['book'][0]")|g}""" )]
     [DataRow( """$..book[?(@.price == 8.99 && @.category == "fiction")]""", """{$|s};{..|g};{book|s};{?(@.price == 8.99 && @.category == "fiction")|g}""" )]
-    public void Should_tokenize_json_path( string jsonPath, string expected )
+    public void Should_TokenizeJsonPath( string jsonPath, string expected )
     {
         // act
         var pathSegment = JsonPathQueryParser.Parse( jsonPath );

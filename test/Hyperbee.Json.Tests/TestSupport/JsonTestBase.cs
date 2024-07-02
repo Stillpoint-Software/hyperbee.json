@@ -8,19 +8,7 @@ namespace Hyperbee.Json.Tests.TestSupport;
 
 public class JsonTestBase
 {
-    protected static string DocumentDefault { get; set; } = "JsonPath.json";
-
-    protected static JsonDocument ReadJsonDocument( string filename = null )
-    {
-        using var stream = GetManifestStream( filename );
-        return JsonDocument.Parse( stream! );
-    }
-
-    protected static JsonNode ReadJsonNode( string filename = null )
-    {
-        using var stream = GetManifestStream( filename );
-        return JsonNode.Parse( stream! );
-    }
+    protected static string DocumentDefault { get; set; } = "BookStore.json";
 
     protected static string ReadJsonString( string filename = null )
     {
@@ -42,39 +30,33 @@ public class JsonTestBase
     {
         var type = typeof( TType );
 
+        var stream = GetManifestStream( filename );
+
         if ( type == typeof( JsonDocument ) )
-            return (TType) (object) ReadJsonDocument( filename );
+            return (TType) (object) JsonDocument.Parse( stream! );
+
+        if ( type == typeof( JsonElement ) )
+            return (TType) (object) JsonDocument.Parse( stream! ).RootElement;
 
         if ( type == typeof( JsonNode ) )
-            return (TType) (object) ReadJsonNode( filename );
+            return (TType) (object) JsonNode.Parse( stream! );
 
         throw new NotSupportedException();
     }
 
-    public static object GetDocument( Type target, string filename = null )
-    {
-        if ( target == typeof( JsonDocument ) )
-            return GetDocument<JsonDocument>( filename );
-
-        if ( target == typeof( JsonNode ) )
-            return GetDocument<JsonNode>( filename );
-
-        throw new NotSupportedException();
-    }
-
-    public static IJsonPathProxy GetDocumentProxy( Type target, string filename = null )
+    public static IJsonPathSource GetDocumentFromResource( Type target, string filename = null )
     {
         var source = ReadJsonString( filename );
-        return GetDocumentProxyFromSource( target, source );
+        return GetDocumentFromSource( target, source );
     }
 
-    public static IJsonPathProxy GetDocumentProxyFromSource( Type target, string source )
+    public static IJsonPathSource GetDocumentFromSource( Type target, string source )
     {
         if ( target == typeof( JsonDocument ) )
-            return new JsonDocumentProxy( source );
+            return new JsonDocumentSource( source );
 
         if ( target == typeof( JsonNode ) )
-            return new JsonNodeProxy( source );
+            return new JsonNodeSource( source );
 
         throw new NotSupportedException();
     }

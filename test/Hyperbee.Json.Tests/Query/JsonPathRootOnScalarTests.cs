@@ -15,16 +15,16 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalar( string query, Type sourceType )
     {
+        // consensus: none
+
         const string json = "42";
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$" )
+            source.FromJsonPathPointer( "$" )
         };
-
-        // no consensus
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
         Assert.IsTrue( JsonValueHelper.GetInt32( matches.First() ) == 42 );
@@ -36,12 +36,12 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     public void RootOnScalarFalse( string query, Type sourceType )
     {
         const string json = "false";
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$" )
+            source.FromJsonPathPointer( "$" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
@@ -54,12 +54,12 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     public void RootOnScalarTrue( string query, Type sourceType )
     {
         const string json = "true";
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$" )
+            source.FromJsonPathPointer( "$" )
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

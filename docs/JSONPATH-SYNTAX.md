@@ -1,17 +1,22 @@
 # JSONPath Syntax Reference
 
-JSONPath is a query language for JSON, similar to XPath for XML. It allows you to extract specific values from JSON documents. 
-This page outlines the syntax and operators supported by Hyperbee.Json.
+JSONPath is a query language for JSON that allows you to extract specific values from JSON documents. 
+This page outlines the syntax and operators supported by `Hyperbee.Json`.
 
-## Basic Syntax
+## Basic Syntax and Operators
 
 ### Root Node
 
-`$` Refers to the root object or array.
+`$` is used as the root node identifier. $ refers to the entire JSON document, serving as the starting 
+point for any JSONPath expression. 
+
+For instance, the expression `$.store.book` would navigate from the root of the JSON document to the 
+store object and then to the book array within that object.
 
 ### Child Operator
 
-`.` Access Child Member.
+`.` is used to select the child elements of a given node. It helps to navigate through the JSON 
+structure by accessing the properties of objects and elements of arrays directly from their parent nodes.
 
 | Expression             | Description                                           
 |------------------------|-------------------------------------------------------
@@ -476,4 +481,3 @@ Filters can be combined using logical operators `&&` (and) and `||` (or).
 
 - Stefan Goessner for the [original JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
-

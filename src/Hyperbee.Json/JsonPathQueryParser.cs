@@ -27,7 +27,7 @@ public enum SelectorKind
     Descendant = 0x200 | Group
 }
 
-public static class JsonPathQueryParser
+internal static class JsonPathQueryParser
 {
     private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
 
@@ -83,6 +83,8 @@ public static class JsonPathQueryParser
 
         var tokens = new List<JsonPathSegment>();
 
+        query = query.TrimEnd(); // remove trailing whitespace to simplify parsing
+
         var i = 0;
         var n = query.Length;
 
@@ -114,6 +116,10 @@ public static class JsonPathQueryParser
                         case '$':
                             if ( i < n && query[i] != '.' && query[i] != '[' )
                                 throw new NotSupportedException( "Invalid character after `$`." );
+
+                            if ( query[^1] == '.' && query[^2] == '.' )
+                                throw new NotSupportedException( "`..` cannot be the last segment." );
+
                             state = State.DotChild;
                             break;
                         default:
@@ -354,10 +360,10 @@ public static class JsonPathQueryParser
 
         // return tokenized query as a segment list
 
-        return TokensAsSegment( tokens );
+        return TokensToSegment( tokens );
     }
 
-    private static JsonPathSegment TokensAsSegment( IList<JsonPathSegment> tokens )
+    private static JsonPathSegment TokensToSegment( IList<JsonPathSegment> tokens )
     {
         if ( tokens == null || tokens.Count == 0 )
             return JsonPathSegment.Final;

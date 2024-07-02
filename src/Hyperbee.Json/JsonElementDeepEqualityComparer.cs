@@ -16,7 +16,7 @@ namespace Hyperbee.Json;
 
 // example 1:
 //
-// var comparer = new JsonElementDeepEqualsComparer();
+// var comparer = new JsonElementDeepEqualityComparer();
 // using var doc1 = JsonDocument.Parse( referenceJson );
 // using var doc2 = JsonDocument.Parse( resultJson );
 //
@@ -30,13 +30,13 @@ namespace Hyperbee.Json;
 // var result = doc1.RootElement.DeepEquals( doc2.RootElement );
 //
 
-public class JsonElementDeepEqualsComparer : IEqualityComparer<JsonElement>
+public class JsonElementDeepEqualityComparer : IEqualityComparer<JsonElement>
 {
-    public JsonElementDeepEqualsComparer()
+    public JsonElementDeepEqualityComparer()
     {
     }
 
-    public JsonElementDeepEqualsComparer( int maxHashDepth ) => MaxHashDepth = maxHashDepth;
+    public JsonElementDeepEqualityComparer( int maxHashDepth ) => MaxHashDepth = maxHashDepth;
 
     private int MaxHashDepth { get; }
 

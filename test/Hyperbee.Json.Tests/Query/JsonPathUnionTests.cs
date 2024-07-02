@@ -15,21 +15,21 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$[0,0]", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromArray( string query, Type sourceType )
     {
+        // consensus: ["a", "a"]
+
         const string json = """
         [
           "a"
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" ),
-            source.GetPropertyFromPath( "$[0]" )
+            source.FromJsonPathPointer( "$[0]" ),
+            source.FromJsonPathPointer( "$[0]" )
         };
-
-        // consensus: ["a", "a"]
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -39,21 +39,21 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['a','a']", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromObject( string query, Type sourceType )
     {
+        // consensus: none
+
         const string json = """
         {
           "a": 1
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['a']" ),
-            source.GetPropertyFromPath( "$['a']" )
+            source.FromJsonPathPointer( "$.a" ),
+            source.FromJsonPathPointer( "$.a" )
         };
-
-        // no consensus
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -65,6 +65,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$[?@.key<3,?@.key>6]", typeof( JsonNode ) )]
     public void UnionWithFilter( string query, Type sourceType )
     {
+        // consensus: none
+
         const string json = """
         [
           { "key": 1 },
@@ -77,20 +79,18 @@ public class JsonPathUnionTests : JsonTestBase
           { "key": 4 }
         ]
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$[0]" ), // key: 1
-            source.GetPropertyFromPath( "$[5]" ), // key: 2
+            source.FromJsonPathPointer( "$[0]" ), // key: 1
+            source.FromJsonPathPointer( "$[5]" ), // key: 2
 
-            source.GetPropertyFromPath( "$[1]" ), // key: 8 
-            source.GetPropertyFromPath( "$[3]" ), // key: 10
-            source.GetPropertyFromPath( "$[4]" ) // key: 7 
+            source.FromJsonPathPointer( "$[1]" ), // key: 8 
+            source.FromJsonPathPointer( "$[3]" ), // key: 10
+            source.FromJsonPathPointer( "$[4]" ) // key: 7 
         };
-
-        // no consensus
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -100,22 +100,22 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['key','another']", typeof( JsonNode ) )]
     public void UnionWithKeys( string query, Type sourceType )
     {
+        // consensus: ["value", "entry"]
+
         const string json = """
         {
           "key": "value",
           "another": "entry"
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['key']" ),
-            source.GetPropertyFromPath( "$['another']" )
+            source.FromJsonPathPointer( "$.key" ),
+            source.FromJsonPathPointer( "$.another" )
         };
-
-        // consensus: ["value", "entry"]
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -125,6 +125,8 @@ public class JsonPathUnionTests : JsonTestBase
     [DataRow( "$['key','another','thing1']", typeof( JsonNode ) )]
     public void UnionWithMultipleKeys( string query, Type sourceType )
     {
+        // consensus: ["value", "entry"]
+
         const string json = """
         {
           "key": "value",
@@ -132,18 +134,71 @@ public class JsonPathUnionTests : JsonTestBase
           "thing1": "thing2"
         }
         """;
-        var source = GetDocumentProxyFromSource( sourceType, json );
+        var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.GetPropertyFromPath( "$['key']" ),
-            source.GetPropertyFromPath( "$['another']" ),
-            source.GetPropertyFromPath( "$['thing1']" )
+            source.FromJsonPathPointer( "$.key" ),
+            source.FromJsonPathPointer( "$.another" ),
+            source.FromJsonPathPointer( "$.thing1" )
         };
 
-        // consensus: ["value", "entry"]
-
         Assert.IsTrue( expected.SequenceEqual( matches ) );
+    }
+
+    [DataTestMethod]
+    [DataRow( "$..['c','d']", typeof( JsonDocument ) )]
+    [DataRow( "$..['c','d']", typeof( JsonNode ) )]
+    public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )
+    {
+        // consensus: ["cc1", "cc2", "cc3", "cc5", "dd1", "dd2", "dd4"]
+        //            any order
+
+        const string json = """
+        [
+          {
+            "c": "cc1",
+            "d": "dd1",
+            "e": "ee1"
+          },
+          {
+            "c": "cc2",
+            "child": {
+              "d": "dd2"
+             }
+          },
+          {
+            "c": "cc3"
+          },
+          {
+            "d": "dd4"
+          },
+          {
+            "child": {
+              "c": "cc5"
+            }
+          }
+        ]
+        """;
+
+        var source = GetDocumentFromSource( sourceType, json );
+
+        var matches = source.Select( query );
+        var expected = new[]
+        {
+            source.FromJsonPathPointer( "$[0].c" ),
+            source.FromJsonPathPointer( "$[0].d" ),
+            source.FromJsonPathPointer( "$[1].c" ),
+            source.FromJsonPathPointer( "$[1].child.d" ),
+            source.FromJsonPathPointer( "$[2].c" ),
+            source.FromJsonPathPointer( "$[3].d" ),
+            source.FromJsonPathPointer( "$[4].child.c" )
+
+        };
+
+        var equals = matches.SequenceEqual( expected );
+
+        Assert.IsTrue( equals );
     }
 }

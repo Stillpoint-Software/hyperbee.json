@@ -23,7 +23,7 @@ jobs:
 
     steps:
     - name: Check For Valid Prerelease
-      if: ${{ env.ALLOW_PRERELEASE == 'true' && github.event.inputs.is_prerelease == 'false' || github.ref == 'refs/heads/main'}}
+      if: ${{ ( env.ALLOW_PRERELEASE == 'true' && github.event.inputs.is_prerelease == 'false' ) || ( github.ref == 'refs/heads/main' && github.event.inputs.is_prerelease == 'true' ) }}
       run: |
         echo "Prereleases should not be triggered on the main branch, please use development or hotfix"
         exit 1

@@ -83,7 +83,7 @@ internal static class JsonPathQueryParser
 
         var tokens = new List<JsonPathSegment>();
 
-        query = query.TrimEnd();
+        query = query.TrimEnd(); // remove trailing whitespace to simplify parsing
 
         var i = 0;
         var n = query.Length;

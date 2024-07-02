@@ -70,18 +70,10 @@ public static class JsonPath<TNode>
         if ( string.IsNullOrWhiteSpace( query ) ) // invalid per the RFC ABNF
             return []; // Consensus: return empty array for empty query
 
-        if ( query == "$" || query == "@" )
+        if ( query == "$" || query == "@" ) // quick out for everything
             return [value];
 
-        var segmentNext = JsonPathQueryParser.Parse( query );
-
-        if ( !segmentNext.IsFinal )
-        {
-            var selector = segmentNext.Selectors[0].Value;
-
-            if ( selector == "$" || selector == "@" )
-                segmentNext = segmentNext.Next;
-        }
+        var segmentNext = JsonPathQueryParser.Parse( query ).Next; // The first segment is always the root; skip it
 
         return EnumerateMatches( root, new NodeArgs( default, value, default, segmentNext, NodeFlags.Default ), processor );
     }

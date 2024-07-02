@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Tests.Parsers;
@@ -10,10 +11,13 @@ public class JsonPathQueryParserTests
     [DataRow( "$", "{$|s}" )]
     [DataRow( "$.two.some", "{$|s};{two|s};{some|s}" )]
     [DataRow( "$.thing[1:2:3]", "{$|s};{thing|s};{1:2:3|g}" )]
+    [DataRow( "$.'thing'[1:2:3]", "{$|s};{thing|s};{1:2:3|g}" )]
     [DataRow( "$..thing[?(@.x == 1)]", "{$|s};{..|g};{thing|s};{?(@.x == 1)|g}" )]
     [DataRow( "$['two.some']", "{$|s};{two.some|s}" )]
     [DataRow( "$.two.some.thing['this.or.that']", "{$|s};{two|s};{some|s};{thing|s};{this.or.that|s}" )]
     [DataRow( "$.store.book[*].author", "{$|s};{store|s};{book|s};{*|g};{author|s}" )]
+    [DataRow( "$.store.'book'[*].author", "{$|s};{store|s};{book|s};{*|g};{author|s}" )]
+    [DataRow( "$.store.book[*].'author'", "{$|s};{store|s};{book|s};{*|g};{author|s}" )]
     [DataRow( "@..author", "{@|s};{..|g};{author|s}" )]
     [DataRow( "$.store.*", "{$|s};{store|s};{*|g}" )]
     [DataRow( "$.store..price", "{$|s};{store|s};{..|g};{price|s}" )]
@@ -55,5 +59,19 @@ public class JsonPathQueryParserTests
                 return $"{{{selectorsString}|{selectorType}}}";
             }
         }
+    }
+
+    [TestMethod]
+    public void ShouldFilterExpressionWithParentAxisOperator()
+    {
+        // NOT-SUPPORTED: parent axis operator is not supported
+
+        // act & assert
+        var jsonPath = "$[*].bookmarks[ ? (@.page == 45)]^^^";
+
+        Assert.ThrowsException<NotSupportedException>( () =>
+        {
+            var pathSegment = JsonPathQueryParser.Parse( jsonPath );
+        } );
     }
 }

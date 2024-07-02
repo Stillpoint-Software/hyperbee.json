@@ -67,7 +67,7 @@ public static class JsonPath<TNode>
 
     private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        if ( string.IsNullOrWhiteSpace( query ) )
+        if ( string.IsNullOrWhiteSpace( query ) ) // invalid per the RFC ABNF
             return []; // Consensus: return empty array for empty query
 
         if ( query == "$" || query == "@" )

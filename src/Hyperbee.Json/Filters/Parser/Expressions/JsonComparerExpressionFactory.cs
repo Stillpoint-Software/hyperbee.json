@@ -127,32 +127,41 @@ public static class JsonComparerExpressionFactory<TNode>
 
             if ( left.Value is IEnumerable<TNode> leftEnumerable1 )
             {
-                var compare = CompareEnumerableToValue( left.Accessor, leftEnumerable1, right.Value, out var count );
-                return NormalizeResult( compare, count, lessThan );
+                var compare = CompareEnumerableToValue( left.Accessor, leftEnumerable1, right.Value, out var nodeCount );
+                return NormalizeResult( compare, nodeCount, lessThan );
             }
 
             if ( right.Value is IEnumerable<TNode> rightEnumerable1 )
             {
-                var compare = CompareEnumerableToValue( left.Accessor, rightEnumerable1, left.Value, out var count );
-                return NormalizeResult( compare, count, lessThan );
+                var compare = CompareEnumerableToValue( left.Accessor, rightEnumerable1, left.Value, out var nodeCount );
+                return NormalizeResult( compare, nodeCount, lessThan );
             }
 
             return CompareValues( left.Value, right.Value );
 
-            static int NormalizeResult( int compare, int count, bool lessThan )
+            static int NormalizeResult( int compare, int nodeCount, bool lessThan )
             {
-                // When comparing a NodeList to a Value, ('<', '<=', '>', '>=') operators only
-                // have meaning when the NodeList has a single element.
+                // When comparing a NodeList to a Value, '<' and '>' type operators only have meaning when the
+                // NodeList has a single node.
                 //
-                // When there is a single element, the comparison is based on the unwrapped mode value. 
-                // This results in a meaningful value comparison for equality and for greater-than and less-than.
+                // 1. When there is a single node, the comparison is based on the unwrapped node value. 
+                // This results in a meaningful value to value comparison for equality, and greater-than and
+                // less-than operations.
                 //
-                // When there is more than on element, or an empty list, equality is based on finding the value
-                // in the set. In the case of comparing a value to a set, greater-than and less-than operations
-                // are not meaningful. In those cases we want to normalize the result so that greater-than and
-                // less-than always return false, regardless of the order of the comparands.
+                // 2. When there is more than on node, or an empty node list, equality is based on finding the
+                // value in the set of nodes. The result is true if the value is found in the set, and false
+                // otherwise.
+                // 
+                // In this case, the result is not meaningful for greater-than and less-than operations, since
+                // the comparison is based on the set of nodes, and not on two single values.
+                //
+                // However, the comparison result will still be used in the context of a greater-than or less-than
+                // operation, which will yield indeterminate results based on the left or right order of operands.
+                // To handle this, we need to normalize the result of the comparison. In this case, we want to
+                // normalize the result so that greater-than and less-than always return false, regardless of the
+                // left or right order of the comparands.
 
-                if ( lessThan && count != 1 ) // Test for a set comparison
+                if ( lessThan && nodeCount != 1 ) // Test for an empty or multi-node set
                 {
                     // invert the comparison result to make sure less-than and greater-than return false
                     return -compare;
@@ -182,14 +191,14 @@ public static class JsonComparerExpressionFactory<TNode>
             return 0; // Sequences are equal
         }
 
-        private static int CompareEnumerableToValue( IValueAccessor<TNode> accessor, IEnumerable<TNode> enumeration, object value, out int count )
+        private static int CompareEnumerableToValue( IValueAccessor<TNode> accessor, IEnumerable<TNode> enumeration, object value, out int nodeCount )
         {
-            count = 0;
+            nodeCount = 0;
             var lastCompare = -1;
 
             foreach ( var item in enumeration )
             {
-                count++;
+                nodeCount++;
 
                 if ( !accessor.TryGetValueFromNode( item, out var itemValue ) )
                     continue; // Skip if value cannot be extracted
@@ -200,10 +209,10 @@ public static class JsonComparerExpressionFactory<TNode>
                     return 0; // Return 0 if any element matches the value
             }
 
-            if ( count == 0 )
+            if ( nodeCount == 0 )
                 return -1; // Return -1 if the list is empty (no elements match the value)
 
-            return count != 1 ? -1 : lastCompare; // Return the last comparison if there is only one element
+            return nodeCount != 1 ? -1 : lastCompare; // Return the last comparison if there is only one node
         }
 
         private static int CompareValues( object left, object right )

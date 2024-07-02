@@ -56,6 +56,11 @@ jobs:
         latest_release=$(echo "$releases" | jq -r --arg build_version "$build_version" 'map(select(.tagName | startswith($build_version))) | sort_by(.createdAt) | reverse | .[0] | .tagName')
 
         version_suffix=${latest_release#*$build_version-}
+
+        if [ "$version_suffix" == "$build_version" ]; then
+          version_suffix=""
+        fi
+
         echo "VERSION_SUFFIX=$version_suffix" >> $GITHUB_ENV
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

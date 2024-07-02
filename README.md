@@ -208,11 +208,11 @@ JsonPath expressions support basic methods calls.
 
 | Method     | Description                                            | Example                                                
 |------------|--------------------------------------------------------|------------------------------------------------
-| `length()` | Returns the length of an array or string.              | `$.store.book[?(@.title.length() > 5)]`                
-| `count()`  | Returns the count of matching elements.                | `$.store.book[?(@.authors.count() > 1)]`               
-| `match()`  | Returns true if a string matches a regular expression. | `$.store.book[?(@.title.match('.*Century.*'))]`   
-| `search()` | Searches for a string within another string.           | `$.store.book[?(@.title.search('Sword'))]`             
-| `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(@.price.value() < 10)]`                
+| `length()` | Returns the length of an array or string.              | `$.store.book[?(length(@.title) > 5)]`                
+| `count()`  | Returns the count of matching elements.                | `$.store.book[?(count(@.authors) > 1)]`               
+| `match()`  | Returns true if a string matches a regular expression. | `$.store.book[?(match(@.title, '.*Century.*'))]`   
+| `search()` | Searches for a string within another string.           | `$.store.book[?(search(@.title, 'Sword'))]`             
+| `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(value(@.price) < 10)]`                
 
 
 You can extend the supported function set by registering your own functions.

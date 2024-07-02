@@ -16,6 +16,9 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context )
         {
+            if ( item.IsEmpty )
+                return null;
+
             if ( item[0] != '$' && item[0] != '@' )
                 return null;
 

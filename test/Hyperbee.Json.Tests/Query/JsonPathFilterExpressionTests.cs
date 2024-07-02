@@ -490,6 +490,44 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     }
 
     [DataTestMethod]
+    [DataRow( "$[?(@.a[?(@.price>10)])]", typeof( JsonDocument ) )]
+    [DataRow( "$[?(@.a[?(@.price>10)])]", typeof( JsonNode ) )]
+    [ExpectedException( typeof( NotSupportedException ) )]
+    public void FilterExpressionWithSubFilter( string query, Type sourceType )
+    {
+        // consensus: NOT_SUPPORTED
+
+        var json =
+            """
+            [
+                {
+                    "a": [{"price": 1}, {"price": 3}]
+                },
+                {
+                    "a": [{"price": 11}]
+                },
+                {
+                    "a": [{"price": 8}, {"price": 12}, {"price": 3}]
+                },
+                {
+                    "a": []
+                }
+            ]
+            """;
+
+        var source = GetDocumentFromSource( sourceType, json );
+
+        var matches = source.Select( query );
+        var expected = new[]
+        {
+            source.FromJsonPathPointer( "$[1]" ),
+            source.FromJsonPathPointer( "$[2]" )
+        };
+
+        Assert.IsTrue( expected.SequenceEqual( matches ) );
+    }
+
+    [DataTestMethod]
     [DataRow( "$[?((@.key<44)==false)]", typeof( JsonDocument ) )]
     [DataRow( "$[?((@.key<44)==false)]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsBooleanExpressionValue( string query, Type sourceType )

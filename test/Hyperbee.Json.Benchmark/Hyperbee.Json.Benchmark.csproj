@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
     <PackageReference Include="JsonCons.JsonPath" Version="1.1.0" />
-    <PackageReference Include="JsonPath.Net" Version="1.1.0" />
+    <PackageReference Include="JsonPath.Net" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{13CB9B41-0
 		docs\JSONPATH-SYNTAX.md = docs\JSONPATH-SYNTAX.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperbee.Json.Cts", "test\Hyperbee.Json.Cts\Hyperbee.Json.Cts.csproj", "{CC1D3E7F-E6F1-432B-B4D1-9402AED24119}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC1D3E7F-E6F1-432B-B4D1-9402AED24119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC1D3E7F-E6F1-432B-B4D1-9402AED24119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC1D3E7F-E6F1-432B-B4D1-9402AED24119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC1D3E7F-E6F1-432B-B4D1-9402AED24119}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{97886205-1467-4EE6-B3DA-496CA3D086E4} = {F9B24CD9-E06B-4834-84CB-8C29E5F10BE0}
 		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9} = {F9B24CD9-E06B-4834-84CB-8C29E5F10BE0}
 		{13CB9B41-0462-4812-8B13-0BFD17F2BC18} = {870D9301-BE3D-44EA-BF9C-FCC2E87FE4CD}
+		{CC1D3E7F-E6F1-432B-B4D1-9402AED24119} = {F9B24CD9-E06B-4834-84CB-8C29E5F10BE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32874F5B-B467-4F28-A8E2-82C2536FB228}

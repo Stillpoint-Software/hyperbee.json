@@ -23,7 +23,7 @@ public static class JsonPathHelper
                     case SelectorKind.Root:
                         builder.Append( "'$'" );
                         break;
-                    case SelectorKind.Dot:
+                    case SelectorKind.DotName:
                     case SelectorKind.Name:
                         builder.Append( $"'{selector.Value}'" );
                         break;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
@@ -15,12 +15,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [["first","second"]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -53,12 +53,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -75,12 +75,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"☺":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -97,12 +97,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"_":"A","_foo":"B"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -135,7 +135,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -147,7 +147,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -159,17 +159,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [["A","B"],["B","A"]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -181,12 +181,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["first","second"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -203,12 +203,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["first","second"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -225,17 +225,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"x":{"a":"Ax","b":"Bx"},"y":{"a":"Ay","b":"By"}}
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [["Ax","Ay"],["Ay","Ax"]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -247,12 +247,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,2]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -277,12 +277,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -299,12 +299,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":1,"b":2}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -321,12 +321,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,5,6]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -343,12 +343,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,0,1,2]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -365,12 +365,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -387,12 +387,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1,2,3,4,5,6,7,8,9,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -409,17 +409,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [["A","B","A"],["B","A","A"]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -431,12 +431,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1,2,3,4,5,6,7,8,9,0,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -453,12 +453,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1,2,0,1,2]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -483,12 +483,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"o":[0,1,[2,3]]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,3]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -505,12 +505,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"o":[{"a":"b"},{"a":"c"}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["b","c"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -527,12 +527,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -549,12 +549,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -571,17 +571,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [[[1]],[2]]
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [[[[1]],[2],[1],1,2],[[[1]],[2],[1],2,1]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -593,17 +593,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":{"c":{"e":1}},"b":{"d":2}}
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [[{"c":{"e":1}},{"d":2},{"e":1},1,2],[{"c":{"e":1}},{"d":2},{"e":1},2,1],[{"c":{"e":1}},{"d":2},2,{"e":1},1],[{"d":2},{"c":{"e":1}},{"e":1},1,2],[{"d":2},{"c":{"e":1}},{"e":1},2,1],[{"d":2},{"c":{"e":1}},2,{"e":1},1]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -615,12 +615,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"b"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["b"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -637,12 +637,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"o":[{"a":"b"}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [[{"a":"b"}],{"a":"b"},"b"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -659,12 +659,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["b","e","c","f"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -681,17 +681,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"x":{"a":"b","d":"e"},"y":{"a":"c","d":"f"}}
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [["b","e","c","f"],["c","f","b","e"]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -711,17 +711,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":1,"b":null}
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [[1,null],[null,1]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -733,12 +733,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -755,12 +755,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":null,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -777,12 +777,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -799,12 +799,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"1","d":"e"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"1","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -821,12 +821,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -843,12 +843,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"1","d":"e"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"1","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -865,12 +865,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":"c","d":"f"},{"a":2,"d":"f"},{"a":"1","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -887,12 +887,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":null,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -909,7 +909,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -921,12 +921,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":true,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":true,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -943,12 +943,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":false,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -965,12 +965,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [1,null,true,{"a":"b"},[false]]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,null,true,{"a":"b"},[false]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -987,12 +987,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"b":[1,2]},{"a":[[1,[2]]],"b":[[1,[2]]]},{"a":[[1,[2]]],"b":[[[2],1]]},{"a":[[1,[2]]],"b":[[1,2]]}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":[[1,[2]]],"b":[[1,[2]]]}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1009,12 +1009,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":2}}}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1031,12 +1031,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1053,12 +1053,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"1","d":"e"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1075,12 +1075,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1097,12 +1097,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1119,12 +1119,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"1","d":"e"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1141,12 +1141,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1163,12 +1163,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":2,"d":"f"},{"a":"1","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1185,12 +1185,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1207,12 +1207,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1229,12 +1229,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1251,12 +1251,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":true,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1273,12 +1273,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1295,12 +1295,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1317,12 +1317,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1339,12 +1339,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1361,7 +1361,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -1373,7 +1373,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":true,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -1385,7 +1385,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -1397,12 +1397,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1419,12 +1419,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1441,12 +1441,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"e"},{"a":10,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1463,12 +1463,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":null,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1485,12 +1485,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":true,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":true,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1507,12 +1507,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":false,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1529,12 +1529,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1551,12 +1551,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1573,12 +1573,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":20,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1595,7 +1595,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -1607,7 +1607,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":true,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -1619,7 +1619,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -1631,12 +1631,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1653,12 +1653,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1675,12 +1675,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":10,"d":"e"},{"a":20,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1697,12 +1697,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":null,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1719,12 +1719,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":true,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":true,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1741,12 +1741,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":false,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1763,12 +1763,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"d":"e"},{"a":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1785,12 +1785,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"b":false},{"b":false},{"c":false}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":false,"b":false}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1807,12 +1807,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":false,"b":false},{"b":false},{"c":false}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":false,"b":false},{"b":false}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1829,12 +1829,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":-10,"d":"e"},{"a":5,"d":"f"},{"a":20,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":5,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1851,12 +1851,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"c","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1873,12 +1873,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"a","d":"e"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1895,12 +1895,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1917,12 +1917,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":null,"d":"e"},{"d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1939,12 +1939,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [1,[],[2],{},{"a":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [[2],{"a":3}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1961,12 +1961,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [1,[],[2],[2,3],{"a":3},{"b":4},{"a":3,"b":4}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [[2],[2,3],{"a":3},{"a":3,"b":4}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -1983,12 +1983,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [1,[],[2],[2,3,4],{},{"a":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [[2],[2,3,4]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2005,12 +2005,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [1,[],[2],{},{"a":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,[],{}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2059,12 +2059,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [[0],[0,1],[0,1,2],[42]]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [[0,1,2],[42]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2081,7 +2081,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":1}
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -2093,7 +2093,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [[5,6]]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -2105,7 +2105,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"0":5}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -2357,12 +2357,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2379,12 +2379,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2401,12 +2401,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2423,12 +2423,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2445,12 +2445,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2467,12 +2467,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2489,12 +2489,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"b":"c","d":"f"},{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2511,12 +2511,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":0,"d":"e"},{"a":0.1,"d":"f"},{"a":"0","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":0,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2533,12 +2533,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2555,12 +2555,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":100,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2577,12 +2577,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":100,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2599,12 +2599,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":0.01,"d":"e"},{"a":0.02,"d":"f"},{"a":"0.01","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":0.01,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2621,12 +2621,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1.1,"d":"e"},{"a":1,"d":"f"},{"a":"1.1","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1.1,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2651,12 +2651,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":110,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2673,12 +2673,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":110,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2695,12 +2695,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":0.011,"d":"e"},{"a":0.012,"d":"f"},{"a":"0.011","d":"g"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":0.011,"d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2717,12 +2717,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"c":"cd","values":[{"a":"ab"},{"c":"d"},{"a":null}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"c":"d"},{"a":null}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2739,12 +2739,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"c":3}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2761,12 +2761,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"b":2},{"c":3}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2783,17 +2783,17 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":1,"b":2,"c":3}
-""");
+""" );
         var results = document.Select(selector);
-        var expected = JsonNode.Parse(
+        var expectedResults = JsonNode.Parse(
 """
 [[1,2],[2,1]]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
         {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![0]![count], result));
+            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
             count++;
         }
     }
@@ -2805,12 +2805,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2827,12 +2827,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2849,12 +2849,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":2},{"a":1,"c":3},{"b":2,"c":3},{"a":1},{"b":2},{"c":3},{"a":1,"b":2,"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"c":3},{"b":2,"c":3},{"a":1,"b":2,"c":3}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2871,12 +2871,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"a":1,"b":2},{"a":1,"c":2},{"b":2},{"c":2},{"a":1,"b":2,"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2},{"a":1,"c":2},{"a":1,"b":2,"c":3}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2893,12 +2893,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["quoted' literal","a","quoted\\' literal"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["quoted' literal"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2915,12 +2915,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["quoted\" literal"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2937,12 +2937,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["quoted' literal","a","quoted\\' literal","'quoted\" literal'"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["quoted' literal"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -2955,16 +2955,16 @@ public class CtsJsonTest
     [TestMethod("filter, string literal, escaped double quote in double quotes")]
     public void Test_FilterStringLiteralEscapedDoubleQuoteInDoubleQuotes_Number167()
     {
-        var selector = "$[?@ == \"quoted\\" literal\"]";
+        var selector = "$[?@ == \"quoted\\\" literal\"]";
         var document = JsonNode.Parse( 
 """
 ["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["quoted\" literal"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3077,12 +3077,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["first"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3099,12 +3099,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["second"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3121,7 +3121,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -3149,12 +3149,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["second"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3171,12 +3171,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["first"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3193,7 +3193,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -3205,7 +3205,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"foo":1}
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -3233,12 +3233,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3255,7 +3255,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -3267,7 +3267,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -3535,12 +3535,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {" ":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3553,16 +3553,16 @@ public class CtsJsonTest
     [TestMethod("name selector, double quotes, escaped double quote")]
     public void Test_NameSelectorDoubleQuotesEscapedDoubleQuote_Number227()
     {
-        var selector = "$[\"\\"\"]";
+        var selector = "$[\"\\\"\"]";
         var document = JsonNode.Parse( 
 """
 {"\"":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3579,12 +3579,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\\":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3597,16 +3597,16 @@ public class CtsJsonTest
     [TestMethod("name selector, double quotes, escaped solidus")]
     public void Test_NameSelectorDoubleQuotesEscapedSolidus_Number229()
     {
-        var selector = "$[\"\/\"]";
+        var selector = "$[\"\\/\"]";
         var document = JsonNode.Parse( 
 """
 {"/":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3623,12 +3623,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\b":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3645,12 +3645,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\f":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3667,12 +3667,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\n":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3689,12 +3689,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\r":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3711,12 +3711,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\t":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3733,12 +3733,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"☺":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3755,12 +3755,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"☺":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3777,12 +3777,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"𝄞":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3799,12 +3799,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"😀":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3833,7 +3833,7 @@ public class CtsJsonTest
     [TestMethod("name selector, double quotes, incomplete escape")]
     public void Test_NameSelectorDoubleQuotesIncompleteEscape_Number241()
     {        
-        var selector = "$[\"\\"]";
+        var selector = "$[\"\\\"]";
         var document = new JsonObject(); // Empty node
         Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
     }
@@ -3845,12 +3845,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -3867,7 +3867,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B"}
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -3879,7 +3879,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 ["first","second"]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -4147,12 +4147,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {" ":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4169,12 +4169,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"'":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4191,12 +4191,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\\":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4209,16 +4209,16 @@ public class CtsJsonTest
     [TestMethod("name selector, single quotes, escaped solidus")]
     public void Test_NameSelectorSingleQuotesEscapedSolidus_Number280()
     {
-        var selector = "$['\/']";
+        var selector = "$['\\/']";
         var document = JsonNode.Parse( 
 """
 {"/":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4235,12 +4235,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\b":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4257,12 +4257,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\f":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4279,12 +4279,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\n":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4301,12 +4301,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\r":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4323,12 +4323,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"\t":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4345,12 +4345,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"☺":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4367,12 +4367,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"☺":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4389,12 +4389,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"𝄞":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4411,12 +4411,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"😀":"A"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["A"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4429,7 +4429,7 @@ public class CtsJsonTest
     [TestMethod("name selector, single quotes, invalid escaped double quote")]
     public void Test_NameSelectorSingleQuotesInvalidEscapedDoubleQuote_Number290()
     {        
-        var selector = "$['\\"']";
+        var selector = "$['\\\"']";
         var document = new JsonObject(); // Empty node
         Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
     }
@@ -4457,12 +4457,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B","":"C"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["C"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4479,12 +4479,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 {"a":"A","b":"B","":"C"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["C"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4501,12 +4501,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,2]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4523,12 +4523,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,3,5]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4545,12 +4545,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1,2,3]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4567,12 +4567,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1,2,3]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4589,12 +4589,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4611,12 +4611,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,2,4,6,8]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4633,12 +4633,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [3,2,1,0]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4655,12 +4655,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [3,2,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4677,12 +4677,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,1,0]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4699,12 +4699,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [3,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4721,7 +4721,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -4733,12 +4733,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [9,8]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4755,12 +4755,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [9,7,5]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4777,12 +4777,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [9,7,5]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4799,12 +4799,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [5,6]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4821,12 +4821,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [8,9]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4843,12 +4843,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1,2,3,4,5,6,7,8]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4865,12 +4865,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [9,8,7,6,5,4,3,2]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4887,12 +4887,12 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [7,6]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4925,7 +4925,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -4937,7 +4937,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -4949,7 +4949,7 @@ public class CtsJsonTest
         var document = JsonNode.Parse( 
 """
 null
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -4961,7 +4961,7 @@ null
         var document = JsonNode.Parse( 
 """
 null
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -4973,12 +4973,12 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -4995,12 +4995,12 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [9,8,7,6,5,4,3,2,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5017,12 +5017,12 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,3,4,5,6,7,8,9]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5039,7 +5039,7 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5051,12 +5051,12 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [9,8,7,6,5,4,3,2,1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5073,12 +5073,12 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [3,2,1,0]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5095,12 +5095,12 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [1]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5117,12 +5117,12 @@ null
         var document = JsonNode.Parse( 
 """
 [0,1,2,3,4,5,6,7,8,9]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [9]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5187,12 +5187,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":[1,2,3]},{"a":[1],"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5209,7 +5209,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5221,12 +5221,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":[1],"d":"f"},{"a":1,"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5307,12 +5307,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"ab"},{"a":"d"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5329,12 +5329,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["☺","☺☺","☺☺☺","ж","жж","жжж","磨","阿美","形声字"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["☺☺","жж","阿美"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5351,12 +5351,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":[1,2,3]},{"a":[1]}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":[1,2,3]}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5373,7 +5373,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5385,7 +5385,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5397,7 +5397,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5409,7 +5409,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5421,7 +5421,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5465,12 +5465,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"c":"cd","values":[{"a":"ab"},{"a":"d"}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5487,12 +5487,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"ab"},{"c":"d"},{"a":null}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5509,12 +5509,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"ab"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5531,12 +5531,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"ab"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5553,12 +5553,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["bab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5575,7 +5575,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"ab"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5587,7 +5587,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5599,12 +5599,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"bc"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5621,7 +5621,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5633,7 +5633,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -5645,12 +5645,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["ж","Ж","1","жЖ",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["Ж"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5667,12 +5667,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["ж","Ж","1",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ж","1"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5689,12 +5689,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["a𐄁b","ab","1",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["a𐄁b"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5711,12 +5711,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["\u2028","\r","\n",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["\u2028"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5733,12 +5733,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["\u2029","\r","\n",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["\u2029"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5779,12 +5779,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"regex":"a.*","values":[{"a":"ab"},{"a":"ba"}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5801,12 +5801,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["abc","a.c","axc"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["abc","a.c"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5823,12 +5823,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["abc","a.c","axc"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["a.c"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5845,12 +5845,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["abc","a.c","axc","a\\\u2028c"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["a\\\u2028c"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5867,12 +5867,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["abc","a.c","a[\u2028c"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["a[\u2028c"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5889,12 +5889,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["abc","a.c","a\u2028c","a]c"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["a.c","a]c"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5911,12 +5911,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["abc","axc","ab","xab"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["abc","ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5933,12 +5933,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["abc","axc","ab","abcx"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["abc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5955,12 +5955,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"the end is ab"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"the end is ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5977,12 +5977,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"the end is ab"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"the end is ab"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -5999,12 +5999,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"ab is at the start"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"ab is at the start"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6021,12 +6021,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"contains two matches"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"contains two matches"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6043,12 +6043,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["bab","bba","bbab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6065,7 +6065,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"contains two matches"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -6077,7 +6077,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -6089,12 +6089,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"bc"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6111,7 +6111,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -6123,7 +6123,7 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"bc"}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -6135,12 +6135,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["ж","Ж","1","жЖ",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["Ж","жЖ"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6157,12 +6157,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["ж","Ж","1",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ж","1"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6179,12 +6179,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["a𐄁bc","abc","1",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["a𐄁bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6201,12 +6201,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["\u2028","\r\u2028\n","\r","\n",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["\u2028","\r\u2028\n"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6223,12 +6223,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["\u2029","\r\u2029\n","\r","\n",true,[],{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["\u2029","\r\u2029\n"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6269,12 +6269,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["bab","bba","bbab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6291,12 +6291,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["x abc y","x a.c y","x axc y"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["x abc y","x a.c y"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6313,12 +6313,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["x abc y","x a.c y","x axc y"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["x a.c y"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6335,12 +6335,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["x abc y","x a.c y","x axc y","x a\\\u2028c y"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["x a\\\u2028c y"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6357,12 +6357,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["x abc y","x a.c y","x a[\u2028c y"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["x a[\u2028c y"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6379,12 +6379,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["x abc y","x a.c y","x a\u2028c y","x a]c y"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["x a.c y","x a]c y"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6401,12 +6401,12 @@ null
         var document = JsonNode.Parse( 
 """
 [[4],{"foo":4},[5],{"foo":5},4]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [[4],{"foo":4}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6423,7 +6423,7 @@ null
         var document = JsonNode.Parse( 
 """
 [[4,4],{"foo":4,"bar":4}]
-""");
+""" );
         var results = document.Select(selector);
         Assert.Fail("missing results");
     }
@@ -6459,12 +6459,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6481,12 +6481,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6503,12 +6503,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6525,12 +6525,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6547,12 +6547,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6569,12 +6569,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6591,12 +6591,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6613,12 +6613,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6635,12 +6635,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6657,12 +6657,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6679,12 +6679,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6701,12 +6701,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6723,12 +6723,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6745,12 +6745,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6767,12 +6767,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6789,12 +6789,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"b","d":"e"},{"b":"c","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"b","d":"e"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6843,12 +6843,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6865,12 +6865,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6887,12 +6887,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6909,12 +6909,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6931,12 +6931,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6953,12 +6953,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6975,12 +6975,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -6997,12 +6997,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7019,12 +7019,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7041,12 +7041,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7063,12 +7063,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7085,12 +7085,12 @@ null
         var document = JsonNode.Parse( 
 """
 ["foo","123"]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7107,12 +7107,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7129,12 +7129,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7151,12 +7151,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7173,12 +7173,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7195,12 +7195,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":{"b":"foo"}},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":{"b":"foo"}}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7217,12 +7217,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":{"b":"foo"}},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":{"b":"foo"}}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7239,12 +7239,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":{"b":"foo"}},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":{"b":"foo"}}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7261,12 +7261,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":{"b":"foo"}},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":{"b":"foo"}}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7283,12 +7283,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"foo"},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7305,12 +7305,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"foo"},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7327,12 +7327,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"foo"},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7349,12 +7349,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"foo"},{}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["foo"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7371,12 +7371,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7393,12 +7393,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7415,12 +7415,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7437,12 +7437,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7459,12 +7459,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7481,12 +7481,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7503,12 +7503,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7525,12 +7525,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"c":3}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1},{"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7547,12 +7547,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7569,12 +7569,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7591,12 +7591,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7613,12 +7613,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7635,12 +7635,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7657,12 +7657,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7679,12 +7679,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7701,12 +7701,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1},{"b":2},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7723,12 +7723,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7745,12 +7745,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7767,12 +7767,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7789,12 +7789,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7811,12 +7811,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7833,12 +7833,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7855,12 +7855,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7877,12 +7877,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7899,12 +7899,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7921,12 +7921,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7943,12 +7943,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7965,12 +7965,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -7987,12 +7987,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8009,12 +8009,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8031,12 +8031,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8053,12 +8053,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8075,12 +8075,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8097,12 +8097,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8119,12 +8119,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8141,12 +8141,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8163,12 +8163,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8185,12 +8185,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8207,12 +8207,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8229,12 +8229,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8251,12 +8251,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8273,12 +8273,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8295,12 +8295,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8317,12 +8317,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8339,12 +8339,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8361,12 +8361,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8383,12 +8383,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8405,12 +8405,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8427,12 +8427,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8449,12 +8449,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8471,12 +8471,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8493,12 +8493,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8515,12 +8515,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8537,12 +8537,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8559,12 +8559,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8581,12 +8581,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8603,12 +8603,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8625,12 +8625,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8647,12 +8647,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8669,12 +8669,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8691,12 +8691,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8713,12 +8713,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8735,12 +8735,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8757,12 +8757,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":1,"b":1},{"a":1,"b":2}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8779,12 +8779,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8801,12 +8801,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8823,12 +8823,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8845,12 +8845,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8867,12 +8867,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"a","d":"e"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8889,12 +8889,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"a","d":"e"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8911,12 +8911,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"a","d":"e"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8933,12 +8933,12 @@ null
         var document = JsonNode.Parse( 
 """
 [{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [{"a":"a","d":"e"},{"a":"d","d":"f"}]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8955,12 +8955,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8977,12 +8977,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -8999,12 +8999,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9021,12 +9021,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9043,12 +9043,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":{"b":"ab"}}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9065,12 +9065,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":{"b":"ab"}}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9087,12 +9087,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":{"b":"ab"}}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9109,12 +9109,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":{"b":"ab"}}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9131,12 +9131,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9153,12 +9153,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9175,12 +9175,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9197,12 +9197,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9283,12 +9283,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9305,12 +9305,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9327,12 +9327,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9349,12 +9349,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9371,12 +9371,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9393,12 +9393,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9415,12 +9415,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9437,12 +9437,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9459,12 +9459,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9481,12 +9481,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9503,12 +9503,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9525,12 +9525,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9547,12 +9547,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9569,12 +9569,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9591,12 +9591,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9613,12 +9613,12 @@ null
         var document = JsonNode.Parse( 
 """
 {"a":"ab","b":"bc"}
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 ["ab","bc"]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9635,12 +9635,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9657,12 +9657,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9679,12 +9679,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9701,12 +9701,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9723,12 +9723,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9745,12 +9745,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9767,12 +9767,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9789,12 +9789,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9811,12 +9811,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9833,12 +9833,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9855,12 +9855,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9877,12 +9877,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9899,12 +9899,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9921,12 +9921,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9943,12 +9943,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)
@@ -9965,12 +9965,12 @@ null
         var document = JsonNode.Parse( 
 """
 [1,2,3,4,5,6]
-""");
+""" );
         var results = document.Select(selector);
         var expected = JsonNode.Parse(
 """
 [2,4]
-""");
+""" );
 
         var count = 0;
         foreach (var result in results)

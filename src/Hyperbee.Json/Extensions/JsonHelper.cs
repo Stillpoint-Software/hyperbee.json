@@ -6,7 +6,7 @@ using Hyperbee.Json.Dynamic;
 
 namespace Hyperbee.Json.Extensions;
 
-public static class JsonPathHelper
+public static class JsonHelper
 {
     // conversion
 
@@ -72,7 +72,7 @@ public static class JsonPathHelper
         return JsonSerializer.Deserialize<T>( ref reader, options );
     }
 
-    public static T ConvertToObject<T>( this JsonNode value, JsonSerializerOptions options = null )
+    public static T ConvertToObject<T>( JsonNode value, JsonSerializerOptions options = null )
         where T : new()
     {
         var bufferWriter = new ArrayBufferWriter<byte>();

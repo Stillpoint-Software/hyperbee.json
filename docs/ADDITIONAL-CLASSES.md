@@ -5,28 +5,18 @@ property diving, element comparisons, and dynamic property access.
 
 ### Property Diving
 
-Property diving acts similarly to JSON Pointer; it expects a path that returns a single element.
-Unlike JSON Pointer, property diving notation expects a singular JSON Path. 
+Property diving acts **similarly** to JSON Pointer; it expects an absolute path that returns a single element.
+Unlike JSON Pointer, property diving notation expects normalized JSON Path notation. 
 
 | Method                             | Description
 |:-----------------------------------|:-----------
 | `JsonElement.FromJsonPathPointer`  | Dives for properties using absolute locations like `$.store.book[2].author`
 
-The syntax supports singular paths; dotted notation, quoted names, and simple bracketed array accessors only.
+The syntax supports absolute (normalized) paths; dotted notation, quoted names, and simple bracketed array accessors only.
 The intention is to return a single element by literal path.
 
-Json path style '$', wildcard '*', '..', and '[a,b]' multi-result selector notations and filters are **not** supported.
+Json path style wildcard '*', '..', and '[a,b]' multi-result selector notations and filters are **not** supported.
 
-```
-Examples of valid path syntax:
-
-    prop1.prop2
-    prop1[0]
-    'prop.2'
-    prop1[0].prop2
-    prop1['prop.2']
-    prop1.'prop.2'[0].prop3
-```
 
 ### JsonElement Path
 
@@ -48,7 +38,8 @@ for a given `JsonElement`.
 
 Basic support is provided for serializing to and from dynamic objects through the use of a custom `JsonConverter`.
 The `DynamicJsonConverter` converter class is useful for simple scenareos. It is intended as a simple helper for 
-basic use cases only.
+basic use cases only. A helper methods `JsonPathHelper.ConvertToDynamic` is provided to simplify the process of 
+serializing and deserializing dynamic objects.
 
 #### DynamicJsonConverter
 

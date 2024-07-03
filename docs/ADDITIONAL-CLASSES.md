@@ -5,14 +5,14 @@ property diving, element comparisons, and dynamic property access.
 
 ### Property Diving
 
-Property diving acts similarly to JSON Pointer; it expects a path that returns a single element.
+Property diving acts similarly to JSON Pointer; it expects an absolute  path that returns a single element.
 Unlike JSON Pointer, property diving notation expects a singular JSON Path. 
 
 | Method                             | Description
 |:-----------------------------------|:-----------
 | `JsonElement.FromJsonPathPointer`  | Dives for properties using absolute locations like `$.store.book[2].author`
 
-The syntax supports singular paths; dotted notation, quoted names, and simple bracketed array accessors only.
+The syntax supports absolute (normalized) paths; dotted notation, quoted names, and simple bracketed array accessors only.
 The intention is to return a single element by literal path.
 
 Json path style '$', wildcard '*', '..', and '[a,b]' multi-result selector notations and filters are **not** supported.

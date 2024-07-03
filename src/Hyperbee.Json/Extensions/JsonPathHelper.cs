@@ -6,7 +6,7 @@ public static class JsonPathHelper
 {
     // conversion
 
-    public static ReadOnlySpan<char> NormalizePath( ReadOnlySpan<char> path )
+    public static ReadOnlySpan<char> ConvertToBracketNotation( ReadOnlySpan<char> path )
     {
         var segments = JsonPathQueryParser.ParseNoCache( path );
 

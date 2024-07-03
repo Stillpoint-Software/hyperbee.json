@@ -64,11 +64,11 @@ public class JsonPathQueryParserTests
         // NOT-SUPPORTED: parent axis operator is not supported
 
         // act & assert
-        var jsonPath = "$[*].bookmarks[ ? (@.page == 45)]^^^";
+        const string jsonPath = "$[*].bookmarks[ ? (@.page == 45)]^^^";
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            var pathSegment = JsonPathQueryParser.Parse( jsonPath );
+            _ = JsonPathQueryParser.Parse( jsonPath );
         } );
     }
 }

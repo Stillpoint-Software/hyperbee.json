@@ -10,7 +10,6 @@
 #endregion
 
 using System.Linq.Expressions;
-using System.Reflection;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -28,7 +27,7 @@ public class FilterParser<TNode> : FilterParser
     public static Func<TNode, TNode, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
         var context = new FilterContext<TNode>( descriptor );
-
+        
         var expression = Parse( filter, context );
 
         return Expression.Lambda<Func<TNode, TNode, bool>>( expression, context.Current, context.Root ).Compile();
@@ -51,7 +50,7 @@ public class FilterParser<TNode> : FilterParser
             throw new ArgumentNullException( nameof( context ) );
 
         if ( state.EndOfBuffer || state.IsTerminal )
-            throw new ArgumentException( $"Invalid filter: \"{state.Buffer}\"", nameof( state ) );
+            throw new ArgumentException( $"Invalid filter: \"{state.Buffer}\".", nameof( state ) );
 
         // parse the expression
         var items = new List<ExprItem>();

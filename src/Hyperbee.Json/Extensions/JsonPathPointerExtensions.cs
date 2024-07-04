@@ -12,12 +12,15 @@ namespace Hyperbee.Json.Extensions;
 // Json path style wildcard '*', '..', and '[a,b]' multi-result selector notations are NOT supported.
 //
 // examples:
-//  prop1.prop2
-//  prop1[0]
-//  'prop.2'
-//  prop1[0].prop2
-//  prop1['prop.2']
-//  prop1.'prop.2'[0].prop3
+//  $.prop1.prop2
+//  $.prop1[0]
+//  $.prop1[0].prop2
+//  $.prop1['prop.2']
+//
+//  also supports quoted member-name for dot child
+//
+//  $.'prop.2'
+//  $.prop1.'prop.2'[0].prop3
 
 public static class JsonPathPointerExtensions
 {
@@ -109,10 +112,10 @@ public static class JsonPathPointerExtensions
 
         internal JsonPathPointerSplitter( ReadOnlySpan<char> span )
         {
-            if ( span.StartsWith( "$." ) )
-                span = span[2..];
-            else if ( span.StartsWith( "$" ) )
-                span = span[1..];
+            if ( !span.StartsWith( "$" ) )
+                throw new NotSupportedException( "Path must start with `$`." );
+
+            span = span.StartsWith( "$." ) ? span[2..] : span[1..]; // eat the leading $
 
             _span = span;
             _scanner = Scanner.Default;

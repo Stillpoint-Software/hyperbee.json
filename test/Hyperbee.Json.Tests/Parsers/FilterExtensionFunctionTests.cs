@@ -31,21 +31,22 @@ public class FilterExtensionFunctionTests : JsonTestBase
         Assert.IsTrue( results.Count == 1 );
         Assert.AreEqual( "$.store.book[2].title", results[0].GetPath() );
     }
+
+    private class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+    {
+        public const string Name = "path";
+        private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+
+        protected override Expression GetExtensionExpression( Expression[] arguments )
+        {
+            return Expression.Invoke( PathExpression, arguments[0] );
+        }
+
+        private static string Path( IEnumerable<JsonNode> nodes )
+        {
+            var node = nodes.FirstOrDefault();
+            return node?.GetPath();
+        }
+    }
 }
 
-public class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
-{
-    public const string Name = "path";
-    private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
-
-    protected override Expression GetExtensionExpression( Expression[] arguments )
-    {
-        return Expression.Invoke( PathExpression, arguments[0] );
-    }
-
-    public static string Path( IEnumerable<JsonNode> nodes )
-    {
-        var node = nodes.FirstOrDefault();
-        return node?.GetPath();
-    }
-}

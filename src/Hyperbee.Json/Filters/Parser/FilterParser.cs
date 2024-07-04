@@ -27,7 +27,7 @@ public class FilterParser<TNode> : FilterParser
     public static Func<TNode, TNode, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
         var context = new FilterContext<TNode>( descriptor );
-        
+
         var expression = Parse( filter, context );
 
         return Expression.Lambda<Func<TNode, TNode, bool>>( expression, context.Current, context.Root ).Compile();

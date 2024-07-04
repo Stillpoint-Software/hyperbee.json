@@ -25,7 +25,7 @@ for a given `JsonElement`.
 
 | Method                     | Description
 |:---------------------------|:-----------
-| `JsonPathBuilder.GetPath` | Returns the JsonPath location string for a given element
+| `JsonPathBuilder.GetPath`  | Returns the JsonPath location string for a given element
 
 ### Equality Helpers
 
@@ -37,11 +37,25 @@ for a given `JsonElement`.
 ### Dynamic Object Serialization
 
 Basic support is provided for serializing to and from dynamic objects through the use of a custom `JsonConverter`.
-The `DynamicJsonConverter` converter class is useful for simple scenareos. It is intended as a simple helper for 
-basic use cases only. A helper methods `JsonPathHelper.ConvertToDynamic` is provided to simplify the process of 
+The `DynamicJsonConverter` class is useful for simple scenareos. It is intended as a simple helper for 
+basic use cases only. A helper methods `JsonHelper.ConvertToDynamic` is provided to simplify the process of 
 serializing and deserializing dynamic objects.
 
-#### DynamicJsonConverter
+#### Example: ConvertToDynamic
+
+```csharp
+var root = JsonDocument.Parse(jsonInput); // jsonInput contains the bookstore example
+var element = JsonHelper.ConvertToDynamic( source );
+
+var book = element.store.book[0];
+var author = book.author;
+var price = book.price;
+
+Assert.IsTrue( price == 8.95 );
+Assert.IsTrue( author == "Nigel Rees" );
+```
+
+#### Example: Serialize To Dynamic
 
 ```csharp
 var serializerOptions = new JsonSerializerOptions
@@ -49,7 +63,7 @@ var serializerOptions = new JsonSerializerOptions
     Converters = {new DynamicJsonConverter()}
 };
 
-// jsonInput is a string containing the bookstore json from the previous examples
+// jsonInput contains the bookstore example
 var jobject = JsonSerializer.Deserialize<dynamic>( jsonInput, serializerOptions);
 
 Assert.IsTrue( jobject.store.bicycle.color == "red" );

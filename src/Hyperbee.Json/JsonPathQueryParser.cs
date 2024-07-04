@@ -58,7 +58,7 @@ internal static class JsonPathQueryParser
         if ( selector?.Value == null )
             return;
 
-        InsertToken( tokens, new[] { selector } );
+        InsertToken( tokens, [selector] );
     }
 
     private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor[] selectors )
@@ -83,7 +83,8 @@ internal static class JsonPathQueryParser
     {
         var tokens = new List<JsonPathSegment>();
 
-        query = query.TrimEnd(); // remove trailing whitespace to simplify parsing
+        if ( StartsOrEndsWithWhitespace( query ) ) // RFC
+            throw new NotSupportedException( "Query cannot start or end with whitespace." );
 
         var i = 0;
         var n = query.Length;
@@ -406,6 +407,11 @@ internal static class JsonPathQueryParser
         // return tokenized query as a segment list
 
         return TokensToSegment( tokens );
+
+        static bool StartsOrEndsWithWhitespace( ReadOnlySpan<char> span )
+        {
+            return !span.IsEmpty && (char.IsWhiteSpace( span[0] ) || char.IsWhiteSpace( span[^1] ));
+        }
     }
 
     private static JsonPathSegment TokensToSegment( IList<JsonPathSegment> tokens )
@@ -543,15 +549,20 @@ internal static class JsonPathQueryParser
             throw new NotSupportedException( "Selector name cannot be null." );
 
         // Validate the first character
-        if ( !char.IsLetter( name[0] ) && name[0] != '_' && name[0] != '$' )
+        if ( !IsValidFirstChar( name[0] ) )
             throw new NotSupportedException( $"Selector name cannot start with `{name[0]}`." );
 
         // Validate subsequent characters
         for ( int i = 1; i < name.Length; i++ )
         {
-            if ( !char.IsLetterOrDigit( name[i] ) && name[i] != '_' && name[i] != '-' && name[i] != '$' )
+            if ( !IsValidSubsequentChar( name[i] ) )
                 throw new NotSupportedException( $"Selector name cannot contain `{name[i]}`." );
         }
+
+        return;
+
+        static bool IsValidFirstChar( char c ) => char.IsLetter( c ) || c == '_' || c >= 0x80;
+        static bool IsValidSubsequentChar( char c ) => char.IsLetterOrDigit( c ) || c == '_' || c == '-' || c >= 0x80;
     }
 
     private static string UnquoteAndUnescape( string value )

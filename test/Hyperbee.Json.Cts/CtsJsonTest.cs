@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Hyperbee.Json.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Cts
 {
@@ -13,15 +13,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["first","second"]""");
+                """["first","second"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -30,7 +30,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @" $";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -38,7 +38,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$ ";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -46,15 +46,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.a";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -63,15 +63,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.☺";
             var document = JsonNode.Parse(
-                """{"☺":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"☺":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -80,15 +80,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$._";
             var document = JsonNode.Parse(
-                """{"_":"A","_foo":"B"}""");
-            var results = document.Select(selector);
+                """{"_":"A","_foo":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -97,7 +97,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.&";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -105,7 +105,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.1";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -113,15 +113,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.c";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -130,15 +130,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.a";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -147,15 +147,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.*";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -164,15 +164,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.*";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["first","second"]""");
+                """["first","second"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -181,15 +181,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[*]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["first","second"]""");
+                """["first","second"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -198,15 +198,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.*.a";
             var document = JsonNode.Parse(
-                """{"x":{"a":"Ax","b":"Bx"},"y":{"a":"Ay","b":"By"}}""");
-            var results = document.Select(selector);
+                """{"x":{"a":"Ax","b":"Bx"},"y":{"a":"Ay","b":"By"}}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -215,15 +215,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[0,2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,2]""");
+                """[0,2]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -232,7 +232,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[0 2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -240,15 +240,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a',1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1]""");
+                """[1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -257,15 +257,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a',1]";
             var document = JsonNode.Parse(
-                """{"a":1,"b":2}""");
-            var results = document.Select(selector);
+                """{"a":1,"b":2}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1]""");
+                """[1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -274,15 +274,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1,5:7]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,5,6]""");
+                """[1,5,6]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -291,15 +291,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1,0:3]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,0,1,2]""");
+                """[1,0,1,2]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -308,15 +308,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1,1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,1]""");
+                """[1,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -325,15 +325,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[*,1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9,1]""");
+                """[0,1,2,3,4,5,6,7,8,9,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -342,15 +342,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[*,'a']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -359,15 +359,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[*,0:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9,0,1]""");
+                """[0,1,2,3,4,5,6,7,8,9,0,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -376,15 +376,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[*,*]";
             var document = JsonNode.Parse(
-                """[0,1,2]""");
-            var results = document.Select(selector);
+                """[0,1,2]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1,2,0,1,2]""");
+                """[0,1,2,0,1,2]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -393,7 +393,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -401,15 +401,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[1]";
             var document = JsonNode.Parse(
-                """{"o":[0,1,[2,3]]}""");
-            var results = document.Select(selector);
+                """{"o":[0,1,[2,3]]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,3]""");
+                """[1,3]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -418,15 +418,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..a";
             var document = JsonNode.Parse(
-                """{"o":[{"a":"b"},{"a":"c"}]}""");
-            var results = document.Select(selector);
+                """{"o":[{"a":"b"},{"a":"c"}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["b","c"]""");
+                """["b","c"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -435,15 +435,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..*";
             var document = JsonNode.Parse(
-                """[0,1]""");
-            var results = document.Select(selector);
+                """[0,1]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1]""");
+                """[0,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -452,15 +452,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[*]";
             var document = JsonNode.Parse(
-                """[0,1]""");
-            var results = document.Select(selector);
+                """[0,1]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1]""");
+                """[0,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -469,15 +469,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[*]";
             var document = JsonNode.Parse(
-                """[[[1]],[2]]""");
-            var results = document.Select(selector);
+                """[[[1]],[2]]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -486,15 +486,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[*]";
             var document = JsonNode.Parse(
-                """{"a":{"c":{"e":1}},"b":{"d":2}}""");
-            var results = document.Select(selector);
+                """{"a":{"c":{"e":1}},"b":{"d":2}}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -503,15 +503,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..*";
             var document = JsonNode.Parse(
-                """{"a":"b"}""");
-            var results = document.Select(selector);
+                """{"a":"b"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["b"]""");
+                """["b"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -520,15 +520,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..*";
             var document = JsonNode.Parse(
-                """{"o":[{"a":"b"}]}""");
-            var results = document.Select(selector);
+                """{"o":[{"a":"b"}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[[{"a":"b"}],{"a":"b"},"b"]""");
+                """[[{"a":"b"}],{"a":"b"},"b"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -537,15 +537,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..['a','d']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["b","e","c","f"]""");
+                """["b","e","c","f"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -554,15 +554,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..['a','d']";
             var document = JsonNode.Parse(
-                """{"x":{"a":"b","d":"e"},"y":{"a":"c","d":"f"}}""");
-            var results = document.Select(selector);
+                """{"x":{"a":"b","d":"e"},"y":{"a":"c","d":"f"}}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -571,7 +571,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -579,15 +579,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@]";
             var document = JsonNode.Parse(
-                """{"a":1,"b":null}""");
-            var results = document.Select(selector);
+                """{"a":1,"b":null}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -596,15 +596,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -613,15 +613,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":null,"d":"e"}""");
+                """{"a":null,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -630,15 +630,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a=='b']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -647,15 +647,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a=='1']";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"1","d":"e"}""");
+                """{"a":"1","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -664,15 +664,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -681,15 +681,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==\";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"1","d":"e"}""");
+                """{"a":"1","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -698,15 +698,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":"c","d":"f"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":"c","d":"f"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"d":"e"}""");
+                """{"a":1,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -715,15 +715,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":null,"d":"e"}""");
+                """{"a":null,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -732,15 +732,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==null]";
             var document = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -749,15 +749,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":true,"d":"e"}""");
+                """{"a":true,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -766,15 +766,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":false,"d":"e"}""");
+                """{"a":false,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -783,15 +783,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@==@]";
             var document = JsonNode.Parse(
-                """[1,null,true,{"a":"b"},[false]]""");
-            var results = document.Select(selector);
+                """[1,null,true,{"a":"b"},[false]]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,null,true,{"a":"b"},[false]]""");
+                """[1,null,true,{"a":"b"},[false]]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -800,15 +800,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":[1,2]},{"a":[[1,[2]]],"b":[[1,[2]]]},{"a":[[1,[2]]],"b":[[[2],1]]},{"a":[[1,[2]]],"b":[[1,2]]}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":[1,2]},{"a":[[1,[2]]],"b":[[1,[2]]]},{"a":[[1,[2]]],"b":[[[2],1]]},{"a":[[1,[2]]],"b":[[1,2]]}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":[[1,[2]]],"b":[[1,[2]]]}""");
+                """{"a":[[1,[2]]],"b":[[1,[2]]]}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -817,15 +817,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":2}}}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":2}}}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}}]""");
+                """[{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -834,15 +834,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!='b']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"c","d":"f"}""");
+                """{"a":"c","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -851,15 +851,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!='1']";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"d":"f"}""");
+                """{"a":1,"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -868,15 +868,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!='b']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"d":"f"}""");
+                """{"a":1,"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -885,15 +885,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"c","d":"f"}""");
+                """{"a":"c","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -902,15 +902,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=\";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"d":"f"}""");
+                """{"a":1,"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -919,15 +919,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"d":"f"}""");
+                """{"a":1,"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -936,15 +936,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=1]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":2,"d":"f"},{"a":"1","d":"f"}]""");
+                """[{"a":2,"d":"f"},{"a":"1","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -953,15 +953,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=1]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"c","d":"f"}""");
+                """{"a":"c","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -970,15 +970,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"c","d":"f"}""");
+                """{"a":"c","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -987,15 +987,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=null]";
             var document = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1004,15 +1004,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"c","d":"f"}""");
+                """{"a":"c","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1021,15 +1021,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"c","d":"f"}""");
+                """{"a":"c","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1038,15 +1038,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<'c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1055,15 +1055,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1072,15 +1072,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"d":"e"}""");
+                """{"a":1,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1089,15 +1089,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1106,15 +1106,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1123,15 +1123,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1140,15 +1140,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<='c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1157,15 +1157,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1174,15 +1174,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"}]""");
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1191,15 +1191,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":null,"d":"e"}""");
+                """{"a":null,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1208,15 +1208,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":true,"d":"e"}""");
+                """{"a":true,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1225,15 +1225,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":false,"d":"e"}""");
+                """{"a":false,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1242,15 +1242,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>'c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"d","d":"f"}""");
+                """{"a":"d","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1259,15 +1259,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"d","d":"f"}""");
+                """{"a":"d","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1276,15 +1276,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":20,"d":"f"}""");
+                """{"a":20,"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1293,15 +1293,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1310,15 +1310,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1327,15 +1327,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1344,15 +1344,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>='c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
+                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1361,15 +1361,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>=\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
+                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1378,15 +1378,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>=10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":10,"d":"e"},{"a":20,"d":"f"}]""");
+                """[{"a":10,"d":"e"},{"a":20,"d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1395,15 +1395,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>=null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":null,"d":"e"}""");
+                """{"a":null,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1412,15 +1412,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>=true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":true,"d":"e"}""");
+                """{"a":true,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1429,15 +1429,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>=false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":false,"d":"e"}""");
+                """{"a":false,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1446,15 +1446,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a&&@.a!=null]";
             var document = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"c","d":"f"}""");
+                """{"a":"c","d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1463,15 +1463,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":false},{"b":false},{"c":false}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":false},{"b":false},{"c":false}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":false,"b":false}""");
+                """{"a":false,"b":false}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1480,15 +1480,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":false},{"b":false},{"c":false}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":false},{"b":false},{"c":false}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":false,"b":false},{"b":false}]""");
+                """[{"a":false,"b":false},{"b":false}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1497,15 +1497,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a>0&&@.a<10]";
             var document = JsonNode.Parse(
-                """[{"a":-10,"d":"e"},{"a":5,"d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":-10,"d":"e"},{"a":5,"d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":5,"d":"f"}""");
+                """{"a":5,"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1514,15 +1514,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a=='b'||@.a=='d']";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
+                """[{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1531,15 +1531,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1548,15 +1548,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"d":"f"}""");
+                """{"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1565,15 +1565,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!@.a]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"d":"f"}""");
+                """{"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1582,15 +1582,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.*]";
             var document = JsonNode.Parse(
-                """[1,[],[2],{},{"a":3}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],{},{"a":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[[2],{"a":3}]""");
+                """[[2],{"a":3}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1599,15 +1599,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@[0, 0, 'a']]";
             var document = JsonNode.Parse(
-                """[1,[],[2],[2,3],{"a":3},{"b":4},{"a":3,"b":4}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],[2,3],{"a":3},{"b":4},{"a":3,"b":4}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[[2],[2,3],{"a":3},{"a":3,"b":4}]""");
+                """[[2],[2,3],{"a":3},{"a":3,"b":4}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1616,15 +1616,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@[0:2]]";
             var document = JsonNode.Parse(
-                """[1,[],[2],[2,3,4],{},{"a":3}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],[2,3,4],{},{"a":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[[2],[2,3,4]]""");
+                """[[2],[2,3,4]]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1633,15 +1633,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!@.*]";
             var document = JsonNode.Parse(
-                """[1,[],[2],{},{"a":3}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],{},{"a":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,[],{}]""");
+                """[1,[],{}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1650,7 +1650,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@[0:0]==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1658,7 +1658,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@[*]==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1666,7 +1666,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@..a==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1674,7 +1674,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a[*].a==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1682,15 +1682,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@[?@>1]]";
             var document = JsonNode.Parse(
-                """[[0],[0,1],[0,1,2],[42]]""");
-            var results = document.Select(selector);
+                """[[0],[0,1],[0,1,2],[42]]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[[0,1,2],[42]]""");
+                """[[0,1,2],[42]]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1699,15 +1699,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a == 1]";
             var document = JsonNode.Parse(
-                """{"a":1}""");
-            var results = document.Select(selector);
+                """{"a":1}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1716,15 +1716,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@['0'] == 5]";
             var document = JsonNode.Parse(
-                """[[5,6]]""");
-            var results = document.Select(selector);
+                """[[5,6]]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1733,15 +1733,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@[0] == 5]";
             var document = JsonNode.Parse(
-                """[{"0":5}]""");
-            var results = document.Select(selector);
+                """[{"0":5}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -1750,7 +1750,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0, 0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1758,7 +1758,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0, 0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1766,7 +1766,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0, 0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1774,7 +1774,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@['a', 'a']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1782,7 +1782,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@['a', 'a']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1790,7 +1790,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@['a', 'a']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1798,7 +1798,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0, '0']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1806,7 +1806,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0, '0']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1814,7 +1814,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0, '0']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1822,7 +1822,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.*==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1830,7 +1830,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.*!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1838,7 +1838,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.*<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1846,7 +1846,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0:0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1854,7 +1854,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0:0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1862,7 +1862,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@[0:0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1870,7 +1870,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0, 0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1878,7 +1878,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0, 0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1886,7 +1886,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0, 0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1894,7 +1894,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($['a', 'a']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1902,7 +1902,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($['a', 'a']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1910,7 +1910,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($['a', 'a']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1918,7 +1918,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0, '0']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1926,7 +1926,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0, '0']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1934,7 +1934,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0, '0']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1942,7 +1942,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($.*==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1950,7 +1950,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($.*!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1958,7 +1958,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($.*<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1966,7 +1966,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0:0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1974,7 +1974,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0:0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1982,7 +1982,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?($[0:0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -1990,15 +1990,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a,?@.b]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2007,15 +2007,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a=='b',?@.b=='x']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2024,15 +2024,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a,?@.d]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2041,15 +2041,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a,1]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2058,15 +2058,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a,*]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2075,15 +2075,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a,1:]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""");
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2092,15 +2092,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1, ?@.a=='b', 1:]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"b":"c","d":"f"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"b":"c","d":"f"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2109,15 +2109,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==-0]";
             var document = JsonNode.Parse(
-                """[{"a":0,"d":"e"},{"a":0.1,"d":"f"},{"a":"0","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":0,"d":"e"},{"a":0.1,"d":"f"},{"a":"0","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":0,"d":"e"}""");
+                """{"a":0,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2126,15 +2126,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1.0]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"d":"e"}""");
+                """{"a":1,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2143,15 +2143,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1e2]";
             var document = JsonNode.Parse(
-                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":100,"d":"e"}""");
+                """{"a":100,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2160,15 +2160,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1e+2]";
             var document = JsonNode.Parse(
-                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":100,"d":"e"}""");
+                """{"a":100,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2177,15 +2177,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1e-2]";
             var document = JsonNode.Parse(
-                """[{"a":0.01,"d":"e"},{"a":0.02,"d":"f"},{"a":"0.01","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":0.01,"d":"e"},{"a":0.02,"d":"f"},{"a":"0.01","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":0.01,"d":"e"}""");
+                """{"a":0.01,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2194,15 +2194,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1.1]";
             var document = JsonNode.Parse(
-                """[{"a":1.1,"d":"e"},{"a":1,"d":"f"},{"a":"1.1","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":1.1,"d":"e"},{"a":1,"d":"f"},{"a":"1.1","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1.1,"d":"e"}""");
+                """{"a":1.1,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2211,7 +2211,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1.]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2219,15 +2219,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1.1e2]";
             var document = JsonNode.Parse(
-                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":110,"d":"e"}""");
+                """{"a":110,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2236,15 +2236,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1.1e+2]";
             var document = JsonNode.Parse(
-                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":110,"d":"e"}""");
+                """{"a":110,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2253,15 +2253,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==1.1e-2]";
             var document = JsonNode.Parse(
-                """[{"a":0.011,"d":"e"},{"a":0.012,"d":"f"},{"a":"0.011","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":0.011,"d":"e"},{"a":0.012,"d":"f"},{"a":"0.011","d":"g"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":0.011,"d":"e"}""");
+                """{"a":0.011,"d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2270,15 +2270,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.values[?length(@.a) == value($..c)]";
             var document = JsonNode.Parse(
-                """{"c":"cd","values":[{"a":"ab"},{"c":"d"},{"a":null}]}""");
-            var results = document.Select(selector);
+                """{"c":"cd","values":[{"a":"ab"},{"c":"d"},{"a":null}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"c":"d"},{"a":null}]""");
+                """[{"c":"d"},{"a":null}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2287,15 +2287,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a == @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"c":3}""");
+                """{"c":3}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2304,15 +2304,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a == length(@.b)]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"b":2},{"c":3}]""");
+                """[{"b":2},{"c":3}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2321,15 +2321,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@<3]";
             var document = JsonNode.Parse(
-                """{"a":1,"b":2,"c":3}""");
-            var results = document.Select(selector);
+                """{"a":1,"b":2,"c":3}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2338,15 +2338,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a || @.b && @.c]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2355,15 +2355,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a && @.b || @.c]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2372,15 +2372,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.a || @.b) && @.c]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":2},{"a":1,"c":3},{"b":2,"c":3},{"a":1},{"b":2},{"c":3},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":2},{"a":1,"c":3},{"b":2,"c":3},{"a":1},{"b":2},{"c":3},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"c":3},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1,"c":3},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2389,15 +2389,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a && (@.b || @.c)]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"a":1,"b":2},{"a":1,"c":2},{"b":2},{"c":2},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"a":1,"b":2},{"a":1,"c":2},{"b":2},{"c":2},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":2},{"a":1,"c":2},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1,"b":2},{"a":1,"c":2},{"a":1,"b":2,"c":3}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2406,15 +2406,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@ == \";
             var document = JsonNode.Parse(
-                """["quoted' literal","a","quoted\\' literal"]""");
-            var results = document.Select(selector);
+                """["quoted' literal","a","quoted\\' literal"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["quoted' literal"]""");
+                """["quoted' literal"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2423,15 +2423,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@ == 'quoted\";
             var document = JsonNode.Parse(
-                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""");
-            var results = document.Select(selector);
+                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["quoted\" literal"]""");
+                """["quoted\" literal"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2440,15 +2440,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@ == 'quoted\\' literal']";
             var document = JsonNode.Parse(
-                """["quoted' literal","a","quoted\\' literal","'quoted\" literal'"]""");
-            var results = document.Select(selector);
+                """["quoted' literal","a","quoted\\' literal","'quoted\" literal'"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["quoted' literal"]""");
+                """["quoted' literal"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2457,15 +2457,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@ == \";
             var document = JsonNode.Parse(
-                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""");
-            var results = document.Select(selector);
+                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["quoted\" literal"]""");
+                """["quoted\" literal"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2474,7 +2474,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?true]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2482,7 +2482,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2490,7 +2490,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?'abc']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2498,7 +2498,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2506,7 +2506,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?2.2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2514,7 +2514,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?null]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2522,7 +2522,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?true && false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2530,7 +2530,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?true || false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2538,7 +2538,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?true == false && false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2546,7 +2546,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?true == false || false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2554,7 +2554,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?false && true == false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2562,7 +2562,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?false || true == false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2570,15 +2570,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[0]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["first"]""");
+                """["first"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2587,15 +2587,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["second"]""");
+                """["second"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2604,15 +2604,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[2]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2621,7 +2621,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2629,7 +2629,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[231584178474632390847141970017375815706539969331281128078915168SomeRandomText]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2637,15 +2637,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["second"]""");
+                """["second"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2654,15 +2654,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-2]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["first"]""");
+                """["first"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2671,15 +2671,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-3]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2688,15 +2688,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[0]";
             var document = JsonNode.Parse(
-                """{"foo":1}""");
-            var results = document.Select(selector);
+                """{"foo":1}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2705,7 +2705,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[01]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2713,7 +2713,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-01]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2721,15 +2721,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2738,15 +2738,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2755,15 +2755,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -2772,7 +2772,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2780,7 +2780,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2788,7 +2788,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2796,7 +2796,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2804,7 +2804,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2812,7 +2812,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2820,7 +2820,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2828,7 +2828,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2836,7 +2836,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2844,7 +2844,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2852,7 +2852,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2860,7 +2860,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2868,7 +2868,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2876,7 +2876,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2884,7 +2884,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2892,7 +2892,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2900,7 +2900,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2908,7 +2908,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2916,7 +2916,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2924,7 +2924,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2932,7 +2932,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2940,7 +2940,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2948,7 +2948,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2956,7 +2956,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2964,7 +2964,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2972,7 +2972,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2980,7 +2980,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2988,7 +2988,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -2996,7 +2996,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3004,7 +3004,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3012,7 +3012,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3020,7 +3020,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3028,15 +3028,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{" ":"A"}""");
-            var results = document.Select(selector);
+                """{" ":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3045,15 +3045,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"\"":"A"}""");
-            var results = document.Select(selector);
+                """{"\"":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3062,15 +3062,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"\\":"A"}""");
-            var results = document.Select(selector);
+                """{"\\":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3079,15 +3079,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"/":"A"}""");
-            var results = document.Select(selector);
+                """{"/":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3096,15 +3096,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"\b":"A"}""");
-            var results = document.Select(selector);
+                """{"\b":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3113,15 +3113,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"\f":"A"}""");
-            var results = document.Select(selector);
+                """{"\f":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3130,15 +3130,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"\n":"A"}""");
-            var results = document.Select(selector);
+                """{"\n":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3147,15 +3147,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"\r":"A"}""");
-            var results = document.Select(selector);
+                """{"\r":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3164,15 +3164,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"\t":"A"}""");
-            var results = document.Select(selector);
+                """{"\t":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3181,15 +3181,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3198,15 +3198,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3215,15 +3215,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"𝄞":"A"}""");
-            var results = document.Select(selector);
+                """{"𝄞":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3232,15 +3232,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"😀":"A"}""");
-            var results = document.Select(selector);
+                """{"😀":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3249,7 +3249,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3257,7 +3257,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3265,7 +3265,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3273,15 +3273,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3290,15 +3290,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['c']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3307,15 +3307,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a']";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3324,7 +3324,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0000']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3332,7 +3332,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0001']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3340,7 +3340,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0002']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3348,7 +3348,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0003']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3356,7 +3356,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0004']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3364,7 +3364,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0005']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3372,7 +3372,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0006']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3380,7 +3380,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0007']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3388,7 +3388,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\b']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3396,7 +3396,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\t']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3404,7 +3404,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\n']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3412,7 +3412,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u000b']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3420,7 +3420,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\f']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3428,7 +3428,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\r']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3436,7 +3436,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u000e']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3444,7 +3444,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u000f']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3452,7 +3452,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0010']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3460,7 +3460,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0011']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3468,7 +3468,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0012']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3476,7 +3476,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0013']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3484,7 +3484,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0014']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3492,7 +3492,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0015']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3500,7 +3500,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0016']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3508,7 +3508,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0017']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3516,7 +3516,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0018']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3524,7 +3524,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u0019']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3532,7 +3532,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u001a']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3540,7 +3540,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u001b']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3548,7 +3548,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u001c']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3556,7 +3556,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u001d']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3564,7 +3564,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u001e']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3572,7 +3572,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\u001f']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3580,15 +3580,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[' ']";
             var document = JsonNode.Parse(
-                """{" ":"A"}""");
-            var results = document.Select(selector);
+                """{" ":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3597,15 +3597,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\'']";
             var document = JsonNode.Parse(
-                """{"'":"A"}""");
-            var results = document.Select(selector);
+                """{"'":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3614,15 +3614,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\\\']";
             var document = JsonNode.Parse(
-                """{"\\":"A"}""");
-            var results = document.Select(selector);
+                """{"\\":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3631,15 +3631,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\/']";
             var document = JsonNode.Parse(
-                """{"/":"A"}""");
-            var results = document.Select(selector);
+                """{"/":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3648,15 +3648,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\b']";
             var document = JsonNode.Parse(
-                """{"\b":"A"}""");
-            var results = document.Select(selector);
+                """{"\b":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3665,15 +3665,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\f']";
             var document = JsonNode.Parse(
-                """{"\f":"A"}""");
-            var results = document.Select(selector);
+                """{"\f":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3682,15 +3682,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\n']";
             var document = JsonNode.Parse(
-                """{"\n":"A"}""");
-            var results = document.Select(selector);
+                """{"\n":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3699,15 +3699,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\r']";
             var document = JsonNode.Parse(
-                """{"\r":"A"}""");
-            var results = document.Select(selector);
+                """{"\r":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3716,15 +3716,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\t']";
             var document = JsonNode.Parse(
-                """{"\t":"A"}""");
-            var results = document.Select(selector);
+                """{"\t":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3733,15 +3733,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\u263A']";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3750,15 +3750,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\u263a']";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3767,15 +3767,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\uD834\\uDD1E']";
             var document = JsonNode.Parse(
-                """{"𝄞":"A"}""");
-            var results = document.Select(selector);
+                """{"𝄞":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3784,15 +3784,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\uD83D\\uDE00']";
             var document = JsonNode.Parse(
-                """{"😀":"A"}""");
-            var results = document.Select(selector);
+                """{"😀":"A"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3801,7 +3801,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3809,7 +3809,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[''']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3817,7 +3817,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['\\']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -3825,15 +3825,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B","":"C"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B","":"C"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["C"]""");
+                """["C"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3842,15 +3842,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B","":"C"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B","":"C"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["C"]""");
+                """["C"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3859,15 +3859,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:3]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,2]""");
+                """[1,2]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3876,15 +3876,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:6:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,3,5]""");
+                """[1,3,5]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3893,15 +3893,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[:]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1,2,3]""");
+                """[0,1,2,3]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3910,15 +3910,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[::]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1,2,3]""");
+                """[0,1,2,3]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3927,15 +3927,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1]""");
+                """[0,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3944,15 +3944,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[::2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,2,4,6,8]""");
+                """[0,2,4,6,8]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3961,15 +3961,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[::-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[3,2,1,0]""");
+                """[3,2,1,0]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3978,15 +3978,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[:0:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[3,2,1]""");
+                """[3,2,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -3995,15 +3995,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[2::-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,1,0]""");
+                """[2,1,0]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4012,15 +4012,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[::-2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[3,1]""");
+                """[3,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4029,15 +4029,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1:-3]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4046,15 +4046,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1:-3:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[9,8]""");
+                """[9,8]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4063,15 +4063,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1:-6:-2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[9,7,5]""");
+                """[9,7,5]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4080,15 +4080,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1:-7:-2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[9,7,5]""");
+                """[9,7,5]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4097,15 +4097,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-5:7]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[5,6]""");
+                """[5,6]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4114,15 +4114,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-2:]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[8,9]""");
+                """[8,9]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4131,15 +4131,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1,2,3,4,5,6,7,8]""");
+                """[1,2,3,4,5,6,7,8]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4148,15 +4148,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1:1:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[9,8,7,6,5,4,3,2]""");
+                """[9,8,7,6,5,4,3,2]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4165,15 +4165,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[7:-5:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[7,6]""");
+                """[7,6]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4182,7 +4182,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:2:3:4]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4190,7 +4190,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:2:a]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4198,15 +4198,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:2:0]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4215,15 +4215,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[2:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4232,15 +4232,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[:]";
             var document = JsonNode.Parse(
-                """null""");
-            var results = document.Select(selector);
+                """null""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4249,15 +4249,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[::-1]";
             var document = JsonNode.Parse(
-                """null""");
-            var results = document.Select(selector);
+                """null""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4266,15 +4266,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[0:10]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
+                """[0,1,2,3,4,5,6,7,8,9]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4283,15 +4283,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[9:0:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[9,8,7,6,5,4,3,2,1]""");
+                """[9,8,7,6,5,4,3,2,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4300,15 +4300,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[2:113667776004]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,3,4,5,6,7,8,9]""");
+                """[2,3,4,5,6,7,8,9]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4317,15 +4317,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-113667776004:1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4334,15 +4334,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[113667776004:0:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[9,8,7,6,5,4,3,2,1]""");
+                """[9,8,7,6,5,4,3,2,1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4351,15 +4351,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[3:-113667776004:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[3,2,1,0]""");
+                """[3,2,1,0]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4368,15 +4368,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:10:113667776004]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[1]""");
+                """[1]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4385,15 +4385,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1:-10:-113667776004]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[9]""");
+                """[9]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4402,7 +4402,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[2:231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4410,7 +4410,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-231584178474632390847141970017375815706539969331281128078915168015826259279872:1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4418,7 +4418,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[231584178474632390847141970017375815706539969331281128078915168015826259279872:0:-1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4426,7 +4426,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[3:-231584178474632390847141970017375815706539969331281128078915168015826259279872:-1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4434,7 +4434,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:10:231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4442,7 +4442,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[-1:-10:-231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4450,15 +4450,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@..*)>2]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"}]""");
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4467,15 +4467,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@.a)>1]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4484,15 +4484,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@['a','d'])>1]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
+                """[{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4501,7 +4501,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(1)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4509,7 +4509,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count('string')>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4517,7 +4517,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(true)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4525,7 +4525,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(false)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4533,7 +4533,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(null)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4541,7 +4541,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@..*)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4549,7 +4549,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count()==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4557,7 +4557,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@.a,@.b)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4565,15 +4565,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@.a)>=2]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"},{"a":"d"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"},{"a":"d"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"ab"}""");
+                """{"a":"ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4582,15 +4582,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@)==2]";
             var document = JsonNode.Parse(
-                """["☺","☺☺","☺☺☺","ж","жж","жжж","磨","阿美","形声字"]""");
-            var results = document.Select(selector);
+                """["☺","☺☺","☺☺☺","ж","жж","жжж","磨","阿美","形声字"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["☺☺","жж","阿美"]""");
+                """["☺☺","жж","阿美"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4599,15 +4599,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@.a)>=2]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1]}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1]}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":[1,2,3]}""");
+                """{"a":[1,2,3]}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4616,15 +4616,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@.a)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4633,15 +4633,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(1)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4650,15 +4650,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(true)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4667,15 +4667,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(false)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4684,15 +4684,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(null)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4701,7 +4701,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@.a)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4709,7 +4709,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length()==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4717,7 +4717,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@.a,@.b)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4725,7 +4725,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@.*)<3]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4733,15 +4733,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.values[?length(@.a)==length(value($..c))]";
             var document = JsonNode.Parse(
-                """{"c":"cd","values":[{"a":"ab"},{"a":"d"}]}""");
-            var results = document.Select(selector);
+                """{"c":"cd","values":[{"a":"ab"},{"a":"d"}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"ab"}""");
+                """{"a":"ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4750,15 +4750,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(value(@.a))>0]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"},{"c":"d"},{"a":null}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"},{"c":"d"},{"a":null}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"ab"}""");
+                """{"a":"ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4767,15 +4767,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"ab"}""");
+                """{"a":"ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4784,15 +4784,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@.a, \";
             var document = JsonNode.Parse(
-                """[{"a":"ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"ab"}""");
+                """{"a":"ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4801,15 +4801,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.values[?match(@, $.regex)]";
             var document = JsonNode.Parse(
-                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""");
-            var results = document.Select(selector);
+                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["bab"]""");
+                """["bab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4818,15 +4818,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4835,15 +4835,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4852,15 +4852,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"bc"}""");
+                """{"a":"bc"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4869,15 +4869,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(1, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4886,15 +4886,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@.a, 1)]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4903,15 +4903,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, '\\\\p{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1","жЖ",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1","жЖ",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["Ж"]""");
+                """["Ж"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4920,15 +4920,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, '\\\\P{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ж","1"]""");
+                """["ж","1"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4937,15 +4937,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, 'a.b')]";
             var document = JsonNode.Parse(
-                """["a𐄁b","ab","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["a𐄁b","ab","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["a𐄁b"]""");
+                """["a𐄁b"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4954,15 +4954,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2028","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2028","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["\u2028"]""");
+                """["\u2028"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4971,15 +4971,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2029","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2029","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["\u2029"]""");
+                """["\u2029"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -4988,7 +4988,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@.a, 'a.*')==true]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -4996,7 +4996,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@.a)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5004,7 +5004,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@.a,@.b,@.c)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5012,15 +5012,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.values[?match(@.a, value($..['regex']))]";
             var document = JsonNode.Parse(
-                """{"regex":"a.*","values":[{"a":"ab"},{"a":"ba"}]}""");
-            var results = document.Select(selector);
+                """{"regex":"a.*","values":[{"a":"ab"},{"a":"ba"}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"ab"}""");
+                """{"a":"ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5029,15 +5029,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, 'a[.b]c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","axc"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","axc"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["abc","a.c"]""");
+                """["abc","a.c"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5046,15 +5046,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, 'a\\\\.c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","axc"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","axc"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["a.c"]""");
+                """["a.c"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5063,15 +5063,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, 'a\\\\\\\\.c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","axc","a\\\u2028c"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","axc","a\\\u2028c"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["a\\\u2028c"]""");
+                """["a\\\u2028c"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5080,15 +5080,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, 'a\\\\[.c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","a[\u2028c"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","a[\u2028c"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["a[\u2028c"]""");
+                """["a[\u2028c"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5097,15 +5097,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, 'a[\\\\].]c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","a\u2028c","a]c"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","a\u2028c","a]c"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["a.c","a]c"]""");
+                """["a.c","a]c"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5114,15 +5114,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, '^ab.*')]";
             var document = JsonNode.Parse(
-                """["abc","axc","ab","xab"]""");
-            var results = document.Select(selector);
+                """["abc","axc","ab","xab"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["abc","ab"]""");
+                """["abc","ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5131,15 +5131,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?match(@, '.*bc$')]";
             var document = JsonNode.Parse(
-                """["abc","axc","ab","abcx"]""");
-            var results = document.Select(selector);
+                """["abc","axc","ab","abcx"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["abc"]""");
+                """["abc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5148,15 +5148,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"the end is ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"the end is ab"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"the end is ab"}""");
+                """{"a":"the end is ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5165,15 +5165,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a, \";
             var document = JsonNode.Parse(
-                """[{"a":"the end is ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"the end is ab"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"the end is ab"}""");
+                """{"a":"the end is ab"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5182,15 +5182,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"ab is at the start"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab is at the start"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"ab is at the start"}""");
+                """{"a":"ab is at the start"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5199,15 +5199,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"contains two matches"}]""");
-            var results = document.Select(selector);
+                """[{"a":"contains two matches"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"contains two matches"}""");
+                """{"a":"contains two matches"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5216,15 +5216,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.values[?search(@, $.regex)]";
             var document = JsonNode.Parse(
-                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""");
-            var results = document.Select(selector);
+                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["bab","bba","bbab"]""");
+                """["bab","bba","bbab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5233,15 +5233,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"contains two matches"}]""");
-            var results = document.Select(selector);
+                """[{"a":"contains two matches"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5250,15 +5250,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5267,15 +5267,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"bc"}""");
+                """{"a":"bc"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5284,15 +5284,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(1, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5301,15 +5301,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a, 1)]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5318,15 +5318,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, '\\\\p{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1","жЖ",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1","жЖ",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["Ж","жЖ"]""");
+                """["Ж","жЖ"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5335,15 +5335,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, '\\\\P{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ж","1"]""");
+                """["ж","1"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5352,15 +5352,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, 'a.b')]";
             var document = JsonNode.Parse(
-                """["a𐄁bc","abc","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["a𐄁bc","abc","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["a𐄁bc"]""");
+                """["a𐄁bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5369,15 +5369,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2028","\r\u2028\n","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2028","\r\u2028\n","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["\u2028","\r\u2028\n"]""");
+                """["\u2028","\r\u2028\n"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5386,15 +5386,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2029","\r\u2029\n","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2029","\r\u2029\n","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["\u2029","\r\u2029\n"]""");
+                """["\u2029","\r\u2029\n"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5403,7 +5403,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a, 'a.*')==true]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5411,7 +5411,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5419,7 +5419,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@.a,@.b,@.c)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5427,15 +5427,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.values[?search(@, value($..['regex']))]";
             var document = JsonNode.Parse(
-                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""");
-            var results = document.Select(selector);
+                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["bab","bba","bbab"]""");
+                """["bab","bba","bbab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5444,15 +5444,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, 'a[.b]c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x axc y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x axc y"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["x abc y","x a.c y"]""");
+                """["x abc y","x a.c y"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5461,15 +5461,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, 'a\\\\.c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x axc y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x axc y"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["x a.c y"]""");
+                """["x a.c y"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5478,15 +5478,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, 'a\\\\\\\\.c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x axc y","x a\\\u2028c y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x axc y","x a\\\u2028c y"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["x a\\\u2028c y"]""");
+                """["x a\\\u2028c y"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5495,15 +5495,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, 'a\\\\[.c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x a[\u2028c y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x a[\u2028c y"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["x a[\u2028c y"]""");
+                """["x a[\u2028c y"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5512,15 +5512,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, 'a[\\\\].]c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x a\u2028c y","x a]c y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x a\u2028c y","x a]c y"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["x a.c y","x a]c y"]""");
+                """["x a.c y","x a]c y"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5529,15 +5529,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?value(@.*)==4]";
             var document = JsonNode.Parse(
-                """[[4],{"foo":4},[5],{"foo":5},4]""");
-            var results = document.Select(selector);
+                """[[4],{"foo":4},[5],{"foo":5},4]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[[4],{"foo":4}]""");
+                """[[4],{"foo":4}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5546,15 +5546,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?value(@.*)==4]";
             var document = JsonNode.Parse(
-                """[[4,4],{"foo":4,"bar":4}]""");
-            var results = document.Select(selector);
+                """[[4,4],{"foo":4,"bar":4}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[null]""");
+                """[null]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5563,7 +5563,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?value()==4]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5571,7 +5571,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?value(@.a,@.b)==4]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5579,7 +5579,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?value(@.a)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5587,15 +5587,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[? @.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5604,15 +5604,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5621,15 +5621,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5638,15 +5638,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5655,15 +5655,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[? (@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5672,15 +5672,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?\n(@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5689,15 +5689,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?\t(@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5706,15 +5706,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?\r(@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5723,15 +5723,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.a) ]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5740,15 +5740,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.a)\n]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5757,15 +5757,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.a)\t]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5774,15 +5774,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?(@.a)\r]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5791,15 +5791,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[ ?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5808,15 +5808,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\n?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5825,15 +5825,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\t?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5842,15 +5842,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\r?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":"b","d":"e"}""");
+                """{"a":"b","d":"e"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5859,7 +5859,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count (@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5867,7 +5867,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count\n(@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5875,7 +5875,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count\t(@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5883,7 +5883,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count\r(@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -5891,15 +5891,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count( @.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5908,15 +5908,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(\n@.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5925,15 +5925,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(\t@.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5942,15 +5942,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(\r@.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5959,15 +5959,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@ ,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5976,15 +5976,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@\n,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -5993,15 +5993,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@\t,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6010,15 +6010,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@\r,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6027,15 +6027,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@, '[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6044,15 +6044,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@,\n'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6061,15 +6061,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@,\t'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6078,15 +6078,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?search(@,\r'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6095,15 +6095,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@.* )==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6112,15 +6112,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@.*\n)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6129,15 +6129,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@.*\t)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6146,15 +6146,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?count(@.*\r)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6163,15 +6163,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@ .a .b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":{"b":"foo"}}""");
+                """{"a":{"b":"foo"}}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6180,15 +6180,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@\n.a\n.b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":{"b":"foo"}}""");
+                """{"a":{"b":"foo"}}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6197,15 +6197,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@\t.a\t.b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":{"b":"foo"}}""");
+                """{"a":{"b":"foo"}}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6214,15 +6214,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?length(@\r.a\r.b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":{"b":"foo"}}""");
+                """{"a":{"b":"foo"}}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6231,15 +6231,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[?length(@)==length($ [0] .a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6248,15 +6248,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[?length(@)==length($\n[0]\n.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6265,15 +6265,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[?length(@)==length($\t[0]\t.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6282,15 +6282,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..[?length(@)==length($\r[0]\r.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6299,15 +6299,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a ||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6316,15 +6316,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\n||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6333,15 +6333,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\t||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6350,15 +6350,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\r||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6367,15 +6367,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a|| @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6384,15 +6384,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a||\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6401,15 +6401,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a||\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6418,15 +6418,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a||\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6435,15 +6435,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a &&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6452,15 +6452,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\n&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6469,15 +6469,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\t&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6486,15 +6486,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\r&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6503,15 +6503,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6520,15 +6520,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6537,15 +6537,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6554,15 +6554,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6571,15 +6571,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a ==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6588,15 +6588,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\n==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6605,15 +6605,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\t==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6622,15 +6622,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\r==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6639,15 +6639,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a== @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6656,15 +6656,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6673,15 +6673,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6690,15 +6690,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a==\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":1}""");
+                """{"a":1,"b":1}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6707,15 +6707,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a !=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6724,15 +6724,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\n!=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6741,15 +6741,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\t!=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6758,15 +6758,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\r!=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6775,15 +6775,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!= @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6792,15 +6792,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6809,15 +6809,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6826,15 +6826,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a!=\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6843,15 +6843,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a <@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6860,15 +6860,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\n<@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6877,15 +6877,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\t<@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6894,15 +6894,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\r<@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6911,15 +6911,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a< @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6928,15 +6928,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6945,15 +6945,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6962,15 +6962,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6979,15 +6979,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b >@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -6996,15 +6996,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b\n>@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7013,15 +7013,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b\t>@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7030,15 +7030,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b\r>@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7047,15 +7047,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b> @.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7064,15 +7064,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b>\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7081,15 +7081,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b>\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7098,15 +7098,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b>\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"a":1,"b":2}""");
+                """{"a":1,"b":2}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7115,15 +7115,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a <=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7132,15 +7132,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\n<=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7149,15 +7149,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\t<=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7166,15 +7166,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a\r<=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7183,15 +7183,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<= @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7200,15 +7200,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7217,15 +7217,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7234,15 +7234,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.a<=\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7251,15 +7251,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b >=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7268,15 +7268,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b\n>=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7285,15 +7285,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b\t>=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7302,15 +7302,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b\r>=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7319,15 +7319,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b>= @.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7336,15 +7336,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b>=\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7353,15 +7353,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b>=\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7370,15 +7370,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?@.b>=\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7387,15 +7387,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?! @.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"d":"f"}""");
+                """{"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7404,15 +7404,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"d":"f"}""");
+                """{"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7421,15 +7421,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"d":"f"}""");
+                """{"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7438,15 +7438,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """{"d":"f"}""");
+                """{"d":"f"}""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7455,15 +7455,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?! (@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7472,15 +7472,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!\n(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7489,15 +7489,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!\t(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7506,15 +7506,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[?!\r(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7523,15 +7523,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$ ['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7540,15 +7540,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$\n['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7557,15 +7557,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$\t['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7574,15 +7574,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$\r['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7591,15 +7591,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'] ['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7608,15 +7608,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'] \n['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7625,15 +7625,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'] \t['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7642,15 +7642,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'] \r['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7659,15 +7659,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$ .a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7676,15 +7676,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$\n.a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7693,15 +7693,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$\t.a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7710,15 +7710,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$\r.a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7727,7 +7727,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$. a";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7735,7 +7735,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.\na";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7743,7 +7743,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.\ta";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7751,7 +7751,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.\ra";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7759,7 +7759,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$.. a";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7767,7 +7767,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..\na";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7775,7 +7775,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..\ta";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7783,7 +7783,7 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$..\ra";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ) );
 
         }
         [TestMethod]
@@ -7791,15 +7791,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[ 'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7808,15 +7808,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\n'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7825,15 +7825,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\t'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7842,15 +7842,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[\r'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7859,15 +7859,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a' ]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7876,15 +7876,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'\n]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7893,15 +7893,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'\t]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7910,15 +7910,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'\r]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7927,15 +7927,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a' ,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7944,15 +7944,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'\n,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7961,15 +7961,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'\t,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7978,15 +7978,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a'\r,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -7995,15 +7995,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a', 'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8012,15 +8012,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a',\n'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8029,15 +8029,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a',\t'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8046,15 +8046,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$['a',\r'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8063,15 +8063,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1 :5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8080,15 +8080,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1\n:5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8097,15 +8097,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1\t:5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8114,15 +8114,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1\r:5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8131,15 +8131,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1: 5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8148,15 +8148,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:\n5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8165,15 +8165,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:\t5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8182,15 +8182,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:\r5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8199,15 +8199,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5 :2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8216,15 +8216,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5\n:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8233,15 +8233,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5\t:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8250,15 +8250,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5\r:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8267,15 +8267,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5: 2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8284,15 +8284,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5:\n2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8301,15 +8301,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5:\t2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }
@@ -8318,15 +8318,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = @"$[1:5:\r2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expected = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var count = 0;
-            foreach (var result in results)
+            foreach ( var result in results )
             {
-                Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
+                Assert.IsTrue( JsonNode.DeepEquals( expected![count], result ) );
                 count++;
             }
         }

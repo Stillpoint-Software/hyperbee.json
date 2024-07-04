@@ -146,8 +146,8 @@ public static class JsonPath<TNode>
                     // to push and pop values onto the stack that we know will not be used.
                     if ( segmentNext.IsFinal )
                     {
-                        // theoretically, we should yield here, but we can't because we need to
-                        // preserve the order of the results as per the RFC. so we push the
+                        // we could just yield here, but we can't because we want to preserve
+                        // the order of the results as per the RFC. so we push the current
                         // value onto the stack without prepending the childKey or childKind
                         // to set up for an immediate return on the next iteration.
                         //Push( stack, value, childValue, childKey, segmentNext );
@@ -170,8 +170,10 @@ public static class JsonPath<TNode>
                     stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
                 }
 
-                // Union Processing After Descent: If a union operator follows a descent operator,
-                // either directly or after intermediary selectors, it should only process simple values. 
+                // Union Processing After Descent: If a union operator immediately follows a
+                // descendant operator, the union should only process simple values. This is
+                // to prevent duplication of complex objects that would result from both the
+                // current node and the union processing the same items.
 
                 stack.Push( parent, value, null, segmentNext, NodeFlags.AfterDescent ); // process the current value
                 continue;
@@ -179,7 +181,7 @@ public static class JsonPath<TNode>
 
             // group
 
-            for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // use 'for' for performance
+            for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // using 'for' for performance
             {
                 if ( i != 0 )
                     (selector, selectorKind) = segmentCurrent.Selectors[i];
@@ -190,7 +192,7 @@ public static class JsonPath<TNode>
                 {
                     foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                     {
-                        var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove leading '?'
+                        var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove the leading '?' character
 
                         if ( !Truthy( result ) )
                             continue;

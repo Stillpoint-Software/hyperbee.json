@@ -138,8 +138,9 @@ namespace Hyperbee.Json.Cts
         # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
         `r`n
-        [TestMethod( `"$name` ($testNumber)" )]
-        public void Test_$testNumber`_$methodName`()
+        // unit-test-ref: `"$name`"
+        [TestMethod]
+        public void Test_$methodName`_Number$testNumber()
         {
             var selector = `"$selector`";`r`n
 "@
@@ -195,12 +196,13 @@ namespace Hyperbee.Json.Cts
 
 # Generate unit-tests
 $jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
-$savePath = "CtsJsonTest.json"
+$savePath = Join-Path -Path $PSScriptRoot -ChildPath "CtsJsonTest.json"
 $jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $savePath
 
 $unitTestContent = Get-UnitTestContent -JsonTests $jsonContent
 
 # Save the generated unit-test file
-Set-Content -Path "CtsJsonTest.cs" -Value $unitTestContent
+$unitTestPath = Join-Path -Path $PSScriptRoot -ChildPath "CtsJsonTest.cs"
+Set-Content -Path $unitTestPath -Value $unitTestContent
 
-Write-Output "C# unit test file 'CtsJsonTest.cs' generated successfully."
+Write-Output "C# unit test file 'CtsJsonTest.cs' generated successfully at '$unitTestPath'."

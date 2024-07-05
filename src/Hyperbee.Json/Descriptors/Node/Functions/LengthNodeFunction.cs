@@ -13,14 +13,14 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
 
     protected override Expression GetExtensionExpression( Expression[] arguments )
     {
-        if ( arguments[0].Type == typeof(IEnumerable<JsonNode>) )
+        if ( arguments[0].Type == typeof( IEnumerable<JsonNode> ) )
             return Expression.Invoke( LengthExpression, arguments[0] );
 
-        if ( arguments[0].Type == typeof(object) )
+        if ( arguments[0].Type == typeof( object ) )
             return Expression.Invoke( LengthObjectExpression, arguments[0] );
 
         if ( arguments[0].Type.IsAssignableTo( typeof( IConvertible ) ) )
-            return Expression.Invoke( LengthObjectExpression, Expression.Convert( arguments[0], typeof(object) ) );
+            return Expression.Invoke( LengthObjectExpression, Expression.Convert( arguments[0], typeof( object ) ) );
 
         throw new NotSupportedException( $"Function {Name} does not support arguments with type {arguments[0].Type.Name}" );
     }

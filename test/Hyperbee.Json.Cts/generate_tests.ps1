@@ -137,13 +137,13 @@ namespace Hyperbee.Json.Cts
         [TestMethod]
         public void Test_$methodName`_Number$testNumber()
         {
-            var selector = @`"$selector`";`r`n
+            var selector = `"$selector`";`r`n
 "@
         
         if ($invalidSelector) {
             $unitTestContent += @"
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
         }`r`n
 "@
         } else {
@@ -158,7 +158,7 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 `"`"`"$result`"`"`");
 
-            var match = TestHelper.MatchOne(results, expect);
+            var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }`r`n
 "@
@@ -167,7 +167,7 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 `"`"`"$results`"`"`");
 
-            var match = TestHelper.MatchAny(results, expectOneOf);
+            var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }`r`n
 "@
@@ -191,7 +191,7 @@ namespace Hyperbee.Json.Cts
 
 # Generate unit-tests
 $jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
-$savePath = "CtsJsonTest.json"
+$savePath = CtsJsonTest.json"
 $jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $savePath
 
 $unitTestContent = Get-UnitTestContent -JsonTests $jsonContent

@@ -231,6 +231,8 @@ internal static class JsonPathQueryParser
                     {
                         case ' ':
                         case '\t':
+                        case '\r':
+                        case '\n':
                             break;
                         case '*':
                             state = State.UnionFinal;
@@ -267,6 +269,8 @@ internal static class JsonPathQueryParser
                     {
                         case ' ':
                         case '\t':
+                        case '\r':
+                        case '\n':
                             break;
                         case ']':
                         case ',':
@@ -346,6 +350,8 @@ internal static class JsonPathQueryParser
                     {
                         case ' ':
                         case '\t':
+                        case '\r':
+                        case '\n':
                             break;
                         case ']':
                             if ( i < n && query[i] != '.' && query[i] != '[' )

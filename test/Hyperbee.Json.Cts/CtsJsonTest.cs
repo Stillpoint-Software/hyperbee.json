@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

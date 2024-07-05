@@ -138,9 +138,8 @@ namespace Hyperbee.Json.Cts
         # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
         `r`n
-        // unit-test-ref: `"$name`"
-        [TestMethod]
-        public void Test_$methodName`_Number$testNumber()
+        [TestMethod( `"$name` ($testNumber)" )]
+        public void Test_$testNumber`_$methodName`()
         {
             var selector = `"$selector`";`r`n
 "@

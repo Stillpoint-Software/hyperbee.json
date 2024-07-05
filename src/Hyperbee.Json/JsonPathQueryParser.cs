@@ -536,7 +536,7 @@ internal static class JsonPathQueryParser
 
             isValid = false;
             reason = "Input contains non-digit characters.";
-            return true; // It's an index, but invalid
+            return false; // It's not an index
         }
 
         // Try parse to detect overflow

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,8 +22,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[["first","second"]]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -58,8 +58,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -74,8 +74,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -90,8 +90,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -126,8 +126,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -142,8 +142,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -158,8 +158,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[["A","B"],["B","A"]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -174,8 +174,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["first","second"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -190,8 +190,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["first","second"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -206,8 +206,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[["Ax","Ay"],["Ay","Ax"]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -222,8 +222,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,2]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -248,8 +248,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -264,8 +264,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -280,8 +280,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,5,6]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -296,8 +296,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,0,1,2]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -312,8 +312,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -328,8 +328,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1,2,3,4,5,6,7,8,9,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -344,8 +344,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[["A","B","A"],["B","A","A"]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -360,8 +360,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1,2,3,4,5,6,7,8,9,0,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -376,8 +376,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1,2,0,1,2]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -402,8 +402,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,3]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -418,8 +418,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["b","c"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -434,8 +434,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -450,8 +450,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -466,8 +466,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[[[[1]],[2],[1],1,2],[[[1]],[2],[1],2,1]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -482,8 +482,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[[{"c":{"e":1}},{"d":2},{"e":1},1,2],[{"c":{"e":1}},{"d":2},{"e":1},2,1],[{"c":{"e":1}},{"d":2},2,{"e":1},1],[{"d":2},{"c":{"e":1}},{"e":1},1,2],[{"d":2},{"c":{"e":1}},{"e":1},2,1],[{"d":2},{"c":{"e":1}},2,{"e":1},1]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -498,8 +498,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["b"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -514,8 +514,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[[{"a":"b"}],{"a":"b"},"b"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -530,8 +530,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["b","e","c","f"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -546,8 +546,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[["b","e","c","f"],["c","f","b","e"]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -572,8 +572,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[[1,null],[null,1]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -588,8 +588,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -604,8 +604,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":null,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -620,8 +620,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -636,8 +636,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"1","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -652,8 +652,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -668,8 +668,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"1","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -684,8 +684,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -700,8 +700,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":null,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -716,8 +716,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -732,8 +732,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":true,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -748,8 +748,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":false,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -764,8 +764,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,null,true,{"a":"b"},[false]]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -780,8 +780,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":[[1,[2]]],"b":[[1,[2]]]}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -796,8 +796,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -812,8 +812,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -828,8 +828,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -844,8 +844,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -860,8 +860,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -876,8 +876,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -892,8 +892,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -908,8 +908,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":2,"d":"f"},{"a":"1","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -924,8 +924,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -940,8 +940,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -956,8 +956,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"d":"e"},{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -972,8 +972,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -988,8 +988,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1004,8 +1004,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1020,8 +1020,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1036,8 +1036,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1052,8 +1052,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1068,8 +1068,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1084,8 +1084,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1100,8 +1100,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1116,8 +1116,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1132,8 +1132,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"e"},{"a":10,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1148,8 +1148,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":null,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1164,8 +1164,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":true,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1180,8 +1180,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":false,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1196,8 +1196,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1212,8 +1212,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1228,8 +1228,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":20,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1244,8 +1244,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1260,8 +1260,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1276,8 +1276,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1292,8 +1292,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1308,8 +1308,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1324,8 +1324,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":10,"d":"e"},{"a":20,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1340,8 +1340,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":null,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1356,8 +1356,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":true,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1372,8 +1372,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":false,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1388,8 +1388,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1404,8 +1404,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":false,"b":false}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1420,8 +1420,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":false,"b":false},{"b":false}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1436,8 +1436,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":5,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1452,8 +1452,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1468,8 +1468,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1484,8 +1484,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1500,8 +1500,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1516,8 +1516,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[[2],{"a":3}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1532,8 +1532,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[[2],[2,3],{"a":3},{"a":3,"b":4}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1548,8 +1548,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[[2],[2,3,4]]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1564,8 +1564,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,[],{}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1620,8 +1620,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[[0,1,2],[42]]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1636,8 +1636,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1652,8 +1652,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1668,8 +1668,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -1984,8 +1984,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2000,8 +2000,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2016,8 +2016,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2032,8 +2032,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2048,8 +2048,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2064,8 +2064,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2080,8 +2080,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"b":"c","d":"f"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2096,8 +2096,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":0,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2112,8 +2112,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2128,8 +2128,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":100,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2144,8 +2144,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":100,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2160,8 +2160,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":0.01,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2176,8 +2176,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1.1,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2202,8 +2202,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":110,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2218,8 +2218,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":110,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2234,8 +2234,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":0.011,"d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2250,8 +2250,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"c":"d"},{"a":null}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2266,8 +2266,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"c":3}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2282,8 +2282,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"b":2},{"c":3}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2298,8 +2298,8 @@ namespace Hyperbee.Json.Cts
             var expectOneOf = JsonNode.Parse(
                 """[[1,2],[2,1]]""" );
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchAny( results, expectOneOf! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2314,8 +2314,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2330,8 +2330,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2346,8 +2346,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"c":3},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2362,8 +2362,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2},{"a":1,"c":2},{"a":1,"b":2,"c":3}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2378,8 +2378,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["quoted' literal"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2394,8 +2394,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["quoted\" literal"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2410,8 +2410,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["quoted' literal"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2426,8 +2426,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["quoted\" literal"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2562,8 +2562,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["first"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2578,8 +2578,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["second"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2594,8 +2594,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2630,8 +2630,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["second"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2646,8 +2646,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["first"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2662,8 +2662,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2678,8 +2678,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2714,8 +2714,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2730,8 +2730,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -2746,8 +2746,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3082,8 +3082,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3098,8 +3098,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3114,8 +3114,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3130,8 +3130,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3146,8 +3146,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3162,8 +3162,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3178,8 +3178,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3194,8 +3194,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3210,8 +3210,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3226,8 +3226,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3242,8 +3242,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3258,8 +3258,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3274,8 +3274,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3320,8 +3320,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3336,8 +3336,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3352,8 +3352,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3688,8 +3688,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3704,8 +3704,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3720,8 +3720,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3736,8 +3736,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3752,8 +3752,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3768,8 +3768,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3784,8 +3784,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3800,8 +3800,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3816,8 +3816,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3832,8 +3832,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3848,8 +3848,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3864,8 +3864,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3880,8 +3880,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3926,8 +3926,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["C"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3942,8 +3942,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["C"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3958,8 +3958,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,2]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3974,8 +3974,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,3,5]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -3990,8 +3990,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1,2,3]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4006,8 +4006,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1,2,3]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4022,8 +4022,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4038,8 +4038,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,2,4,6,8]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4054,8 +4054,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[3,2,1,0]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4070,8 +4070,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[3,2,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4086,8 +4086,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,1,0]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4102,8 +4102,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[3,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4118,8 +4118,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4134,8 +4134,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[9,8]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4150,8 +4150,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[9,7,5]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4166,8 +4166,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[9,7,5]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4182,8 +4182,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[5,6]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4198,8 +4198,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[8,9]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4214,8 +4214,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1,2,3,4,5,6,7,8]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4230,8 +4230,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[9,8,7,6,5,4,3,2]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4246,8 +4246,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[7,6]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4282,8 +4282,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4298,8 +4298,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4314,8 +4314,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4330,8 +4330,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4346,8 +4346,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0,1,2,3,4,5,6,7,8,9]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4362,8 +4362,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[9,8,7,6,5,4,3,2,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4378,8 +4378,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,3,4,5,6,7,8,9]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4394,8 +4394,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[0]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4410,8 +4410,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[9,8,7,6,5,4,3,2,1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4426,8 +4426,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[3,2,1,0]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4442,8 +4442,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[1]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4458,8 +4458,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[9]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4534,8 +4534,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":[1,2,3]},{"a":[1],"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4550,8 +4550,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4566,8 +4566,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4662,8 +4662,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4678,8 +4678,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["☺☺","жж","阿美"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4694,8 +4694,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":[1,2,3]}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4710,8 +4710,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4726,8 +4726,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4742,8 +4742,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4758,8 +4758,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4774,8 +4774,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4830,8 +4830,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4846,8 +4846,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4862,8 +4862,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4878,8 +4878,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4894,8 +4894,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["bab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4910,8 +4910,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4926,8 +4926,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4942,8 +4942,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"bc"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4958,8 +4958,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4974,8 +4974,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -4990,8 +4990,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["Ж"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5006,8 +5006,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ж","1"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5022,8 +5022,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["a𐄁b"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5038,8 +5038,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["\u2028"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5054,8 +5054,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["\u2029"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5100,8 +5100,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5116,8 +5116,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["abc","a.c"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5132,8 +5132,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["a.c"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5148,8 +5148,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["a\\\u2028c"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5164,8 +5164,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["a[\u2028c"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5180,8 +5180,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["a.c","a]c"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5196,8 +5196,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["abc","ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5212,8 +5212,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["abc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5228,8 +5228,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"the end is ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5244,8 +5244,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"the end is ab"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5260,8 +5260,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"ab is at the start"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5276,8 +5276,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"contains two matches"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5292,8 +5292,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["bab","bba","bbab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5308,8 +5308,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5324,8 +5324,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5340,8 +5340,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"bc"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5356,8 +5356,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5372,8 +5372,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5388,8 +5388,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["Ж","жЖ"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5404,8 +5404,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ж","1"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5420,8 +5420,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["a𐄁bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5436,8 +5436,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["\u2028","\r\u2028\n"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5452,8 +5452,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["\u2029","\r\u2029\n"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5498,8 +5498,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["bab","bba","bbab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5514,8 +5514,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["x abc y","x a.c y"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5530,8 +5530,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["x a.c y"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5546,8 +5546,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["x a\\\u2028c y"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5562,8 +5562,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["x a[\u2028c y"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5578,8 +5578,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["x a.c y","x a]c y"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5594,8 +5594,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[[4],{"foo":4}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5610,8 +5610,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5656,8 +5656,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5672,8 +5672,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5688,8 +5688,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5704,8 +5704,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5720,8 +5720,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5736,8 +5736,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5752,8 +5752,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5768,8 +5768,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5784,8 +5784,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5800,8 +5800,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5816,8 +5816,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5832,8 +5832,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5848,8 +5848,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5864,8 +5864,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5880,8 +5880,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5896,8 +5896,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"b","d":"e"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5952,8 +5952,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5968,8 +5968,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -5984,8 +5984,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6000,8 +6000,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6016,8 +6016,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6032,8 +6032,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6048,8 +6048,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6064,8 +6064,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6080,8 +6080,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6096,8 +6096,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6112,8 +6112,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6128,8 +6128,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6144,8 +6144,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6160,8 +6160,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6176,8 +6176,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6192,8 +6192,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6208,8 +6208,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":{"b":"foo"}}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6224,8 +6224,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":{"b":"foo"}}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6240,8 +6240,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":{"b":"foo"}}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6256,8 +6256,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":{"b":"foo"}}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6272,8 +6272,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6288,8 +6288,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6304,8 +6304,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6320,8 +6320,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["foo"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6336,8 +6336,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6352,8 +6352,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6368,8 +6368,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6384,8 +6384,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6400,8 +6400,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6416,8 +6416,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6432,8 +6432,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6448,8 +6448,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1},{"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6464,8 +6464,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6480,8 +6480,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6496,8 +6496,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6512,8 +6512,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6528,8 +6528,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6544,8 +6544,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6560,8 +6560,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6576,8 +6576,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6592,8 +6592,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6608,8 +6608,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6624,8 +6624,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6640,8 +6640,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6656,8 +6656,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6672,8 +6672,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6688,8 +6688,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6704,8 +6704,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6720,8 +6720,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6736,8 +6736,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6752,8 +6752,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6768,8 +6768,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6784,8 +6784,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6800,8 +6800,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6816,8 +6816,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6832,8 +6832,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6848,8 +6848,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6864,8 +6864,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6880,8 +6880,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6896,8 +6896,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6912,8 +6912,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6928,8 +6928,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6944,8 +6944,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6960,8 +6960,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6976,8 +6976,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -6992,8 +6992,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7008,8 +7008,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7024,8 +7024,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7040,8 +7040,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7056,8 +7056,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7072,8 +7072,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7088,8 +7088,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7104,8 +7104,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7120,8 +7120,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7136,8 +7136,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7152,8 +7152,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7168,8 +7168,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7184,8 +7184,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7200,8 +7200,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7216,8 +7216,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7232,8 +7232,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7248,8 +7248,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7264,8 +7264,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7280,8 +7280,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7296,8 +7296,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7312,8 +7312,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7328,8 +7328,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7344,8 +7344,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7360,8 +7360,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7376,8 +7376,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7392,8 +7392,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7408,8 +7408,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7424,8 +7424,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7440,8 +7440,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7456,8 +7456,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7472,8 +7472,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7488,8 +7488,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7504,8 +7504,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7520,8 +7520,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7536,8 +7536,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7552,8 +7552,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7568,8 +7568,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7584,8 +7584,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7600,8 +7600,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7616,8 +7616,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7632,8 +7632,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7648,8 +7648,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7664,8 +7664,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7760,8 +7760,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7776,8 +7776,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7792,8 +7792,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7808,8 +7808,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7824,8 +7824,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7840,8 +7840,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7856,8 +7856,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7872,8 +7872,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7888,8 +7888,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7904,8 +7904,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7920,8 +7920,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7936,8 +7936,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7952,8 +7952,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7968,8 +7968,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -7984,8 +7984,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8000,8 +8000,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8016,8 +8016,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8032,8 +8032,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8048,8 +8048,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8064,8 +8064,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8080,8 +8080,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8096,8 +8096,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8112,8 +8112,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8128,8 +8128,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8144,8 +8144,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8160,8 +8160,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8176,8 +8176,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8192,8 +8192,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8208,8 +8208,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8224,8 +8224,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8240,8 +8240,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
 
 
@@ -8256,8 +8256,8 @@ namespace Hyperbee.Json.Cts
             var expect = JsonNode.Parse(
                 """[2,4]""" );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
     }
 }

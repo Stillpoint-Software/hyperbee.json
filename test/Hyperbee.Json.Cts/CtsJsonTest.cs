@@ -1,15 +1,15 @@
 using System;
 using System.Text.Json.Nodes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Hyperbee.Json.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Cts
 {
     [TestClass]
     public class CtsJsonTest
     {
-        
-        
+
+
 
         // unit-test-ref: "basic, root"
         [TestMethod]
@@ -17,15 +17,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[["first","second"]]""");
+                """[["first","second"]]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, no leading whitespace"
         [TestMethod]
@@ -33,9 +33,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = " $";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "basic, no trailing whitespace"
         [TestMethod]
@@ -43,9 +43,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$ ";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "basic, name shorthand"
         [TestMethod]
@@ -53,15 +53,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.a";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, name shorthand, extended unicode ☺"
         [TestMethod]
@@ -69,15 +69,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.☺";
             var document = JsonNode.Parse(
-                """{"☺":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"☺":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, name shorthand, underscore"
         [TestMethod]
@@ -85,15 +85,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$._";
             var document = JsonNode.Parse(
-                """{"_":"A","_foo":"B"}""");
-            var results = document.Select(selector);
+                """{"_":"A","_foo":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, name shorthand, symbol"
         [TestMethod]
@@ -101,9 +101,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.&";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "basic, name shorthand, number"
         [TestMethod]
@@ -111,9 +111,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.1";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "basic, name shorthand, absent data"
         [TestMethod]
@@ -121,15 +121,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.c";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, name shorthand, array data"
         [TestMethod]
@@ -137,15 +137,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.a";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, wildcard shorthand, object data"
         [TestMethod]
@@ -153,15 +153,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.*";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[["A","B"],["B","A"]]""");
+                """[["A","B"],["B","A"]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, wildcard shorthand, array data"
         [TestMethod]
@@ -169,15 +169,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.*";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["first","second"]""");
+                """["first","second"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, wildcard selector, array data"
         [TestMethod]
@@ -185,15 +185,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[*]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["first","second"]""");
+                """["first","second"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, wildcard shorthand, then name shorthand"
         [TestMethod]
@@ -201,15 +201,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.*.a";
             var document = JsonNode.Parse(
-                """{"x":{"a":"Ax","b":"Bx"},"y":{"a":"Ay","b":"By"}}""");
-            var results = document.Select(selector);
+                """{"x":{"a":"Ax","b":"Bx"},"y":{"a":"Ay","b":"By"}}""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[["Ax","Ay"],["Ay","Ax"]]""");
+                """[["Ax","Ay"],["Ay","Ax"]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors"
         [TestMethod]
@@ -217,15 +217,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[0,2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,2]""");
+                """[0,2]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, space instead of comma"
         [TestMethod]
@@ -233,9 +233,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[0 2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, name and index, array data"
         [TestMethod]
@@ -243,15 +243,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a',1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1]""");
+                """[1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, name and index, object data"
         [TestMethod]
@@ -259,15 +259,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a',1]";
             var document = JsonNode.Parse(
-                """{"a":1,"b":2}""");
-            var results = document.Select(selector);
+                """{"a":1,"b":2}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1]""");
+                """[1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, index and slice"
         [TestMethod]
@@ -275,15 +275,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1,5:7]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,5,6]""");
+                """[1,5,6]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, index and slice, overlapping"
         [TestMethod]
@@ -291,15 +291,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1,0:3]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,0,1,2]""");
+                """[1,0,1,2]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, duplicate index"
         [TestMethod]
@@ -307,15 +307,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1,1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,1]""");
+                """[1,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, wildcard and index"
         [TestMethod]
@@ -323,15 +323,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[*,1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9,1]""");
+                """[0,1,2,3,4,5,6,7,8,9,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, wildcard and name"
         [TestMethod]
@@ -339,15 +339,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[*,'a']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[["A","B","A"],["B","A","A"]]""");
+                """[["A","B","A"],["B","A","A"]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, wildcard and slice"
         [TestMethod]
@@ -355,15 +355,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[*,0:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9,0,1]""");
+                """[0,1,2,3,4,5,6,7,8,9,0,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, multiple selectors, multiple wildcards"
         [TestMethod]
@@ -371,15 +371,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[*,*]";
             var document = JsonNode.Parse(
-                """[0,1,2]""");
-            var results = document.Select(selector);
+                """[0,1,2]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1,2,0,1,2]""");
+                """[0,1,2,0,1,2]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, empty segment"
         [TestMethod]
@@ -387,9 +387,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, index"
         [TestMethod]
@@ -397,15 +397,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[1]";
             var document = JsonNode.Parse(
-                """{"o":[0,1,[2,3]]}""");
-            var results = document.Select(selector);
+                """{"o":[0,1,[2,3]]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,3]""");
+                """[1,3]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, name shorthand"
         [TestMethod]
@@ -413,15 +413,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..a";
             var document = JsonNode.Parse(
-                """{"o":[{"a":"b"},{"a":"c"}]}""");
-            var results = document.Select(selector);
+                """{"o":[{"a":"b"},{"a":"c"}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["b","c"]""");
+                """["b","c"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, wildcard shorthand, array data"
         [TestMethod]
@@ -429,15 +429,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..*";
             var document = JsonNode.Parse(
-                """[0,1]""");
-            var results = document.Select(selector);
+                """[0,1]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1]""");
+                """[0,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, wildcard selector, array data"
         [TestMethod]
@@ -445,15 +445,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[*]";
             var document = JsonNode.Parse(
-                """[0,1]""");
-            var results = document.Select(selector);
+                """[0,1]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1]""");
+                """[0,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, wildcard selector, nested arrays"
         [TestMethod]
@@ -461,15 +461,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[*]";
             var document = JsonNode.Parse(
-                """[[[1]],[2]]""");
-            var results = document.Select(selector);
+                """[[[1]],[2]]""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[[[[1]],[2],[1],1,2],[[[1]],[2],[1],2,1]]""");
+                """[[[[1]],[2],[1],1,2],[[[1]],[2],[1],2,1]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, wildcard selector, nested objects"
         [TestMethod]
@@ -477,15 +477,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[*]";
             var document = JsonNode.Parse(
-                """{"a":{"c":{"e":1}},"b":{"d":2}}""");
-            var results = document.Select(selector);
+                """{"a":{"c":{"e":1}},"b":{"d":2}}""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[[{"c":{"e":1}},{"d":2},{"e":1},1,2],[{"c":{"e":1}},{"d":2},{"e":1},2,1],[{"c":{"e":1}},{"d":2},2,{"e":1},1],[{"d":2},{"c":{"e":1}},{"e":1},1,2],[{"d":2},{"c":{"e":1}},{"e":1},2,1],[{"d":2},{"c":{"e":1}},2,{"e":1},1]]""");
+                """[[{"c":{"e":1}},{"d":2},{"e":1},1,2],[{"c":{"e":1}},{"d":2},{"e":1},2,1],[{"c":{"e":1}},{"d":2},2,{"e":1},1],[{"d":2},{"c":{"e":1}},{"e":1},1,2],[{"d":2},{"c":{"e":1}},{"e":1},2,1],[{"d":2},{"c":{"e":1}},2,{"e":1},1]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, wildcard shorthand, object data"
         [TestMethod]
@@ -493,15 +493,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..*";
             var document = JsonNode.Parse(
-                """{"a":"b"}""");
-            var results = document.Select(selector);
+                """{"a":"b"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["b"]""");
+                """["b"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, wildcard shorthand, nested data"
         [TestMethod]
@@ -509,15 +509,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..*";
             var document = JsonNode.Parse(
-                """{"o":[{"a":"b"}]}""");
-            var results = document.Select(selector);
+                """{"o":[{"a":"b"}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[[{"a":"b"}],{"a":"b"},"b"]""");
+                """[[{"a":"b"}],{"a":"b"},"b"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, multiple selectors"
         [TestMethod]
@@ -525,15 +525,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..['a','d']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["b","e","c","f"]""");
+                """["b","e","c","f"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, descendant segment, object traversal, multiple selectors"
         [TestMethod]
@@ -541,15 +541,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..['a','d']";
             var document = JsonNode.Parse(
-                """{"x":{"a":"b","d":"e"},"y":{"a":"c","d":"f"}}""");
-            var results = document.Select(selector);
+                """{"x":{"a":"b","d":"e"},"y":{"a":"c","d":"f"}}""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[["b","e","c","f"],["c","f","b","e"]]""");
+                """[["b","e","c","f"],["c","f","b","e"]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "basic, bald descendant segment"
         [TestMethod]
@@ -557,9 +557,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, existence, without segments"
         [TestMethod]
@@ -567,15 +567,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@]";
             var document = JsonNode.Parse(
-                """{"a":1,"b":null}""");
-            var results = document.Select(selector);
+                """{"a":1,"b":null}""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[[1,null],[null,1]]""");
+                """[[1,null],[null,1]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, existence"
         [TestMethod]
@@ -583,15 +583,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, existence, present with null"
         [TestMethod]
@@ -599,15 +599,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":null,"d":"e"}]""");
+                """[{"a":null,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals string, single quotes"
         [TestMethod]
@@ -615,15 +615,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a=='b']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals numeric string, single quotes"
         [TestMethod]
@@ -631,15 +631,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a=='1']";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"1","d":"e"}]""");
+                """[{"a":"1","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals string, double quotes"
         [TestMethod]
@@ -647,15 +647,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==\\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals numeric string, double quotes"
         [TestMethod]
@@ -663,15 +663,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==\\";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"1","d":"e"}]""");
+                """[{"a":"1","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number"
         [TestMethod]
@@ -679,15 +679,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":"c","d":"f"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":"c","d":"f"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"e"}]""");
+                """[{"a":1,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals null"
         [TestMethod]
@@ -695,15 +695,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":null,"d":"e"}]""");
+                """[{"a":null,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals null, absent from data"
         [TestMethod]
@@ -711,15 +711,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==null]";
             var document = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals true"
         [TestMethod]
@@ -727,15 +727,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":true,"d":"e"}]""");
+                """[{"a":true,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals false"
         [TestMethod]
@@ -743,15 +743,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":false,"d":"e"}]""");
+                """[{"a":false,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals self"
         [TestMethod]
@@ -759,15 +759,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@==@]";
             var document = JsonNode.Parse(
-                """[1,null,true,{"a":"b"},[false]]""");
-            var results = document.Select(selector);
+                """[1,null,true,{"a":"b"},[false]]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,null,true,{"a":"b"},[false]]""");
+                """[1,null,true,{"a":"b"},[false]]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, deep equality, arrays"
         [TestMethod]
@@ -775,15 +775,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":[1,2]},{"a":[[1,[2]]],"b":[[1,[2]]]},{"a":[[1,[2]]],"b":[[[2],1]]},{"a":[[1,[2]]],"b":[[1,2]]}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":[1,2]},{"a":[[1,[2]]],"b":[[1,[2]]]},{"a":[[1,[2]]],"b":[[[2],1]]},{"a":[[1,[2]]],"b":[[1,2]]}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":[[1,[2]]],"b":[[1,[2]]]}]""");
+                """[{"a":[[1,[2]]],"b":[[1,[2]]]}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, deep equality, objects"
         [TestMethod]
@@ -791,15 +791,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":2}}}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1}},{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":2}}}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}}]""");
+                """[{"a":{"x":1,"y":{"z":1}},"b":{"x":1,"y":{"z":1}}},{"a":{"x":1,"y":{"z":1}},"b":{"y":{"z":1},"x":1}}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals string, single quotes"
         [TestMethod]
@@ -807,15 +807,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!='b']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"}]""");
+                """[{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals numeric string, single quotes"
         [TestMethod]
@@ -823,15 +823,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!='1']";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"f"}]""");
+                """[{"a":1,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals string, single quotes, different type"
         [TestMethod]
@@ -839,15 +839,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!='b']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"f"}]""");
+                """[{"a":1,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals string, double quotes"
         [TestMethod]
@@ -855,15 +855,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=\\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"}]""");
+                """[{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals numeric string, double quotes"
         [TestMethod]
@@ -871,15 +871,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=\\";
             var document = JsonNode.Parse(
-                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"1","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"f"}]""");
+                """[{"a":1,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals string, double quotes, different types"
         [TestMethod]
@@ -887,15 +887,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=\\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"f"}]""");
+                """[{"a":1,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals number"
         [TestMethod]
@@ -903,15 +903,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=1]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":2,"d":"f"},{"a":"1","d":"f"}]""");
+                """[{"a":2,"d":"f"},{"a":"1","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals number, different types"
         [TestMethod]
@@ -919,15 +919,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=1]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"}]""");
+                """[{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals null"
         [TestMethod]
@@ -935,15 +935,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"}]""");
+                """[{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals null, absent from data"
         [TestMethod]
@@ -951,15 +951,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=null]";
             var document = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals true"
         [TestMethod]
@@ -967,15 +967,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"}]""");
+                """[{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not-equals false"
         [TestMethod]
@@ -983,15 +983,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"}]""");
+                """[{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than string, single quotes"
         [TestMethod]
@@ -999,15 +999,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<'c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than string, double quotes"
         [TestMethod]
@@ -1015,15 +1015,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<\\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than number"
         [TestMethod]
@@ -1031,15 +1031,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"e"}]""");
+                """[{"a":1,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than null"
         [TestMethod]
@@ -1047,15 +1047,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than true"
         [TestMethod]
@@ -1063,15 +1063,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than false"
         [TestMethod]
@@ -1079,15 +1079,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than or equal to string, single quotes"
         [TestMethod]
@@ -1095,15 +1095,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<='c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than or equal to string, double quotes"
         [TestMethod]
@@ -1111,15 +1111,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=\\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than or equal to number"
         [TestMethod]
@@ -1127,15 +1127,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"}]""");
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than or equal to null"
         [TestMethod]
@@ -1143,15 +1143,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":null,"d":"e"}]""");
+                """[{"a":null,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than or equal to true"
         [TestMethod]
@@ -1159,15 +1159,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":true,"d":"e"}]""");
+                """[{"a":true,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, less than or equal to false"
         [TestMethod]
@@ -1175,15 +1175,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":false,"d":"e"}]""");
+                """[{"a":false,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than string, single quotes"
         [TestMethod]
@@ -1191,15 +1191,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>'c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"d","d":"f"}]""");
+                """[{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than string, double quotes"
         [TestMethod]
@@ -1207,15 +1207,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>\\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"d","d":"f"}]""");
+                """[{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than number"
         [TestMethod]
@@ -1223,15 +1223,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":20,"d":"f"}]""");
+                """[{"a":20,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than null"
         [TestMethod]
@@ -1239,15 +1239,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than true"
         [TestMethod]
@@ -1255,15 +1255,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than false"
         [TestMethod]
@@ -1271,15 +1271,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than or equal to string, single quotes"
         [TestMethod]
@@ -1287,15 +1287,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>='c']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
+                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than or equal to string, double quotes"
         [TestMethod]
@@ -1303,15 +1303,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>=\\";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
+                """[{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than or equal to number"
         [TestMethod]
@@ -1319,15 +1319,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>=10]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":10,"d":"e"},{"a":"c","d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":10,"d":"e"},{"a":20,"d":"f"}]""");
+                """[{"a":10,"d":"e"},{"a":20,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than or equal to null"
         [TestMethod]
@@ -1335,15 +1335,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>=null]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":null,"d":"e"}]""");
+                """[{"a":null,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than or equal to true"
         [TestMethod]
@@ -1351,15 +1351,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>=true]";
             var document = JsonNode.Parse(
-                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":true,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":true,"d":"e"}]""");
+                """[{"a":true,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, greater than or equal to false"
         [TestMethod]
@@ -1367,15 +1367,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>=false]";
             var document = JsonNode.Parse(
-                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":false,"d":"e"}]""");
+                """[{"a":false,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, exists and not-equals null, absent from data"
         [TestMethod]
@@ -1383,15 +1383,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a&&@.a!=null]";
             var document = JsonNode.Parse(
-                """[{"d":"e"},{"a":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"e"},{"a":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"c","d":"f"}]""");
+                """[{"a":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, exists and exists, data false"
         [TestMethod]
@@ -1399,15 +1399,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":false},{"b":false},{"c":false}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":false},{"b":false},{"c":false}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":false,"b":false}]""");
+                """[{"a":false,"b":false}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, exists or exists, data false"
         [TestMethod]
@@ -1415,15 +1415,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":false,"b":false},{"b":false},{"c":false}]""");
-            var results = document.Select(selector);
+                """[{"a":false,"b":false},{"b":false},{"c":false}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":false,"b":false},{"b":false}]""");
+                """[{"a":false,"b":false},{"b":false}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, and"
         [TestMethod]
@@ -1431,15 +1431,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a>0&&@.a<10]";
             var document = JsonNode.Parse(
-                """[{"a":-10,"d":"e"},{"a":5,"d":"f"},{"a":20,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":-10,"d":"e"},{"a":5,"d":"f"},{"a":20,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":5,"d":"f"}]""");
+                """[{"a":5,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, or"
         [TestMethod]
@@ -1447,15 +1447,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a=='b'||@.a=='d']";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"c","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
+                """[{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not expression"
         [TestMethod]
@@ -1463,15 +1463,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not exists"
         [TestMethod]
@@ -1479,15 +1479,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"d":"f"}]""");
+                """[{"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, not exists, data null"
         [TestMethod]
@@ -1495,15 +1495,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!@.a]";
             var document = JsonNode.Parse(
-                """[{"a":null,"d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":null,"d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"d":"f"}]""");
+                """[{"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, non-singular existence, wildcard"
         [TestMethod]
@@ -1511,15 +1511,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.*]";
             var document = JsonNode.Parse(
-                """[1,[],[2],{},{"a":3}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],{},{"a":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[[2],{"a":3}]""");
+                """[[2],{"a":3}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, non-singular existence, multiple"
         [TestMethod]
@@ -1527,15 +1527,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@[0, 0, 'a']]";
             var document = JsonNode.Parse(
-                """[1,[],[2],[2,3],{"a":3},{"b":4},{"a":3,"b":4}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],[2,3],{"a":3},{"b":4},{"a":3,"b":4}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[[2],[2,3],{"a":3},{"a":3,"b":4}]""");
+                """[[2],[2,3],{"a":3},{"a":3,"b":4}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, non-singular existence, slice"
         [TestMethod]
@@ -1543,15 +1543,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@[0:2]]";
             var document = JsonNode.Parse(
-                """[1,[],[2],[2,3,4],{},{"a":3}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],[2,3,4],{},{"a":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[[2],[2,3,4]]""");
+                """[[2],[2,3,4]]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, non-singular existence, negated"
         [TestMethod]
@@ -1559,15 +1559,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!@.*]";
             var document = JsonNode.Parse(
-                """[1,[],[2],{},{"a":3}]""");
-            var results = document.Select(selector);
+                """[1,[],[2],{},{"a":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,[],{}]""");
+                """[1,[],{}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, non-singular query in comparison, slice"
         [TestMethod]
@@ -1575,9 +1575,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@[0:0]==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, non-singular query in comparison, all children"
         [TestMethod]
@@ -1585,9 +1585,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@[*]==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, non-singular query in comparison, descendants"
         [TestMethod]
@@ -1595,9 +1595,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@..a==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, non-singular query in comparison, combined"
         [TestMethod]
@@ -1605,9 +1605,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a[*].a==0]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, nested"
         [TestMethod]
@@ -1615,15 +1615,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@[?@>1]]";
             var document = JsonNode.Parse(
-                """[[0],[0,1],[0,1,2],[42]]""");
-            var results = document.Select(selector);
+                """[[0],[0,1],[0,1,2],[42]]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[[0,1,2],[42]]""");
+                """[[0,1,2],[42]]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, name segment on primitive, selects nothing"
         [TestMethod]
@@ -1631,15 +1631,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a == 1]";
             var document = JsonNode.Parse(
-                """{"a":1}""");
-            var results = document.Select(selector);
+                """{"a":1}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, name segment on array, selects nothing"
         [TestMethod]
@@ -1647,15 +1647,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@['0'] == 5]";
             var document = JsonNode.Parse(
-                """[[5,6]]""");
-            var results = document.Select(selector);
+                """[[5,6]]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, index segment on object, selects nothing"
         [TestMethod]
@@ -1663,15 +1663,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@[0] == 5]";
             var document = JsonNode.Parse(
-                """[{"0":5}]""");
-            var results = document.Select(selector);
+                """[{"0":5}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, index, equal"
         [TestMethod]
@@ -1679,9 +1679,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0, 0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, index, not equal"
         [TestMethod]
@@ -1689,9 +1689,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0, 0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, index, less-or-equal"
         [TestMethod]
@@ -1699,9 +1699,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0, 0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, name, equal"
         [TestMethod]
@@ -1709,9 +1709,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@['a', 'a']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, name, not equal"
         [TestMethod]
@@ -1719,9 +1719,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@['a', 'a']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, name, less-or-equal"
         [TestMethod]
@@ -1729,9 +1729,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@['a', 'a']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, combined, equal"
         [TestMethod]
@@ -1739,9 +1739,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0, '0']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, combined, not equal"
         [TestMethod]
@@ -1749,9 +1749,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0, '0']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, combined, less-or-equal"
         [TestMethod]
@@ -1759,9 +1759,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0, '0']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, wildcard, equal"
         [TestMethod]
@@ -1769,9 +1769,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.*==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, wildcard, not equal"
         [TestMethod]
@@ -1779,9 +1779,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.*!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, wildcard, less-or-equal"
         [TestMethod]
@@ -1789,9 +1789,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.*<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, slice, equal"
         [TestMethod]
@@ -1799,9 +1799,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0:0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, slice, not equal"
         [TestMethod]
@@ -1809,9 +1809,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0:0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, relative non-singular query, slice, less-or-equal"
         [TestMethod]
@@ -1819,9 +1819,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@[0:0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, index, equal"
         [TestMethod]
@@ -1829,9 +1829,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0, 0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, index, not equal"
         [TestMethod]
@@ -1839,9 +1839,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0, 0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, index, less-or-equal"
         [TestMethod]
@@ -1849,9 +1849,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0, 0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, name, equal"
         [TestMethod]
@@ -1859,9 +1859,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($['a', 'a']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, name, not equal"
         [TestMethod]
@@ -1869,9 +1869,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($['a', 'a']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, name, less-or-equal"
         [TestMethod]
@@ -1879,9 +1879,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($['a', 'a']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, combined, equal"
         [TestMethod]
@@ -1889,9 +1889,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0, '0']==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, combined, not equal"
         [TestMethod]
@@ -1899,9 +1899,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0, '0']!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, combined, less-or-equal"
         [TestMethod]
@@ -1909,9 +1909,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0, '0']<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, wildcard, equal"
         [TestMethod]
@@ -1919,9 +1919,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($.*==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, wildcard, not equal"
         [TestMethod]
@@ -1929,9 +1929,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($.*!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, wildcard, less-or-equal"
         [TestMethod]
@@ -1939,9 +1939,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($.*<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, slice, equal"
         [TestMethod]
@@ -1949,9 +1949,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0:0]==42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, slice, not equal"
         [TestMethod]
@@ -1959,9 +1959,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0:0]!=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, absolute non-singular query, slice, less-or-equal"
         [TestMethod]
@@ -1969,9 +1969,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?($[0:0]<=42)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, multiple selectors"
         [TestMethod]
@@ -1979,15 +1979,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a,?@.b]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, multiple selectors, comparison"
         [TestMethod]
@@ -1995,15 +1995,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a=='b',?@.b=='x']";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, multiple selectors, overlapping"
         [TestMethod]
@@ -2011,15 +2011,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a,?@.d]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, multiple selectors, filter and index"
         [TestMethod]
@@ -2027,15 +2027,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a,1]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, multiple selectors, filter and wildcard"
         [TestMethod]
@@ -2043,15 +2043,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a,*]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"a":"b","d":"e"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, multiple selectors, filter and slice"
         [TestMethod]
@@ -2059,15 +2059,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a,1:]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""");
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"},{"g":"h"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, multiple selectors, comparison filter, index and slice"
         [TestMethod]
@@ -2075,15 +2075,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1, ?@.a=='b', 1:]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"b":"c","d":"f"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
+                """[{"b":"c","d":"f"},{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, zero and negative zero"
         [TestMethod]
@@ -2091,15 +2091,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==-0]";
             var document = JsonNode.Parse(
-                """[{"a":0,"d":"e"},{"a":0.1,"d":"f"},{"a":"0","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":0,"d":"e"},{"a":0.1,"d":"f"},{"a":"0","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":0,"d":"e"}]""");
+                """[{"a":0,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, with and without decimal fraction"
         [TestMethod]
@@ -2107,15 +2107,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1.0]";
             var document = JsonNode.Parse(
-                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"d":"e"},{"a":2,"d":"f"},{"a":"1","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"d":"e"}]""");
+                """[{"a":1,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, exponent"
         [TestMethod]
@@ -2123,15 +2123,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1e2]";
             var document = JsonNode.Parse(
-                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":100,"d":"e"}]""");
+                """[{"a":100,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, positive exponent"
         [TestMethod]
@@ -2139,15 +2139,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1e+2]";
             var document = JsonNode.Parse(
-                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":100,"d":"e"},{"a":100.1,"d":"f"},{"a":"100","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":100,"d":"e"}]""");
+                """[{"a":100,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, negative exponent"
         [TestMethod]
@@ -2155,15 +2155,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1e-2]";
             var document = JsonNode.Parse(
-                """[{"a":0.01,"d":"e"},{"a":0.02,"d":"f"},{"a":"0.01","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":0.01,"d":"e"},{"a":0.02,"d":"f"},{"a":"0.01","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":0.01,"d":"e"}]""");
+                """[{"a":0.01,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, decimal fraction"
         [TestMethod]
@@ -2171,15 +2171,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1.1]";
             var document = JsonNode.Parse(
-                """[{"a":1.1,"d":"e"},{"a":1,"d":"f"},{"a":"1.1","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":1.1,"d":"e"},{"a":1,"d":"f"},{"a":"1.1","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1.1,"d":"e"}]""");
+                """[{"a":1.1,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, decimal fraction, no fractional digit"
         [TestMethod]
@@ -2187,9 +2187,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1.]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, equals number, decimal fraction, exponent"
         [TestMethod]
@@ -2197,15 +2197,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1.1e2]";
             var document = JsonNode.Parse(
-                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":110,"d":"e"}]""");
+                """[{"a":110,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, decimal fraction, positive exponent"
         [TestMethod]
@@ -2213,15 +2213,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1.1e+2]";
             var document = JsonNode.Parse(
-                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":110,"d":"e"},{"a":110.1,"d":"f"},{"a":"110","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":110,"d":"e"}]""");
+                """[{"a":110,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals number, decimal fraction, negative exponent"
         [TestMethod]
@@ -2229,15 +2229,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==1.1e-2]";
             var document = JsonNode.Parse(
-                """[{"a":0.011,"d":"e"},{"a":0.012,"d":"f"},{"a":"0.011","d":"g"}]""");
-            var results = document.Select(selector);
+                """[{"a":0.011,"d":"e"},{"a":0.012,"d":"f"},{"a":"0.011","d":"g"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":0.011,"d":"e"}]""");
+                """[{"a":0.011,"d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals, special nothing"
         [TestMethod]
@@ -2245,15 +2245,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.values[?length(@.a) == value($..c)]";
             var document = JsonNode.Parse(
-                """{"c":"cd","values":[{"a":"ab"},{"c":"d"},{"a":null}]}""");
-            var results = document.Select(selector);
+                """{"c":"cd","values":[{"a":"ab"},{"c":"d"},{"a":null}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"c":"d"},{"a":null}]""");
+                """[{"c":"d"},{"a":null}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals, empty node list and empty node list"
         [TestMethod]
@@ -2261,15 +2261,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a == @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"c":3}]""");
+                """[{"c":3}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, equals, empty node list and special nothing"
         [TestMethod]
@@ -2277,15 +2277,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a == length(@.b)]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"b":2},{"c":3}]""");
+                """[{"b":2},{"c":3}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, object data"
         [TestMethod]
@@ -2293,15 +2293,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@<3]";
             var document = JsonNode.Parse(
-                """{"a":1,"b":2,"c":3}""");
-            var results = document.Select(selector);
+                """{"a":1,"b":2,"c":3}""" );
+            var results = document.Select( selector );
             var expectOneOf = JsonNode.Parse(
-                """[[1,2],[2,1]]""");
+                """[[1,2],[2,1]]""" );
 
             var match = TestHelper.MatchAny(results, expectOneOf!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, and binds more tightly than or"
         [TestMethod]
@@ -2309,15 +2309,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a || @.b && @.c]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, left to right evaluation"
         [TestMethod]
@@ -2325,15 +2325,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a && @.b || @.c]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1,"b":2},{"a":1,"c":3},{"b":1,"c":3},{"c":3},{"a":1,"b":2,"c":3}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, group terms, left"
         [TestMethod]
@@ -2341,15 +2341,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.a || @.b) && @.c]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":2},{"a":1,"c":3},{"b":2,"c":3},{"a":1},{"b":2},{"c":3},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":2},{"a":1,"c":3},{"b":2,"c":3},{"a":1},{"b":2},{"c":3},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"c":3},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1,"c":3},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, group terms, right"
         [TestMethod]
@@ -2357,15 +2357,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a && (@.b || @.c)]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"a":1,"b":2},{"a":1,"c":2},{"b":2},{"c":2},{"a":1,"b":2,"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"a":1,"b":2},{"a":1,"c":2},{"b":2},{"c":2},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2},{"a":1,"c":2},{"a":1,"b":2,"c":3}]""");
+                """[{"a":1,"b":2},{"a":1,"c":2},{"a":1,"b":2,"c":3}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, string literal, single quote in double quotes"
         [TestMethod]
@@ -2373,15 +2373,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@ == \\";
             var document = JsonNode.Parse(
-                """["quoted' literal","a","quoted\\' literal"]""");
-            var results = document.Select(selector);
+                """["quoted' literal","a","quoted\\' literal"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["quoted' literal"]""");
+                """["quoted' literal"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, string literal, double quote in single quotes"
         [TestMethod]
@@ -2389,15 +2389,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@ == 'quoted\\";
             var document = JsonNode.Parse(
-                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""");
-            var results = document.Select(selector);
+                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["quoted\" literal"]""");
+                """["quoted\" literal"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, string literal, escaped single quote in single quotes"
         [TestMethod]
@@ -2405,15 +2405,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@ == 'quoted\\' literal']";
             var document = JsonNode.Parse(
-                """["quoted' literal","a","quoted\\' literal","'quoted\" literal'"]""");
-            var results = document.Select(selector);
+                """["quoted' literal","a","quoted\\' literal","'quoted\" literal'"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["quoted' literal"]""");
+                """["quoted' literal"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, string literal, escaped double quote in double quotes"
         [TestMethod]
@@ -2421,15 +2421,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@ == \\";
             var document = JsonNode.Parse(
-                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""");
-            var results = document.Select(selector);
+                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["quoted\" literal"]""");
+                """["quoted\" literal"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "filter, literal true must be compared"
         [TestMethod]
@@ -2437,9 +2437,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?true]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, literal false must be compared"
         [TestMethod]
@@ -2447,9 +2447,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, literal string must be compared"
         [TestMethod]
@@ -2457,9 +2457,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?'abc']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, literal int must be compared"
         [TestMethod]
@@ -2467,9 +2467,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, literal float must be compared"
         [TestMethod]
@@ -2477,9 +2477,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?2.2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, literal null must be compared"
         [TestMethod]
@@ -2487,9 +2487,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?null]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, and, literals must be compared"
         [TestMethod]
@@ -2497,9 +2497,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?true && false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, or, literals must be compared"
         [TestMethod]
@@ -2507,9 +2507,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?true || false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, and, right hand literal must be compared"
         [TestMethod]
@@ -2517,9 +2517,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?true == false && false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, or, right hand literal must be compared"
         [TestMethod]
@@ -2527,9 +2527,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?true == false || false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, and, left hand literal must be compared"
         [TestMethod]
@@ -2537,9 +2537,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?false && true == false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "filter, or, left hand literal must be compared"
         [TestMethod]
@@ -2547,9 +2547,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?false || true == false]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "index selector, first element"
         [TestMethod]
@@ -2557,15 +2557,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[0]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["first"]""");
+                """["first"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "index selector, second element"
         [TestMethod]
@@ -2573,15 +2573,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["second"]""");
+                """["second"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "index selector, out of bound"
         [TestMethod]
@@ -2589,15 +2589,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[2]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "index selector, overflowing index"
         [TestMethod]
@@ -2605,9 +2605,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "index selector, not actually an index, overflowing index leads into general text"
         [TestMethod]
@@ -2615,9 +2615,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[231584178474632390847141970017375815706539969331281128078915168SomeRandomText]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "index selector, negative"
         [TestMethod]
@@ -2625,15 +2625,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["second"]""");
+                """["second"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "index selector, more negative"
         [TestMethod]
@@ -2641,15 +2641,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-2]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["first"]""");
+                """["first"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "index selector, negative out of bound"
         [TestMethod]
@@ -2657,15 +2657,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-3]";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "index selector, on object"
         [TestMethod]
@@ -2673,15 +2673,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[0]";
             var document = JsonNode.Parse(
-                """{"foo":1}""");
-            var results = document.Select(selector);
+                """{"foo":1}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "index selector, leading 0"
         [TestMethod]
@@ -2689,9 +2689,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[01]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "index selector, leading -0"
         [TestMethod]
@@ -2699,9 +2699,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-01]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes"
         [TestMethod]
@@ -2709,15 +2709,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, absent data"
         [TestMethod]
@@ -2725,15 +2725,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, array data"
         [TestMethod]
@@ -2741,15 +2741,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0000"
         [TestMethod]
@@ -2757,9 +2757,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0001"
         [TestMethod]
@@ -2767,9 +2767,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0002"
         [TestMethod]
@@ -2777,9 +2777,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0003"
         [TestMethod]
@@ -2787,9 +2787,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0004"
         [TestMethod]
@@ -2797,9 +2797,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0005"
         [TestMethod]
@@ -2807,9 +2807,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0006"
         [TestMethod]
@@ -2817,9 +2817,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0007"
         [TestMethod]
@@ -2827,9 +2827,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0008"
         [TestMethod]
@@ -2837,9 +2837,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0009"
         [TestMethod]
@@ -2847,9 +2847,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+000A"
         [TestMethod]
@@ -2857,9 +2857,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+000B"
         [TestMethod]
@@ -2867,9 +2867,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+000C"
         [TestMethod]
@@ -2877,9 +2877,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+000D"
         [TestMethod]
@@ -2887,9 +2887,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+000E"
         [TestMethod]
@@ -2897,9 +2897,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+000F"
         [TestMethod]
@@ -2907,9 +2907,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0010"
         [TestMethod]
@@ -2917,9 +2917,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0011"
         [TestMethod]
@@ -2927,9 +2927,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0012"
         [TestMethod]
@@ -2937,9 +2937,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0013"
         [TestMethod]
@@ -2947,9 +2947,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0014"
         [TestMethod]
@@ -2957,9 +2957,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0015"
         [TestMethod]
@@ -2967,9 +2967,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0016"
         [TestMethod]
@@ -2977,9 +2977,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0017"
         [TestMethod]
@@ -2987,9 +2987,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0018"
         [TestMethod]
@@ -2997,9 +2997,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0019"
         [TestMethod]
@@ -3007,9 +3007,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+001A"
         [TestMethod]
@@ -3017,9 +3017,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+001B"
         [TestMethod]
@@ -3027,9 +3027,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+001C"
         [TestMethod]
@@ -3037,9 +3037,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+001D"
         [TestMethod]
@@ -3047,9 +3047,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+001E"
         [TestMethod]
@@ -3057,9 +3057,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+001F"
         [TestMethod]
@@ -3067,9 +3067,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded U+0020"
         [TestMethod]
@@ -3077,15 +3077,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{" ":"A"}""");
-            var results = document.Select(selector);
+                """{" ":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped double quote"
         [TestMethod]
@@ -3093,15 +3093,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"\"":"A"}""");
-            var results = document.Select(selector);
+                """{"\"":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped reverse solidus"
         [TestMethod]
@@ -3109,15 +3109,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"\\":"A"}""");
-            var results = document.Select(selector);
+                """{"\\":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped solidus"
         [TestMethod]
@@ -3125,15 +3125,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"/":"A"}""");
-            var results = document.Select(selector);
+                """{"/":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped backspace"
         [TestMethod]
@@ -3141,15 +3141,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"\b":"A"}""");
-            var results = document.Select(selector);
+                """{"\b":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped form feed"
         [TestMethod]
@@ -3157,15 +3157,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"\f":"A"}""");
-            var results = document.Select(selector);
+                """{"\f":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped line feed"
         [TestMethod]
@@ -3173,15 +3173,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"\n":"A"}""");
-            var results = document.Select(selector);
+                """{"\n":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped carriage return"
         [TestMethod]
@@ -3189,15 +3189,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"\r":"A"}""");
-            var results = document.Select(selector);
+                """{"\r":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped tab"
         [TestMethod]
@@ -3205,15 +3205,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"\t":"A"}""");
-            var results = document.Select(selector);
+                """{"\t":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped ☺, upper case hex"
         [TestMethod]
@@ -3221,15 +3221,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, escaped ☺, lower case hex"
         [TestMethod]
@@ -3237,15 +3237,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, surrogate pair 𝄞"
         [TestMethod]
@@ -3253,15 +3253,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"𝄞":"A"}""");
-            var results = document.Select(selector);
+                """{"𝄞":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, surrogate pair 😀"
         [TestMethod]
@@ -3269,15 +3269,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"😀":"A"}""");
-            var results = document.Select(selector);
+                """{"😀":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, invalid escaped single quote"
         [TestMethod]
@@ -3285,9 +3285,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, embedded double quote"
         [TestMethod]
@@ -3295,9 +3295,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, incomplete escape"
         [TestMethod]
@@ -3305,9 +3305,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes"
         [TestMethod]
@@ -3315,15 +3315,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, absent data"
         [TestMethod]
@@ -3331,15 +3331,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['c']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, array data"
         [TestMethod]
@@ -3347,15 +3347,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a']";
             var document = JsonNode.Parse(
-                """["first","second"]""");
-            var results = document.Select(selector);
+                """["first","second"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0000"
         [TestMethod]
@@ -3363,9 +3363,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0000']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0001"
         [TestMethod]
@@ -3373,9 +3373,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0001']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0002"
         [TestMethod]
@@ -3383,9 +3383,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0002']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0003"
         [TestMethod]
@@ -3393,9 +3393,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0003']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0004"
         [TestMethod]
@@ -3403,9 +3403,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0004']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0005"
         [TestMethod]
@@ -3413,9 +3413,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0005']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0006"
         [TestMethod]
@@ -3423,9 +3423,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0006']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0007"
         [TestMethod]
@@ -3433,9 +3433,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0007']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0008"
         [TestMethod]
@@ -3443,9 +3443,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\b']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0009"
         [TestMethod]
@@ -3453,9 +3453,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\t']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+000A"
         [TestMethod]
@@ -3463,9 +3463,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\n']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+000B"
         [TestMethod]
@@ -3473,9 +3473,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u000b']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+000C"
         [TestMethod]
@@ -3483,9 +3483,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\f']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+000D"
         [TestMethod]
@@ -3493,9 +3493,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\r']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+000E"
         [TestMethod]
@@ -3503,9 +3503,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u000e']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+000F"
         [TestMethod]
@@ -3513,9 +3513,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u000f']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0010"
         [TestMethod]
@@ -3523,9 +3523,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0010']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0011"
         [TestMethod]
@@ -3533,9 +3533,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0011']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0012"
         [TestMethod]
@@ -3543,9 +3543,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0012']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0013"
         [TestMethod]
@@ -3553,9 +3553,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0013']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0014"
         [TestMethod]
@@ -3563,9 +3563,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0014']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0015"
         [TestMethod]
@@ -3573,9 +3573,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0015']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0016"
         [TestMethod]
@@ -3583,9 +3583,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0016']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0017"
         [TestMethod]
@@ -3593,9 +3593,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0017']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0018"
         [TestMethod]
@@ -3603,9 +3603,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0018']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0019"
         [TestMethod]
@@ -3613,9 +3613,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u0019']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+001A"
         [TestMethod]
@@ -3623,9 +3623,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u001a']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+001B"
         [TestMethod]
@@ -3633,9 +3633,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u001b']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+001C"
         [TestMethod]
@@ -3643,9 +3643,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u001c']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+001D"
         [TestMethod]
@@ -3653,9 +3653,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u001d']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+001E"
         [TestMethod]
@@ -3663,9 +3663,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u001e']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+001F"
         [TestMethod]
@@ -3673,9 +3673,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\u001f']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded U+0020"
         [TestMethod]
@@ -3683,15 +3683,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[' ']";
             var document = JsonNode.Parse(
-                """{" ":"A"}""");
-            var results = document.Select(selector);
+                """{" ":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped single quote"
         [TestMethod]
@@ -3699,15 +3699,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\'']";
             var document = JsonNode.Parse(
-                """{"'":"A"}""");
-            var results = document.Select(selector);
+                """{"'":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped reverse solidus"
         [TestMethod]
@@ -3715,15 +3715,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\\\']";
             var document = JsonNode.Parse(
-                """{"\\":"A"}""");
-            var results = document.Select(selector);
+                """{"\\":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped solidus"
         [TestMethod]
@@ -3731,15 +3731,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\/']";
             var document = JsonNode.Parse(
-                """{"/":"A"}""");
-            var results = document.Select(selector);
+                """{"/":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped backspace"
         [TestMethod]
@@ -3747,15 +3747,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\b']";
             var document = JsonNode.Parse(
-                """{"\b":"A"}""");
-            var results = document.Select(selector);
+                """{"\b":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped form feed"
         [TestMethod]
@@ -3763,15 +3763,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\f']";
             var document = JsonNode.Parse(
-                """{"\f":"A"}""");
-            var results = document.Select(selector);
+                """{"\f":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped line feed"
         [TestMethod]
@@ -3779,15 +3779,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\n']";
             var document = JsonNode.Parse(
-                """{"\n":"A"}""");
-            var results = document.Select(selector);
+                """{"\n":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped carriage return"
         [TestMethod]
@@ -3795,15 +3795,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\r']";
             var document = JsonNode.Parse(
-                """{"\r":"A"}""");
-            var results = document.Select(selector);
+                """{"\r":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped tab"
         [TestMethod]
@@ -3811,15 +3811,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\t']";
             var document = JsonNode.Parse(
-                """{"\t":"A"}""");
-            var results = document.Select(selector);
+                """{"\t":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped ☺, upper case hex"
         [TestMethod]
@@ -3827,15 +3827,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\u263A']";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, escaped ☺, lower case hex"
         [TestMethod]
@@ -3843,15 +3843,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\u263a']";
             var document = JsonNode.Parse(
-                """{"☺":"A"}""");
-            var results = document.Select(selector);
+                """{"☺":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, surrogate pair 𝄞"
         [TestMethod]
@@ -3859,15 +3859,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\uD834\\uDD1E']";
             var document = JsonNode.Parse(
-                """{"𝄞":"A"}""");
-            var results = document.Select(selector);
+                """{"𝄞":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, surrogate pair 😀"
         [TestMethod]
@@ -3875,15 +3875,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\uD83D\\uDE00']";
             var document = JsonNode.Parse(
-                """{"😀":"A"}""");
-            var results = document.Select(selector);
+                """{"😀":"A"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["A"]""");
+                """["A"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, invalid escaped double quote"
         [TestMethod]
@@ -3891,9 +3891,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\\\";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, embedded single quote"
         [TestMethod]
@@ -3901,9 +3901,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[''']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, incomplete escape"
         [TestMethod]
@@ -3911,9 +3911,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['\\']";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "name selector, double quotes, empty"
         [TestMethod]
@@ -3921,15 +3921,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\\";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B","":"C"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B","":"C"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["C"]""");
+                """["C"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "name selector, single quotes, empty"
         [TestMethod]
@@ -3937,15 +3937,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['']";
             var document = JsonNode.Parse(
-                """{"a":"A","b":"B","":"C"}""");
-            var results = document.Select(selector);
+                """{"a":"A","b":"B","":"C"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["C"]""");
+                """["C"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, slice selector"
         [TestMethod]
@@ -3953,15 +3953,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:3]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,2]""");
+                """[1,2]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, slice selector with step"
         [TestMethod]
@@ -3969,15 +3969,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:6:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,3,5]""");
+                """[1,3,5]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, slice selector with everything omitted, short form"
         [TestMethod]
@@ -3985,15 +3985,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[:]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1,2,3]""");
+                """[0,1,2,3]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, slice selector with everything omitted, long form"
         [TestMethod]
@@ -4001,15 +4001,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[::]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1,2,3]""");
+                """[0,1,2,3]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, slice selector with start omitted"
         [TestMethod]
@@ -4017,15 +4017,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1]""");
+                """[0,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, slice selector with start and end omitted"
         [TestMethod]
@@ -4033,15 +4033,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[::2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,2,4,6,8]""");
+                """[0,2,4,6,8]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative step with default start and end"
         [TestMethod]
@@ -4049,15 +4049,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[::-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[3,2,1,0]""");
+                """[3,2,1,0]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative step with default start"
         [TestMethod]
@@ -4065,15 +4065,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[:0:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[3,2,1]""");
+                """[3,2,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative step with default end"
         [TestMethod]
@@ -4081,15 +4081,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[2::-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,1,0]""");
+                """[2,1,0]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, larger negative step"
         [TestMethod]
@@ -4097,15 +4097,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[::-2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3]""");
-            var results = document.Select(selector);
+                """[0,1,2,3]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[3,1]""");
+                """[3,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative range with default step"
         [TestMethod]
@@ -4113,15 +4113,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1:-3]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative range with negative step"
         [TestMethod]
@@ -4129,15 +4129,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1:-3:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[9,8]""");
+                """[9,8]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative range with larger negative step"
         [TestMethod]
@@ -4145,15 +4145,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1:-6:-2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[9,7,5]""");
+                """[9,7,5]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, larger negative range with larger negative step"
         [TestMethod]
@@ -4161,15 +4161,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1:-7:-2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[9,7,5]""");
+                """[9,7,5]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative from, positive to"
         [TestMethod]
@@ -4177,15 +4177,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-5:7]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[5,6]""");
+                """[5,6]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative from"
         [TestMethod]
@@ -4193,15 +4193,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-2:]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[8,9]""");
+                """[8,9]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, positive from, negative to"
         [TestMethod]
@@ -4209,15 +4209,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1,2,3,4,5,6,7,8]""");
+                """[1,2,3,4,5,6,7,8]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative from, positive to, negative step"
         [TestMethod]
@@ -4225,15 +4225,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1:1:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[9,8,7,6,5,4,3,2]""");
+                """[9,8,7,6,5,4,3,2]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, positive from, negative to, negative step"
         [TestMethod]
@@ -4241,15 +4241,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[7:-5:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[7,6]""");
+                """[7,6]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, too many colons"
         [TestMethod]
@@ -4257,9 +4257,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:2:3:4]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "slice selector, non-integer array index"
         [TestMethod]
@@ -4267,9 +4267,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:2:a]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "slice selector, zero step"
         [TestMethod]
@@ -4277,15 +4277,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:2:0]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, empty range"
         [TestMethod]
@@ -4293,15 +4293,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[2:2]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, slice selector with everything omitted with empty array"
         [TestMethod]
@@ -4309,15 +4309,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[:]";
             var document = JsonNode.Parse(
-                """[]""");
-            var results = document.Select(selector);
+                """[]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, negative step with empty array"
         [TestMethod]
@@ -4325,15 +4325,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[::-1]";
             var document = JsonNode.Parse(
-                """[]""");
-            var results = document.Select(selector);
+                """[]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, maximal range with positive step"
         [TestMethod]
@@ -4341,15 +4341,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[0:10]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
+                """[0,1,2,3,4,5,6,7,8,9]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, maximal range with negative step"
         [TestMethod]
@@ -4357,15 +4357,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[9:0:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[9,8,7,6,5,4,3,2,1]""");
+                """[9,8,7,6,5,4,3,2,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, excessively large to value"
         [TestMethod]
@@ -4373,15 +4373,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[2:113667776004]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,3,4,5,6,7,8,9]""");
+                """[2,3,4,5,6,7,8,9]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, excessively small from value"
         [TestMethod]
@@ -4389,15 +4389,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-113667776004:1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[0]""");
+                """[0]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, excessively large from value with negative step"
         [TestMethod]
@@ -4405,15 +4405,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[113667776004:0:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[9,8,7,6,5,4,3,2,1]""");
+                """[9,8,7,6,5,4,3,2,1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, excessively small to value with negative step"
         [TestMethod]
@@ -4421,15 +4421,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[3:-113667776004:-1]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[3,2,1,0]""");
+                """[3,2,1,0]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, excessively large step"
         [TestMethod]
@@ -4437,15 +4437,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:10:113667776004]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[1]""");
+                """[1]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, excessively small step"
         [TestMethod]
@@ -4453,15 +4453,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1:-10:-113667776004]";
             var document = JsonNode.Parse(
-                """[0,1,2,3,4,5,6,7,8,9]""");
-            var results = document.Select(selector);
+                """[0,1,2,3,4,5,6,7,8,9]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[9]""");
+                """[9]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "slice selector, overflowing to value"
         [TestMethod]
@@ -4469,9 +4469,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[2:231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "slice selector, underflowing from value"
         [TestMethod]
@@ -4479,9 +4479,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-231584178474632390847141970017375815706539969331281128078915168015826259279872:1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "slice selector, overflowing from value with negative step"
         [TestMethod]
@@ -4489,9 +4489,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[231584178474632390847141970017375815706539969331281128078915168015826259279872:0:-1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "slice selector, underflowing to value with negative step"
         [TestMethod]
@@ -4499,9 +4499,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[3:-231584178474632390847141970017375815706539969331281128078915168015826259279872:-1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "slice selector, overflowing step"
         [TestMethod]
@@ -4509,9 +4509,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:10:231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "slice selector, underflowing step"
         [TestMethod]
@@ -4519,9 +4519,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[-1:-10:-231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, count function"
         [TestMethod]
@@ -4529,15 +4529,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@..*)>2]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"}]""");
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, count, single-node arg"
         [TestMethod]
@@ -4545,15 +4545,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@.a)>1]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, count, multiple-selector arg"
         [TestMethod]
@@ -4561,15 +4561,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@['a','d'])>1]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":[1],"d":"f"},{"a":1,"d":"f"}]""");
+                """[{"a":[1],"d":"f"},{"a":1,"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, count, non-query arg, number"
         [TestMethod]
@@ -4577,9 +4577,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(1)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, non-query arg, string"
         [TestMethod]
@@ -4587,9 +4587,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count('string')>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, non-query arg, true"
         [TestMethod]
@@ -4597,9 +4597,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(true)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, non-query arg, false"
         [TestMethod]
@@ -4607,9 +4607,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(false)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, non-query arg, null"
         [TestMethod]
@@ -4617,9 +4617,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(null)>2]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, result must be compared"
         [TestMethod]
@@ -4627,9 +4627,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@..*)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, no params"
         [TestMethod]
@@ -4637,9 +4637,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count()==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, count, too many params"
         [TestMethod]
@@ -4647,9 +4647,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@.a,@.b)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, length, string data"
         [TestMethod]
@@ -4657,15 +4657,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@.a)>=2]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"},{"a":"d"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"},{"a":"d"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"ab"}]""");
+                """[{"a":"ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, string data, unicode"
         [TestMethod]
@@ -4673,15 +4673,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@)==2]";
             var document = JsonNode.Parse(
-                """["☺","☺☺","☺☺☺","ж","жж","жжж","磨","阿美","形声字"]""");
-            var results = document.Select(selector);
+                """["☺","☺☺","☺☺☺","ж","жж","жжж","磨","阿美","形声字"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["☺☺","жж","阿美"]""");
+                """["☺☺","жж","阿美"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, array data"
         [TestMethod]
@@ -4689,15 +4689,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@.a)>=2]";
             var document = JsonNode.Parse(
-                """[{"a":[1,2,3]},{"a":[1]}]""");
-            var results = document.Select(selector);
+                """[{"a":[1,2,3]},{"a":[1]}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":[1,2,3]}]""");
+                """[{"a":[1,2,3]}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, missing data"
         [TestMethod]
@@ -4705,15 +4705,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@.a)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, number arg"
         [TestMethod]
@@ -4721,15 +4721,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(1)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, true arg"
         [TestMethod]
@@ -4737,15 +4737,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(true)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, false arg"
         [TestMethod]
@@ -4753,15 +4753,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(false)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, null arg"
         [TestMethod]
@@ -4769,15 +4769,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(null)>=2]";
             var document = JsonNode.Parse(
-                """[{"d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, result must be compared"
         [TestMethod]
@@ -4785,9 +4785,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@.a)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, length, no params"
         [TestMethod]
@@ -4795,9 +4795,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length()==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, length, too many params"
         [TestMethod]
@@ -4805,9 +4805,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@.a,@.b)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, length, non-singular query arg"
         [TestMethod]
@@ -4815,9 +4815,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@.*)<3]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, length, arg is a function expression"
         [TestMethod]
@@ -4825,15 +4825,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.values[?length(@.a)==length(value($..c))]";
             var document = JsonNode.Parse(
-                """{"c":"cd","values":[{"a":"ab"},{"a":"d"}]}""");
-            var results = document.Select(selector);
+                """{"c":"cd","values":[{"a":"ab"},{"a":"d"}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"ab"}]""");
+                """[{"a":"ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, length, arg is special nothing"
         [TestMethod]
@@ -4841,15 +4841,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(value(@.a))>0]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"},{"c":"d"},{"a":null}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"},{"c":"d"},{"a":null}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"ab"}]""");
+                """[{"a":"ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, found match"
         [TestMethod]
@@ -4857,15 +4857,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"ab"}]""");
+                """[{"a":"ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, double quotes"
         [TestMethod]
@@ -4873,15 +4873,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@.a, \\";
             var document = JsonNode.Parse(
-                """[{"a":"ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"ab"}]""");
+                """[{"a":"ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, regex from the document"
         [TestMethod]
@@ -4889,15 +4889,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.values[?match(@, $.regex)]";
             var document = JsonNode.Parse(
-                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""");
-            var results = document.Select(selector);
+                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["bab"]""");
+                """["bab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, don't select match"
         [TestMethod]
@@ -4905,15 +4905,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, not a match"
         [TestMethod]
@@ -4921,15 +4921,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, select non-match"
         [TestMethod]
@@ -4937,15 +4937,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!match(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"bc"}]""");
+                """[{"a":"bc"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, non-string first arg"
         [TestMethod]
@@ -4953,15 +4953,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(1, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, non-string second arg"
         [TestMethod]
@@ -4969,15 +4969,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@.a, 1)]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, filter, match function, unicode char class, uppercase"
         [TestMethod]
@@ -4985,15 +4985,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, '\\\\p{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1","жЖ",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1","жЖ",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["Ж"]""");
+                """["Ж"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, filter, match function, unicode char class negated, uppercase"
         [TestMethod]
@@ -5001,15 +5001,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, '\\\\P{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ж","1"]""");
+                """["ж","1"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, filter, match function, unicode, surrogate pair"
         [TestMethod]
@@ -5017,15 +5017,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, 'a.b')]";
             var document = JsonNode.Parse(
-                """["a𐄁b","ab","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["a𐄁b","ab","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["a𐄁b"]""");
+                """["a𐄁b"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, dot matcher on \u2028"
         [TestMethod]
@@ -5033,15 +5033,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2028","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2028","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["\u2028"]""");
+                """["\u2028"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, dot matcher on \u2029"
         [TestMethod]
@@ -5049,15 +5049,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2029","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2029","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["\u2029"]""");
+                """["\u2029"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, result cannot be compared"
         [TestMethod]
@@ -5065,9 +5065,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@.a, 'a.*')==true]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, match, too few params"
         [TestMethod]
@@ -5075,9 +5075,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@.a)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, match, too many params"
         [TestMethod]
@@ -5085,9 +5085,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@.a,@.b,@.c)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, match, arg is a function expression"
         [TestMethod]
@@ -5095,15 +5095,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.values[?match(@.a, value($..['regex']))]";
             var document = JsonNode.Parse(
-                """{"regex":"a.*","values":[{"a":"ab"},{"a":"ba"}]}""");
-            var results = document.Select(selector);
+                """{"regex":"a.*","values":[{"a":"ab"},{"a":"ba"}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"ab"}]""");
+                """[{"a":"ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, dot in character class"
         [TestMethod]
@@ -5111,15 +5111,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, 'a[.b]c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","axc"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","axc"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["abc","a.c"]""");
+                """["abc","a.c"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, escaped dot"
         [TestMethod]
@@ -5127,15 +5127,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, 'a\\\\.c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","axc"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","axc"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["a.c"]""");
+                """["a.c"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, escaped backslash before dot"
         [TestMethod]
@@ -5143,15 +5143,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, 'a\\\\\\\\.c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","axc","a\\\u2028c"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","axc","a\\\u2028c"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["a\\\u2028c"]""");
+                """["a\\\u2028c"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, escaped left square bracket"
         [TestMethod]
@@ -5159,15 +5159,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, 'a\\\\[.c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","a[\u2028c"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","a[\u2028c"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["a[\u2028c"]""");
+                """["a[\u2028c"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, escaped right square bracket"
         [TestMethod]
@@ -5175,15 +5175,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, 'a[\\\\].]c')]";
             var document = JsonNode.Parse(
-                """["abc","a.c","a\u2028c","a]c"]""");
-            var results = document.Select(selector);
+                """["abc","a.c","a\u2028c","a]c"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["a.c","a]c"]""");
+                """["a.c","a]c"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, explicit caret"
         [TestMethod]
@@ -5191,15 +5191,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, '^ab.*')]";
             var document = JsonNode.Parse(
-                """["abc","axc","ab","xab"]""");
-            var results = document.Select(selector);
+                """["abc","axc","ab","xab"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["abc","ab"]""");
+                """["abc","ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, match, explicit dollar"
         [TestMethod]
@@ -5207,15 +5207,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?match(@, '.*bc$')]";
             var document = JsonNode.Parse(
-                """["abc","axc","ab","abcx"]""");
-            var results = document.Select(selector);
+                """["abc","axc","ab","abcx"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["abc"]""");
+                """["abc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, at the end"
         [TestMethod]
@@ -5223,15 +5223,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"the end is ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"the end is ab"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"the end is ab"}]""");
+                """[{"a":"the end is ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, double quotes"
         [TestMethod]
@@ -5239,15 +5239,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a, \\";
             var document = JsonNode.Parse(
-                """[{"a":"the end is ab"}]""");
-            var results = document.Select(selector);
+                """[{"a":"the end is ab"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"the end is ab"}]""");
+                """[{"a":"the end is ab"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, at the start"
         [TestMethod]
@@ -5255,15 +5255,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"ab is at the start"}]""");
-            var results = document.Select(selector);
+                """[{"a":"ab is at the start"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"ab is at the start"}]""");
+                """[{"a":"ab is at the start"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, in the middle"
         [TestMethod]
@@ -5271,15 +5271,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"contains two matches"}]""");
-            var results = document.Select(selector);
+                """[{"a":"contains two matches"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"contains two matches"}]""");
+                """[{"a":"contains two matches"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, regex from the document"
         [TestMethod]
@@ -5287,15 +5287,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.values[?search(@, $.regex)]";
             var document = JsonNode.Parse(
-                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""");
-            var results = document.Select(selector);
+                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["bab","bba","bbab"]""");
+                """["bab","bba","bbab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, don't select match"
         [TestMethod]
@@ -5303,15 +5303,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"contains two matches"}]""");
-            var results = document.Select(selector);
+                """[{"a":"contains two matches"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, not a match"
         [TestMethod]
@@ -5319,15 +5319,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, select non-match"
         [TestMethod]
@@ -5335,15 +5335,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!search(@.a, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"bc"}]""");
+                """[{"a":"bc"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, non-string first arg"
         [TestMethod]
@@ -5351,15 +5351,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(1, 'a.*')]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, non-string second arg"
         [TestMethod]
@@ -5367,15 +5367,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a, 1)]";
             var document = JsonNode.Parse(
-                """[{"a":"bc"}]""");
-            var results = document.Select(selector);
+                """[{"a":"bc"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, filter, search function, unicode char class, uppercase"
         [TestMethod]
@@ -5383,15 +5383,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, '\\\\p{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1","жЖ",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1","жЖ",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["Ж","жЖ"]""");
+                """["Ж","жЖ"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, filter, search function, unicode char class negated, uppercase"
         [TestMethod]
@@ -5399,15 +5399,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, '\\\\P{Lu}')]";
             var document = JsonNode.Parse(
-                """["ж","Ж","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["ж","Ж","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ж","1"]""");
+                """["ж","1"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, filter, search function, unicode, surrogate pair"
         [TestMethod]
@@ -5415,15 +5415,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, 'a.b')]";
             var document = JsonNode.Parse(
-                """["a𐄁bc","abc","1",true,[],{}]""");
-            var results = document.Select(selector);
+                """["a𐄁bc","abc","1",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["a𐄁bc"]""");
+                """["a𐄁bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, dot matcher on \u2028"
         [TestMethod]
@@ -5431,15 +5431,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2028","\r\u2028\n","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2028","\r\u2028\n","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["\u2028","\r\u2028\n"]""");
+                """["\u2028","\r\u2028\n"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, dot matcher on \u2029"
         [TestMethod]
@@ -5447,15 +5447,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, '.')]";
             var document = JsonNode.Parse(
-                """["\u2029","\r\u2029\n","\r","\n",true,[],{}]""");
-            var results = document.Select(selector);
+                """["\u2029","\r\u2029\n","\r","\n",true,[],{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["\u2029","\r\u2029\n"]""");
+                """["\u2029","\r\u2029\n"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, result cannot be compared"
         [TestMethod]
@@ -5463,9 +5463,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a, 'a.*')==true]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, search, too few params"
         [TestMethod]
@@ -5473,9 +5473,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, search, too many params"
         [TestMethod]
@@ -5483,9 +5483,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@.a,@.b,@.c)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, search, arg is a function expression"
         [TestMethod]
@@ -5493,15 +5493,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.values[?search(@, value($..['regex']))]";
             var document = JsonNode.Parse(
-                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""");
-            var results = document.Select(selector);
+                """{"regex":"b.?b","values":["abc","bcd","bab","bba","bbab","b",true,[],{}]}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["bab","bba","bbab"]""");
+                """["bab","bba","bbab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, dot in character class"
         [TestMethod]
@@ -5509,15 +5509,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, 'a[.b]c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x axc y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x axc y"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["x abc y","x a.c y"]""");
+                """["x abc y","x a.c y"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, escaped dot"
         [TestMethod]
@@ -5525,15 +5525,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, 'a\\\\.c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x axc y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x axc y"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["x a.c y"]""");
+                """["x a.c y"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, escaped backslash before dot"
         [TestMethod]
@@ -5541,15 +5541,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, 'a\\\\\\\\.c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x axc y","x a\\\u2028c y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x axc y","x a\\\u2028c y"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["x a\\\u2028c y"]""");
+                """["x a\\\u2028c y"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, escaped left square bracket"
         [TestMethod]
@@ -5557,15 +5557,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, 'a\\\\[.c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x a[\u2028c y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x a[\u2028c y"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["x a[\u2028c y"]""");
+                """["x a[\u2028c y"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, search, escaped right square bracket"
         [TestMethod]
@@ -5573,15 +5573,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, 'a[\\\\].]c')]";
             var document = JsonNode.Parse(
-                """["x abc y","x a.c y","x a\u2028c y","x a]c y"]""");
-            var results = document.Select(selector);
+                """["x abc y","x a.c y","x a\u2028c y","x a]c y"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["x a.c y","x a]c y"]""");
+                """["x a.c y","x a]c y"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, value, single-value nodelist"
         [TestMethod]
@@ -5589,15 +5589,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?value(@.*)==4]";
             var document = JsonNode.Parse(
-                """[[4],{"foo":4},[5],{"foo":5},4]""");
-            var results = document.Select(selector);
+                """[[4],{"foo":4},[5],{"foo":5},4]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[[4],{"foo":4}]""");
+                """[[4],{"foo":4}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, value, multi-value nodelist"
         [TestMethod]
@@ -5605,15 +5605,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?value(@.*)==4]";
             var document = JsonNode.Parse(
-                """[[4,4],{"foo":4,"bar":4}]""");
-            var results = document.Select(selector);
+                """[[4,4],{"foo":4,"bar":4}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[]""");
+                """[]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "functions, value, too few params"
         [TestMethod]
@@ -5621,9 +5621,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?value()==4]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, value, too many params"
         [TestMethod]
@@ -5631,9 +5631,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?value(@.a,@.b)==4]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "functions, value, result must be compared"
         [TestMethod]
@@ -5641,9 +5641,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?value(@.a)]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, space between question mark and expression"
         [TestMethod]
@@ -5651,15 +5651,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[? @.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, newline between question mark and expression"
         [TestMethod]
@@ -5667,15 +5667,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, tab between question mark and expression"
         [TestMethod]
@@ -5683,15 +5683,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, return between question mark and expression"
         [TestMethod]
@@ -5699,15 +5699,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, space between question mark and parenthesized expression"
         [TestMethod]
@@ -5715,15 +5715,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[? (@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, newline between question mark and parenthesized expression"
         [TestMethod]
@@ -5731,15 +5731,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?\n(@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, tab between question mark and parenthesized expression"
         [TestMethod]
@@ -5747,15 +5747,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?\t(@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, return between question mark and parenthesized expression"
         [TestMethod]
@@ -5763,15 +5763,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?\r(@.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, space between parenthesized expression and bracket"
         [TestMethod]
@@ -5779,15 +5779,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.a) ]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, newline between parenthesized expression and bracket"
         [TestMethod]
@@ -5795,15 +5795,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.a)\n]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, tab between parenthesized expression and bracket"
         [TestMethod]
@@ -5811,15 +5811,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.a)\t]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, return between parenthesized expression and bracket"
         [TestMethod]
@@ -5827,15 +5827,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?(@.a)\r]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, space between bracket and question mark"
         [TestMethod]
@@ -5843,15 +5843,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[ ?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, newline between bracket and question mark"
         [TestMethod]
@@ -5859,15 +5859,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\n?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, tab between bracket and question mark"
         [TestMethod]
@@ -5875,15 +5875,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\t?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, filter, return between bracket and question mark"
         [TestMethod]
@@ -5891,15 +5891,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\r?@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"b","d":"e"},{"b":"c","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"b","d":"e"}]""");
+                """[{"a":"b","d":"e"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, space between function name and parenthesis"
         [TestMethod]
@@ -5907,9 +5907,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count (@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, newline between function name and parenthesis"
         [TestMethod]
@@ -5917,9 +5917,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count\n(@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, tab between function name and parenthesis"
         [TestMethod]
@@ -5927,9 +5927,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count\t(@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, return between function name and parenthesis"
         [TestMethod]
@@ -5937,9 +5937,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count\r(@.*)==1]";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, space between parenthesis and arg"
         [TestMethod]
@@ -5947,15 +5947,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count( @.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, newline between parenthesis and arg"
         [TestMethod]
@@ -5963,15 +5963,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(\n@.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, tab between parenthesis and arg"
         [TestMethod]
@@ -5979,15 +5979,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(\t@.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, return between parenthesis and arg"
         [TestMethod]
@@ -5995,15 +5995,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(\r@.*)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, space between arg and comma"
         [TestMethod]
@@ -6011,15 +6011,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@ ,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, newline between arg and comma"
         [TestMethod]
@@ -6027,15 +6027,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@\n,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, tab between arg and comma"
         [TestMethod]
@@ -6043,15 +6043,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@\t,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, return between arg and comma"
         [TestMethod]
@@ -6059,15 +6059,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@\r,'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, space between comma and arg"
         [TestMethod]
@@ -6075,15 +6075,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@, '[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, newline between comma and arg"
         [TestMethod]
@@ -6091,15 +6091,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@,\n'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, tab between comma and arg"
         [TestMethod]
@@ -6107,15 +6107,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@,\t'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, return between comma and arg"
         [TestMethod]
@@ -6123,15 +6123,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?search(@,\r'[a-z]+')]";
             var document = JsonNode.Parse(
-                """["foo","123"]""");
-            var results = document.Select(selector);
+                """["foo","123"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, space between arg and parenthesis"
         [TestMethod]
@@ -6139,15 +6139,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@.* )==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, newline between arg and parenthesis"
         [TestMethod]
@@ -6155,15 +6155,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@.*\n)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, tab between arg and parenthesis"
         [TestMethod]
@@ -6171,15 +6171,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@.*\t)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, return between arg and parenthesis"
         [TestMethod]
@@ -6187,15 +6187,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?count(@.*\r)==1]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, spaces in a relative singular selector"
         [TestMethod]
@@ -6203,15 +6203,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@ .a .b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":{"b":"foo"}}]""");
+                """[{"a":{"b":"foo"}}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, newlines in a relative singular selector"
         [TestMethod]
@@ -6219,15 +6219,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@\n.a\n.b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":{"b":"foo"}}]""");
+                """[{"a":{"b":"foo"}}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, tabs in a relative singular selector"
         [TestMethod]
@@ -6235,15 +6235,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@\t.a\t.b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":{"b":"foo"}}]""");
+                """[{"a":{"b":"foo"}}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, returns in a relative singular selector"
         [TestMethod]
@@ -6251,15 +6251,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?length(@\r.a\r.b) == 3]";
             var document = JsonNode.Parse(
-                """[{"a":{"b":"foo"}},{}]""");
-            var results = document.Select(selector);
+                """[{"a":{"b":"foo"}},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":{"b":"foo"}}]""");
+                """[{"a":{"b":"foo"}}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, spaces in an absolute singular selector"
         [TestMethod]
@@ -6267,15 +6267,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[?length(@)==length($ [0] .a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, newlines in an absolute singular selector"
         [TestMethod]
@@ -6283,15 +6283,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[?length(@)==length($\n[0]\n.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, tabs in an absolute singular selector"
         [TestMethod]
@@ -6299,15 +6299,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[?length(@)==length($\t[0]\t.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, functions, returns in an absolute singular selector"
         [TestMethod]
@@ -6315,15 +6315,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..[?length(@)==length($\r[0]\r.a)]";
             var document = JsonNode.Parse(
-                """[{"a":"foo"},{}]""");
-            var results = document.Select(selector);
+                """[{"a":"foo"},{}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["foo"]""");
+                """["foo"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before ||"
         [TestMethod]
@@ -6331,15 +6331,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a ||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before ||"
         [TestMethod]
@@ -6347,15 +6347,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\n||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before ||"
         [TestMethod]
@@ -6363,15 +6363,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\t||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before ||"
         [TestMethod]
@@ -6379,15 +6379,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\r||@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after ||"
         [TestMethod]
@@ -6395,15 +6395,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a|| @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after ||"
         [TestMethod]
@@ -6411,15 +6411,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a||\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after ||"
         [TestMethod]
@@ -6427,15 +6427,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a||\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after ||"
         [TestMethod]
@@ -6443,15 +6443,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a||\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"c":3}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2}]""");
+                """[{"a":1},{"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before &&"
         [TestMethod]
@@ -6459,15 +6459,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a &&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before &&"
         [TestMethod]
@@ -6475,15 +6475,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\n&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before &&"
         [TestMethod]
@@ -6491,15 +6491,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\t&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before &&"
         [TestMethod]
@@ -6507,15 +6507,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\r&&@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after &&"
         [TestMethod]
@@ -6523,15 +6523,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after &&"
         [TestMethod]
@@ -6539,15 +6539,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after &&"
         [TestMethod]
@@ -6555,15 +6555,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after &&"
         [TestMethod]
@@ -6571,15 +6571,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a&& @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1},{"b":2},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before =="
         [TestMethod]
@@ -6587,15 +6587,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a ==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before =="
         [TestMethod]
@@ -6603,15 +6603,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\n==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before =="
         [TestMethod]
@@ -6619,15 +6619,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\t==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before =="
         [TestMethod]
@@ -6635,15 +6635,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\r==@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after =="
         [TestMethod]
@@ -6651,15 +6651,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a== @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after =="
         [TestMethod]
@@ -6667,15 +6667,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after =="
         [TestMethod]
@@ -6683,15 +6683,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after =="
         [TestMethod]
@@ -6699,15 +6699,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a==\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1}]""");
+                """[{"a":1,"b":1}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before !="
         [TestMethod]
@@ -6715,15 +6715,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a !=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before !="
         [TestMethod]
@@ -6731,15 +6731,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\n!=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before !="
         [TestMethod]
@@ -6747,15 +6747,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\t!=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before !="
         [TestMethod]
@@ -6763,15 +6763,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\r!=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after !="
         [TestMethod]
@@ -6779,15 +6779,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!= @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after !="
         [TestMethod]
@@ -6795,15 +6795,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after !="
         [TestMethod]
@@ -6811,15 +6811,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after !="
         [TestMethod]
@@ -6827,15 +6827,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a!=\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before <"
         [TestMethod]
@@ -6843,15 +6843,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a <@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before <"
         [TestMethod]
@@ -6859,15 +6859,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\n<@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before <"
         [TestMethod]
@@ -6875,15 +6875,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\t<@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before <"
         [TestMethod]
@@ -6891,15 +6891,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\r<@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after <"
         [TestMethod]
@@ -6907,15 +6907,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a< @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after <"
         [TestMethod]
@@ -6923,15 +6923,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after <"
         [TestMethod]
@@ -6939,15 +6939,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after <"
         [TestMethod]
@@ -6955,15 +6955,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before >"
         [TestMethod]
@@ -6971,15 +6971,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b >@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before >"
         [TestMethod]
@@ -6987,15 +6987,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b\n>@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before >"
         [TestMethod]
@@ -7003,15 +7003,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b\t>@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before >"
         [TestMethod]
@@ -7019,15 +7019,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b\r>@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after >"
         [TestMethod]
@@ -7035,15 +7035,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b> @.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after >"
         [TestMethod]
@@ -7051,15 +7051,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b>\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after >"
         [TestMethod]
@@ -7067,15 +7067,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b>\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after >"
         [TestMethod]
@@ -7083,15 +7083,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b>\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":2}]""");
+                """[{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before <="
         [TestMethod]
@@ -7099,15 +7099,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a <=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before <="
         [TestMethod]
@@ -7115,15 +7115,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\n<=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before <="
         [TestMethod]
@@ -7131,15 +7131,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\t<=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before <="
         [TestMethod]
@@ -7147,15 +7147,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a\r<=@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after <="
         [TestMethod]
@@ -7163,15 +7163,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<= @.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after <="
         [TestMethod]
@@ -7179,15 +7179,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=\n@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after <="
         [TestMethod]
@@ -7195,15 +7195,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=\t@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after <="
         [TestMethod]
@@ -7211,15 +7211,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a<=\r@.b]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space before >="
         [TestMethod]
@@ -7227,15 +7227,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b >=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline before >="
         [TestMethod]
@@ -7243,15 +7243,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b\n>=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab before >="
         [TestMethod]
@@ -7259,15 +7259,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b\t>=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return before >="
         [TestMethod]
@@ -7275,15 +7275,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b\r>=@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space after >="
         [TestMethod]
@@ -7291,15 +7291,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b>= @.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline after >="
         [TestMethod]
@@ -7307,15 +7307,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b>=\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab after >="
         [TestMethod]
@@ -7323,15 +7323,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b>=\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return after >="
         [TestMethod]
@@ -7339,15 +7339,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.b>=\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""");
-            var results = document.Select(selector);
+                """[{"a":1,"b":1},{"a":1,"b":2},{"a":2,"b":1}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":1,"b":1},{"a":1,"b":2}]""");
+                """[{"a":1,"b":1},{"a":1,"b":2}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space between logical not and test expression"
         [TestMethod]
@@ -7355,15 +7355,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?! @.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"d":"f"}]""");
+                """[{"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline between logical not and test expression"
         [TestMethod]
@@ -7371,15 +7371,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!\n@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"d":"f"}]""");
+                """[{"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab between logical not and test expression"
         [TestMethod]
@@ -7387,15 +7387,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!\t@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"d":"f"}]""");
+                """[{"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return between logical not and test expression"
         [TestMethod]
@@ -7403,15 +7403,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!\r@.a]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"d":"f"}]""");
+                """[{"d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, space between logical not and parenthesized expression"
         [TestMethod]
@@ -7419,15 +7419,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?! (@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, newline between logical not and parenthesized expression"
         [TestMethod]
@@ -7435,15 +7435,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!\n(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, tab between logical not and parenthesized expression"
         [TestMethod]
@@ -7451,15 +7451,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!\t(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, operators, return between logical not and parenthesized expression"
         [TestMethod]
@@ -7467,15 +7467,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?!\r(@.a=='b')]";
             var document = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""");
-            var results = document.Select(selector);
+                """[{"a":"a","d":"e"},{"a":"b","d":"f"},{"a":"d","d":"f"}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""");
+                """[{"a":"a","d":"e"},{"a":"d","d":"f"}]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between root and bracket"
         [TestMethod]
@@ -7483,15 +7483,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$ ['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between root and bracket"
         [TestMethod]
@@ -7499,15 +7499,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$\n['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between root and bracket"
         [TestMethod]
@@ -7515,15 +7515,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$\t['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between root and bracket"
         [TestMethod]
@@ -7531,15 +7531,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$\r['a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between bracket and bracket"
         [TestMethod]
@@ -7547,15 +7547,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'] ['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between root and bracket"
         [TestMethod]
@@ -7563,15 +7563,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'] \n['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between root and bracket"
         [TestMethod]
@@ -7579,15 +7579,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'] \t['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between root and bracket"
         [TestMethod]
@@ -7595,15 +7595,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'] \r['b']";
             var document = JsonNode.Parse(
-                """{"a":{"b":"ab"}}""");
-            var results = document.Select(selector);
+                """{"a":{"b":"ab"}}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between root and dot"
         [TestMethod]
@@ -7611,15 +7611,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$ .a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between root and dot"
         [TestMethod]
@@ -7627,15 +7627,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$\n.a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between root and dot"
         [TestMethod]
@@ -7643,15 +7643,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$\t.a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between root and dot"
         [TestMethod]
@@ -7659,15 +7659,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$\r.a";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between dot and name"
         [TestMethod]
@@ -7675,9 +7675,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$. a";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between dot and name"
         [TestMethod]
@@ -7685,9 +7685,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.\na";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between dot and name"
         [TestMethod]
@@ -7695,9 +7695,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.\ta";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between dot and name"
         [TestMethod]
@@ -7705,9 +7705,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.\ra";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between recursive descent and name"
         [TestMethod]
@@ -7715,9 +7715,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$.. a";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between recursive descent and name"
         [TestMethod]
@@ -7725,9 +7725,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..\na";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between recursive descent and name"
         [TestMethod]
@@ -7735,9 +7735,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..\ta";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between recursive descent and name"
         [TestMethod]
@@ -7745,9 +7745,9 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$..\ra";
             var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            Assert.ThrowsException<NotSupportedException>( () => document.Select( selector ).ToArray() );
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between bracket and selector"
         [TestMethod]
@@ -7755,15 +7755,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[ 'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between bracket and selector"
         [TestMethod]
@@ -7771,15 +7771,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\n'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between bracket and selector"
         [TestMethod]
@@ -7787,15 +7787,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\t'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between bracket and selector"
         [TestMethod]
@@ -7803,15 +7803,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[\r'a']";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between selector and bracket"
         [TestMethod]
@@ -7819,15 +7819,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a' ]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between selector and bracket"
         [TestMethod]
@@ -7835,15 +7835,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'\n]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between selector and bracket"
         [TestMethod]
@@ -7851,15 +7851,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'\t]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between selector and bracket"
         [TestMethod]
@@ -7867,15 +7867,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'\r]";
             var document = JsonNode.Parse(
-                """{"a":"ab"}""");
-            var results = document.Select(selector);
+                """{"a":"ab"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab"]""");
+                """["ab"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between selector and comma"
         [TestMethod]
@@ -7883,15 +7883,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a' ,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between selector and comma"
         [TestMethod]
@@ -7899,15 +7899,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'\n,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between selector and comma"
         [TestMethod]
@@ -7915,15 +7915,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'\t,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between selector and comma"
         [TestMethod]
@@ -7931,15 +7931,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a'\r,'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, space between comma and selector"
         [TestMethod]
@@ -7947,15 +7947,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a', 'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, newline between comma and selector"
         [TestMethod]
@@ -7963,15 +7963,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a',\n'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, tab between comma and selector"
         [TestMethod]
@@ -7979,15 +7979,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a',\t'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, selectors, return between comma and selector"
         [TestMethod]
@@ -7995,15 +7995,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$['a',\r'b']";
             var document = JsonNode.Parse(
-                """{"a":"ab","b":"bc"}""");
-            var results = document.Select(selector);
+                """{"a":"ab","b":"bc"}""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """["ab","bc"]""");
+                """["ab","bc"]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, space between start and colon"
         [TestMethod]
@@ -8011,15 +8011,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1 :5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, newline between start and colon"
         [TestMethod]
@@ -8027,15 +8027,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1\n:5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, tab between start and colon"
         [TestMethod]
@@ -8043,15 +8043,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1\t:5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, return between start and colon"
         [TestMethod]
@@ -8059,15 +8059,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1\r:5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, space between colon and end"
         [TestMethod]
@@ -8075,15 +8075,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1: 5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, newline between colon and end"
         [TestMethod]
@@ -8091,15 +8091,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:\n5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, tab between colon and end"
         [TestMethod]
@@ -8107,15 +8107,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:\t5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, return between colon and end"
         [TestMethod]
@@ -8123,15 +8123,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:\r5:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, space between end and colon"
         [TestMethod]
@@ -8139,15 +8139,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5 :2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, newline between end and colon"
         [TestMethod]
@@ -8155,15 +8155,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5\n:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, tab between end and colon"
         [TestMethod]
@@ -8171,15 +8171,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5\t:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, return between end and colon"
         [TestMethod]
@@ -8187,15 +8187,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5\r:2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, space between colon and step"
         [TestMethod]
@@ -8203,15 +8203,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5: 2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, newline between colon and step"
         [TestMethod]
@@ -8219,15 +8219,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5:\n2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, tab between colon and step"
         [TestMethod]
@@ -8235,15 +8235,15 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5:\t2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);
         }
-        
+
 
         // unit-test-ref: "whitespace, slice, return between colon and step"
         [TestMethod]
@@ -8251,10 +8251,10 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[1:5:\r2]";
             var document = JsonNode.Parse(
-                """[1,2,3,4,5,6]""");
-            var results = document.Select(selector);
+                """[1,2,3,4,5,6]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """[2,4]""");
+                """[2,4]""" );
 
             var match = TestHelper.MatchOne(results, expect!);
             Assert.IsTrue(match);

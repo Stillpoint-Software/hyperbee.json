@@ -124,6 +124,11 @@ namespace Hyperbee.Json.Cts
 
         $testNumber++
         $selector = $test.selector
+
+        if ($selector.EndsWith('\')) {
+            $selector += '\'
+        }
+
         $invalidSelector = if ($test.invalid_selector) { $true } else { $false }
 
         $document = $test.document
@@ -191,7 +196,7 @@ namespace Hyperbee.Json.Cts
 
 # Generate unit-tests
 $jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
-$savePath = CtsJsonTest.json"
+$savePath = "CtsJsonTest.json"
 $jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $savePath
 
 $unitTestContent = Get-UnitTestContent -JsonTests $jsonContent

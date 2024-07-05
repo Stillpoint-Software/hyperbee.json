@@ -28,6 +28,10 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
         {
             return null; // missing members should act falsy
         }
+        catch ( NotSupportedException )
+        {
+            throw;
+        }
         catch ( Exception ex )
         {
             throw new FilterException( "Error compiling filter expression.", ex );

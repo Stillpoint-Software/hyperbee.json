@@ -27,7 +27,19 @@ public abstract class FilterExtensionFunction
                     : FilterParser.ArgSeparator
             };
 
+            if ( localState.IsTerminal )
+                throw new NotSupportedException( $"Invalid arguments for filter: \"{state.Buffer}\"." );
+
             var argument = FilterParser<TNode>.Parse( ref localState, context );
+
+            if(argument.Type != typeof( IEnumerable<TNode> )) 
+            {
+                ///argument[i] = Expression.
+            }
+            else
+            {
+                arguments[i] = argument;
+            }
 
             arguments[i] = argument;
         }

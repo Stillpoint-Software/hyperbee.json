@@ -36,7 +36,7 @@ public class FilterParser<TNode> : FilterParser
     internal static Expression Parse( ReadOnlySpan<char> filter, FilterContext<TNode> context )
     {
         var pos = 0;
-        var state = new ParserState( filter, [], ref pos, Operator.Nop, EndLine );
+        var state = new ParserState( filter, [], ref pos, Operator.NonOperator, EndLine );
 
         var expression = Parse( ref state, context );
 
@@ -50,7 +50,7 @@ public class FilterParser<TNode> : FilterParser
             throw new ArgumentNullException( nameof( context ) );
 
         if ( state.EndOfBuffer || state.IsTerminal )
-            throw new ArgumentException( $"Invalid filter: \"{state.Buffer}\".", nameof( state ) );
+            throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
 
         // parse the expression
         var items = new List<ExprItem>();
@@ -114,7 +114,7 @@ public class FilterParser<TNode> : FilterParser
         // check for end of buffer
         if ( state.EndOfBuffer )
         {
-            state.Operator = Operator.Nop;
+            state.Operator = Operator.EndOfBuffer;
             state.Item = [];
             return;
         }
@@ -149,7 +149,7 @@ public class FilterParser<TNode> : FilterParser
             if ( count == 0 && ch == EndArg )
                 return false;
 
-            if ( op != Operator.Nop && op != Operator.ClosedParen )
+            if ( !op.IsNonOperator() && op != Operator.ClosedParen )
                 return true;
 
             if ( ch == terminal || ch == EndArg || ch == EndLine )
@@ -198,15 +198,15 @@ public class FilterParser<TNode> : FilterParser
             case ')':
                 state.Operator = Operator.ClosedParen;
                 break;
-            case ' ' or '\t' when quoteChar == null:
-                state.Operator = Operator.Nop;
+            case ' ' or '\t' or '\r' or '\n' when quoteChar == null:
+                state.Operator = Operator.Whitespace;
                 break;
             case '\'' or '\"' when state.Pos > 0 && state.Previous != '\\':
                 quoteChar = quoteChar == null ? nextChar : null;
-                state.Operator = Operator.Nop;
+                state.Operator = Operator.Quotes;
                 break;
             default:
-                state.Operator = Operator.Nop;
+                state.Operator = Operator.Segment;
                 break;
         }
 
@@ -230,7 +230,7 @@ public class FilterParser<TNode> : FilterParser
 
         if ( state.EndOfBuffer )
         {
-            state.Operator = Operator.Nop;
+            state.Operator = Operator.EndOfBuffer;
             return;
         }
 
@@ -256,7 +256,7 @@ public class FilterParser<TNode> : FilterParser
         return;
 
         // Helper method to determine if an operator is a parenthesis or a no-op
-        static bool IsParenOrNop( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen or Operator.Nop;
+        static bool IsParenOrNop( Operator op ) => (op is Operator.OpenParen or Operator.ClosedParen) || op.IsNonOperator();
         static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
     }
 
@@ -362,7 +362,10 @@ public class FilterParser<TNode> : FilterParser
                     FilterTruthyExpression.IsTruthyExpression( right.Expression )
                 );
                 break;
-            case Operator.Nop:
+            case Operator.NonOperator:
+            case Operator.Whitespace:
+            case Operator.Quotes:
+            case Operator.Segment:
             case Operator.OpenParen:
             case Operator.ClosedParen:
             default:

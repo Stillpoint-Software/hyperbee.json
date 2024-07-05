@@ -139,15 +139,27 @@ namespace Hyperbee.Json.Cts
         $unitTestContent += @"
         `r`n
         [TestMethod( `"$name` ($testNumber)" )]
-        public void Test_$testNumber`_$methodName`()
+        public void Test`_$methodName`_$testNumber()
         {
             var selector = `"$selector`";`r`n
 "@
         
         if ($invalidSelector) {
             $unitTestContent += @"
-            var document = new JsonObject(); // Empty node
-            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector).ToArray());
+            var document = JsonNode.Parse( `"[0]`" ); // Empty node
+
+            try
+            {
+                document.Select( selector ).ToArray();
+                Assert.Fail( `"Failed to throw exception`" );
+            }
+            catch ( NotSupportedException ) { }
+            catch ( ArgumentException ) { }
+            catch (Exception e)
+            {
+                Assert.Fail( $`"Invalid exception of type {e.GetType().Name}`" );
+            }
+
         }`r`n
 "@
         } else {

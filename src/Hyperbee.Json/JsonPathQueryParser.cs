@@ -126,6 +126,8 @@ internal static class JsonPathQueryParser
                     {
                         case ' ':
                         case '\t':
+                        case '\n':
+                        case '\r':
                             break;
                         case '@': // Technically invalid, but allows `@` to work on sub queries without changing tokenizer 
                         case '$':
@@ -217,6 +219,8 @@ internal static class JsonPathQueryParser
                             throw new NotSupportedException( $"Quoted member names are not allowed in dot notation at pos {i - 1}." );
                         case ' ':
                         case '\t':
+                        case '\n':
+                        case '\r':
                             throw new NotSupportedException( $"Invalid whitespace in object notation at pos {i - 1}." );
                         case '\0':
                             state = State.FinalSelector;
@@ -442,15 +446,15 @@ internal static class JsonPathQueryParser
         if ( IsQuoted( selector ) )
             return SelectorKind.Name;
 
+        if ( IsFilter( selector ) )
+            return SelectorKind.Filter;
+
         if ( IsIndex( selector, out var isValid, out var reason ) )
         {
             if ( !isValid )
                 throw new NotSupportedException( reason );
             return SelectorKind.Index;
         }
-
-        if ( IsFilter( selector ) )
-            return SelectorKind.Filter;
 
         if ( IsSlice( selector, out isValid, out reason ) )
         {

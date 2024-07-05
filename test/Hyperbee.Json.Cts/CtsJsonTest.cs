@@ -7106,15 +7106,15 @@ namespace Hyperbee.Json.Cts
             try
             {
                 document.Select( selector ).ToArray();
-                Assert.Fail( "Failed to throw exception" );
             }
-            catch ( NotSupportedException ) { }
-            catch ( ArgumentException ) { }
+            catch ( NotSupportedException ) { return; }
+            catch ( ArgumentException ) { return; }
             catch ( Exception e )
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
 
+            Assert.Fail( "Failed to throw exception" );
         }
 
 

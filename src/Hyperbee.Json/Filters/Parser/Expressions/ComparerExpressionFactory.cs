@@ -179,6 +179,11 @@ public static class ComparerExpressionFactory<TNode>
                 if ( !rightEnumerator.MoveNext() )
                     return 1; // Left has more elements, so it is greater
 
+                // if the values can be extracted, compare the values directly
+                if ( accessor.TryGetValueFromNode( leftEnumerator.Current, out var leftItemValue ) &&
+                     accessor.TryGetValueFromNode( rightEnumerator.Current, out var rightItemValue ) )
+                    return CompareValues( leftItemValue, rightItemValue );
+
                 if ( !accessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
                     return -1; // Elements are not deeply equal
             }

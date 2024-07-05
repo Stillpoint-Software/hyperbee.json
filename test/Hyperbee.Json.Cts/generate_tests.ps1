@@ -207,12 +207,13 @@ namespace Hyperbee.Json.Cts
 
 # Generate unit-tests
 $jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
-$savePath = "CtsJsonTest.json"
+$savePath = Join-Path -Path $PSScriptRoot -ChildPath "CtsJsonTest.json"
 $jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $savePath
 
 $unitTestContent = Get-UnitTestContent -JsonTests $jsonContent
 
 # Save the generated unit-test file
-Set-Content -Path "CtsJsonTest.cs" -Value $unitTestContent
+$unitTestPath = Join-Path -Path $PSScriptRoot -ChildPath "CtsJsonTest.cs"
+Set-Content -Path $unitTestPath -Value $unitTestContent
 
-Write-Output "C# unit test file 'CtsJsonTest.cs' generated successfully."
+Write-Output "C# unit test file 'CtsJsonTest.cs' generated successfully at '$unitTestPath'."

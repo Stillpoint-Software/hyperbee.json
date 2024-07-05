@@ -1,187 +1,202 @@
-﻿function ConvertToCSharpMethodName {
-    param(
-        [string]$name
+function Invoke-WebRequestWithRetry {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Url,
+        [int]$MaxRetries = 5,
+        [int]$RetryDelay = 3 # seconds
     )
 
-    # Split by non-word characters, capitalize each part, and join them
-    $nameParts = $name -split '\W+'
-    $pascalCaseName = ($nameParts | ForEach-Object { 
-        if ($_.Length -gt 0) {
-            $_.Substring(0,1).ToUpper() + $_.Substring(1).ToLower()
+    Write-Host "Downloading $Url"
+
+    $attempt = 0
+    while ($attempt -lt $MaxRetries) {
+        try {
+            $response = Invoke-WebRequest -Uri $Url
+            return $response
         }
-    }) -join ''
+        catch {
+            $attempt++
+            Write-Host "Attempt $attempt failed: $_"
+            if ($attempt -ge $MaxRetries) {
+                throw "Failed to retrieve the content after $MaxRetries attempts. Error: $_"
+            }
+            Start-Sleep -Seconds $RetryDelay
+        }
+    }
 
-    return $pascalCaseName
+    Write-Host "Download complete."
 }
 
-function EscapePowershell($text) {
-    return $text  -replace "`"", '\"' -replace "`t", '\t' -replace "`r", '\r' -replace "`n", '\n'
+function Get-JsonContent {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Url,
+        [string]$SavePath
+    )
+
+    # Fetch the JSON content as a string
+    $response = Invoke-WebRequestWithRetry -Url $Url
+    $jsonContent = $response.Content
+
+    # Save the JSON content to a file in a pretty formatted way if SavePath is provided
+    if ($PSBoundParameters.ContainsKey('SavePath')) {
+        $prettyJson = $jsonContent | ConvertFrom-Json -AsHashtable | ConvertTo-Json -Depth 10
+        Set-Content -Path $SavePath -Value $prettyJson
+        Write-Output "JSON content saved to '$SavePath'."
+    }
+
+    # Convert the raw JSON string to a PowerShell hashtable to access properties
+    $jsonObject = $jsonContent | ConvertFrom-Json -AsHashtable
+
+    # Use regex to extract all selector properties
+    $pattern = '"selector"\s*:\s*"(.*?)"'
+    $matches = [regex]::Matches($jsonContent, $pattern)
+
+    # Iterate through all tests and collect the properties
+    $output = @()
+    for ($i = 0; $i -lt $jsonObject.tests.Count; $i++) {
+        $test = $jsonObject.tests[$i]
+
+        $name = $test['name']
+
+        # convert json to strings BEFORE adding to ps object to prevent unwanted conversions
+        $document = ConvertTo-Json -InputObject $test['document'] -Depth 10 -Compress
+        $result = if ($test.ContainsKey('result')) { ConvertTo-Json -InputObject $test['result'] -Depth 10 -Compress } else { $null }
+        $results = if ($test.ContainsKey('results')) { ConvertTo-Json -InputObject $test['results'] -Depth 10 -Compress } else { $null }
+        $invalid_selector = if ($test.ContainsKey('invalid_selector')) { $test['invalid_selector'] } else { $null }
+
+        $rawJsonSelector = $matches[$i].Groups[1].Value
+
+        $item = [PSCustomObject]@{
+            name             = $name
+            document         = $document
+            result           = $result
+            results          = $results
+            selector         = $rawJsonSelector
+            invalid_selector = $invalid_selector
+        }
+
+        $output += $item
+    }
+
+    return $output
 }
 
-# Define the URL of the JSON file
-$jsonUrl = "https://github.com/Stillpoint-Software/jsonpath-compliance-test-suite/raw/main/cts.json"
+# Helper function to convert test names to C# method names
+function Convert-ToCSharpMethodName {
+    param (
+        [string]$name
+    )
+    return $name -replace '[^a-zA-Z0-9]', '_'
+}
 
-# Download the JSON file
-$jsonContent = Invoke-WebRequest -Uri $jsonUrl | Select-Object -ExpandProperty Content | ConvertFrom-Json -AsHashTable
+function Get-UnitTestContent {
+    param (
+        [Parameter(Mandatory=$true)]
+        [array]$JsonTests
+    )
 
-
-
-
-# Use regex to extract all selector properties
-# $pattern = '"selector"\s*:\s*"(.*?)"'
-# $matches = [regex]::Matches($jsonContent, $pattern)
-
-# Iterate through all tests and output the properties
-# for ($i = 0; $i -lt $jsonObject.tests.Count; $i++) {
-#     $test = $jsonObject.tests[$i]
-# 
-#     $name = $test.name
-#     $document = $test.document
-#     $result = $test.result -replace 'results', 'result'
-#     $invalid_selector = if ($test.PSObject.Properties.Match('invalid_selector').Count -gt 0) { $test.invalid_selector } else { $null }
-# 
-#     $rawJsonSelector = $matches[$i].Groups[1].Value
-# 
-#     $output = @{
-#         name             = $name
-#         document         = $document
-#         result           = $result
-#         selector         = $rawJsonSelector
-#         invalid_selector = $invalid_selector
-#     }
-
-# }
-
-
-
-
-# Prepare the content for the C# unit test file
-$unitTestContent = @"
+    # Prepare the content for the C# unit test file
+    $unitTestContent = @"
 using System;
 using System.Text.Json.Nodes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Hyperbee.Json.Extensions;
 
-namespace Hyperbee.Json.Cts;
-
-[TestClass]
-public class CtsJsonTest
+namespace Hyperbee.Json.Cts
 {
-
-"@
-
-$testNumber = 0
-
-# Loop through each test case in the JSON and generate a TestMethod
-foreach ($test in $jsonContent.tests) {
-
-    $testNumber++
-    $name = $test.name
-    $methodName = ConvertToCSharpMethodName $name  # Convert $test.name to C# method name
-
-    $selector = $test.selector
-    $escapedSelector = EscapePowershell $selector
-
-    $invalidSelector = if ($test.invalid_selector) { $true } else { $false }
-
-    $document = if ($test.document) { ConvertTo-Json -InputObject $test.document -Depth 4 -Compress } else { "null" }
-
-    # Check if the result or results property exists and is not empty
-    $result = $null
-    if ([bool]($test.Keys -match "result")) {
-        Write-Output "result"
-        $result = if ($test.result) { ConvertTo-Json -InputObject $test.result -Depth 4 -Compress } else { $null }
-    }
-
-    $results = $null
-    if ([bool]($test.Keys -match "results")) {
-        Write-Output "results"
-        $results = if ($test.results) { ConvertTo-Json -InputObject $test.results -Depth 4 -Compress } else { $null }
-    }
-
-    # Replace placeholders in the template with actual test case data
-    $unitTestContent += @"
-
-    [TestMethod("$name")]
-    public void Test_$methodName`_Number$testNumber()
+    [TestClass]
+    public class CtsJsonTest
     {
+        `r`n
 "@
 
-    if ($invalidSelector) {
+    $testNumber = 0
+
+    # Loop through each test case in the JSON and generate a TestMethod
+    foreach ($test in $JsonTests) {
+        $name = $test.name
+        $methodName = Convert-ToCSharpMethodName $name  # Convert $test.name to C# method name
+
+        if($null -eq $name -or $name -eq "") {
+            continue
+        }
+
+        $testNumber++
+        $selector = $test.selector
+        $invalidSelector = if ($test.invalid_selector) { $true } else { $false }
+
+        $document = $test.document
+        $result = $test.result
+        $results = $test.results
+
+        # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
+        `r`n
+        // unit-test-ref: `"$name`"
+        [TestMethod]
+        public void Test_$methodName`_Number$testNumber()
+        {
+            var selector = @`"$selector`";`r`n
+"@
         
-        var selector = `"$escapedSelector`";
-        var document = new JsonObject(); // Empty node
-        Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
-    }
-
-"@
-    } else {
-        $unitTestContent += @"
-
-        var selector = `"$escapedSelector`";
-        var document = JsonNode.Parse( 
-"""
-$document
-""" );
-        var results = document.Select(selector);
-"@
-
-        if ($result -ne $null) {
+        if ($invalidSelector) {
             $unitTestContent += @"
-
-        var expected = JsonNode.Parse(
-"""
-$result
-""" );
-
-        var count = 0;
-        foreach (var result in results)
-        {
-            Assert.IsTrue(JsonNode.DeepEquals(expected![count], result));
-            count++;
-        }
-    }
-
-"@
-        } elseif ($results -ne  $null) {
-            $unitTestContent += @"
-
-        var expectedResults = JsonNode.Parse(
-"""
-$results
-""" );
-
-        var count = 0;
-        foreach (var result in results)
-        {
-            Assert.IsTrue(JsonNode.DeepEquals(expectedResults![0]![count], result));
-            count++;
-        }
-    }
-
+            var document = new JsonObject(); // Empty node
+            Assert.ThrowsException<NotSupportedException>(() => document.Select(selector));
+        }`r`n
 "@
         } else {
             $unitTestContent += @"
-
-        Assert.Fail("missing results");
-    }
-
+            var document = JsonNode.Parse(
+                `"`"`"$document`"`"`");
+            var results = document.Select(selector);`r`n
 "@
+
+            if ($null -ne $result) {
+                $unitTestContent += @"
+            var expect = JsonNode.Parse(
+                `"`"`"$result`"`"`");
+
+            var match = TestHelper.MatchOne(results, expect);
+            Assert.IsTrue(match);
+        }`r`n
+"@
+            } elseif ($null -ne $results) {
+                $unitTestContent += @"
+            var expectOneOf = JsonNode.Parse(
+                `"`"`"$results`"`"`");
+
+            var match = TestHelper.MatchAny(results, expectOneOf);
+            Assert.IsTrue(match);
+        }`r`n
+"@
+            } else {
+                $unitTestContent += @"
+            Assert.Fail(`"missing results`");
+        }`r`n
+"@
+            }
         }
     }
-}
 
-
-# Close the class and namespace
-$unitTestContent += @"
-
-}
+    # Close the class and namespace
+    $unitTestContent += @"
+    }
+}`r`n
 "@
 
+    return $unitTestContent
+}
 
-#Write-Output $unitTestContent
+# Generate unit-tests
+$jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
+$savePath = "CtsJsonTest.json"
+$jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $savePath
 
-# Save the generated C# unit test file
-Set-Content -Path "CtsJsonTest.cs" -Value $unitTestContent -Encoding UTF8
+$unitTestContent = Get-UnitTestContent -JsonTests $jsonContent
+
+# Save the generated unit-test file
+Set-Content -Path "CtsJsonTest.cs" -Value $unitTestContent
 
 Write-Output "C# unit test file 'CtsJsonTest.cs' generated successfully."

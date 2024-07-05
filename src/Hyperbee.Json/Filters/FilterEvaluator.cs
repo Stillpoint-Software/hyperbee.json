@@ -30,7 +30,7 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
         }
         catch ( Exception ex )
         {
-            throw new FilterEvaluatorException( "Error compiling JsonPath expression.", ex );
+            throw new FilterException( "Error compiling filter expression.", ex );
         }
     }
 }

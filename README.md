@@ -1,4 +1,4 @@
-﻿
+
 # Hyperbee.Json
 
 `Hyperbee.Json` is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`.  
@@ -14,10 +14,10 @@ The library is designed to be quick and extensible, allowing support for other J
 
 ## JSONPath Consensus
 
-Hyperbee.Json aims to follow the RFC and to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
-when the RFC is unopinionated. When the RFC is unopinionated and where the consensus is ambiguous or not aligned with our 
+Hyperbee.Json aims to follow the RFC, and to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
+when the RFC is unopinionated. When the RFC is unopinionated, and where the consensus is ambiguous or not aligned with our 
 performance and usability goals, we may deviate. Our goal is always to provide a robust and performant library while  
-strengthening our alignment with the RFC.
+strengthening our alignment with the RFC and the community.
 
 ## Installation
 
@@ -31,34 +31,9 @@ dotnet add package Hyperbee.Json
 
 ### Basic Examples
 
-#### Selecting a Single Element
+#### Selecting Elements
 
 ```csharp
-using Hyperbee.JsonPath;
-using System.Text.Json;
-
-var json = """
-{ 
-  "store": { 
-    "book": [ 
-      { "category": "fiction" }, 
-      { "category": "science" } 
-    ] 
-  } 
-}
-""";
-
-var root = JsonDocument.Parse(json);
-var result = JsonPath.Select(root, "$.store.book[0].category");
-
-Console.WriteLine(result.First()); // Output: "fiction"
-```
-
-#### Selecting Multiple Elements
-
-```csharp
-using Hyperbee.JsonPath;
-using System.Text.Json;
 
 var json = """
 { 
@@ -83,8 +58,6 @@ foreach (var item in result)
 #### Filtering
 
 ```csharp
-using Hyperbee.JsonPath;
-using System.Text.Json;
 
 var json = """
 { 
@@ -114,8 +87,6 @@ foreach (var item in result)
 
 #### Working with (JsonElement, Path) pairs
 ```csharp
-using Hyperbee.JsonPath;
-using System.Text.Json;
 
 var json = """
 { 
@@ -140,8 +111,6 @@ Console.WriteLine(path); // Output: "$.store.book[0].category
 #### Working with JsonNode
 
 ```csharp
-using Hyperbee.JsonPath;
-using System.Text.Json.Nodes;
 
 var json = """
 { 
@@ -160,9 +129,9 @@ var result = JsonPath.Select(root, "$.store.book[0].category");
 Console.WriteLine(result.First()); // Output: "fiction"
 ```
 
-## JSONPath Syntax Reference
+## JSONPath Syntax Overview
 
-Here's a quick reference for JSONPath syntax:
+Here's a quick overview of JSONPath syntax:
 
 | JSONPath                                     | Description                                                
 |:---------------------------------------------|:-----------------------------------------------------------
@@ -177,9 +146,8 @@ Here's a quick reference for JSONPath syntax:
 | `..`                                         | Recursive descent  
 | `?<expr>`                                    | Filter selector
 
-JSONPath expressions refer to a JSON structure in the same way as XPath expressions 
-are used in combination with an XML document. JSONPath assumes the name `$` is assigned 
-to the root level object.
+JSONPath expressions refer to a JSON structure, and JSONPath assumes the name `$` is assigned 
+to the root JSON object.
 
 JSONPath expressions can use dot-notation:
 
@@ -189,35 +157,38 @@ or bracket-notation:
 
     $['store']['book'][0]['title']
 
-JSONPath allows the wildcard symbol `*` for member names and array indices. It
-borrows the descendant operator `..` from [E4X][e4x], and the array slice
-syntax proposal `[start:end:step]` from ECMASCRIPT 4.
+- JSONPath allows the wildcard symbol `*` for member names and array indices. 
+- It borrows the descendant operator `..` from [E4X][e4x]
+- It uses the `@` symbol to refer to the current object.
+- It uses the `?()` syntax for filtering.
+- It uses the array slice syntax proposal `[start:end:step]` from ECMASCRIPT 4.
 
 Expressions can be used as an alternative to explicit names or indices, as in:
 
-    $.store.book[(@.length-1)].title
+    $.store.book[(length(@)-1)].title
 
-using the symbol `@` for the current object. Filter expressions are supported via
-the syntax `?(<boolean expr>)`, as in:
+Filter expressions are supported via the syntax `?(<boolean expr>)`, as in:
 
     $.store.book[?(@.price < 10)].title
 
-### JSONPath Methods
+### JSONPath Functions
 
 JsonPath expressions support basic methods calls.
 
 | Method     | Description                                            | Example                                                
 |------------|--------------------------------------------------------|------------------------------------------------
 | `length()` | Returns the length of an array or string.              | `$.store.book[?(length(@.title) > 5)]`                
-| `count()`  | Returns the count of matching elements.                | `$.store.book[?(count(@.authors) > 1)]`               
-| `match()`  | Returns true if a string matches a regular expression. | `$.store.book[?(match(@.title, '.*Century.*'))]`   
-| `search()` | Searches for a string within another string.           | `$.store.book[?(search(@.title, 'Sword'))]`             
+| `count()`  | Returns the count of matching elements.                | `$.store.book[?(count(@.authors.) > 1)]`               
+| `match()`  | Returns true if a string matches a regular expression. | `$.store.book[?(match(@.title,'.*Century.*'))]`   
+| `search()` | Searches for a string within another string.           | `$.store.book[?(search(@.title,'Sword'))]`             
 | `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(value(@.price) < 10)]`                
 
 
-You can extend the supported function set by registering your own functions.
+### JSONPath Custom Functions
 
-#### Example: `JsonNode` Path Function
+You can also extend the supported function set by registering your own functions.
+
+**Example:** Implement a `JsonNode` Path Function:
 
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
@@ -264,7 +235,8 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
   - Comprehensive feature set.
   - Deferred execution queries with `IEnumerable`.
   - Strong community support.
-
+  - .NET Foundation Project.
+  
 - **Cons:**
   - No support for `JsonElement`.
   - Not quite as fast as other `System.Text.Json` implementations.
@@ -285,7 +257,7 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
   - Comprehensive feature set.
   - Documentation and examples.
   - Strong community support.
-  - Level 2 .NET Foundation Project.
+  - .NET Foundation Project.
 
 - **Cons:**
   - No support for `JsonElement`, or `JsonNode`.
@@ -296,9 +268,9 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
 - Supports both `JsonElement`, and `JsonNode`.
 - Deferred execution queries with `IEnumerable`.
 - Extendable to support additional JSON document types and functions.
-- Consensus focused JSONPath implementation.
+- RFC and Consensus focused JSONPath implementation.
 
-- ## Benchmarks
+## Benchmarks
 
 Here is a performance comparison of various queries on the standard book store document.
 
@@ -374,8 +346,7 @@ Here is a performance comparison of various queries on the standard book store d
 | JsonEverything_JsonNode | $.store.book[0]                  |  4.779 us | 2.9031 us | 0.1591 us |   5.96 KB 
 | Newtonsoft_JObject      | $.store.book[0]                  |  8.714 us | 2.5518 us | 0.1399 us |  14.56 KB 
 ```
-```
-```
+
 
 ## Additional Documentation
 

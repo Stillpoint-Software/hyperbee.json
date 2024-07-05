@@ -28,7 +28,7 @@ public class JsonExtensionTests : JsonTestBase
         var document = JsonDocument.Parse( json );
 
         // act
-        var result = document.RootElement.ToObject<TestItem>();
+        var result = JsonHelper.ConvertToObject<TestItem>( document.RootElement );
 
         // assert
         Assert.AreEqual( source, result );

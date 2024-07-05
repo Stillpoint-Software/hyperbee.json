@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
@@ -43,5 +44,4 @@ public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
             };
         }
     }
-
 }

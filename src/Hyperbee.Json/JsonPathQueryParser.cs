@@ -318,12 +318,15 @@ internal static class JsonPathQueryParser
 
                             selectorKind = GetSelectorKind( selectorValue );
 
-                            selectorValue = selectorKind switch
+                            switch ( selectorKind )
                             {
-                                SelectorKind.Undefined => throw new NotSupportedException( $"Invalid bracket expression syntax. Unrecognized selector format at pos {i - 1}." ),
-                                SelectorKind.Name => UnquoteAndUnescape( selectorValue ),
-                                _ => selectorValue
-                            };
+                                case SelectorKind.Undefined:
+                                    throw new NotSupportedException( $"Invalid bracket expression syntax. Unrecognized selector format at pos {i - 1}." );
+                                case SelectorKind.Name:
+                                    ThrowIfNotValidQuotedName( selectorValue );
+                                    selectorValue = UnquoteAndUnescape( selectorValue );
+                                    break;
+                            }
 
                             selectors.Insert( 0, new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue } );
 
@@ -471,52 +474,6 @@ internal static class JsonPathQueryParser
         };
     }
 
-    //private static bool IsSlice( ReadOnlySpan<char> input )
-    //{
-    //    var index = 0;
-
-    //    // First part (optional number)
-    //    if ( !IsOptionalNumber( input, ref index ) )
-    //        return false;
-
-    //    // Optional colon
-    //    if ( index < input.Length && input[index] == ':' )
-    //    {
-    //        index++;
-
-    //        // Second part (optional number)
-    //        if ( !IsOptionalNumber( input, ref index ) )
-    //            return false;
-
-    //        // Optional second colon
-    //        if ( index < input.Length && input[index] == ':' )
-    //        {
-    //            index++;
-
-    //            // Third part (optional number)
-    //            if ( !IsOptionalNumber( input, ref index ) )
-    //                return false;
-    //        }
-    //    }
-
-    //    var result = index == input.Length;
-    //    return result;
-
-    //    static bool IsOptionalNumber( ReadOnlySpan<char> span, ref int idx )
-    //    {
-    //        var start = idx;
-
-    //        if ( idx < span.Length && (span[idx] == '-' || span[idx] == '+') )
-    //            idx++;
-
-    //        while ( idx < span.Length && char.IsDigit( span[idx] ) )
-    //            idx++;
-
-    //        var isValid = idx > start || start == idx;
-    //        return isValid; // True if there was a number or just an optional sign
-    //    }
-    //}
-
     private static bool IsFilter( ReadOnlySpan<char> input )
     {
         if ( input.Length < 2 || input[0] != '?' )
@@ -536,17 +493,6 @@ internal static class JsonPathQueryParser
 
         return result;
     }
-
-    //private static bool IsIndex( ReadOnlySpan<char> input )
-    //{
-    //    foreach ( var ch in input )
-    //    {
-    //        if ( !char.IsDigit( ch ) )
-    //            return false;
-    //    }
-
-    //    return true;
-    //}
 
     private static bool IsIndex( ReadOnlySpan<char> input, out bool isValid, out string reason )
     {
@@ -593,9 +539,16 @@ internal static class JsonPathQueryParser
             return true; // It's an index, but invalid
         }
 
+        // Try parse to detect overflow
+        if ( !int.TryParse( input, out _ ) )
+        {
+            isValid = false;
+            reason = "Input is too large.";
+            return true; // It's an index, but invalid
+        }
+
         return true; // It's a valid index
     }
-
 
     private static bool IsQuoted( ReadOnlySpan<char> input )
     {
@@ -670,9 +623,6 @@ internal static class JsonPathQueryParser
         }
     }
 
-
-
-
     private static void ThrowIfQuoted( string value )
     {
         if ( IsQuoted( value ) )
@@ -699,6 +649,77 @@ internal static class JsonPathQueryParser
 
         static bool IsValidFirstChar( char c ) => char.IsLetter( c ) || c == '_' || c >= 0x80;
         static bool IsValidSubsequentChar( char c ) => char.IsLetterOrDigit( c ) || c == '_' || c == '-' || c >= 0x80;
+    }
+
+    private static void ThrowIfNotValidQuotedName(ReadOnlySpan<char> name)
+    {
+        if (name.IsEmpty)
+            throw new NotSupportedException("Selector name cannot be null.");
+
+        char quoteChar = name[0];
+        if (name.Length < 2 || (quoteChar != '"' && quoteChar != '\'') || name[^1] != quoteChar)
+            throw new NotSupportedException("Quoted name must start and end with the same quote character, either double or single quote.");
+
+        for (int i = 1; i < name.Length - 1; i++)
+        {
+            if (name[i] == '\\')
+            {
+                // Check if it's a valid escape sequence
+                if (i + 1 >= name.Length - 1 || !IsValidEscapeSequence(name.Slice(i, 2), quoteChar))
+                    throw new NotSupportedException("Invalid escape sequence in quoted name.");
+
+                if (name[i + 1] == 'u')
+                {
+                    // Ensure it's a valid Unicode escape sequence (e.g., \u263a)
+                    if (i + 5 >= name.Length - 1 || !IsValidUnicodeEscapeSequence(name.Slice(i, 6)))
+                        throw new NotSupportedException("Invalid Unicode escape sequence in quoted name.");
+                    i += 5; // Skip the Unicode escape sequence
+                }
+                else
+                {
+                    i++; // Skip the regular escape character
+                }
+            }
+            else if (name[i] == quoteChar)
+            {
+                // Unescaped quotes are not allowed inside the quoted name.
+                throw new NotSupportedException("Unescaped quote characters are not allowed inside a quoted name.");
+            }
+            else if (name[i] <= '\u001F')
+            {
+                // Control characters (U+0000 to U+001F) are not allowed.
+                throw new NotSupportedException($"Control character '\\u{((int)name[i]):x4}' is not allowed in a quoted name.");
+            }
+        }
+
+        return;
+
+        static bool IsValidEscapeSequence( ReadOnlySpan<char> span, char quoteChar )
+        {
+            // Valid escape sequences based on the quote character
+            return span.Length == 2 && (
+                span[1] == quoteChar || 
+                span[1] == '\\' || 
+                span[1] == '/' || span[1] == 'b' || 
+                span[1] == 'f' || span[1] == 'n' || 
+                span[1] == 'r' || span[1] == 't' || 
+                span[1] == 'u'
+            );
+        }
+
+        static bool IsValidUnicodeEscapeSequence( ReadOnlySpan<char> span )
+        {
+            if ( span.Length != 6 || span[1] != 'u' ) 
+                return false;
+            
+            for ( int i = 2; i < 6; i++ )
+            {
+                if ( !Uri.IsHexDigit( span[i] ) ) 
+                    return false;
+            }
+
+            return true;
+        }
     }
 
     private static string UnquoteAndUnescape( string value )

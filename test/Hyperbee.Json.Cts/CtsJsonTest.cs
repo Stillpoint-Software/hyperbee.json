@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -4919,7 +4919,7 @@ namespace Hyperbee.Json.Cts
         [TestMethod( "name selector, single quotes, escaped single quote (278)" )]
         public void Test_name_selector__single_quotes__escaped_single_quote_278()
         {
-            var selector = "$['\\'']";
+            var selector = """$['\'']""";
             var document = JsonNode.Parse(
                 """{"'":"A"}""" );
             var results = document.Select( selector );

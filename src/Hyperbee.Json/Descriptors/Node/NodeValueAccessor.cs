@@ -13,7 +13,6 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         {
             case JsonArray arrayValue:
                 for ( var index = arrayValue.Count - 1; index >= 0; index-- )
-
                 {
                     var child = arrayValue[index];
 
@@ -42,6 +41,9 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public JsonNode GetElementAt( in JsonNode value, int index )
     {
+        if ( index < 0 ) // flip negative index to positive
+            index = ((JsonArray) value).Count + index;
+
         return value[index];
     }
 
@@ -80,6 +82,9 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 {
                     if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                     {
+                        if ( index < 0 ) // flip negative index to positive
+                            index = valueArray.Count + index;
+
                         if ( index >= 0 && index < valueArray.Count )
                         {
                             childValue = value[index];

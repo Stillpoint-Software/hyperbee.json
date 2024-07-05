@@ -49,7 +49,7 @@ function Get-JsonContent {
     $jsonObject = $jsonContent | ConvertFrom-Json -AsHashtable
 
     # Use regex to extract all selector properties
-    $pattern = '"selector"\s*:\s*"(.*?)"'
+    $pattern = '"selector"\s*:\s*"(.*?[^\\])"'
     $matches = [regex]::Matches($jsonContent, $pattern)
 
     # Iterate through all tests and collect the properties

@@ -334,7 +334,7 @@ internal static class JsonPathQueryParser
                                     if ( i < n && query[i] != '.' && query[i] != '[' )
                                         throw new NotSupportedException( $"Invalid character after `]` at pos {i - 1}." );
                                     state = State.DotChild;
-                                    InsertToken( tokens, selectors.ToArray() );
+                                    InsertToken( tokens, [.. selectors] );
                                     selectors.Clear();
                                     break;
                             }
@@ -442,14 +442,22 @@ internal static class JsonPathQueryParser
         if ( IsQuoted( selector ) )
             return SelectorKind.Name;
 
-        if ( IsIndex( selector ) )
+        if ( IsIndex( selector, out var isValid, out var reason ) )
+        {
+            if ( !isValid )
+                throw new NotSupportedException( reason );
             return SelectorKind.Index;
+        }
 
         if ( IsFilter( selector ) )
             return SelectorKind.Filter;
 
-        if ( IsSlice( selector ) )
+        if ( IsSlice( selector, out isValid, out reason ) )
+        {
+            if ( !isValid )
+                throw new NotSupportedException( reason );
             return SelectorKind.Slice;
+        }
 
         return selector switch
         {
@@ -459,51 +467,51 @@ internal static class JsonPathQueryParser
         };
     }
 
-    private static bool IsSlice( ReadOnlySpan<char> input )
-    {
-        var index = 0;
+    //private static bool IsSlice( ReadOnlySpan<char> input )
+    //{
+    //    var index = 0;
 
-        // First part (optional number)
-        if ( !IsOptionalNumber( input, ref index ) )
-            return false;
+    //    // First part (optional number)
+    //    if ( !IsOptionalNumber( input, ref index ) )
+    //        return false;
 
-        // Optional colon
-        if ( index < input.Length && input[index] == ':' )
-        {
-            index++;
+    //    // Optional colon
+    //    if ( index < input.Length && input[index] == ':' )
+    //    {
+    //        index++;
 
-            // Second part (optional number)
-            if ( !IsOptionalNumber( input, ref index ) )
-                return false;
+    //        // Second part (optional number)
+    //        if ( !IsOptionalNumber( input, ref index ) )
+    //            return false;
 
-            // Optional second colon
-            if ( index < input.Length && input[index] == ':' )
-            {
-                index++;
+    //        // Optional second colon
+    //        if ( index < input.Length && input[index] == ':' )
+    //        {
+    //            index++;
 
-                // Third part (optional number)
-                if ( !IsOptionalNumber( input, ref index ) )
-                    return false;
-            }
-        }
+    //            // Third part (optional number)
+    //            if ( !IsOptionalNumber( input, ref index ) )
+    //                return false;
+    //        }
+    //    }
 
-        var result = index == input.Length;
-        return result;
+    //    var result = index == input.Length;
+    //    return result;
 
-        static bool IsOptionalNumber( ReadOnlySpan<char> span, ref int idx )
-        {
-            var start = idx;
+    //    static bool IsOptionalNumber( ReadOnlySpan<char> span, ref int idx )
+    //    {
+    //        var start = idx;
 
-            if ( idx < span.Length && (span[idx] == '-' || span[idx] == '+') )
-                idx++;
+    //        if ( idx < span.Length && (span[idx] == '-' || span[idx] == '+') )
+    //            idx++;
 
-            while ( idx < span.Length && char.IsDigit( span[idx] ) )
-                idx++;
+    //        while ( idx < span.Length && char.IsDigit( span[idx] ) )
+    //            idx++;
 
-            var isValid = idx > start || start == idx;
-            return isValid; // True if there was a number or just an optional sign
-        }
-    }
+    //        var isValid = idx > start || start == idx;
+    //        return isValid; // True if there was a number or just an optional sign
+    //    }
+    //}
 
     private static bool IsFilter( ReadOnlySpan<char> input )
     {
@@ -525,16 +533,65 @@ internal static class JsonPathQueryParser
         return result;
     }
 
-    private static bool IsIndex( ReadOnlySpan<char> input )
+    //private static bool IsIndex( ReadOnlySpan<char> input )
+    //{
+    //    foreach ( var ch in input )
+    //    {
+    //        if ( !char.IsDigit( ch ) )
+    //            return false;
+    //    }
+
+    //    return true;
+    //}
+
+    private static bool IsIndex( ReadOnlySpan<char> input, out bool isValid, out string reason )
     {
-        foreach ( var ch in input )
+        isValid = true;
+        reason = string.Empty;
+
+        if ( input.Length == 0 )
         {
-            if ( !char.IsDigit( ch ) )
-                return false;
+            isValid = false;
+            reason = "Input is empty.";
+            return false;
         }
 
-        return true;
+        int start = 0;
+
+        // Handle optional leading negative sign
+        if ( input[0] == '-' )
+        {
+            start = 1;
+            if ( input.Length == 1 )
+            {
+                isValid = false;
+                reason = "Invalid negative index.";
+                return true; // It's an index, but invalid
+            }
+        }
+
+        // Check for leading zeros
+        if ( input[start] == '0' && input.Length > (start + 1) )
+        {
+            isValid = false;
+            reason = "Leading zeros are not allowed.";
+            return true; // It's an index, but invalid
+        }
+
+        // Check if all remaining characters are digits
+        for ( int i = start; i < input.Length; i++ )
+        {
+            if ( char.IsDigit( input[i] ) )
+                continue;
+
+            isValid = false;
+            reason = "Input contains non-digit characters.";
+            return true; // It's an index, but invalid
+        }
+
+        return true; // It's a valid index
     }
+
 
     private static bool IsQuoted( ReadOnlySpan<char> input )
     {
@@ -542,6 +599,75 @@ internal static class JsonPathQueryParser
                 input[0] == '"' && input[^1] == '"' ||
                 input[0] == '\'' && input[^1] == '\'');
     }
+
+    private static bool IsSlice( ReadOnlySpan<char> input, out bool isValid, out string reason )
+    {
+        var index = 0;
+        isValid = true;
+        reason = string.Empty;
+        var partCount = 0;
+
+        do
+        {
+            // Validate each part (optional number)
+            if ( !ValidatePart( input, ref index, ref isValid, ref reason ) )
+            {
+                if ( !isValid )
+                    reason = "Invalid number in slice.";
+                return partCount > 0; // Return true if at least one colon was found, indicating it was intended as a slice
+            }
+
+            partCount++;
+
+            // Check for optional colon
+            if ( index < input.Length && input[index] == ':' )
+                index++;
+            else
+                break;
+
+        } while ( partCount < 3 && index < input.Length );
+
+        if ( index != input.Length )
+        {
+            isValid = false;
+            reason = "Unexpected characters at the end of slice.";
+        }
+
+        return partCount > 1; // Return true if at least one colon was found, indicating it was intended as a slice
+
+        static bool ValidatePart( ReadOnlySpan<char> span, ref int idx, ref bool isValid, ref string reason )
+        {
+            var start = idx;
+
+            if ( idx < span.Length && (span[idx] == '-' || span[idx] == '+') )
+                idx++;
+
+            var numberStart = idx;
+
+            while ( idx < span.Length && char.IsDigit( span[idx] ) )
+                idx++;
+
+            // Check for leading zeros in unsigned or signed numbers
+            if ( numberStart < idx && (idx - numberStart > 1) && span[numberStart] == '0' )
+            {
+                isValid = false;
+                reason = "Leading zeros are not allowed.";
+                return false;
+            }
+
+            var isValidNumber = idx > start || start == idx;
+            if ( !isValidNumber )
+            {
+                isValid = false;
+                reason = "Invalid number format.";
+            }
+
+            return isValidNumber; // True if there was a number or just an optional sign
+        }
+    }
+
+
+
 
     private static void ThrowIfQuoted( string value )
     {

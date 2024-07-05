@@ -45,6 +45,9 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public JsonElement GetElementAt( in JsonElement value, int index )
     {
+        if ( index < 0 ) // flip negative index to positive
+            index = value.GetArrayLength() + index;
+
         return value[index];
     }
 
@@ -79,7 +82,12 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
             case JsonValueKind.Array:
                 if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
-                    if ( index >= 0 && index < value.GetArrayLength() )
+                    var arrayLength = value.GetArrayLength();
+
+                    if ( index < 0 ) // flip negative index to positive
+                        index = arrayLength + index;
+
+                    if ( index >= 0 && index < arrayLength )
                     {
                         childValue = value[index];
                         return true;

@@ -87,9 +87,9 @@ public class FilterParser<TNode> : FilterParser
         {
             return currentExpr is ConstantExpression && !IsComparisonOperator( previousOp ) && !IsComparisonOperator( currentOp );
 
-            static bool IsComparisonOperator( Operator op ) => 
-                op == Operator.Equals || op == Operator.NotEquals || 
-                op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual || 
+            static bool IsComparisonOperator( Operator op ) =>
+                op == Operator.Equals || op == Operator.NotEquals ||
+                op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual ||
                 op == Operator.LessThan || op == Operator.LessThanOrEqual;
         }
     }

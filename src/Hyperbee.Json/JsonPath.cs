@@ -68,7 +68,7 @@ public static class JsonPath<TNode>
         // because the RFC ABNF does not allow whitespace in the query for dot member notation,
         // but it does allow it in the filter for function arguments.
 
-        return EnumerateMatches( value, root, query, true, processor ); 
+        return EnumerateMatches( value, root, query, true, processor );
     }
 
     private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query, bool allowDotWhitespace, NodeProcessorDelegate<TNode> processor = null )

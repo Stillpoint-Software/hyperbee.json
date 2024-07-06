@@ -42,10 +42,6 @@ public class FilterParser<TNode> : FilterParser
 
         var expression = Parse( ref state, context );
 
-        // BF: Ensure literals are not standalone
-        if ( expression is ConstantExpression )
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
-
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
@@ -66,6 +62,7 @@ public class FilterParser<TNode> : FilterParser
             var prevOp = MoveNext( ref state );
             var exprItem = GetExprItem( ref state, context );
 
+            // unless the expression is an argument, constants must be compared
             if ( !state.IsArgument && ConstantIsNotCompared( prevOp, exprItem.Operator, exprItem.Expression ) )
                 throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
 

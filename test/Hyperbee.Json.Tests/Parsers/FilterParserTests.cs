@@ -166,7 +166,7 @@ public class FilterParserTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "4 == length ( @.store.book )",  typeof( JsonElement ) )]
+    [DataRow( "4 == length ( @.store.book )", typeof( JsonElement ) )]
     [DataRow( "length (@.store.book) == 4", typeof( JsonElement ) )]
     public void Should_Fail_WhenHasInvalidWhitespace( string filter, Type sourceType )
     {

@@ -226,11 +226,11 @@ internal static class JsonPathQueryParser
                         case '\'':
                         case '"':
                             throw new NotSupportedException( $"Quoted member names are not allowed in dot notation at pos {i - 1}." );
-                        //case ' ':
-                        //case '\t':
-                        //case '\n':
-                        //case '\r':
-                        //    throw new NotSupportedException( $"Invalid whitespace in object notation at pos {i - 1}." );
+                            //case ' ':
+                            //case '\t':
+                            //case '\n':
+                            //case '\r':
+                            //    throw new NotSupportedException( $"Invalid whitespace in object notation at pos {i - 1}." );
                     }
 
                     break;
@@ -710,7 +710,7 @@ internal static class JsonPathQueryParser
             // Valid escape sequences based on the quote character
             return span.Length == 2 && (
                 span[1] == quoteChar ||
-                span[1] == '\\' || 
+                span[1] == '\\' ||
                 span[1] == '/' || span[1] == 'b' ||
                 span[1] == 'f' || span[1] == 'n' ||
                 span[1] == 'r' || span[1] == 't' ||

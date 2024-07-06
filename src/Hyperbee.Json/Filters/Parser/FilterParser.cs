@@ -43,8 +43,8 @@ public class FilterParser<TNode> : FilterParser
         var expression = Parse( ref state, context );
 
         // BF: Ensure literals are not standalone
-        if ( expression is ConstantExpression ) 
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" ); 
+        if ( expression is ConstantExpression )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
 
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }

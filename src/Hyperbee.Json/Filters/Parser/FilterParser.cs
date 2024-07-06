@@ -35,6 +35,8 @@ public class FilterParser<TNode> : FilterParser
 
     internal static Expression Parse( ReadOnlySpan<char> filter, FilterContext<TNode> context )
     {
+        filter = filter.Trim(); // remove leading and trailing whitespace to simplify parsing
+
         var pos = 0;
         var state = new ParserState( filter, [], ref pos, Operator.NonOperator, EndLine );
 

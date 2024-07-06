@@ -17,7 +17,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$";
             var document = JsonNode.Parse(
                 """["first","second"]""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """[["first","second"]]""" );
 
@@ -5672,7 +5672,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[1:10:113667776004]";
             var document = JsonNode.Parse(
                 """[0,1,2,3,4,5,6,7,8,9]""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """[1]""" );
 
@@ -5687,7 +5687,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[-1:-10:-113667776004]";
             var document = JsonNode.Parse(
                 """[0,1,2,3,4,5,6,7,8,9]""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """[9]""" );
 
@@ -9416,7 +9416,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['a', 'b']";
             var document = JsonNode.Parse(
                 """{"a":"ab","b":"bc"}""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 

@@ -34,6 +34,7 @@ internal static class JsonPathQueryParser
     private enum State
     {
         Undefined,
+        Whitespace,
         Start,
         DotChild,
         UnionStart,
@@ -96,6 +97,8 @@ internal static class JsonPathQueryParser
         var literalDelimiter = '\'';
         var selectors = new List<SelectorDescriptor>();
 
+        char[] whitespaceTerminators = [];
+
         var state = State.Start;
         State returnState = State.Undefined;
 
@@ -110,8 +113,9 @@ internal static class JsonPathQueryParser
             }
             else // end of input
             {
-                state = State.FinalSelector;
-                c = '\0'; // Add null terminator to signal end of input
+                if ( state != State.Whitespace ) // whitespace is a sub-state, allow it to exit
+                    state = State.FinalSelector;
+                c = '\0'; // Set char to null terminator to signal end of input
             }
 
             // process character
@@ -124,23 +128,20 @@ internal static class JsonPathQueryParser
                 case State.Start:
                     switch ( c )
                     {
-                        case ' ':
-                        case '\t':
-                        case '\n':
-                        case '\r':
-                            break;
                         case '@': // Technically invalid, but allows `@` to work on sub queries without changing tokenizer 
                         case '$':
-                            if ( i < n && query[i] != '.' && query[i] != '[' )
-                                throw new NotSupportedException( "Invalid character after `$`." );
 
                             if ( query[^1] == '.' && query[^2] == '.' )
                                 throw new NotSupportedException( "`..` cannot be the last segment." );
 
-                            state = State.DotChild;
+                            InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Root, Value = c.ToString() } );
+
+                            whitespaceTerminators = ['.', '['];
+                            state = State.Whitespace;
+                            returnState = State.DotChild;
                             break;
                         default:
-                            throw new NotSupportedException( "`$` expected." );
+                            throw new NotSupportedException( $"Invalid character `{c}` at pos {i - 1}." );
                     }
 
                     break;
@@ -157,19 +158,37 @@ internal static class JsonPathQueryParser
 
                     break;
 
+                case State.Whitespace:
+                    switch ( c )
+                    {
+                        case ' ':
+                        case '\t':
+                        case '\n':
+                        case '\r':
+                            break;
+                        default:
+
+                            if ( c != '\0' && whitespaceTerminators.Length > 0 && !whitespaceTerminators.Contains( c ) )
+                                throw new NotSupportedException( $"Invalid character `{c}` at pos {i - 1}." );
+
+                            whitespaceTerminators = [];
+                            state = returnState; // transition back to the appropriate state
+                            selectorStart = i; // start of the next selector
+                            i--; // replay character
+                            break;
+                    }
+
+                    break;
+
                 case State.DotChild:
                     switch ( c )
                     {
                         case '[':
-                            state = State.UnionStart;
-
                             selectorValue = GetSelector( state, query, selectorStart, i );
                             selectorKind = selectorValue switch
                             {
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
-                                "$" => SelectorKind.Root,
                                 "@" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
-                                "@" => SelectorKind.Root,
                                 "*" => SelectorKind.Wildcard,
                                 _ => SelectorKind.DotName
                             };
@@ -182,6 +201,8 @@ internal static class JsonPathQueryParser
 
                             InsertToken( tokens, new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue } );
 
+                            state = State.Whitespace;
+                            returnState = State.UnionStart;
                             break;
                         case '.':
                             if ( i == n )
@@ -191,9 +212,7 @@ internal static class JsonPathQueryParser
                             selectorKind = selectorValue switch
                             {
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
-                                "$" => SelectorKind.Root,
                                 "@" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
-                                "@" => SelectorKind.Root,
                                 "*" => SelectorKind.Wildcard,
                                 _ => SelectorKind.DotName
                             };
@@ -222,10 +241,6 @@ internal static class JsonPathQueryParser
                         case '\n':
                         case '\r':
                             throw new NotSupportedException( $"Invalid whitespace in object notation at pos {i - 1}." );
-                        case '\0':
-                            state = State.FinalSelector;
-                            i--; // step back to process the last character
-                            break;
                     }
 
                     break;
@@ -233,11 +248,6 @@ internal static class JsonPathQueryParser
                 case State.UnionStart:
                     switch ( c )
                     {
-                        case ' ':
-                        case '\t':
-                        case '\r':
-                        case '\n':
-                            break;
                         case '*':
                             state = State.UnionFinal;
                             InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Wildcard, Value = "*" } );
@@ -252,8 +262,8 @@ internal static class JsonPathQueryParser
                             break;
                         case '\'':
                         case '"':
-                            returnState = State.UnionQuotedFinal;
                             state = State.QuotedName;
+                            returnState = State.UnionQuotedFinal;
                             literalDelimiter = c;
                             selectorStart = i - 1;
                             bracketDepth = 1;
@@ -280,6 +290,7 @@ internal static class JsonPathQueryParser
                         case ',':
                             state = State.UnionElement;
                             i--; // replay character
+
                             break;
                         default: // invalid characters after end of string
                             throw new NotSupportedException( $"Invalid bracket literal at pos {i - 1}." );
@@ -335,14 +346,17 @@ internal static class JsonPathQueryParser
                             switch ( c )
                             {
                                 case ',':
-                                    state = State.UnionNext;
+                                    whitespaceTerminators = [];
+                                    state = State.Whitespace;
+                                    returnState = State.UnionNext;
                                     break;
                                 case ']':
-                                    if ( i < n && query[i] != '.' && query[i] != '[' )
-                                        throw new NotSupportedException( $"Invalid character after `]` at pos {i - 1}." );
-                                    state = State.DotChild;
                                     InsertToken( tokens, [.. selectors] );
                                     selectors.Clear();
+
+                                    whitespaceTerminators = ['.', '['];
+                                    state = State.Whitespace;
+                                    returnState = State.DotChild;
                                     break;
                             }
 
@@ -451,8 +465,9 @@ internal static class JsonPathQueryParser
 
         if ( IsIndex( selector, out var isValid, out var reason ) )
         {
-            if ( !isValid )
+            if ( !isValid ) // it is an index, but invalid
                 throw new NotSupportedException( reason );
+
             return SelectorKind.Index;
         }
 
@@ -461,8 +476,9 @@ internal static class JsonPathQueryParser
 
         if ( IsSlice( selector, out isValid, out reason ) )
         {
-            if ( !isValid )
+            if ( !isValid ) // it is a slice, but invalid
                 throw new NotSupportedException( reason );
+
             return SelectorKind.Slice;
         }
 
@@ -496,6 +512,101 @@ internal static class JsonPathQueryParser
 
     private static bool IsIndex( ReadOnlySpan<char> input, out bool isValid, out string reason )
     {
+        return IsValidNumber( input, out isValid, out reason );
+    }
+
+    private static bool IsQuoted( ReadOnlySpan<char> input )
+    {
+        return (input.Length > 1 &&
+                input[0] == '"' && input[^1] == '"' ||
+                input[0] == '\'' && input[^1] == '\'');
+    }
+
+    private static bool IsSlice( ReadOnlySpan<char> input, out bool isValid, out string reason )
+    {
+        var index = 0;
+        isValid = true;
+        reason = string.Empty;
+        var partCount = 0;
+
+        SkipWhitespace( input, ref index );
+
+        do
+        {
+            // Validate each part (optional number)
+            if ( !ValidatePart( input, ref index, ref isValid, ref reason/*, allowEmpty: true*/ ) )
+            {
+                if ( !isValid )
+                    reason = "Invalid number in slice.";
+                return partCount > 0; // Return true if at least one colon was found, indicating it was intended as a slice
+            }
+
+            partCount++;
+
+            SkipWhitespace( input, ref index );
+
+            // Check for optional colon
+            if ( index >= input.Length || input[index] != ':' )
+                break;
+
+            index++;
+            SkipWhitespace( input, ref index );
+
+        } while ( partCount < 3 && index < input.Length );
+
+        if ( index != input.Length )
+        {
+            isValid = false;
+            reason = "Unexpected characters at the end of slice.";
+        }
+
+        return partCount > 0; // Return true if at least one colon was found, indicating it was intended as a slice
+
+        // Helper method to validate each part of the slice
+        static bool ValidatePart( ReadOnlySpan<char> span, ref int idx, ref bool isValid, ref string reason/*, bool allowEmpty = false*/ )
+        {
+            SkipWhitespace( span, ref idx );
+
+            var start = idx;
+
+            if ( idx < span.Length && (span[idx] == '-' /*|| span[idx] == '+'*/) )
+                idx++;
+
+            while ( idx < span.Length && char.IsDigit( span[idx] ) )
+                idx++;
+
+            // Allow empty
+            if ( start == idx )
+                return true;
+
+            // Check for leading zeros in unsigned or signed numbers
+            if ( !IsValidNumber( span[start..idx], out isValid, out reason ) )
+                return false;
+
+            var isValidNumber = idx > start || start == idx;
+            
+            if ( !isValidNumber )
+            {
+                isValid = false;
+                reason = "Invalid number format.";
+            }
+
+            return isValidNumber; // True if there was a number or just an optional sign
+        }
+
+        // Helper method to skip whitespace
+        static void SkipWhitespace( ReadOnlySpan<char> span, ref int idx )
+        {
+            while ( idx < span.Length && char.IsWhiteSpace( span[idx] ) )
+            {
+                idx++;
+            }
+        }
+    }
+
+
+    private static bool IsValidNumber( ReadOnlySpan<char> input, out bool isValid, out string reason )
+    {
         isValid = true;
         reason = string.Empty;
 
@@ -515,8 +626,8 @@ internal static class JsonPathQueryParser
             if ( input.Length == 1 )
             {
                 isValid = false;
-                reason = "Invalid negative index.";
-                return true; // It's an index, but invalid
+                reason = "Invalid negative number.";
+                return false;
             }
         }
 
@@ -525,102 +636,29 @@ internal static class JsonPathQueryParser
         {
             isValid = false;
             reason = "Leading zeros are not allowed.";
-            return true; // It's an index, but invalid
+            return false;
         }
 
         // Check if all remaining characters are digits
-        for ( int i = start; i < input.Length; i++ )
+        for ( var i = start; i < input.Length; i++ )
         {
-            if ( char.IsDigit( input[i] ) )
-                continue;
-
-            isValid = false;
-            reason = "Input contains non-digit characters.";
-            return false; // It's not an index
+            if ( !char.IsDigit( input[i] ) )
+            {
+                isValid = false;
+                reason = "Input contains non-digit characters.";
+                return false;
+            }
         }
 
         // Try parse to detect overflow
-        if ( !int.TryParse( input, out _ ) )
+        if ( !long.TryParse( input, out _ ) )
         {
             isValid = false;
             reason = "Input is too large.";
-            return true; // It's an index, but invalid
+            return false;
         }
 
-        return true; // It's a valid index
-    }
-
-    private static bool IsQuoted( ReadOnlySpan<char> input )
-    {
-        return (input.Length > 1 &&
-                input[0] == '"' && input[^1] == '"' ||
-                input[0] == '\'' && input[^1] == '\'');
-    }
-
-    private static bool IsSlice( ReadOnlySpan<char> input, out bool isValid, out string reason )
-    {
-        var index = 0;
-        isValid = true;
-        reason = string.Empty;
-        var partCount = 0;
-
-        do
-        {
-            // Validate each part (optional number)
-            if ( !ValidatePart( input, ref index, ref isValid, ref reason ) )
-            {
-                if ( !isValid )
-                    reason = "Invalid number in slice.";
-                return partCount > 0; // Return true if at least one colon was found, indicating it was intended as a slice
-            }
-
-            partCount++;
-
-            // Check for optional colon
-            if ( index < input.Length && input[index] == ':' )
-                index++;
-            else
-                break;
-
-        } while ( partCount < 3 && index < input.Length );
-
-        if ( index != input.Length )
-        {
-            isValid = false;
-            reason = "Unexpected characters at the end of slice.";
-        }
-
-        return partCount > 1; // Return true if at least one colon was found, indicating it was intended as a slice
-
-        static bool ValidatePart( ReadOnlySpan<char> span, ref int idx, ref bool isValid, ref string reason )
-        {
-            var start = idx;
-
-            if ( idx < span.Length && (span[idx] == '-' || span[idx] == '+') )
-                idx++;
-
-            var numberStart = idx;
-
-            while ( idx < span.Length && char.IsDigit( span[idx] ) )
-                idx++;
-
-            // Check for leading zeros in unsigned or signed numbers
-            if ( numberStart < idx && (idx - numberStart > 1) && span[numberStart] == '0' )
-            {
-                isValid = false;
-                reason = "Leading zeros are not allowed.";
-                return false;
-            }
-
-            var isValidNumber = idx > start || start == idx;
-            if ( !isValidNumber )
-            {
-                isValid = false;
-                reason = "Invalid number format.";
-            }
-
-            return isValidNumber; // True if there was a number or just an optional sign
-        }
+        return true; // It's a valid number
     }
 
     private static void ThrowIfQuoted( string value )

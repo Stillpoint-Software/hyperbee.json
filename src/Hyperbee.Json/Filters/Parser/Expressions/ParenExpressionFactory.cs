@@ -8,8 +8,8 @@ internal class ParenExpressionFactory : IExpressionFactory
     {
         if ( state.Operator == Operator.OpenParen && state.Item.IsEmpty )
         {
-            var localState = state with 
-            { 
+            var localState = state with
+            {
                 Terminal = FilterParser.EndArg
             };
 

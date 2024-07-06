@@ -86,7 +86,7 @@ public static class JsonHelper
     }
 
     //
-    internal static ReadOnlySpan<char> Unescape( ReadOnlySpan<char> span)
+    internal static ReadOnlySpan<char> Unescape( ReadOnlySpan<char> span )
     {
         // Estimate the maximum length of the unescaped string
         int maxLength = span.Length;
@@ -95,13 +95,13 @@ public static class JsonHelper
         Span<char> destination = new char[maxLength];
         int written = 0;
 
-        for (int i = 0; i < span.Length; i++)
+        for ( int i = 0; i < span.Length; i++ )
         {
-            if (span[i] == '\\' && i + 1 < span.Length)
+            if ( span[i] == '\\' && i + 1 < span.Length )
             {
                 // Handle escaping
                 i++;
-                switch (span[i])
+                switch ( span[i] )
                 {
                     case '"':
                     case '\\':
@@ -123,8 +123,8 @@ public static class JsonHelper
                     case 't':
                         destination[written++] = '\t';
                         break;
-                    case 'u' when i + 4 < span.Length && IsHexDigit(span[i + 1]) && IsHexDigit(span[i + 2]) && IsHexDigit(span[i + 3]) && IsHexDigit(span[i + 4]):
-                        destination[written++] = (char)Convert.ToInt32(span.Slice(i + 1, 4).ToString(), 16);
+                    case 'u' when i + 4 < span.Length && IsHexDigit( span[i + 1] ) && IsHexDigit( span[i + 2] ) && IsHexDigit( span[i + 3] ) && IsHexDigit( span[i + 4] ):
+                        destination[written++] = (char) Convert.ToInt32( span.Slice( i + 1, 4 ).ToString(), 16 );
                         i += 4;
                         break;
                     default:
@@ -151,5 +151,5 @@ public static class JsonHelper
 
     }
 
-     
+
 }

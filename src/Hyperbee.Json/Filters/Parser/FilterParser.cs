@@ -85,7 +85,7 @@ public class FilterParser<TNode> : FilterParser
 
         if ( state.EndOfBuffer || state.IsTerminal )
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
-       
+
         // parse the expression
         var items = new List<ExprItem>();
 
@@ -454,7 +454,7 @@ public class FilterParser<TNode> : FilterParser
     }
 
 
-    public static string Unescape( ReadOnlySpan<char> span)
+    public static string Unescape( ReadOnlySpan<char> span )
     {
         // Estimate the maximum length of the unescaped string
         int maxLength = span.Length;
@@ -463,13 +463,13 @@ public class FilterParser<TNode> : FilterParser
         Span<char> destination = maxLength <= 256 ? stackalloc char[maxLength] : new char[maxLength];
         int written = 0;
 
-        for (int i = 0; i < span.Length; i++)
+        for ( int i = 0; i < span.Length; i++ )
         {
-            if (span[i] == '\\' && i + 1 < span.Length)
+            if ( span[i] == '\\' && i + 1 < span.Length )
             {
                 // Handle escaping
                 i++;
-                switch (span[i])
+                switch ( span[i] )
                 {
                     case '"':
                     case '\\':
@@ -491,8 +491,8 @@ public class FilterParser<TNode> : FilterParser
                     case 't':
                         destination[written++] = '\t';
                         break;
-                    case 'u' when i + 4 < span.Length && IsHexDigit(span[i + 1]) && IsHexDigit(span[i + 2]) && IsHexDigit(span[i + 3]) && IsHexDigit(span[i + 4]):
-                        destination[written++] = (char)Convert.ToInt32(span.Slice(i + 1, 4).ToString(), 16);
+                    case 'u' when i + 4 < span.Length && IsHexDigit( span[i + 1] ) && IsHexDigit( span[i + 2] ) && IsHexDigit( span[i + 3] ) && IsHexDigit( span[i + 4] ):
+                        destination[written++] = (char) Convert.ToInt32( span.Slice( i + 1, 4 ).ToString(), 16 );
                         i += 4;
                         break;
                     default:
@@ -508,7 +508,7 @@ public class FilterParser<TNode> : FilterParser
             }
         }
 
-        return new string(destination[..written]);
+        return new string( destination[..written] );
 
         static bool IsHexDigit( char c )
         {

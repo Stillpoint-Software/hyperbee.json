@@ -6,7 +6,7 @@ public ref struct ParserState
 {
     public ReadOnlySpan<char> Buffer { get; }
     public ReadOnlySpan<char> Item { get; internal set; }
-    
+
     public bool TrailingWhitespace { get; internal set; }
     public bool IsArgument { get; internal set; }
 

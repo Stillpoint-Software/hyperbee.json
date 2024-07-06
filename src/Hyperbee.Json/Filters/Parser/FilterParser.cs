@@ -17,7 +17,7 @@ namespace Hyperbee.Json.Filters.Parser;
 
 public abstract class FilterParser
 {
-    public const char EndLine = '\n';
+    public const char EndLine = '\0'; // using null character instead of \n
     public const char EndArg = ')';
     public const char ArgSeparator = ',';
 }

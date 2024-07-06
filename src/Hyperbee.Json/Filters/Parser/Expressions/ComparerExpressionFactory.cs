@@ -48,16 +48,16 @@ public static class ComparerExpressionFactory<TNode>
 
         private object Value { get; } = value;
 
-        public int CompareTo( Comparand other ) => Compare( this, other );
-        public bool Equals( Comparand other ) => Compare( this, other ) == 0;
+        public int CompareTo( Comparand other ) => Compare( this, other, Operator.Equals );
+        public bool Equals( Comparand other ) => Compare( this, other, Operator.Equals ) == 0;
         public override bool Equals( object obj ) => obj is Comparand other && Equals( other );
 
-        public static bool operator ==( Comparand left, Comparand right ) => Compare( left, right ) == 0;
-        public static bool operator !=( Comparand left, Comparand right ) => Compare( left, right ) != 0;
-        public static bool operator <( Comparand left, Comparand right ) => Compare( left, right, lessThan: true ) < 0;
-        public static bool operator >( Comparand left, Comparand right ) => Compare( left, right ) > 0;
-        public static bool operator <=( Comparand left, Comparand right ) => Compare( left, right, lessThan: true ) <= 0;
-        public static bool operator >=( Comparand left, Comparand right ) => Compare( left, right ) >= 0;
+        public static bool operator ==( Comparand left, Comparand right ) => Compare( left, right, Operator.Equals ) == 0;
+        public static bool operator !=( Comparand left, Comparand right ) => Compare( left, right, Operator.NotEquals ) != 0;
+        public static bool operator <( Comparand left, Comparand right ) => Compare( left, right, Operator.LessThan ) < 0;
+        public static bool operator >( Comparand left, Comparand right ) => Compare( left, right, Operator.GreaterThan ) > 0;
+        public static bool operator <=( Comparand left, Comparand right ) => Compare( left, right, Operator.LessThanOrEqual ) <= 0;
+        public static bool operator >=( Comparand left, Comparand right ) => Compare( left, right, Operator.GreaterThanOrEqual ) >= 0;
 
         public override int GetHashCode()
         {
@@ -116,37 +116,37 @@ public static class ComparerExpressionFactory<TNode>
          * - Check if one is a NodeList and the other is a Value.
          * - Compare directly if both are Values.
          */
-        private static int Compare( Comparand left, Comparand right, bool lessThan = false )
+        private static int Compare( Comparand left, Comparand right, Operator operation )
         {
             if ( left.Value is IEnumerable<TNode> leftEnumerable && right.Value is IEnumerable<TNode> rightEnumerable )
             {
-                return CompareEnumerables( left.Accessor, leftEnumerable, rightEnumerable );
+                return CompareEnumerables( left.Accessor, leftEnumerable, rightEnumerable, out _ );
             }
 
             if ( left.Value is IEnumerable<TNode> leftEnumerable1 )
             {
-                var compare = CompareEnumerableToValue( left.Accessor, leftEnumerable1, right.Value, out var nodeCount );
-                return NormalizeResult( compare, nodeCount, lessThan );
+                var compare = CompareEnumerableToValue( left.Accessor, leftEnumerable1, right.Value, out var typeMismatch, out var nodeCount );
+                return AdjustResult( compare, nodeCount, operation, typeMismatch );
             }
 
             if ( right.Value is IEnumerable<TNode> rightEnumerable1 )
             {
-                var compare = CompareEnumerableToValue( left.Accessor, rightEnumerable1, left.Value, out var nodeCount );
-                return NormalizeResult( compare, nodeCount, lessThan );
+                var compare = CompareEnumerableToValue( left.Accessor, rightEnumerable1, left.Value, out var typeMismatch, out var nodeCount );
+                return AdjustResult( compare, nodeCount, operation, typeMismatch );
             }
 
-            return CompareValues( left.Value, right.Value );
+            return CompareValues( left.Value, right.Value, out _ );
 
-            static int NormalizeResult( int compare, int nodeCount, bool lessThan )
+            static int AdjustResult( int compare, int nodeCount, Operator operation, bool typeMismatch )
             {
                 // When comparing a NodeList to a Value, '<' and '>' type operators only have meaning when the
                 // NodeList has a single node.
                 //
                 // 1. When there is a single node, the comparison is based on the unwrapped node value. 
                 // This results in a meaningful value to value comparison for equality, and greater-than and
-                // less-than operations.
+                // less-than operations (if the values are the same type).
                 //
-                // 2. When there is more than on node, or an empty node list, equality is based on finding the
+                // 2. When there is more than one node, or an empty node list, equality is based on finding the
                 // value in the set of nodes. The result is true if the value is found in the set, and false
                 // otherwise.
                 // 
@@ -159,20 +159,21 @@ public static class ComparerExpressionFactory<TNode>
                 // normalize the result so that greater-than and less-than always return false, regardless of the
                 // left or right order of the comparands.
 
-                if ( lessThan && nodeCount != 1 ) // Test for an empty or multi-node set
+                return (nodeCount != 1 || typeMismatch) switch // Test for a non-single value set, or a type comparison mismatch
                 {
-                    // invert the comparison result to make sure less-than and greater-than return false
-                    return -compare;
-                }
-
-                return compare;
+                    true when (operation == Operator.LessThan || operation == Operator.LessThanOrEqual) => compare < 0 ? -compare : compare,
+                    true when (operation == Operator.GreaterThan || operation == Operator.GreaterThanOrEqual) => compare > 0 ? -compare : compare,
+                    _ => compare
+                };
             }
         }
 
-        private static int CompareEnumerables( IValueAccessor<TNode> accessor, IEnumerable<TNode> left, IEnumerable<TNode> right )
+        private static int CompareEnumerables( IValueAccessor<TNode> accessor, IEnumerable<TNode> left, IEnumerable<TNode> right, out bool typeMismatch )
         {
             using var leftEnumerator = left.GetEnumerator();
             using var rightEnumerator = right.GetEnumerator();
+
+            typeMismatch = false;
 
             while ( leftEnumerator.MoveNext() )
             {
@@ -182,7 +183,7 @@ public static class ComparerExpressionFactory<TNode>
                 // if the values can be extracted, compare the values directly
                 if ( accessor.TryGetValueFromNode( leftEnumerator.Current, out var leftItemValue ) &&
                      accessor.TryGetValueFromNode( rightEnumerator.Current, out var rightItemValue ) )
-                    return CompareValues( leftItemValue, rightItemValue );
+                    return CompareValues( leftItemValue, rightItemValue, out typeMismatch );
 
                 if ( !accessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
                     return -1; // Elements are not deeply equal
@@ -194,9 +195,10 @@ public static class ComparerExpressionFactory<TNode>
             return 0; // Sequences are equal
         }
 
-        private static int CompareEnumerableToValue( IValueAccessor<TNode> accessor, IEnumerable<TNode> enumeration, object value, out int nodeCount )
+        private static int CompareEnumerableToValue( IValueAccessor<TNode> accessor, IEnumerable<TNode> enumeration, object value, out bool typeMismatch, out int nodeCount )
         {
             nodeCount = 0;
+            typeMismatch = false;
             var lastCompare = -1;
 
             foreach ( var item in enumeration )
@@ -206,7 +208,7 @@ public static class ComparerExpressionFactory<TNode>
                 if ( !accessor.TryGetValueFromNode( item, out var itemValue ) )
                     continue; // Skip if value cannot be extracted
 
-                lastCompare = CompareValues( itemValue, value );
+                lastCompare = CompareValues( itemValue, value, out typeMismatch );
 
                 if ( lastCompare == 0 )
                     return 0; // Return 0 if any node matches the value
@@ -221,8 +223,10 @@ public static class ComparerExpressionFactory<TNode>
             return nodeCount != 1 ? -1 : lastCompare; // Return the last comparison if there is only one node
         }
 
-        private static int CompareValues( object left, object right )
+        private static int CompareValues( object left, object right, out bool typeMismatch )
         {
+            typeMismatch = false;
+
             if ( left == null && right == null )
             {
                 return 0;
@@ -230,7 +234,8 @@ public static class ComparerExpressionFactory<TNode>
 
             if ( left?.GetType() != right?.GetType() )
             {
-                return -1;
+                typeMismatch = true; // Type mismatch
+                return -1; 
             }
 
             if ( left is string leftString && right is string rightString )

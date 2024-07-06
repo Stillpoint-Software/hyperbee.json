@@ -62,9 +62,7 @@ public class FilterParser<TNode> : FilterParser
             var prevOp = MoveNext( ref state );
             var exprItem = GetExprItem( ref state, context );
 
-            // unless the expression is an argument, constants must be compared
-            if ( !state.IsArgument && ConstantIsNotCompared( prevOp, exprItem.Operator, exprItem.Expression ) )
-                throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
+            ThrowIfConstantIsNotCompared( prevOp, exprItem, in state );
 
             items.Add( exprItem );
 
@@ -79,16 +77,21 @@ public class FilterParser<TNode> : FilterParser
         var index = 1;
 
         return Merge( baseItem, ref index, items, context.Descriptor );
+    }
 
-        static bool ConstantIsNotCompared( Operator previousOp, Operator currentOp, Expression currentExpr )
-        {
-            return currentExpr is ConstantExpression && !IsComparisonOperator( previousOp ) && !IsComparisonOperator( currentOp );
+    private static void ThrowIfConstantIsNotCompared( Operator prevOp, ExprItem exprItem, in ParserState state )
+    {
+        // unless the expression is an argument, constants must be compared
+        if ( !state.IsArgument && exprItem.Expression is ConstantExpression && 
+             !IsComparisonOperator( prevOp ) && !IsComparisonOperator( exprItem.Operator ) )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
 
-            static bool IsComparisonOperator( Operator op ) =>
-                op == Operator.Equals || op == Operator.NotEquals ||
-                op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual ||
-                op == Operator.LessThan || op == Operator.LessThanOrEqual;
-        }
+        return;
+
+        static bool IsComparisonOperator( Operator op ) =>
+            op == Operator.Equals || op == Operator.NotEquals ||
+            op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual ||
+            op == Operator.LessThan || op == Operator.LessThanOrEqual;
     }
 
     private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
@@ -124,7 +127,7 @@ public class FilterParser<TNode> : FilterParser
     private static Operator MoveNext( ref ParserState state )
     {
         char? quote = null;
-        var previousOp = state.Operator;
+        var prevOp = state.Operator;
 
         // remove leading whitespace
         while ( !state.EndOfBuffer && char.IsWhiteSpace( state.Current ) )
@@ -135,7 +138,7 @@ public class FilterParser<TNode> : FilterParser
         {
             state.Operator = Operator.EndOfBuffer;
             state.Item = [];
-            return previousOp;
+            return prevOp;
         }
 
         // read next item
@@ -159,7 +162,7 @@ public class FilterParser<TNode> : FilterParser
         }
 
         state.SetItem( itemStart, itemEnd );
-        return previousOp;
+        return prevOp;
 
         // Helper method to determine if item parsing is finished
         static bool IsFinished( int count, char ch, Operator op, char terminal )

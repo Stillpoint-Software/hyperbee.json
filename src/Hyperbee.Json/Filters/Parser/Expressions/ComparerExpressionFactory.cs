@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
 
@@ -235,7 +235,7 @@ public static class ComparerExpressionFactory<TNode>
             if ( left?.GetType() != right?.GetType() )
             {
                 typeMismatch = true; // Type mismatch: important for non-equality comparisons
-                return -1; 
+                return -1;
             }
 
             if ( left is string leftString && right is string rightString )

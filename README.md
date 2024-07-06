@@ -12,7 +12,7 @@ The library is designed to be quick and extensible, allowing support for other J
 - **`IEnumerable` Results:** Deferred execution queries with `IEnumerable`.
 - **Conformant:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html). 
 
-## JSONPath Consensus
+## JSONPath RFC
 
 Hyperbee.Json aims to follow the RFC, and to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
 when the RFC is unopinionated. When the RFC is unopinionated, and where the consensus is ambiguous or not aligned with our 

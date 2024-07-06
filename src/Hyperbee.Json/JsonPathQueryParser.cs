@@ -38,11 +38,8 @@ internal static class JsonPathQueryParser
         Start,
         DotChild,
         UnionStart,
-        UnionQuotedFinal,
         UnionElement,
         UnionNext,
-        UnionFinal,
-        QuotedName,
         FinalSelector,
         Final
     }
@@ -98,6 +95,7 @@ internal static class JsonPathQueryParser
         var selectors = new List<SelectorDescriptor>();
 
         char[] whitespaceTerminators = [];
+        bool quoted = false;
 
         var state = State.Start;
         State returnState = State.Undefined;
@@ -146,18 +144,6 @@ internal static class JsonPathQueryParser
 
                     break;
 
-                case State.QuotedName:
-                    if ( c == '\\' ) // handle escaping
-                    {
-                        i++; // advance past the escaped character
-                    }
-                    else if ( c == literalDelimiter )
-                    {
-                        state = returnState; // transition back to the appropriate state
-                    }
-
-                    break;
-
                 case State.Whitespace:
                     switch ( c )
                     {
@@ -173,7 +159,10 @@ internal static class JsonPathQueryParser
 
                             whitespaceTerminators = [];
                             state = returnState; // transition back to the appropriate state
-                            selectorStart = i; // start of the next selector
+
+                            if ( returnState != State.UnionElement ) // hack to preserve the selector start for union elements
+                                selectorStart = i; // start of the next selector
+
                             i--; // replay character
                             break;
                     }
@@ -248,26 +237,22 @@ internal static class JsonPathQueryParser
                 case State.UnionStart:
                     switch ( c )
                     {
-                        //case '*':
-                        //    state = State.UnionFinal;
-                        //    InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Wildcard, Value = "*" } );
-                        //    break;
-                        case '.':
+                        case '.': // .. descendant
                             if ( i > n || query[i] != '.' )
                                 throw new NotSupportedException( $"Invalid `.` in bracket expression at pos {i - 1}." );
 
-                            state = State.UnionFinal;
+                            state = State.UnionNext; 
                             InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Descendant, Value = ".." } );
                             i++;
                             break;
                         case '\'':
                         case '"':
-                            state = State.QuotedName;
-                            returnState = State.UnionQuotedFinal;
+                            state = State.UnionElement;
                             literalDelimiter = c;
-                            selectorStart = i - 1;
+                            selectorStart = i - 1; // capture the quote character
                             bracketDepth = 1;
-                            break;
+                            quoted = true;
+                           break;
                         default:
                             state = State.UnionElement;
                             i--; // replay character
@@ -278,27 +263,25 @@ internal static class JsonPathQueryParser
 
                     break;
 
-                case State.UnionQuotedFinal:
-                    switch ( c )
-                    {
-                        case ' ':
-                        case '\t':
-                        case '\r':
-                        case '\n':
-                            break;
-                        case ']':
-                        case ',':
-                            state = State.UnionElement;
-                            i--; // replay character
+                case State.UnionElement:
 
-                            break;
-                        default: // invalid characters after end of string
-                            throw new NotSupportedException( $"Invalid bracket literal at pos {i - 1}." );
+                    if ( quoted )
+                    {
+                        if ( c == '\\' ) // handle escaping
+                        {
+                            i++; // advance past the escaped character
+                        }
+                        else if ( c == literalDelimiter )
+                        {
+                            quoted = false;
+                            whitespaceTerminators = [',', ']'];
+                            state = State.Whitespace;
+                            returnState = State.UnionElement; 
+                        }
+
+                        continue;
                     }
 
-                    break;
-
-                case State.UnionElement:
                     switch ( c )
                     {
                         case '[': // handle nested `[` (not called for first bracket)
@@ -327,7 +310,7 @@ internal static class JsonPathQueryParser
                             if ( string.IsNullOrEmpty( selectorValue ) ) // [] is not valid
                                 throw new NotSupportedException( "Invalid bracket expression syntax. Bracket expression cannot be empty." );
 
-                            selectorKind = GetSelectorKind( selectorValue );
+                            selectorKind = GetValidatedSelectorKind( selectorValue );
 
                             switch ( selectorKind )
                             {
@@ -366,14 +349,8 @@ internal static class JsonPathQueryParser
                     break;
 
                 case State.UnionNext:
-                case State.UnionFinal:
                     switch ( c )
                     {
-                        case ' ':
-                        case '\t':
-                        case '\r':
-                        case '\n':
-                            break;
                         case ']':
                             if ( i < n && query[i] != '.' && query[i] != '[' )
                                 throw new NotSupportedException( $"Invalid character after `]` at pos {i - 1}." );
@@ -382,22 +359,15 @@ internal static class JsonPathQueryParser
                             break;
                         case '\'':
                         case '"':
-                            if ( state != State.UnionNext )
-                                throw new NotSupportedException( $"Invalid bracket syntax at pos {i - 1}." );
-
-                            returnState = State.UnionQuotedFinal;
-                            state = State.QuotedName;
+                            state = State.UnionElement;
                             literalDelimiter = c;
-                            selectorStart = i - 1;
+                            selectorStart = i - 1; // capture the quote character
+                            quoted = true;
                             break;
                         default:
-                            if ( state != State.UnionNext )
-                                throw new NotSupportedException( $"Invalid bracket syntax at pos {i - 1}." );
-
                             state = State.UnionElement;
                             i--; // replay character
                             selectorStart = i;
-
                             break;
                     }
 
@@ -458,7 +428,7 @@ internal static class JsonPathQueryParser
         return tokens.First();
     }
 
-    private static SelectorKind GetSelectorKind( string selector )
+    private static SelectorKind GetValidatedSelectorKind( ReadOnlySpan<char> selector )
     {
         switch ( selector )
         {

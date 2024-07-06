@@ -134,33 +134,6 @@ public static class JsonPath<TNode>
                 continue;
             }
 
-            //// wildcard
-
-            //if ( selectorKind == SelectorKind.Wildcard )
-            //{
-            //    foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
-            //    {
-            //        // optimization: quicker return for final 
-            //        //
-            //        // the parser will work without this check, but we would be forcing it
-            //        // to push and pop values onto the stack that we know will not be used.
-            //        if ( segmentNext.IsFinal )
-            //        {
-            //            // we could just yield here, but we can't because we want to preserve
-            //            // the order of the results as per the RFC. so we push the current
-            //            // value onto the stack without prepending the childKey or childKind
-            //            // to set up for an immediate return on the next iteration.
-            //            //Push( stack, value, childValue, childKey, segmentNext );
-            //            stack.Push( value, childValue, childKey, segmentNext );
-            //            continue;
-            //        }
-
-            //        stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
-            //    }
-
-            //    continue;
-            //}
-
             // descendant
 
             if ( selectorKind == SelectorKind.Descendant )
@@ -185,7 +158,6 @@ public static class JsonPath<TNode>
             {
                 if ( i != 0 )
                     (selector, selectorKind) = segmentCurrent.Selectors[i];
-
 
                 // wildcard
 

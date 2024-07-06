@@ -584,7 +584,7 @@ internal static class JsonPathQueryParser
                 return false;
 
             var isValidNumber = idx > start || start == idx;
-            
+
             if ( !isValidNumber )
             {
                 isValid = false;

@@ -21,7 +21,7 @@ namespace Hyperbee.Json.Cts
         {
             var nodeArray = nodes.ToArray();
 
-            if (!force && nodeArray.Length == 1 && nodeArray[0] is JsonArray array )
+            if ( !force && nodeArray.Length == 1 && nodeArray[0] is JsonArray array )
                 return array;
 
             var jsonArray = new JsonArray();

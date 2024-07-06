@@ -212,8 +212,8 @@ public static class ComparerExpressionFactory<TNode>
                     return 0; // Return 0 if any node matches the value
             }
 
-            if ( nodeCount == 0 && value == null )
-                return 0; // Return 0 if the value is null (no nodes to compare to)
+            if ( nodeCount == 0 && value == null ) //BF - when comparing a missing property to null $[?(@.key==null)] we need to fail
+                return -1; // Return 0 if the value is null (no nodes to compare to)
 
             if ( nodeCount == 0 )
                 return -1; // Return -1 if the list is empty (no nodes match the value)

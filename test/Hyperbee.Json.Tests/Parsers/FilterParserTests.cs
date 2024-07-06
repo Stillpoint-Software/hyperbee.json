@@ -8,6 +8,7 @@ using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
+using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Tests.Parsers;
@@ -17,8 +18,6 @@ public class FilterParserTests : JsonTestBase
 {
     [DataTestMethod]
     [DataRow( "((\"world\" == 'world') && (1 == 1))", true, typeof( JsonElement ) )]
-    [DataRow( "true", true, typeof( JsonElement ) )]
-    [DataRow( "false", false, typeof( JsonElement ) )]
     [DataRow( "1 == 1", true, typeof( JsonElement ) )]
     [DataRow( "(1 == 1)", true, typeof( JsonElement ) )]
     [DataRow( "(1 != 2)", true, typeof( JsonElement ) )]
@@ -27,8 +26,6 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "(\"world\" == 'world') || true", true, typeof( JsonElement ) )]
     [DataRow( "(\"world\" == 'world') || 1 == 1", true, typeof( JsonElement ) )]
     [DataRow( "!('World' != 'World') && !(1 == 2 || 1 == 3)", true, typeof( JsonElement ) )]
-    [DataRow( "true", true, typeof( JsonNode ) )]
-    [DataRow( "false", false, typeof( JsonNode ) )]
     [DataRow( "1 == 1", true, typeof( JsonNode ) )]
     [DataRow( "(1 == 1)", true, typeof( JsonNode ) )]
     [DataRow( "(1 != 2)", true, typeof( JsonNode ) )]
@@ -47,6 +44,23 @@ public class FilterParserTests : JsonTestBase
 
         // assert
         Assert.AreEqual( expected, result );
+    }
+
+    [DataTestMethod]
+    [DataRow( "true", typeof( JsonElement ) )]
+    [DataRow( "false", typeof( JsonElement ) )]
+    [DataRow( "true", typeof( JsonNode ) )]
+    [DataRow( "false", typeof( JsonNode ) )]
+    public void Should_Fail_WhenNotComparingLiterals( string filter, Type sourceType )
+    {
+        // arrange 
+
+        // act & assert
+        Assert.ThrowsException<NotSupportedException>( () =>
+        {
+            var (expression, param) = GetExpression( filter, sourceType );
+            return Execute( expression, param, sourceType );
+        } );
     }
 
     [DataTestMethod]
@@ -135,12 +149,10 @@ public class FilterParserTests : JsonTestBase
 
     [DataTestMethod]
     [DataRow( "length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
-    [DataRow( "length (@.store.book) == 4  ", true, typeof( JsonElement ) )]
     [DataRow( "  length(@.store.book) == 4", true, typeof( JsonElement ) )]
     [DataRow( "  length(@.store.book) == 4  ", true, typeof( JsonElement ) )]
     [DataRow( "  length( @.store.book ) == 4  ", true, typeof( JsonElement ) )]
     [DataRow( "4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
-    [DataRow( "4 == length ( @.store.book )  ", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
@@ -151,6 +163,14 @@ public class FilterParserTests : JsonTestBase
 
         // assert
         Assert.AreEqual( expected, result );
+    }
+
+    [DataTestMethod]
+    [DataRow( "4 == length ( @.store.book )",  typeof( JsonElement ) )]
+    [DataRow( "length (@.store.book) == 4", typeof( JsonElement ) )]
+    public void Should_Fail_WhenHasInvalidWhitespace( string filter, Type sourceType )
+    {
+        Assert.ThrowsException<NotSupportedException>( () => CompileAndExecute( filter, sourceType ) );
     }
 
     [DataTestMethod]

@@ -2911,7 +2911,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 

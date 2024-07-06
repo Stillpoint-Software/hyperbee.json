@@ -235,8 +235,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
     [DataRow( "$[-2]", typeof( JsonNode ) )]
     public void BracketNotationWithNegativeNumberOnShortArray( string query, Type sourceType )
     {
-        // rfc: ["one element] // (-2 => -2:1:1 => -1:1:1 [0])
-        // consensus: []
+        // rfc: ["one element] // out of bounds should return empty list
 
         const string json = """
         [
@@ -247,8 +246,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "one element" );
+        Assert.IsTrue( matches.Count == 0 );
     }
 
     [DataTestMethod]
@@ -633,8 +631,8 @@ public class JsonPathBracketNotationTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( """$[':@.\"$,*\'\\']""", typeof( JsonDocument ) )]
-    [DataRow( """$[':@.\"$,*\'\\']""", typeof( JsonNode ) )]
+    [DataRow( """$[':@."$,*\'\\']""", typeof( JsonDocument ) )]
+    [DataRow( """$[':@."$,*\'\\']""", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedSpecialCharactersCombined( string query, Type sourceType )
     {
         // rfc: 42

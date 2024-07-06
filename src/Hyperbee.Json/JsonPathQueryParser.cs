@@ -248,10 +248,10 @@ internal static class JsonPathQueryParser
                 case State.UnionStart:
                     switch ( c )
                     {
-                        case '*':
-                            state = State.UnionFinal;
-                            InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Wildcard, Value = "*" } );
-                            break;
+                        //case '*':
+                        //    state = State.UnionFinal;
+                        //    InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Wildcard, Value = "*" } );
+                        //    break;
                         case '.':
                             if ( i > n || query[i] != '.' )
                                 throw new NotSupportedException( $"Invalid `.` in bracket expression at pos {i - 1}." );
@@ -460,6 +460,14 @@ internal static class JsonPathQueryParser
 
     private static SelectorKind GetSelectorKind( string selector )
     {
+        switch ( selector )
+        {
+            case "*":
+                return SelectorKind.Wildcard;
+            case "..":
+                return SelectorKind.Descendant;
+        }
+
         if ( IsQuoted( selector ) )
             return SelectorKind.Name;
 
@@ -482,12 +490,7 @@ internal static class JsonPathQueryParser
             return SelectorKind.Slice;
         }
 
-        return selector switch
-        {
-            "*" => SelectorKind.Wildcard,
-            ".." => SelectorKind.Descendant,
-            _ => SelectorKind.Undefined
-        };
+        return SelectorKind.Undefined;
     }
 
     private static bool IsFilter( ReadOnlySpan<char> input )
@@ -534,7 +537,7 @@ internal static class JsonPathQueryParser
         do
         {
             // Validate each part (optional number)
-            if ( !ValidatePart( input, ref index, ref isValid, ref reason/*, allowEmpty: true*/ ) )
+            if ( !ValidatePart( input, ref index, ref isValid, ref reason ) )
             {
                 if ( !isValid )
                     reason = "Invalid number in slice.";
@@ -563,13 +566,13 @@ internal static class JsonPathQueryParser
         return partCount > 0; // Return true if at least one colon was found, indicating it was intended as a slice
 
         // Helper method to validate each part of the slice
-        static bool ValidatePart( ReadOnlySpan<char> span, ref int idx, ref bool isValid, ref string reason/*, bool allowEmpty = false*/ )
+        static bool ValidatePart( ReadOnlySpan<char> span, ref int idx, ref bool isValid, ref string reason )
         {
             SkipWhitespace( span, ref idx );
 
             var start = idx;
 
-            if ( idx < span.Length && (span[idx] == '-' /*|| span[idx] == '+'*/) )
+            if ( idx < span.Length && (span[idx] == '-') )
                 idx++;
 
             while ( idx < span.Length && char.IsDigit( span[idx] ) )
@@ -603,7 +606,6 @@ internal static class JsonPathQueryParser
             }
         }
     }
-
 
     private static bool IsValidNumber( ReadOnlySpan<char> input, out bool isValid, out string reason )
     {

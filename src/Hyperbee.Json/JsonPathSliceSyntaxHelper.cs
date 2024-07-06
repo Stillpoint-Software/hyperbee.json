@@ -5,6 +5,7 @@ namespace Hyperbee.Json;
 
 internal static class JsonPathSliceSyntaxHelper
 {
+    // parse slice expression and return normalized bounds
     public static (int Lower, int Upper, int Step) ParseExpression( ReadOnlySpan<char> sliceExpr, int length, bool reverse = false )
     {
         // parse the slice expression and return normalized bounds

@@ -407,7 +407,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[*,*]";
             var document = JsonNode.Parse(
                 """[0,1,2]""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """[0,1,2,0,1,2]""" );
 

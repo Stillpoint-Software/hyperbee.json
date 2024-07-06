@@ -82,7 +82,7 @@ public class FilterParser<TNode> : FilterParser
     private static void ThrowIfConstantIsNotCompared( Operator prevOp, ExprItem exprItem, in ParserState state )
     {
         // unless the expression is an argument, constants must be compared
-        if ( !state.IsArgument && exprItem.Expression is ConstantExpression && 
+        if ( !state.IsArgument && exprItem.Expression is ConstantExpression &&
              !IsComparisonOperator( prevOp ) && !IsComparisonOperator( exprItem.Operator ) )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
 

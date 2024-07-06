@@ -235,7 +235,7 @@ public static class ComparerExpressionFactory<TNode>
             if ( left?.GetType() != right?.GetType() )
             {
                 typeMismatch = true; // Type mismatch
-                return -1; 
+                return -1;
             }
 
             if ( left is string leftString && right is string rightString )

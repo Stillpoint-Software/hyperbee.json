@@ -42,9 +42,9 @@ public class FilterParser<TNode> : FilterParser
 
         var expression = Parse( ref state, context );
 
-        // Additional check to ensure literals are not standalone
-        if ( expression is ConstantExpression ) //MOD-GPT
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" ); //MOD-GPT
+        // BF: Ensure literals are not standalone
+        if ( expression is ConstantExpression ) 
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" ); 
 
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
@@ -79,7 +79,6 @@ public class FilterParser<TNode> : FilterParser
         return Merge( baseItem, ref index, items, context.Descriptor );
     }
 
-    /*
     private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
     {
         if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
@@ -96,43 +95,6 @@ public class FilterParser<TNode> : FilterParser
 
         if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, context ) )
             return ExprItem( ref state, expression );
-
-        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
-
-        throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
-
-        // Helper method to create an expression item
-        static ExprItem ExprItem( ref ParserState state, Expression expression )
-        {
-            UpdateOperator( ref state );
-            return new ExprItem( expression, state.Operator );
-        }
-    }
-    */
-
-    private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
-    {
-        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
-            return ExprItem( ref state, expression );
-
-        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // will recurse.
-            return ExprItem( ref state, expression );
-
-        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
-
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // may recurse for each function argument.
-            return ExprItem( ref state, expression );
-
-        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-        {
-            // Ensure the literal is part of a valid comparison expression
-            if ( state.Operator == Operator.NonOperator ) //MOD-GPT
-                throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" ); //MOD-GPT
-
-            return ExprItem( ref state, expression );
-        }
 
         if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, context ) )
             return ExprItem( ref state, expression );

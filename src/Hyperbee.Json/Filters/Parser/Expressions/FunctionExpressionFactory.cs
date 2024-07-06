@@ -8,6 +8,9 @@ internal class FunctionExpressionFactory : IExpressionFactory
     {
         if ( context.Descriptor.Functions.TryGetCreator( state.Item.ToString(), out var functionCreator ) )
         {
+            if ( state.TrailingWhitespace )
+                throw new NotSupportedException( "Whitespace is not allowed after a function name." );
+
             expression = functionCreator()
                 .GetExpression( ref state, context ); // will recurse for each function argument.
 

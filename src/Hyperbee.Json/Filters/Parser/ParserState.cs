@@ -4,6 +4,7 @@ public ref struct ParserState
 {
     public ReadOnlySpan<char> Buffer { get; }
     public ReadOnlySpan<char> Item { get; internal set; }
+    public bool TrailingWhitespace { get; internal set; }
 
     public Operator Operator { get; set; }
     public char Terminal { get; init; }
@@ -26,5 +27,11 @@ public ref struct ParserState
     public readonly char Current => Buffer[Pos];
     public readonly char Previous => Buffer[Pos - 1];
 
-    internal void SetItem( int itemStart, int itemEnd ) => Item = Buffer[itemStart..itemEnd].TrimEnd();
+    internal void SetItem( int itemStart, int itemEnd )
+    {
+        var item = Buffer[itemStart..itemEnd];
+        TrailingWhitespace = !item.IsEmpty && char.IsWhiteSpace( item[^1] );
+
+        Item = item.TrimEnd();
+    }
 }

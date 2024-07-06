@@ -241,7 +241,7 @@ internal static class JsonPathQueryParser
                             if ( i > n || query[i] != '.' )
                                 throw new NotSupportedException( $"Invalid `.` in bracket expression at pos {i - 1}." );
 
-                            state = State.UnionNext; 
+                            state = State.UnionNext;
                             InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Descendant, Value = ".." } );
                             i++;
                             break;
@@ -252,7 +252,7 @@ internal static class JsonPathQueryParser
                             selectorStart = i - 1; // capture the quote character
                             bracketDepth = 1;
                             quoted = true;
-                           break;
+                            break;
                         default:
                             state = State.UnionElement;
                             i--; // replay character
@@ -276,7 +276,7 @@ internal static class JsonPathQueryParser
                             quoted = false;
                             whitespaceTerminators = [',', ']'];
                             state = State.Whitespace;
-                            returnState = State.UnionElement; 
+                            returnState = State.UnionElement;
                         }
 
                         continue;

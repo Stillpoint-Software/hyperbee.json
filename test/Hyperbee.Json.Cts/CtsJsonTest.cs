@@ -2741,10 +2741,18 @@ namespace Hyperbee.Json.Cts
         [TestMethod( "filter, string literal, escaped single quote in single quotes (166)" )]
         public void Test_filter__string_literal__escaped_single_quote_in_single_quotes_166()
         {
-            var selector = "$[?@ == 'quoted\\' literal']";
+            var selector = "$[?@ == 'quoted\\' literal']"; // BF: I think this is a typo in the test case
+
             var document = JsonNode.Parse(
-                """["quoted' literal","a","quoted\\' literal","'quoted\" literal'"]""" );
-            var results = document.Select( selector );
+                """
+                [
+                    "quoted' literal",
+                    "a","quoted\\' literal",
+                    "'quoted\" literal'"
+                ]
+                """ );
+
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """["quoted' literal"]""" );
 

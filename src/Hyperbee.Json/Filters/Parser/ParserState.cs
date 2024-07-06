@@ -1,9 +1,12 @@
-﻿namespace Hyperbee.Json.Filters.Parser;
+﻿using Hyperbee.Json.Extensions;
+
+namespace Hyperbee.Json.Filters.Parser;
 
 public ref struct ParserState
 {
     public ReadOnlySpan<char> Buffer { get; }
     public ReadOnlySpan<char> Item { get; internal set; }
+    
     public bool TrailingWhitespace { get; internal set; }
     public bool IsArgument { get; internal set; }
 
@@ -33,6 +36,6 @@ public ref struct ParserState
         var item = Buffer[itemStart..itemEnd];
         TrailingWhitespace = !item.IsEmpty && char.IsWhiteSpace( item[^1] );
 
-        Item = item.TrimEnd();
+        Item = JsonHelper.Unescape( item.TrimEnd() );
     }
 }

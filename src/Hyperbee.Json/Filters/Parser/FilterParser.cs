@@ -20,6 +20,38 @@ public abstract class FilterParser
     public const char EndLine = '\0'; // using null character instead of \n
     public const char EndArg = ')';
     public const char ArgSeparator = ',';
+
+    internal static bool IsNonSingularQuery( ReadOnlySpan<char> query ) // BF WIP
+    {
+        bool inSingleQuotes = false;
+        bool inDoubleQuotes = false;
+
+        for ( var i = 0; i < query.Length; i++ )
+        {
+            char current = query[i];
+
+            switch ( current )
+            {
+                case '\'' when !inDoubleQuotes:
+                    inSingleQuotes = !inSingleQuotes;
+                    break;
+                case '"' when !inSingleQuotes:
+                    inDoubleQuotes = !inDoubleQuotes;
+                    break;
+            }
+
+            if ( inSingleQuotes || inDoubleQuotes )
+                continue;
+
+            if ( query[i..].StartsWith( ".*".AsSpan() ) || query[i..].StartsWith( "..".AsSpan() ) ||
+                 query[i..].StartsWith( "[".AsSpan() ) || query[i..].StartsWith( "]".AsSpan() ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 public class FilterParser<TNode> : FilterParser
@@ -53,7 +85,7 @@ public class FilterParser<TNode> : FilterParser
 
         if ( state.EndOfBuffer || state.IsTerminal )
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
-
+       
         // parse the expression
         var items = new List<ExprItem>();
 
@@ -185,6 +217,20 @@ public class FilterParser<TNode> : FilterParser
     {
         nextChar = state.Buffer[state.Pos++];
 
+        // Handle escape characters within quotes
+        if ( quoteChar.HasValue )
+        {
+            if ( nextChar == '\\' && state.Pos < state.Buffer.Length )
+            {
+                nextChar = state.Buffer[state.Pos++];
+            }
+            else if ( nextChar == quoteChar && (state.Pos <= 1 || state.Buffer[state.Pos - 2] != '\\') )
+            {
+                quoteChar = null; // Exiting quoted string
+            }
+            return;
+        }
+
         switch ( nextChar )
         {
             case '&' when Next( ref state, '&' ):
@@ -220,11 +266,11 @@ public class FilterParser<TNode> : FilterParser
             case ')':
                 state.Operator = Operator.ClosedParen;
                 break;
-            case ' ' or '\t' or '\r' or '\n' when quoteChar == null:
+            case ' ' or '\t' or '\r' or '\n':
                 state.Operator = Operator.Whitespace;
                 break;
-            case '\'' or '\"' when state.Pos > 0 && state.Previous != '\\':
-                quoteChar = quoteChar == null ? nextChar : null;
+            case '\'' or '\"':
+                quoteChar = nextChar; // Entering a quoted string
                 state.Operator = Operator.Quotes;
                 break;
             default:
@@ -237,7 +283,7 @@ public class FilterParser<TNode> : FilterParser
         // Helper method to check if the next character is the expected character
         static bool Next( ref ParserState state, char expected )
         {
-            if ( state.EndOfBuffer || state.Current != expected )
+            if ( state.EndOfBuffer || state.Buffer[state.Pos] != expected )
                 return false;
 
             state.Pos++;
@@ -405,6 +451,72 @@ public class FilterParser<TNode> : FilterParser
             );
 
         left.Operator = right.Operator;
+    }
+
+
+    public static string Unescape( ReadOnlySpan<char> span)
+    {
+        // Estimate the maximum length of the unescaped string
+        int maxLength = span.Length;
+
+        // Use stackalloc for the temporary destination span if the length is small enough
+        Span<char> destination = maxLength <= 256 ? stackalloc char[maxLength] : new char[maxLength];
+        int written = 0;
+
+        for (int i = 0; i < span.Length; i++)
+        {
+            if (span[i] == '\\' && i + 1 < span.Length)
+            {
+                // Handle escaping
+                i++;
+                switch (span[i])
+                {
+                    case '"':
+                    case '\\':
+                    case '/':
+                        destination[written++] = span[i];
+                        break;
+                    case 'b':
+                        destination[written++] = '\b';
+                        break;
+                    case 'f':
+                        destination[written++] = '\f';
+                        break;
+                    case 'n':
+                        destination[written++] = '\n';
+                        break;
+                    case 'r':
+                        destination[written++] = '\r';
+                        break;
+                    case 't':
+                        destination[written++] = '\t';
+                        break;
+                    case 'u' when i + 4 < span.Length && IsHexDigit(span[i + 1]) && IsHexDigit(span[i + 2]) && IsHexDigit(span[i + 3]) && IsHexDigit(span[i + 4]):
+                        destination[written++] = (char)Convert.ToInt32(span.Slice(i + 1, 4).ToString(), 16);
+                        i += 4;
+                        break;
+                    default:
+                        // If not a recognized escape sequence, treat as literal
+                        destination[written++] = '\\';
+                        destination[written++] = span[i];
+                        break;
+                }
+            }
+            else
+            {
+                destination[written++] = span[i];
+            }
+        }
+
+        return new string(destination[..written]);
+
+        static bool IsHexDigit( char c )
+        {
+            return (c >= '0' && c <= '9') ||
+                   (c >= 'A' && c <= 'F') ||
+                   (c >= 'a' && c <= 'f');
+        }
+
     }
 
     private class ExprItem( Expression expression, Operator op )

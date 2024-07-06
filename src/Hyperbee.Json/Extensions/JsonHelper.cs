@@ -84,4 +84,72 @@ public static class JsonHelper
         var reader = new Utf8JsonReader( bufferWriter.WrittenSpan );
         return JsonSerializer.Deserialize<T>( ref reader, options );
     }
+
+    //
+    internal static ReadOnlySpan<char> Unescape( ReadOnlySpan<char> span)
+    {
+        // Estimate the maximum length of the unescaped string
+        int maxLength = span.Length;
+
+        // Use stackalloc for the temporary destination span if the length is small enough
+        Span<char> destination = new char[maxLength];
+        int written = 0;
+
+        for (int i = 0; i < span.Length; i++)
+        {
+            if (span[i] == '\\' && i + 1 < span.Length)
+            {
+                // Handle escaping
+                i++;
+                switch (span[i])
+                {
+                    case '"':
+                    case '\\':
+                    case '/':
+                        destination[written++] = span[i];
+                        break;
+                    case 'b':
+                        destination[written++] = '\b';
+                        break;
+                    case 'f':
+                        destination[written++] = '\f';
+                        break;
+                    case 'n':
+                        destination[written++] = '\n';
+                        break;
+                    case 'r':
+                        destination[written++] = '\r';
+                        break;
+                    case 't':
+                        destination[written++] = '\t';
+                        break;
+                    case 'u' when i + 4 < span.Length && IsHexDigit(span[i + 1]) && IsHexDigit(span[i + 2]) && IsHexDigit(span[i + 3]) && IsHexDigit(span[i + 4]):
+                        destination[written++] = (char)Convert.ToInt32(span.Slice(i + 1, 4).ToString(), 16);
+                        i += 4;
+                        break;
+                    default:
+                        // If not a recognized escape sequence, treat as literal
+                        destination[written++] = '\\';
+                        destination[written++] = span[i];
+                        break;
+                }
+            }
+            else
+            {
+                destination[written++] = span[i];
+            }
+        }
+
+        return destination[..written];
+
+        static bool IsHexDigit( char c )
+        {
+            return (c >= '0' && c <= '9') ||
+                   (c >= 'A' && c <= 'F') ||
+                   (c >= 'a' && c <= 'f');
+        }
+
+    }
+
+     
 }

@@ -8,7 +8,11 @@ internal class ParenExpressionFactory : IExpressionFactory
     {
         if ( state.Operator == Operator.OpenParen && state.Item.IsEmpty )
         {
-            var localState = state with { Terminal = FilterParser.EndArg };
+            var localState = state with 
+            { 
+                Terminal = FilterParser.EndArg
+            };
+
             expression = FilterParser<TNode>.Parse( ref localState, context ); // will recurse.
             return true;
         }

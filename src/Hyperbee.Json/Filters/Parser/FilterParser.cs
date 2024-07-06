@@ -63,8 +63,13 @@ public class FilterParser<TNode> : FilterParser
 
         do
         {
-            MoveNext( ref state );
-            items.Add( GetExprItem( ref state, context ) );
+            var prevOp = MoveNext( ref state );
+            var exprItem = GetExprItem( ref state, context );
+
+            if ( !state.IsArgument && ConstantIsNotCompared( prevOp, exprItem.Operator, exprItem.Expression ) )
+                throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
+
+            items.Add( exprItem );
 
         } while ( state.IsParsing );
 
@@ -77,6 +82,16 @@ public class FilterParser<TNode> : FilterParser
         var index = 1;
 
         return Merge( baseItem, ref index, items, context.Descriptor );
+
+        static bool ConstantIsNotCompared( Operator previousOp, Operator currentOp, Expression currentExpr )
+        {
+            return currentExpr is ConstantExpression && !IsComparisonOperator( previousOp ) && !IsComparisonOperator( currentOp );
+
+            static bool IsComparisonOperator( Operator op ) => 
+                op == Operator.Equals || op == Operator.NotEquals || 
+                op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual || 
+                op == Operator.LessThan || op == Operator.LessThanOrEqual;
+        }
     }
 
     private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
@@ -109,9 +124,10 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static void MoveNext( ref ParserState state )
+    private static Operator MoveNext( ref ParserState state )
     {
         char? quote = null;
+        var previousOp = state.Operator;
 
         // remove leading whitespace
         while ( !state.EndOfBuffer && char.IsWhiteSpace( state.Current ) )
@@ -122,7 +138,7 @@ public class FilterParser<TNode> : FilterParser
         {
             state.Operator = Operator.EndOfBuffer;
             state.Item = [];
-            return;
+            return previousOp;
         }
 
         // read next item
@@ -146,7 +162,7 @@ public class FilterParser<TNode> : FilterParser
         }
 
         state.SetItem( itemStart, itemEnd );
-        return;
+        return previousOp;
 
         // Helper method to determine if item parsing is finished
         static bool IsFinished( int count, char ch, Operator op, char terminal )

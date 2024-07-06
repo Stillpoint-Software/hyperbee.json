@@ -57,15 +57,21 @@ public static class JsonPath<TNode>
 
     public static IEnumerable<TNode> Select( in TNode value, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        return EnumerateMatches( value, value, query, processor );
+        return EnumerateMatches( value, value, query, false, processor );
     }
 
     internal static IEnumerable<TNode> SelectInternal( in TNode value, TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        return EnumerateMatches( value, root, query, processor );
+        // entry point for filter recursive calls
+
+        // explicitly allow dot whitespace for function arguments. This is very annoying
+        // because the RFC ABNF does not allow whitespace in the query for dot member notation,
+        // but it does allow it in the filter for function arguments.
+
+        return EnumerateMatches( value, root, query, true, processor ); 
     }
 
-    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
+    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query, bool allowDotWhitespace, NodeProcessorDelegate<TNode> processor = null )
     {
         if ( string.IsNullOrWhiteSpace( query ) ) // invalid per the RFC ABNF
             return []; // Consensus: return empty array for empty query
@@ -73,7 +79,7 @@ public static class JsonPath<TNode>
         if ( query == "$" || query == "@" ) // quick out for everything
             return [value];
 
-        var segmentNext = JsonPathQueryParser.Parse( query ).Next; // The first segment is always the root; skip it
+        var segmentNext = JsonPathQueryParser.Parse( query, allowDotWhitespace ).Next; // The first segment is always the root; skip it
 
         return EnumerateMatches( root, new NodeArgs( default, value, default, segmentNext, NodeFlags.Default ), processor );
     }

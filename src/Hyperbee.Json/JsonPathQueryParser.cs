@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -45,40 +45,17 @@ internal static class JsonPathQueryParser
         Final
     }
 
-    private static string GetSelector( State state, ReadOnlySpan<char> buffer, int start, int stop )
+    internal static JsonPathSegment Parse( string query, bool allowDotWhitespace = false )
     {
-        var adjust = state == State.FinalSelector || state == State.Final ? 0 : 1; // non-final states have already advanced to the next character, so we need to subtract 1
-        var length = stop - start - adjust;
-        return length <= 0 ? null : buffer.Slice( start, length ).Trim().ToString();
+        return JsonPathTokens.GetOrAdd( query, x => TokenFactory( x.AsSpan(), allowDotWhitespace ) );
     }
 
-    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor selector )
+    internal static JsonPathSegment ParseNoCache( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
     {
-        if ( selector?.Value == null )
-            return;
-
-        InsertToken( tokens, [selector] );
+        return TokenFactory( query, allowDotWhitespace );
     }
 
-    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor[] selectors )
-    {
-        if ( selectors == null || selectors.Length == 0 )
-            return;
-
-        tokens.Add( new JsonPathSegment( selectors ) );
-    }
-
-    internal static JsonPathSegment Parse( string query )
-    {
-        return JsonPathTokens.GetOrAdd( query, x => TokenFactory( x.AsSpan() ) );
-    }
-
-    internal static JsonPathSegment ParseNoCache( ReadOnlySpan<char> query )
-    {
-        return TokenFactory( query );
-    }
-
-    private static JsonPathSegment TokenFactory( ReadOnlySpan<char> query )
+    private static JsonPathSegment TokenFactory( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
     {
         var tokens = new List<JsonPathSegment>();
 
@@ -226,11 +203,13 @@ internal static class JsonPathQueryParser
                         case '\'':
                         case '"':
                             throw new NotSupportedException( $"Quoted member names are not allowed in dot notation at pos {i - 1}." );
-                            //case ' ':
-                            //case '\t':
-                            //case '\n':
-                            //case '\r':
-                            //    throw new NotSupportedException( $"Invalid whitespace in object notation at pos {i - 1}." );
+                        case ' ':
+                        case '\t':
+                        case '\n':
+                        case '\r':
+                            if ( !allowDotWhitespace ) // filter dot notation allows whitespace, query dot notation does not
+                                throw new NotSupportedException( $"Invalid whitespace in object notation at pos {i - 1}." );
+                            break;
                     }
 
                     break;
@@ -412,21 +391,11 @@ internal static class JsonPathQueryParser
         }
     }
 
-    private static JsonPathSegment TokensToSegment( IList<JsonPathSegment> tokens )
+    private static string GetSelector( State state, ReadOnlySpan<char> buffer, int start, int stop )
     {
-        if ( tokens == null || tokens.Count == 0 )
-            return JsonPathSegment.Final;
-
-        // set the next properties
-
-        for ( var index = 0; index < tokens.Count; index++ )
-        {
-            tokens[index].Next = index != tokens.Count - 1
-                ? tokens[index + 1]
-                : JsonPathSegment.Final;
-        }
-
-        return tokens.First();
+        var adjust = state == State.FinalSelector || state == State.Final ? 0 : 1; // non-final states have already advanced to the next character, so we need to subtract 1
+        var length = stop - start - adjust;
+        return length <= 0 ? null : buffer.Slice( start, length ).Trim().ToString();
     }
 
     private static SelectorKind GetValidatedSelectorKind( ReadOnlySpan<char> selector )
@@ -462,6 +431,22 @@ internal static class JsonPathQueryParser
         }
 
         return SelectorKind.Undefined;
+    }
+
+    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor selector )
+    {
+        if ( selector?.Value == null )
+            return;
+
+        InsertToken( tokens, [selector] );
+    }
+
+    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor[] selectors )
+    {
+        if ( selectors == null || selectors.Length == 0 )
+            return;
+
+        tokens.Add( new JsonPathSegment( selectors ) );
     }
 
     private static bool IsFilter( ReadOnlySpan<char> input )
@@ -632,6 +617,23 @@ internal static class JsonPathQueryParser
         }
 
         return true; // It's a valid number
+    }
+
+    private static JsonPathSegment TokensToSegment( IList<JsonPathSegment> tokens )
+    {
+        if ( tokens == null || tokens.Count == 0 )
+            return JsonPathSegment.Final;
+
+        // set the next properties
+
+        for ( var index = 0; index < tokens.Count; index++ )
+        {
+            tokens[index].Next = index != tokens.Count - 1
+                ? tokens[index + 1]
+                : JsonPathSegment.Final;
+        }
+
+        return tokens.First();
     }
 
     private static void ThrowIfQuoted( string value )

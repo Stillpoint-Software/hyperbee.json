@@ -24,7 +24,8 @@ public abstract class FilterExtensionFunction
                 Item = [],
                 Terminal = i == _argumentCount - 1
                     ? FilterParser.EndArg
-                    : FilterParser.ArgSeparator
+                    : FilterParser.ArgSeparator,
+                IsArgument = true
             };
 
             if ( localState.IsTerminal )

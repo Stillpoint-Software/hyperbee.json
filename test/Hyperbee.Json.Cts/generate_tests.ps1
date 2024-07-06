@@ -107,8 +107,7 @@ namespace Hyperbee.Json.Cts
 {
     [TestClass]
     public class CtsJsonTest
-    {
-        `r`n
+    {`r`n
 "@
 
     $testNumber = 0
@@ -159,7 +158,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $`"Invalid exception of type {e.GetType().Name}`" );
             }
-
         }`r`n
 "@
         } else {

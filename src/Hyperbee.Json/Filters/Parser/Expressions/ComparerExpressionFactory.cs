@@ -234,7 +234,7 @@ public static class ComparerExpressionFactory<TNode>
 
             if ( left?.GetType() != right?.GetType() )
             {
-                typeMismatch = true; // Type mismatch
+                typeMismatch = true; // Type mismatch: important for non-equality comparisons
                 return -1; 
             }
 

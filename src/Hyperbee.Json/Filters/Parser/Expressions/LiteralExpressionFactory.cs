@@ -33,6 +33,9 @@ internal class LiteralExpressionFactory : IExpressionFactory
         // The current design treats all numbers are floats since we don't
         // know what's in the data or the other side of the operator yet.
 
+        if ( item[^1] == '.' ) // incomplete floating-point number. we can parse it but the RFC doesn't like it.
+            throw new NotSupportedException( $"Incomplete floating-point number `{item.ToString()}`" );
+
         return float.TryParse( item, out float result )
             ? Expression.Constant( result )
             : null;

@@ -2146,7 +2146,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                var results = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }

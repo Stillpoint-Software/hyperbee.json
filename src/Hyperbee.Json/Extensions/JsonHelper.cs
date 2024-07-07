@@ -46,7 +46,7 @@ public static class JsonHelper
 
                     case SelectorKind.Undefined:
                     default:
-                        throw new NotSupportedException( $"Unsupported {nameof(SelectorKind)}." );
+                        throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
                 }
             }
 
@@ -107,13 +107,13 @@ public static class JsonHelper
                 if ( current == '\'' || current == '"' )
                 {
                     builder.Append( current );
-                    
+
                     var endQuotePos = UnescapeQuotedString( span[++i..], current, ref builder ); // unescape
 
                     if ( endQuotePos == -1 ) // we expect a closing quote
-                        throw new ArgumentException( "Closing quote not found in quoted string." ); 
+                        throw new ArgumentException( "Closing quote not found in quoted string." );
 
-                    i += endQuotePos; 
+                    i += endQuotePos;
 
                     builder.Append( current );
                 }
@@ -127,7 +127,7 @@ public static class JsonHelper
 
     private static int UnescapeQuotedString( ReadOnlySpan<char> span, char quoteChar, ref SpanBuilder builder )
     {
-        for ( var i = 0 ; i < span.Length; i++ )
+        for ( var i = 0; i < span.Length; i++ )
         {
             if ( span[i] == quoteChar )
             {

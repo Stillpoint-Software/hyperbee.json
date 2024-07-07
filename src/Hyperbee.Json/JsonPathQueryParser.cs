@@ -429,7 +429,7 @@ internal static class JsonPathQueryParser
     private static SelectorDescriptor GetSelectorDescriptor( SelectorKind selectorKind, in SpanBuilder builder, bool nullable = true )
     {
         var selectorValue = builder.ToString();
-            
+
         if ( selectorValue == string.Empty && !nullable )
             selectorValue = null;
 
@@ -650,7 +650,7 @@ internal static class JsonPathQueryParser
         {
             if ( char.IsDigit( input[i] ) )
                 continue;
- 
+
             isValid = false;
             reason = "Input contains non-digit characters.";
             return false;

@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // C# Implementation of JSONPath[1]
 //
@@ -150,11 +150,11 @@ public static class JsonPath<TNode>
                 {
                     // descendant
                     case SelectorKind.Descendant:
-                    {
-                        foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // complex objects only
                         {
-                            stack.Push( value, childValue, childKey, segmentCurrent ); // descendant(s) 
-                        }
+                            foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // complex objects only
+                            {
+                                stack.Push( value, childValue, childKey, segmentCurrent ); // descendant(s) 
+                            }
 
                             // Union Processing After Descent: If a union operator immediately follows a
                             // descendant operator, the union should only process simple values. This is
@@ -215,105 +215,105 @@ public static class JsonPath<TNode>
                         }
 
                         continue;
-                    }
+                }
 
                     // Array: [#] 
                     case SelectorKind.Index:
-                        {
-                            if ( nodeKind != NodeKind.Array )
-                                continue;
-
-                            stack.Push( value, accessor.GetElementAt( value, int.Parse( selector ) ), selector, segmentNext );
+                    {
+                        if ( nodeKind != NodeKind.Array )
                             continue;
-                        }
 
-                    // Array: [start:end:step] Python slice syntax
-                    case SelectorKind.Slice:
+                        stack.Push( value, accessor.GetElementAt( value, int.Parse( selector ) ), selector, segmentNext );
+                        continue;
+                    }
+
+                // Array: [start:end:step] Python slice syntax
+                case SelectorKind.Slice:
+                    {
+                        if ( nodeKind != NodeKind.Array )
+                            continue;
+
+                        foreach ( var index in EnumerateSlice( value, selector, accessor ) )
                         {
-                            if ( nodeKind != NodeKind.Array )
-                                continue;
-
-                            foreach ( var index in EnumerateSlice( value, selector, accessor ) )
-                            {
-                                stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext );
-                            }
+                            stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext );
+                        }
 
                     // Array: [name,name,..] Union on array
                     case SelectorKind.Name when nodeKind == NodeKind.Array:
-                    {
-                        var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
-                        var length = accessor.GetArrayLength( value );
-                        
-                        // for each index in the array, try to get name
-                        for ( var index = length - 1; index >= 0; index-- )
-                        {
-                            var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
-                            var length = accessor.GetArrayLength( value );
-
-                            for ( var index = length - 1; index >= 0; index-- )
                             {
-                                var childValue = accessor.GetElementAt( value, index );
+                                var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                                var length = accessor.GetArrayLength( value );
 
-                                if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
-                                    continue;
+                                // for each index in the array, try to get name
+                                for ( var index = length - 1; index >= 0; index-- )
+                                {
+                                    var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                                    var length = accessor.GetArrayLength( value );
 
-                                stack.Push( value, childValue, index.ToString(), indexSegment );
-                            }
+                                    for ( var index = length - 1; index >= 0; index-- )
+                                    {
+                                        var childValue = accessor.GetElementAt( value, index );
+
+                                        if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
+                                            continue;
+
+                                        stack.Push( value, childValue, index.ToString(), indexSegment );
+                                    }
 
                     // Object: [name,name,..] Union on object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
-                        {
-                            if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
-                                stack.Push( value, childValue, selector, segmentNext );
+                                        {
+                                            if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                                                stack.Push( value, childValue, selector, segmentNext );
 
-                            continue;
+                                            continue;
+                                        }
+
+                                    default:
+                                        {
+                                            throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
+                                        }
+
+                                    } // end switch
+                                } // end for group selector
+
+                            } while ( stack.TryPop( out args ) ) ;
                         }
 
-                    default:
+                        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+                        private static bool Truthy( object value )
                         {
-                            throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
+                            return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
                         }
 
-                } // end switch
-            } // end for group selector
+                        private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
+                        {
+                            var length = accessor.GetArrayLength( value );
 
-        } while ( stack.TryPop( out args ) );
-    }
+                            if ( length == 0 )
+                                yield break;
 
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static bool Truthy( object value )
-    {
-        return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
-    }
+                            var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
-    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
-    {
-        var length = accessor.GetArrayLength( value );
+                            switch ( step )
+                            {
+                                case > 0:
+                                    {
+                                        for ( var index = lower; index < upper; index += step )
+                                            yield return index;
+                                        break;
+                                    }
+                                case < 0:
+                                    {
+                                        for ( var index = upper; index > lower; index += step )
+                                            yield return index;
+                                        break;
+                                    }
+                            }
+                        }
 
-        if ( length == 0 )
-            yield break;
-
-        var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
-
-        switch ( step )
-        {
-            case > 0:
-                {
-                    for ( var index = lower; index < upper; index += step )
-                        yield return index;
-                    break;
-                }
-            case < 0:
-                {
-                    for ( var index = upper; index > lower; index += step )
-                        yield return index;
-                    break;
-                }
-        }
-    }
-
-    [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, First = ({Segment?.Selectors?[0]}), IsSingular = {Segment?.IsSingular}, Count = {Segment?.Selectors?.Length}" )]
-    private record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
+                        [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, First = ({Segment?.Selectors?[0]}), IsSingular = {Segment?.IsSingular}, Count = {Segment?.Selectors?.Length}" )]
+                        private record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
 
     private sealed class NodeArgsStack( int capacity = 16 )
     {

@@ -33,7 +33,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         private static IEnumerable<TNode> Select( TNode current, TNode root, string query, FilterContext<TNode> context )
         {
-            context.IsSingularQuery = FilterParser.IsNonSingularQuery( query ); //BF Thinking this may be the key to identifying if the query is a non-singular or not for comparands
+            context.IsSingularQuery = FilterParser.IsNonSingularQuery( query ); //BF This may be the key to identifying if the query is a non-singular for comparand operations
             return JsonPath<TNode>.SelectInternal( current, root, query );
         }
     }

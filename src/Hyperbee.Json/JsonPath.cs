@@ -64,9 +64,9 @@ public static class JsonPath<TNode>
     {
         // entry point for filter recursive calls
 
-        // explicitly allow dot whitespace for function arguments. This is very annoying
-        // because the RFC ABNF does not allow whitespace in the query for dot member notation,
-        // but it does allow it in the filter for function arguments.
+        // explicitly allow dot whitespace for function arguments. This is annoying
+        // because the RFC ABNF does not allow whitespace in the query for dot member
+        // notation, but it does allow it in the filter for function arguments.
 
         return EnumerateMatches( value, root, query, true, processor );
     }
@@ -125,151 +125,154 @@ public static class JsonPath<TNode>
             if ( nodeKind == NodeKind.Value )
                 continue;
 
-            // try to access object or array using name or index
+            // singular selector
 
             if ( segmentCurrent.IsSingular )
             {
                 if ( nodeKind == NodeKind.Object && selectorKind == SelectorKind.Index )
                     continue; // don't allow indexing in to objects
 
+                // try to access object or array using name or index
                 if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
-                {
                     stack.Push( value, childValue, selector, segmentNext );
-                }
 
                 continue;
             }
 
-            // descendant
-
-            if ( selectorKind == SelectorKind.Descendant )
-            {
-                foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
-                {
-                    stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
-                }
-
-                // Union Processing After Descent: If a union operator immediately follows a
-                // descendant operator, the union should only process simple values. This is
-                // to prevent duplication of complex objects that would result from both the
-                // current node and the union processing the same items.
-
-                stack.Push( parent, value, null, segmentNext, NodeFlags.AfterDescent ); // process the current value
-                continue;
-            }
-
-            // group
+            // group selector
 
             for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // using 'for' for performance
             {
-                if ( i != 0 )
+                if ( i > 0 ) // we already have the first selector
                     (selector, selectorKind) = segmentCurrent.Selectors[i];
 
-                // wildcard
-
-                if ( selectorKind == SelectorKind.Wildcard )
+                switch ( selectorKind )
                 {
-                    foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
+                    // descendant
+                    case SelectorKind.Descendant:
                     {
-                        // optimization: quicker return for final 
-                        //
-                        // the parser will work without this check, but we would be forcing it
-                        // to push and pop values onto the stack that we know will not be used.
-                        if ( segmentNext.IsFinal )
+                        foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
                         {
-                            // we could just yield here, but we can't because we want to preserve
-                            // the order of the results as per the RFC. so we push the current
-                            // value onto the stack without prepending the childKey or childKind
-                            // to set up for an immediate return on the next iteration.
-                            //Push( stack, value, childValue, childKey, segmentNext );
-                            stack.Push( value, childValue, childKey, segmentNext );
-                            continue;
+                            stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
                         }
 
-                        stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                        // Union Processing After Descent: If a union operator immediately follows a
+                        // descendant operator, the union should only process simple values. This is
+                        // to prevent duplication of complex objects that would result from both the
+                        // current node and the union processing the same items.
+
+                        stack.Push( parent, value, null, segmentNext, NodeFlags.AfterDescent ); // process the current value
+                        continue;
                     }
 
-                    continue;
-                }
-
-                // [?exp]
-
-                if ( selectorKind == SelectorKind.Filter )
-                {
-                    foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
+                    // wildcard
+                    case SelectorKind.Wildcard:
                     {
-                        var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove the leading '?' character
-
-                        if ( !Truthy( result ) )
-                            continue;
-
-                        // optimization: quicker return for tail values
-                        if ( segmentNext.IsFinal )
+                        foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                         {
-                            stack.Push( value, childValue, childKey, segmentNext );
-                            continue;
+                            // optimization: quicker return for final 
+                            //
+                            // the parser will work without this check, but we would be forcing it
+                            // to push and pop values onto the stack that we know will not be used.
+                            if ( segmentNext.IsFinal )
+                            {
+                                // we could just yield here, but we can't because we want to preserve
+                                // the order of the results as per the RFC. so we push the current
+                                // value onto the stack without prepending the childKey or childKind
+                                // to set up for an immediate return on the next iteration.
+                                //Push( stack, value, childValue, childKey, segmentNext );
+                                stack.Push( value, childValue, childKey, segmentNext );
+                                continue;
+                            }
+
+                            stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                         }
 
-                        stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                        continue;
                     }
 
-                    continue;
-                }
-
-                // array [name1,name2,...] or [#,#,...] or [start:end:step]
-
-                if ( nodeKind == NodeKind.Array )
-                {
-                    // [#,#,...] 
-
-                    if ( selectorKind == SelectorKind.Index )
+                    // [?exp]
+                    case SelectorKind.Filter:
                     {
+                        foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
+                        {
+                            var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove the leading '?' character
+
+                            if ( !Truthy( result ) )
+                                continue;
+
+                            // optimization: quicker return for tail values
+                            if ( segmentNext.IsFinal )
+                            {
+                                stack.Push( value, childValue, childKey, segmentNext );
+                                continue;
+                            }
+
+                            stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                        }
+
+                        continue;
+                    }
+
+                    // Array: [#,#,...] 
+                    case SelectorKind.Index:
+                    {
+                        if ( nodeKind != NodeKind.Array )
+                            continue;
+
                         stack.Push( value, accessor.GetElementAt( value, int.Parse( selector ) ), selector, segmentNext );
                         continue;
                     }
 
-                    // [start:end:step] Python slice syntax
-
-                    if ( selectorKind == SelectorKind.Slice )
+                    // Array: [start:end:step] Python slice syntax
+                    case SelectorKind.Slice:
                     {
+                        if ( nodeKind != NodeKind.Array )
+                            continue;
+
                         foreach ( var index in EnumerateSlice( value, selector, accessor ) )
                         {
                             stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext );
                         }
+
                         continue;
                     }
 
-                    // [name1,name2,...]
-
-                    var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
-                    var length = accessor.GetArrayLength( value );
-
-                    for ( var index = length - 1; index >= 0; index-- )
+                    // Array: [name1,name2,...]
+                    case SelectorKind.Name when nodeKind == NodeKind.Array:
                     {
-                        var childValue = accessor.GetElementAt( value, index );
+                        var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                        var length = accessor.GetArrayLength( value );
 
-                        if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
-                            continue;
+                        for ( var index = length - 1; index >= 0; index-- )
+                        {
+                            var childValue = accessor.GetElementAt( value, index );
 
-                        stack.Push( value, childValue, index.ToString(), indexSegment );
-                    }
+                            if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
+                                continue;
 
-                    continue;
-                }
+                            stack.Push( value, childValue, index.ToString(), indexSegment );
+                        }
 
-                // object [name1,name2,...]
-
-                if ( nodeKind == NodeKind.Object )
-                {
-                    if ( selectorKind == SelectorKind.Slice || selectorKind == SelectorKind.Index )
                         continue;
-
-                    if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
-                    {
-                        stack.Push( value, childValue, selector, segmentNext );
                     }
-                }
-            }
+
+                    // Object: [name1,name2,...]
+                    case SelectorKind.Name when nodeKind == NodeKind.Object:
+                    {
+                        if ( accessor.TryGetChildValue( value, selector, out var childValue ) )
+                            stack.Push( value, childValue, selector, segmentNext );
+
+                        continue;
+                    }
+
+                    default:
+                    {
+                        throw new NotSupportedException( $"Unsupported {nameof(SelectorKind)}." );
+                    }
+
+                } // end switch
+            } // end for group selector
 
         } while ( stack.TryPop( out args ) );
     }

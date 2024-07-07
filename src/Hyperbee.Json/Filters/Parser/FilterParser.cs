@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -111,21 +111,6 @@ public class FilterParser<TNode> : FilterParser
         return Merge( baseItem, ref index, items, context.Descriptor );
     }
 
-    private static void ThrowIfConstantIsNotCompared( Operator prevOp, ExprItem exprItem, in ParserState state )
-    {
-        // unless the expression is an argument, constants must be compared
-        if ( !state.IsArgument && exprItem.Expression is ConstantExpression &&
-             !IsComparisonOperator( prevOp ) && !IsComparisonOperator( exprItem.Operator ) )
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
-
-        return;
-
-        static bool IsComparisonOperator( Operator op ) =>
-            op == Operator.Equals || op == Operator.NotEquals ||
-            op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual ||
-            op == Operator.LessThan || op == Operator.LessThanOrEqual;
-    }
-
     private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
     {
         if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
@@ -194,6 +179,7 @@ public class FilterParser<TNode> : FilterParser
         }
 
         state.SetItem( itemStart, itemEnd );
+
         return prevOp;
 
         // Helper method to determine if item parsing is finished
@@ -231,6 +217,7 @@ public class FilterParser<TNode> : FilterParser
             return;
         }
 
+        // Normal character handling
         switch ( nextChar )
         {
             case '&' when Next( ref state, '&' ):
@@ -453,70 +440,19 @@ public class FilterParser<TNode> : FilterParser
         left.Operator = right.Operator;
     }
 
-
-    public static string Unescape( ReadOnlySpan<char> span )
+    private static void ThrowIfConstantIsNotCompared( Operator prevOp, ExprItem exprItem, in ParserState state )
     {
-        // Estimate the maximum length of the unescaped string
-        int maxLength = span.Length;
+        // unless the expression is an argument, constants must be compared
+        if ( !state.IsArgument && exprItem.Expression is ConstantExpression &&
+             !IsComparisonOperator( prevOp ) && !IsComparisonOperator( exprItem.Operator ) )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
 
-        // Use stackalloc for the temporary destination span if the length is small enough
-        Span<char> destination = maxLength <= 256 ? stackalloc char[maxLength] : new char[maxLength];
-        int written = 0;
+        return;
 
-        for ( int i = 0; i < span.Length; i++ )
-        {
-            if ( span[i] == '\\' && i + 1 < span.Length )
-            {
-                // Handle escaping
-                i++;
-                switch ( span[i] )
-                {
-                    case '"':
-                    case '\\':
-                    case '/':
-                        destination[written++] = span[i];
-                        break;
-                    case 'b':
-                        destination[written++] = '\b';
-                        break;
-                    case 'f':
-                        destination[written++] = '\f';
-                        break;
-                    case 'n':
-                        destination[written++] = '\n';
-                        break;
-                    case 'r':
-                        destination[written++] = '\r';
-                        break;
-                    case 't':
-                        destination[written++] = '\t';
-                        break;
-                    case 'u' when i + 4 < span.Length && IsHexDigit( span[i + 1] ) && IsHexDigit( span[i + 2] ) && IsHexDigit( span[i + 3] ) && IsHexDigit( span[i + 4] ):
-                        destination[written++] = (char) Convert.ToInt32( span.Slice( i + 1, 4 ).ToString(), 16 );
-                        i += 4;
-                        break;
-                    default:
-                        // If not a recognized escape sequence, treat as literal
-                        destination[written++] = '\\';
-                        destination[written++] = span[i];
-                        break;
-                }
-            }
-            else
-            {
-                destination[written++] = span[i];
-            }
-        }
-
-        return new string( destination[..written] );
-
-        static bool IsHexDigit( char c )
-        {
-            return (c >= '0' && c <= '9') ||
-                   (c >= 'A' && c <= 'F') ||
-                   (c >= 'a' && c <= 'f');
-        }
-
+        static bool IsComparisonOperator( Operator op ) =>
+            op == Operator.Equals || op == Operator.NotEquals ||
+            op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual ||
+            op == Operator.LessThan || op == Operator.LessThanOrEqual;
     }
 
     private class ExprItem( Expression expression, Operator op )

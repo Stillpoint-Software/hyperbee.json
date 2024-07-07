@@ -36,6 +36,6 @@ public ref struct ParserState
         var item = Buffer[itemStart..itemEnd];
         TrailingWhitespace = !item.IsEmpty && char.IsWhiteSpace( item[^1] );
 
-        Item = JsonHelper.Unescape( item.TrimEnd() );
+        Item = item.TrimEnd();
     }
 }

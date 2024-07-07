@@ -32,6 +32,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         private static IEnumerable<TNode> Select( TNode current, TNode root, string query )
         {
+            var group = FilterParser.IsNonSingularQuery( query ); //bsf
             return JsonPath<TNode>.SelectInternal( current, root, query );
         }
     }

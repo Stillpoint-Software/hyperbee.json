@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Dynamic;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Extensions;
 
@@ -45,7 +46,7 @@ public static class JsonHelper
 
                     case SelectorKind.Undefined:
                     default:
-                        throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
+                        throw new NotSupportedException( $"Unsupported {nameof(SelectorKind)}." );
                 }
             }
 
@@ -85,71 +86,123 @@ public static class JsonHelper
         return JsonSerializer.Deserialize<T>( ref reader, options );
     }
 
-    //
-    internal static ReadOnlySpan<char> Unescape( ReadOnlySpan<char> span )
+    //BF not sure where to put this
+
+    internal static void Unescape( ReadOnlySpan<char> span, ref SpanBuilder builder, bool singleString = true )
     {
-        // Estimate the maximum length of the unescaped string
-        int maxLength = span.Length;
-
-        // Use stackalloc for the temporary destination span if the length is small enough
-        Span<char> destination = new char[maxLength];
-        int written = 0;
-
-        for ( int i = 0; i < span.Length; i++ )
+        if ( singleString )
         {
+            if ( span.Length < 2 || (span[0] != '\'' && span[0] != '"') || (span[^1] != '\'' && span[^1] != '"') )
+                throw new ArgumentException( "Quoted strings must start and end with a quote." );
+
+            UnescapeQuotedString( span[1..^1], span[0], ref builder ); // unquote and unescape
+        }
+        else
+        {
+            // Scan for, and unescape, quoted strings
+            for ( var i = 0; i < span.Length; i++ )
+            {
+                var current = span[i];
+
+                if ( current == '\'' || current == '"' )
+                {
+                    builder.Append( current );
+                    
+                    var endQuotePos = UnescapeQuotedString( span[++i..], current, ref builder ); // unescape
+
+                    if ( endQuotePos == -1 ) // we expect a closing quote
+                        throw new ArgumentException( "Closing quote not found in quoted string." ); 
+
+                    i += endQuotePos; 
+
+                    builder.Append( current );
+                }
+                else
+                {
+                    builder.Append( current );
+                }
+            }
+        }
+    }
+
+    private static int UnescapeQuotedString( ReadOnlySpan<char> span, char quoteChar, ref SpanBuilder builder )
+    {
+        for ( var i = 0 ; i < span.Length; i++ )
+        {
+            if ( span[i] == quoteChar )
+            {
+                // return after the closing quote
+                return i;
+            }
+
             if ( span[i] == '\\' && i + 1 < span.Length )
             {
-                // Handle escaping
                 i++;
                 switch ( span[i] )
                 {
+                    case '\'':
+                        builder.Append( '\'' );
+                        break;
                     case '"':
+                        builder.Append( '"' );
+                        break;
                     case '\\':
+                        builder.Append( '\\' );
+                        break;
                     case '/':
-                        destination[written++] = span[i];
+                        builder.Append( '/' );
                         break;
                     case 'b':
-                        destination[written++] = '\b';
+                        builder.Append( '\b' );
                         break;
                     case 'f':
-                        destination[written++] = '\f';
+                        builder.Append( '\f' );
                         break;
                     case 'n':
-                        destination[written++] = '\n';
+                        builder.Append( '\n' );
                         break;
                     case 'r':
-                        destination[written++] = '\r';
+                        builder.Append( '\r' );
                         break;
                     case 't':
-                        destination[written++] = '\t';
+                        builder.Append( '\t' );
                         break;
-                    case 'u' when i + 4 < span.Length && IsHexDigit( span[i + 1] ) && IsHexDigit( span[i + 2] ) && IsHexDigit( span[i + 3] ) && IsHexDigit( span[i + 4] ):
-                        destination[written++] = (char) Convert.ToInt32( span.Slice( i + 1, 4 ).ToString(), 16 );
+                    case 'u' when i + 4 < span.Length:
+                        builder.Append( ConvertHexToChar( span.Slice( i + 1, 4 ) ) );
                         i += 4;
                         break;
                     default:
-                        // If not a recognized escape sequence, treat as literal
-                        destination[written++] = '\\';
-                        destination[written++] = span[i];
-                        break;
+                        throw new ArgumentException( $"Invalid escape sequence `\\{span[i]}` in quoted string." );
                 }
             }
             else
             {
-                destination[written++] = span[i];
+                builder.Append( span[i] );
             }
         }
 
-        return destination[..written];
+        return -1; // no closing quote
 
-        static bool IsHexDigit( char c )
+        static char ConvertHexToChar( ReadOnlySpan<char> hexSpan )
         {
-            return (c >= '0' && c <= '9') ||
-                   (c >= 'A' && c <= 'F') ||
-                   (c >= 'a' && c <= 'f');
+            if ( hexSpan.Length != 4 )
+            {
+                throw new ArgumentException( "Hex span must be exactly 4 characters long." );
+            }
+
+            var value = 0;
+            for ( var i = 0; i < hexSpan.Length; i++ )
+            {
+                value = (value << 4) + hexSpan[i] switch
+                {
+                    >= '0' and <= '9' => hexSpan[i] - '0',
+                    >= 'a' and <= 'f' => hexSpan[i] - 'a' + 10,
+                    >= 'A' and <= 'F' => hexSpan[i] - 'A' + 10,
+                    _ => throw new ArgumentException( "Invalid hex digit." )
+                };
+            }
+
+            return (char) value;
         }
-
     }
-
-
 }

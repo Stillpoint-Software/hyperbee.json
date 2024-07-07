@@ -302,7 +302,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['a',1]";
             var document = JsonNode.Parse(
                 """{"a":1,"b":2}""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """[1]""" );
 
@@ -2764,9 +2764,17 @@ namespace Hyperbee.Json.Cts
         [TestMethod( "filter, string literal, escaped double quote in double quotes (167)" )]
         public void Test_filter__string_literal__escaped_double_quote_in_double_quotes_167()
         {
-            var selector = "$[?@ == \"quoted\\\" literal\"]";
+            var selector = "$[?@ == \"quoted\\\" literal\"]"; // `quoted\" literal`
             var document = JsonNode.Parse(
-                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""" );
+                """
+                [
+                    "quoted\" literal",
+                    "a",
+                    "quoted\\\" literal",
+                    "'quoted\" literal'"
+                ]
+                """ );
+
             var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """["quoted\" literal"]""" );
@@ -4074,7 +4082,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\\u263A\"]";
             var document = JsonNode.Parse(
                 """{"☺":"A"}""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
@@ -5172,7 +5180,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\"]";
             var document = JsonNode.Parse(
                 """{"a":"A","b":"B","":"C"}""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """["C"]""" );
 

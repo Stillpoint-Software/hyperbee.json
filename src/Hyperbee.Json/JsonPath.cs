@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // C# Implementation of JSONPath[1]
 //
@@ -150,11 +150,11 @@ public static class JsonPath<TNode>
                 {
                     // descendant
                     case SelectorKind.Descendant:
+                    {
+                        foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // complex objects only
                         {
-                            foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
-                            {
-                                stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
-                            }
+                            stack.Push( value, childValue, childKey, segmentCurrent ); // descendant(s) 
+                        }
 
                             // Union Processing After Descent: If a union operator immediately follows a
                             // descendant operator, the union should only process simple values. This is
@@ -214,7 +214,10 @@ public static class JsonPath<TNode>
                             continue;
                         }
 
-                    // Array: [#,#,...] 
+                        continue;
+                    }
+
+                    // Array: [#] 
                     case SelectorKind.Index:
                         {
                             if ( nodeKind != NodeKind.Array )
@@ -235,11 +238,14 @@ public static class JsonPath<TNode>
                                 stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext );
                             }
 
-                            continue;
-                        }
-
-                    // Array: [name1,name2,...]
+                    // Array: [name,name,..] Union on array
                     case SelectorKind.Name when nodeKind == NodeKind.Array:
+                    {
+                        var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                        var length = accessor.GetArrayLength( value );
+                        
+                        // for each index in the array, try to get name
+                        for ( var index = length - 1; index >= 0; index-- )
                         {
                             var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
                             var length = accessor.GetArrayLength( value );
@@ -254,10 +260,7 @@ public static class JsonPath<TNode>
                                 stack.Push( value, childValue, index.ToString(), indexSegment );
                             }
 
-                            continue;
-                        }
-
-                    // Object: [name1,name2,...]
+                    // Object: [name,name,..] Union on object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
                         {
                             if ( accessor.TryGetChildValue( value, selector, out var childValue ) )

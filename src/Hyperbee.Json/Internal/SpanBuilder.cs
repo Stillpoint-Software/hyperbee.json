@@ -40,8 +40,8 @@ internal ref struct SpanBuilder
 
     private void Grow( int additionalCapacity = 0 )
     {
-        int newCapacity = Math.Max( _chars.Length * 2, _chars.Length + additionalCapacity );
-        char[] newArray = ArrayPool<char>.Shared.Rent( newCapacity );
+        var newCapacity = Math.Max( _chars.Length * 2, _chars.Length + additionalCapacity );
+        var newArray = ArrayPool<char>.Shared.Rent( newCapacity );
         _chars.CopyTo( newArray );
 
         ArrayPool<char>.Shared.Return( _buffer );

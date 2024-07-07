@@ -45,6 +45,7 @@ public static class ComparerExpressionFactory<TNode>
         private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
 
         private IValueAccessor<TNode> Accessor { get; } = accessor;
+        // private bool NonSingularQuery { get; } = context.NonSingularQuery; //BF
 
         private object Value { get; } = value;
 

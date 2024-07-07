@@ -14,5 +14,5 @@ internal record FilterContext<TNode>
     public ParameterExpression Root { get; } = Expression.Parameter( typeof( TNode ), "root" );
     public ITypeDescriptor<TNode> Descriptor { get; }
 
-    public bool IsSingularQuery { get; internal set; }
+    public bool NonSingularQuery { get; internal set; }
 }

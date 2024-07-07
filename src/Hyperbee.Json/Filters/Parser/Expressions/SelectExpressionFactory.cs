@@ -12,7 +12,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, IEnumerable<TNode>>) Select );
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, FilterContext<TNode>, IEnumerable<TNode>>) Select );
 
         public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context )
         {
@@ -23,16 +23,17 @@ internal class SelectExpressionFactory : IExpressionFactory
                 return null;
 
             var queryExp = Expression.Constant( item.ToString() );
+            var contextExpr = Expression.Constant( context );
 
             if ( item[0] == '$' ) // Current becomes root
                 context = context with { Current = context.Root };
 
-            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp );
+            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, contextExpr ); //BF may just want to pass context
         }
 
-        private static IEnumerable<TNode> Select( TNode current, TNode root, string query )
+        private static IEnumerable<TNode> Select( TNode current, TNode root, string query, FilterContext<TNode> context )
         {
-            var group = FilterParser.IsNonSingularQuery( query ); //bsf
+            context.IsSingularQuery = FilterParser.IsNonSingularQuery( query ); //BF Thinking this may be the key to identifying if the query is a non-singular or not for comparands
             return JsonPath<TNode>.SelectInternal( current, root, query );
         }
     }

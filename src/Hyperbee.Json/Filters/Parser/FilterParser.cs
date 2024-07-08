@@ -76,7 +76,7 @@ public class FilterParser<TNode> : FilterParser
         var baseItem = items[0];
         var index = 1;
 
-        return Merge( baseItem, ref index, items, context.Descriptor );
+        return Merge( baseItem, ref index, items, context.Descriptor ); //BF nsq
     }
 
     private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
@@ -294,7 +294,7 @@ public class FilterParser<TNode> : FilterParser
                 Merge( next, ref index, items, descriptor, mergeOneOnly: true ); // recursive call
             }
 
-            MergeItems( current, next, descriptor );
+            MergeItems( current, next, descriptor ); //BF nsq
 
             if ( mergeOneOnly )
                 return current.Expression;
@@ -333,7 +333,7 @@ public class FilterParser<TNode> : FilterParser
         switch ( left.Operator )
         {
             case Operator.Equals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression ); //BF nsq
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
 
                 left.Expression = Expression.Equal( left.Expression, right.Expression );

@@ -45,7 +45,7 @@ public static class ComparerExpressionFactory<TNode>
         private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
 
         private IValueAccessor<TNode> Accessor { get; } = accessor;
-        // private bool NonSingularQuery { get; } = context.NonSingularQuery; //BF
+        // private bool NonSingularQuery { get; } = context.NonSingularQuery; //BF nsq
 
         private object Value { get; } = value;
 
@@ -117,7 +117,7 @@ public static class ComparerExpressionFactory<TNode>
          * - Check if one is a NodeList and the other is a Value.
          * - Compare directly if both are Values.
          */
-        private static int Compare( Comparand left, Comparand right, Operator operation )
+        private static int Compare( Comparand left, Comparand right, Operator operation ) //BF nsq
         {
             if ( left.Value is IEnumerable<TNode> leftEnumerable && right.Value is IEnumerable<TNode> rightEnumerable )
             {

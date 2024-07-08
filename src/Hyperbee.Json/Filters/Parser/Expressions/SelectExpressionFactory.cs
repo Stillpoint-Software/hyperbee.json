@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -28,16 +28,16 @@ internal class SelectExpressionFactory : IExpressionFactory
             if ( item[0] == '$' ) // Current becomes root
                 context = context with { Current = context.Root };
 
-            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, contextExpr ); //BF may just want to pass context
+            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, contextExpr ); //BF nsq - may just want to pass context
         }
 
         private static IEnumerable<TNode> Select( TNode current, TNode root, string query, FilterContext<TNode> context )
         {
-            context.NonSingularQuery = IsNonSingularQuery( query ); //BF This may be the key to identifying if the query is a non-singular for comparand operations
+            context.NonSingularQuery = IsNonSingularQuery( query ); //BF nsq - identify non-singular-query (nsq) for comparand operations
             return JsonPath<TNode>.SelectInternal( current, root, query );
         }
 
-        private static bool IsNonSingularQuery( ReadOnlySpan<char> query )
+        private static bool IsNonSingularQuery( ReadOnlySpan<char> query ) //BF nsq
         {
             // non-singular: `..` or `.*` or `[` or `]` 
 

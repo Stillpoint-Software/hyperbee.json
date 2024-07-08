@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
-using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json;
@@ -304,7 +303,7 @@ internal static class JsonPathQueryParser
                                     else
                                     {
                                         var builder = new SpanBuilder( selectorSpan.Length );
-                                        JsonHelper.Unescape( selectorSpan, ref builder, singleString: true ); // unquote and unescape
+                                        SpanHelper.Unescape( selectorSpan, ref builder, singleString: true ); // unquote and unescape
                                         descriptor = GetSelectorDescriptor( selectorKind, builder, nullable: false );
                                         escaped = false;
                                     }
@@ -318,7 +317,7 @@ internal static class JsonPathQueryParser
                                     else
                                     {
                                         var builder = new SpanBuilder( selectorSpan.Length );
-                                        JsonHelper.Unescape( selectorSpan, ref builder, singleString: false ); // unescape
+                                        SpanHelper.Unescape( selectorSpan, ref builder, singleString: false ); // unescape
                                         descriptor = GetSelectorDescriptor( selectorKind, builder );
                                         escaped = false;
                                     }
@@ -724,7 +723,7 @@ internal static class JsonPathQueryParser
             if ( name[i] == '\\' )
             {
                 // Check if it's a valid escape sequence
-                if ( i + 1 >= name.Length - 1 || !IsValidEscapeSequence( name.Slice( i, 2 ), quoteChar ) )
+                if ( i + 1 >= name.Length - 1 || !IsValidEscapeChar( name[i+1], quoteChar ) )
                     throw new NotSupportedException( "Invalid escape sequence in quoted name." );
 
                 if ( name[i + 1] == 'u' )
@@ -753,17 +752,17 @@ internal static class JsonPathQueryParser
 
         return;
 
-        static bool IsValidEscapeSequence( ReadOnlySpan<char> span, char quoteChar )
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        static bool IsValidEscapeChar( char escapeChar, char quoteChar )
         {
-            // Valid escape sequences based on the quote character
-            return span.Length == 2 && (
-                span[1] == quoteChar ||
-                span[1] == '\\' ||
-                span[1] == '/' || span[1] == 'b' ||
-                span[1] == 'f' || span[1] == 'n' ||
-                span[1] == 'r' || span[1] == 't' ||
-                span[1] == 'u'
-            );
+            return
+                escapeChar == quoteChar ||
+                escapeChar == '\\' ||
+                escapeChar == '/' || escapeChar == 'b' ||
+                escapeChar == 'f' || escapeChar == 'n' ||
+                escapeChar == 'r' || escapeChar == 't' ||
+                escapeChar == 'u'
+            ;
         }
 
         static bool IsValidUnicodeEscapeSequence( ReadOnlySpan<char> span )

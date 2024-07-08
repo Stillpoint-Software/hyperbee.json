@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts
@@ -1710,17 +1711,11 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0, 0]!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            try
-            {
-                _ = document.Select( selector ).ToArray();
-                Assert.Fail( "Failed to throw exception" );
-            }
-            catch ( NotSupportedException ) { }
-            catch ( ArgumentException ) { }
-            catch ( Exception e )
-            {
-                Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
-            }
+            TestHelper.ThrowsException( () =>
+                {
+                    _ = document.Select( selector ).ToArray();
+                },
+                typeof(NotSupportedException), typeof(ArgumentException) );
         }
 
 

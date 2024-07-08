@@ -4,9 +4,9 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionItemContext expressionItemContext, FilterContext<TNode> context )
     {
-        expression = ExpressionHelper<TNode>.GetExpression( state.Item, context );
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, context, ref expressionItemContext );
         return expression != null;
     }
 
@@ -14,7 +14,7 @@ internal class SelectExpressionFactory : IExpressionFactory
     {
         private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, FilterContext<TNode>, IEnumerable<TNode>>) Select );
 
-        public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context )
+        public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context, ref ExpressionItemContext expressionItemContext )
         {
             if ( item.IsEmpty )
                 return null;
@@ -22,18 +22,20 @@ internal class SelectExpressionFactory : IExpressionFactory
             if ( item[0] != '$' && item[0] != '@' )
                 return null;
 
-            var queryExp = Expression.Constant( item.ToString() );
-            var contextExpr = Expression.Constant( context );
+            var query = item.ToString();
+            expressionItemContext.NonSingleQuery = IsNonSingularQuery( query ); //BF nsq - identify non-singular-query (nsq) for comparand operations
+
+            var queryExp = Expression.Constant( query );
+            var contextExp = Expression.Constant( context );
 
             if ( item[0] == '$' ) // Current becomes root
                 context = context with { Current = context.Root };
 
-            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, contextExpr ); //BF nsq - may just want to pass context
+            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, contextExp ); //BF nsq - may just want to pass context
         }
 
         private static IEnumerable<TNode> Select( TNode current, TNode root, string query, FilterContext<TNode> context )
         {
-            context.NonSingularQuery = IsNonSingularQuery( query ); //BF nsq - identify non-singular-query (nsq) for comparand operations
             return JsonPath<TNode>.SelectInternal( current, root, query );
         }
 

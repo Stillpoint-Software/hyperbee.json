@@ -60,7 +60,7 @@ public static class JsonPath<TNode>
         return EnumerateMatches( value, value, query, false, processor );
     }
 
-    internal static IEnumerable<TNode> SelectInternal( in TNode value, TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
+    internal static IEnumerable<TNode> SelectInternal( in TNode value, in TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
     {
         // entry point for filter recursive calls
 

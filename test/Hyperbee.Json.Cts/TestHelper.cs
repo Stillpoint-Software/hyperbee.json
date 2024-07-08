@@ -53,5 +53,25 @@ namespace Hyperbee.Json.Cts
             var compare = ConvertToJsonArray( results, force: true );
             return JsonNode.DeepEquals( expect, compare );
         }
+
+        public static void ThrowsException( Action action, params Type[] expectedExceptions )
+        {
+            try
+            {
+                action.Invoke();
+                Assert.Fail( "Failed to throw exception" );
+            }
+            catch ( Exception e ) when ( e is AssertFailedException )
+            {
+                throw;
+            }
+            catch ( Exception e )
+            {
+                if ( !expectedExceptions.Any( ex => ex.IsInstanceOfType( e ) ) )
+                {
+                    Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
+                }
+            }
+        }
     }
 }

@@ -333,52 +333,41 @@ public partial class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right, FilterContext<TNode> context )
     {
+        ThrowIfNonSingularCompare( left, right );
+
         switch ( left.Operator )
         {
             case Operator.Equals:
-                if ( left.NonSingleQuery || right.NonSingleQuery )
-                    throw new NotSupportedException( "Unsupported non-single query" );
-
                 left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression ); //BF nsq
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.Equal( left.Expression, right.Expression );
                 break;
             case Operator.NotEquals:
-                if ( left.NonSingleQuery || right.NonSingleQuery )
-                    throw new NotSupportedException( "Unsupported non-single query" );
                 left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.NotEqual( left.Expression, right.Expression );
                 break;
             case Operator.GreaterThan:
-                if ( left.NonSingleQuery || right.NonSingleQuery )
-                    throw new NotSupportedException( "Unsupported non-single query" );
                 left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.GreaterThan( left.Expression, right.Expression );
                 break;
             case Operator.GreaterThanOrEqual:
-                if ( left.NonSingleQuery || right.NonSingleQuery )
-                    throw new NotSupportedException( "Unsupported non-single query" );
                 left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.GreaterThanOrEqual( left.Expression, right.Expression );
                 break;
             case Operator.LessThan:
-                if ( left.NonSingleQuery || right.NonSingleQuery )
-                    throw new NotSupportedException( "Unsupported non-single query" );
                 left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.LessThan( left.Expression, right.Expression );
                 break;
             case Operator.LessThanOrEqual:
-                if ( left.NonSingleQuery || right.NonSingleQuery )
-                    throw new NotSupportedException( "Unsupported non-single query" );
                 left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
@@ -424,6 +413,17 @@ public partial class FilterParser<TNode> : FilterParser
         left.Operator = right.Operator;
     }
 
+    private static void ThrowIfNonSingularCompare( ExprItem left, ExprItem right )
+    {
+        if ( IsNonSingularCompare( left ) || IsNonSingularCompare( right ) )
+            throw new NotSupportedException( "Unsupported non-single query" );
+
+        return;
+
+        static bool IsNonSingularCompare( ExprItem item ) =>
+            item.NonSingularQuery && item.Operator.IsComparison();
+    }
+
     private static void ThrowIfConstantIsNotCompared( Operator prevOp, ExprItem exprItem, in ParserState state )
     {
         // unless the expression is an argument, constants must be compared
@@ -439,9 +439,9 @@ public partial class FilterParser<TNode> : FilterParser
             op == Operator.LessThan || op == Operator.LessThanOrEqual;
     }
 
-    private class ExprItem( Expression expression, Operator op, bool nonSingleQuery )
+    private class ExprItem( Expression expression, Operator op, bool nonSingularQuery )
     {
-        public bool NonSingleQuery { get; set; } = nonSingleQuery;
+        public bool NonSingularQuery { get; set; } = nonSingularQuery;
         public Expression Expression { get; set; } = expression;
         public Operator Operator { get; set; } = op;
     }

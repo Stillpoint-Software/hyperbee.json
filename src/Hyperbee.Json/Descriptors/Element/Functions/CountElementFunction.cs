@@ -10,7 +10,7 @@ public class CountElementFunction() : FilterExtensionFunction( argumentCount: 1 
     public const string Name = "count";
     private static readonly Expression CountExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, float>) Count );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         return Expression.Invoke( CountExpression, arguments[0] );
     }

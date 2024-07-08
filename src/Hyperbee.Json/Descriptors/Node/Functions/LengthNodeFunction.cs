@@ -11,8 +11,11 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
     private static readonly Expression LengthExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, float?>) Length );
     private static readonly Expression LengthObjectExpression = Expression.Constant( (Func<object, float?>) Length );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
+        if ( argumentInfo[0] )
+            throw new NotSupportedException( $"Function {Name} does not support non-singular arguments." );
+
         if ( arguments[0].Type == typeof( IEnumerable<JsonNode> ) )
             return Expression.Invoke( LengthExpression, arguments[0] );
 
@@ -28,9 +31,6 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
     public static float? Length( IEnumerable<JsonNode> nodes )
     {
         var jsonNodes = nodes as JsonNode[] ?? nodes.ToArray();
-
-        if ( jsonNodes.Length == 1 )
-            throw new NotSupportedException( $"Function {Name} requires a single node." );
 
         return Length( jsonNodes.FirstOrDefault() );
     }

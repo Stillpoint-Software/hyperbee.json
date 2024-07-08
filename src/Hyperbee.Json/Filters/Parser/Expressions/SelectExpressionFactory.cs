@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -22,10 +23,9 @@ internal class SelectExpressionFactory : IExpressionFactory
             if ( item[0] != '$' && item[0] != '@' )
                 return null;
 
-            var query = item.ToString();
-            expressionItemContext.NonSingleQuery = IsNonSingularQuery( query ); //BF nsq - identify non-singular-query (nsq) for comparand operations
+            expressionItemContext.NonSingleQuery = QueryHelper.IsNonSingular( item ); //BF nsq - identify non-singular-query (nsq) for comparand operations
 
-            var queryExp = Expression.Constant( query );
+            var queryExp = Expression.Constant( item.ToString() );
             var contextExp = Expression.Constant( context );
 
             if ( item[0] == '$' ) // Current becomes root
@@ -37,49 +37,6 @@ internal class SelectExpressionFactory : IExpressionFactory
         private static IEnumerable<TNode> Select( TNode current, TNode root, string query, FilterContext<TNode> context )
         {
             return JsonPath<TNode>.SelectInternal( current, root, query );
-        }
-
-        private static bool IsNonSingularQuery( ReadOnlySpan<char> query ) //BF nsq
-        {
-            bool inQuotes = false;
-            char quoteChar = '\0';
-
-            // Check for any special characters that would indicate a non-singular query
-
-            for ( var i = 0; i < query.Length; i++ )
-            {
-                char current = query[i];
-
-                if ( inQuotes )
-                {
-                    if ( current != '\\' && current == quoteChar )
-                    {
-                        inQuotes = false;
-                        quoteChar = '\0';
-                    }
-
-                    continue;
-                }
-
-                switch ( current )
-                {
-                    case '\'':
-                    case '"':
-                        quoteChar = current;
-                        inQuotes = true;
-                        continue;
-                    case '*':
-                    case ',':
-                    case ':':
-                        return true;
-                    case '.':
-                        if ( i + 1 < query.Length && query[i + 1] == '.' ) // ..
-                            return true;
-                        break;
-                }
-            }
-
-            return false;
         }
     }
 }

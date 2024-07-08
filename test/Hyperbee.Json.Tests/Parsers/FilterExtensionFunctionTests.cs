@@ -37,7 +37,7 @@ public class FilterExtensionFunctionTests : JsonTestBase
         public const string Name = "path";
         private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
 
-        protected override Expression GetExtensionExpression( Expression[] arguments )
+        protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
         {
             return Expression.Invoke( PathExpression, arguments[0] );
         }

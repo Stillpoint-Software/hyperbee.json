@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -11,11 +12,13 @@ public abstract class FilterExtensionFunction
         _argumentCount = argumentCount;
     }
 
-    protected abstract Expression GetExtensionExpression( Expression[] arguments );
+    protected abstract Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo );
 
     internal Expression GetExpression<TNode>( ref ParserState state, FilterContext<TNode> context )
     {
         var arguments = new Expression[_argumentCount];
+
+        var argumentInfo = new bool[_argumentCount];
 
         for ( var i = 0; i < _argumentCount; i++ )
         {
@@ -33,10 +36,12 @@ public abstract class FilterExtensionFunction
 
             var argument = FilterParser<TNode>.Parse( ref localState, context );
 
+            argumentInfo[i] = QueryHelper.IsNonSingular( localState.Item );
+
             arguments[i] = argument;
         }
 
-        return GetExtensionExpression( arguments );
+        return GetExtensionExpression( arguments, argumentInfo );
     }
 }
 

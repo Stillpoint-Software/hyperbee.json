@@ -12,7 +12,7 @@ public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
     public const string Name = "value";
     public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, object>) Value );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         return Expression.Invoke( ValueExpression, arguments[0] );
     }

@@ -10,7 +10,7 @@ public class MatchElementFunction() : FilterExtensionFunction( argumentCount: 2 
     public const string Name = "match";
     private static readonly Expression MatchExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, string, bool>) Match );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         return Expression.Invoke( MatchExpression, arguments[0], arguments[1] );
     }

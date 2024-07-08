@@ -723,7 +723,7 @@ internal static class JsonPathQueryParser
             if ( name[i] == '\\' )
             {
                 // Check if it's a valid escape sequence
-                if ( i + 1 >= name.Length - 1 || !IsValidEscapeChar( name[i+1], quoteChar ) )
+                if ( i + 1 >= name.Length - 1 || !IsValidEscapeChar( name[i + 1], quoteChar ) )
                     throw new NotSupportedException( "Invalid escape sequence in quoted name." );
 
                 if ( name[i + 1] == 'u' )

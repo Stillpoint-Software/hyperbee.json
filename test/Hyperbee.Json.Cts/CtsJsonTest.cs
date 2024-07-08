@@ -1,7 +1,5 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Cts
 {
@@ -10,14 +8,13 @@ namespace Hyperbee.Json.Cts
     {
 
 
-
         [TestMethod( "basic, root (1)" )]
         public void Test_basic__root_1()
         {
             var selector = "$";
             var document = JsonNode.Parse(
                 """["first","second"]""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """[["first","second"]]""" );
 
@@ -34,7 +31,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -43,7 +40,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -55,7 +51,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -64,7 +60,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -121,7 +116,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -130,7 +125,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -142,7 +136,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -151,7 +145,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -268,7 +261,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -277,7 +270,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -302,7 +294,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['a',1]";
             var document = JsonNode.Parse(
                 """{"a":1,"b":2}""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """[1]""" );
 
@@ -407,7 +399,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[*,*]";
             var document = JsonNode.Parse(
                 """[0,1,2]""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """[0,1,2,0,1,2]""" );
 
@@ -424,7 +416,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -433,7 +425,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -595,7 +586,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -604,7 +595,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1561,7 +1551,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1570,7 +1560,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1582,7 +1571,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1591,7 +1580,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1603,7 +1591,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1612,7 +1600,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1624,7 +1611,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1633,7 +1620,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1705,7 +1691,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1714,7 +1700,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1726,7 +1711,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1735,7 +1720,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1747,7 +1731,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1756,7 +1740,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1768,7 +1751,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1777,7 +1760,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1789,7 +1771,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1798,7 +1780,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1810,7 +1791,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1819,7 +1800,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1831,7 +1811,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1840,7 +1820,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1852,7 +1831,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1861,7 +1840,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1873,7 +1851,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1882,7 +1860,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1894,7 +1871,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1903,7 +1880,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1915,7 +1891,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1924,7 +1900,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1936,7 +1911,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1945,7 +1920,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1957,7 +1931,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1966,7 +1940,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1978,7 +1951,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -1987,7 +1960,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -1999,7 +1971,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2008,7 +1980,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2020,7 +1991,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2029,7 +2000,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2041,7 +2011,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2050,7 +2020,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2062,7 +2031,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2071,7 +2040,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2083,7 +2051,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2092,7 +2060,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2104,7 +2071,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2113,7 +2080,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2125,7 +2091,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2134,7 +2100,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2146,7 +2111,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                var results = document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2155,7 +2120,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2167,7 +2131,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2176,7 +2140,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2188,7 +2151,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2197,7 +2160,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2209,7 +2171,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2218,7 +2180,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2230,7 +2191,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2239,7 +2200,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2251,7 +2211,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2260,7 +2220,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2272,7 +2231,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2281,7 +2240,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2293,7 +2251,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2302,7 +2260,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2314,7 +2271,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2323,7 +2280,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2530,7 +2486,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2539,7 +2495,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2741,18 +2696,10 @@ namespace Hyperbee.Json.Cts
         [TestMethod( "filter, string literal, escaped single quote in single quotes (166)" )]
         public void Test_filter__string_literal__escaped_single_quote_in_single_quotes_166()
         {
-            var selector = "$[?@ == 'quoted\\' literal']"; // BF: I think this is a typo in the test case
-
+            var selector = "$[?@ == 'quoted\\' literal']";
             var document = JsonNode.Parse(
-                """
-                [
-                    "quoted' literal",
-                    "a","quoted\\' literal",
-                    "'quoted\" literal'"
-                ]
-                """ );
-
-            var results = document.Select( selector ).ToArray();
+                """["quoted' literal","a","quoted\\' literal","'quoted\" literal'"]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """["quoted' literal"]""" );
 
@@ -2764,17 +2711,9 @@ namespace Hyperbee.Json.Cts
         [TestMethod( "filter, string literal, escaped double quote in double quotes (167)" )]
         public void Test_filter__string_literal__escaped_double_quote_in_double_quotes_167()
         {
-            var selector = "$[?@ == \"quoted\\\" literal\"]"; // `quoted\" literal`
+            var selector = "$[?@ == \"quoted\\\" literal\"]";
             var document = JsonNode.Parse(
-                """
-                [
-                    "quoted\" literal",
-                    "a",
-                    "quoted\\\" literal",
-                    "'quoted\" literal'"
-                ]
-                """ );
-
+                """["quoted\" literal","a","quoted\\\" literal","'quoted\" literal'"]""" );
             var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """["quoted\" literal"]""" );
@@ -2792,7 +2731,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2801,7 +2740,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2813,7 +2751,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2822,7 +2760,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2834,7 +2771,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2843,7 +2780,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2855,7 +2791,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2864,7 +2800,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2876,7 +2811,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2885,7 +2820,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2897,7 +2831,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2906,7 +2840,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2918,7 +2851,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2938,7 +2871,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2947,7 +2880,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2959,7 +2891,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2968,7 +2900,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -2980,7 +2911,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -2989,7 +2920,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3001,7 +2931,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3010,7 +2940,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3022,7 +2951,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3031,7 +2960,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3088,7 +3016,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3097,7 +3025,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3109,7 +3036,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3118,7 +3045,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3190,7 +3116,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3199,7 +3125,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3211,7 +3136,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3220,7 +3145,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3277,7 +3201,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3286,7 +3210,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3298,7 +3221,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3307,7 +3230,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3319,7 +3241,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3328,7 +3250,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3340,7 +3261,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3349,7 +3270,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3361,7 +3281,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3370,7 +3290,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3382,7 +3301,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3391,7 +3310,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3403,7 +3321,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3412,7 +3330,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3424,7 +3341,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3433,7 +3350,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3445,7 +3361,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3454,7 +3370,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3466,7 +3381,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3475,7 +3390,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3487,7 +3401,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3496,7 +3410,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3508,7 +3421,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3517,7 +3430,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3529,7 +3441,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3538,7 +3450,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3550,7 +3461,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3559,7 +3470,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3571,7 +3481,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3580,7 +3490,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3592,7 +3501,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3601,7 +3510,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3613,7 +3521,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3622,7 +3530,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3634,7 +3541,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3643,7 +3550,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3655,7 +3561,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3664,7 +3570,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3676,7 +3581,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3685,7 +3590,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3697,7 +3601,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3706,7 +3610,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3718,7 +3621,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3727,7 +3630,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3739,7 +3641,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3748,7 +3650,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3760,7 +3661,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3769,7 +3670,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3781,7 +3681,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3790,7 +3690,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3802,7 +3701,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3811,7 +3710,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3823,7 +3721,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3832,7 +3730,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3844,7 +3741,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3853,7 +3750,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3865,7 +3761,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3874,7 +3770,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3886,7 +3781,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3895,7 +3790,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3907,7 +3801,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3916,7 +3810,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -3928,7 +3821,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -3937,7 +3830,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4082,7 +3974,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\\u263A\"]";
             var document = JsonNode.Parse(
                 """{"☺":"A"}""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """["A"]""" );
 
@@ -4144,7 +4036,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4153,7 +4045,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4165,7 +4056,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4174,7 +4065,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4186,7 +4076,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4195,7 +4085,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4252,7 +4141,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4261,7 +4150,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4273,7 +4161,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4282,7 +4170,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4294,7 +4181,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4303,7 +4190,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4315,7 +4201,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4324,7 +4210,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4336,7 +4221,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4345,7 +4230,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4357,7 +4241,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4366,7 +4250,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4378,7 +4261,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4387,7 +4270,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4399,7 +4281,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4408,7 +4290,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4420,7 +4301,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4429,7 +4310,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4441,7 +4321,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4450,7 +4330,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4462,7 +4341,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4471,7 +4350,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4483,7 +4361,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4492,7 +4370,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4504,7 +4381,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4513,7 +4390,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4525,7 +4401,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4534,7 +4410,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4546,7 +4421,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4555,7 +4430,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4567,7 +4441,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4576,7 +4450,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4588,7 +4461,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4597,7 +4470,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4609,7 +4481,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4618,7 +4490,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4630,7 +4501,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4639,7 +4510,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4651,7 +4521,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4660,7 +4530,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4672,7 +4541,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4681,7 +4550,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4693,7 +4561,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4702,7 +4570,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4714,7 +4581,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4723,7 +4590,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4735,7 +4601,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4744,7 +4610,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4756,7 +4621,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4765,7 +4630,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4777,7 +4641,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4786,7 +4650,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4798,7 +4661,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4807,7 +4670,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4819,7 +4681,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4828,7 +4690,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4840,7 +4701,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4849,7 +4710,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4861,7 +4721,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4870,7 +4730,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4882,7 +4741,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4891,7 +4750,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4903,7 +4761,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -4912,7 +4770,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -4934,7 +4791,7 @@ namespace Hyperbee.Json.Cts
         [TestMethod( "name selector, single quotes, escaped single quote (278)" )]
         public void Test_name_selector__single_quotes__escaped_single_quote_278()
         {
-            var selector = """$['\'']""";
+            var selector = "$['\\'']";
             var document = JsonNode.Parse(
                 """{"'":"A"}""" );
             var results = document.Select( selector );
@@ -5119,7 +4976,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5128,7 +4985,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5140,7 +4996,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5149,7 +5005,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5161,7 +5016,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5170,7 +5025,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5180,7 +5034,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\"]";
             var document = JsonNode.Parse(
                 """{"a":"A","b":"B","":"C"}""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """["C"]""" );
 
@@ -5497,7 +5351,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5506,7 +5360,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5518,7 +5371,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5527,7 +5380,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5687,7 +5539,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[1:10:113667776004]";
             var document = JsonNode.Parse(
                 """[0,1,2,3,4,5,6,7,8,9]""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """[1]""" );
 
@@ -5702,7 +5554,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[-1:-10:-113667776004]";
             var document = JsonNode.Parse(
                 """[0,1,2,3,4,5,6,7,8,9]""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """[9]""" );
 
@@ -5719,7 +5571,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5728,7 +5580,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5740,7 +5591,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5749,7 +5600,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5761,7 +5611,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5770,7 +5620,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5782,7 +5631,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5791,7 +5640,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5803,7 +5651,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5812,7 +5660,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5824,7 +5671,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5833,7 +5680,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5890,7 +5736,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5899,7 +5745,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5911,7 +5756,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5920,7 +5765,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5932,7 +5776,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5941,7 +5785,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5953,7 +5796,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5962,7 +5805,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5974,7 +5816,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -5983,7 +5825,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -5995,7 +5836,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6004,7 +5845,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6016,7 +5856,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6025,7 +5865,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6037,7 +5876,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6046,7 +5885,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6178,7 +6016,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6187,7 +6025,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6199,7 +6036,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6208,7 +6045,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6220,7 +6056,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6229,7 +6065,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6241,7 +6076,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6250,7 +6085,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6487,7 +6321,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6496,7 +6330,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6508,7 +6341,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6517,7 +6350,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6529,7 +6361,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6538,7 +6370,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6895,7 +6726,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6904,7 +6735,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6916,7 +6746,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6925,7 +6755,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -6937,7 +6766,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -6946,7 +6775,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -7078,7 +6906,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -7087,7 +6915,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -7099,7 +6926,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -7108,7 +6935,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -7120,16 +6946,15 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
+                Assert.Fail( "Failed to throw exception" );
             }
-            catch ( NotSupportedException ) { return; }
-            catch ( ArgumentException ) { return; }
+            catch ( NotSupportedException ) { }
+            catch ( ArgumentException ) { }
             catch ( Exception e )
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
-            Assert.Fail( "Failed to throw exception" );
         }
 
 
@@ -7381,7 +7206,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -7390,7 +7215,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -7402,7 +7226,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -7411,7 +7235,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -7423,7 +7246,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -7432,7 +7255,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -7444,7 +7266,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -7453,7 +7275,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9085,7 +8906,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9094,7 +8915,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9106,7 +8926,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9115,7 +8935,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9127,7 +8946,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9136,7 +8955,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9148,7 +8966,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9157,7 +8975,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9169,7 +8986,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9178,7 +8995,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9190,7 +9006,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9199,7 +9015,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9211,7 +9026,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9220,7 +9035,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9232,7 +9046,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( "Failed to throw exception" );
             }
             catch ( NotSupportedException ) { }
@@ -9241,7 +9055,6 @@ namespace Hyperbee.Json.Cts
             {
                 Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
             }
-
         }
 
 
@@ -9431,7 +9244,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['a', 'b']";
             var document = JsonNode.Parse(
                 """{"a":"ab","b":"bc"}""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """["ab","bc"]""" );
 

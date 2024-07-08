@@ -98,9 +98,7 @@ function Get-UnitTestContent {
 
     # Prepare the content for the C# unit test file
     $unitTestContent = @"
-using System;
 using System.Text.Json.Nodes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts
@@ -149,7 +147,7 @@ namespace Hyperbee.Json.Cts
 
             try
             {
-                document.Select( selector ).ToArray();
+                _ = document.Select( selector ).ToArray();
                 Assert.Fail( `"Failed to throw exception`" );
             }
             catch ( NotSupportedException ) { }

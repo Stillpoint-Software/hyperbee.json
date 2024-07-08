@@ -8,7 +8,7 @@ public enum Operator
     None = 0x0,
 
     // Base non-operator token
-    NonOperator = 0x1, // 0001
+    NonOperator = 0x1,
 
     OpenParen = 0x2,
     ClosedParen = 0x4,

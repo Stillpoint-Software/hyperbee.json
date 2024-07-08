@@ -22,15 +22,15 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
         if ( arguments[0].Type.IsAssignableTo( typeof( IConvertible ) ) )
             return Expression.Invoke( LengthObjectExpression, Expression.Convert( arguments[0], typeof( object ) ) );
 
-        throw new NotSupportedException( $"Function {Name} does not support arguments with type {arguments[0].Type.Name}" );
+        throw new NotSupportedException( $"Function {Name} does not support arguments with type {arguments[0].Type.Name}." );
     }
 
     public static float? Length( IEnumerable<JsonNode> nodes )
     {
         var jsonNodes = nodes as JsonNode[] ?? nodes.ToArray();
 
-        if ( jsonNodes.Length > 1 )
-            throw new NotSupportedException( $"Function {Name} requires a single node" );
+        if ( jsonNodes.Length == 1 )
+            throw new NotSupportedException( $"Function {Name} requires a single node." );
 
         return Length( jsonNodes.FirstOrDefault() );
     }

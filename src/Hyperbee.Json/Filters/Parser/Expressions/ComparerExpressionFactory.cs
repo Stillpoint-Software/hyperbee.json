@@ -121,7 +121,7 @@ public static class ComparerExpressionFactory<TNode>
         {
             if ( left.Value is IEnumerable<TNode> leftEnumerable && right.Value is IEnumerable<TNode> rightEnumerable )
             {
-                return CompareEnumerables( left.Accessor, leftEnumerable, rightEnumerable, out _ );
+                return CompareEnumerables( left.Accessor, leftEnumerable, rightEnumerable );
             }
 
             if ( left.Value is IEnumerable<TNode> leftEnumerable1 )
@@ -169,12 +169,10 @@ public static class ComparerExpressionFactory<TNode>
             }
         }
 
-        private static int CompareEnumerables( IValueAccessor<TNode> accessor, IEnumerable<TNode> left, IEnumerable<TNode> right, out bool typeMismatch )
+        private static int CompareEnumerables( IValueAccessor<TNode> accessor, IEnumerable<TNode> left, IEnumerable<TNode> right )
         {
             using var leftEnumerator = left.GetEnumerator();
             using var rightEnumerator = right.GetEnumerator();
-
-            typeMismatch = false;
 
             while ( leftEnumerator.MoveNext() )
             {
@@ -184,7 +182,7 @@ public static class ComparerExpressionFactory<TNode>
                 // if the values can be extracted, compare the values directly
                 if ( accessor.TryGetValueFromNode( leftEnumerator.Current, out var leftItemValue ) &&
                      accessor.TryGetValueFromNode( rightEnumerator.Current, out var rightItemValue ) )
-                    return CompareValues( leftItemValue, rightItemValue, out typeMismatch );
+                    return CompareValues( leftItemValue, rightItemValue, out _ );
 
                 if ( !accessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
                     return -1; // Elements are not deeply equal

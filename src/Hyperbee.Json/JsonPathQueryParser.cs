@@ -148,7 +148,7 @@ internal static class JsonPathQueryParser
                 case State.DotChild:
                     switch ( c )
                     {
-                        case '[':
+                        case '[': // end-of-child
                             selectorSpan = GetSelectorSpan( state, query, selectorStart, i );
                             selectorKind = selectorSpan switch
                             {
@@ -170,7 +170,7 @@ internal static class JsonPathQueryParser
                             returnState = State.UnionStart;
                             break;
 
-                        case '.':
+                        case '.': // end-of-child
                             if ( i == n )
                                 throw new NotSupportedException( $"Missing character after `.` at pos {i - 1}." );
 
@@ -312,7 +312,7 @@ internal static class JsonPathQueryParser
                                 case SelectorKind.Filter:
                                     if ( !escaped )
                                     {
-                                        descriptor = GetSelectorDescriptor( selectorKind, selectorSpan );
+                                        descriptor = GetSelectorDescriptor( selectorKind, selectorSpan );  
                                     }
                                     else
                                     {

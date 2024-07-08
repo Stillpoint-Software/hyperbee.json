@@ -39,10 +39,10 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         private static bool IsNonSingularQuery( ReadOnlySpan<char> query ) //BF nsq
         {
-            // non-singular: `..` or `.*` or `[` or `]` 
-
             bool inQuotes = false;
             char quoteChar = '\0';
+
+            // Check for any special characters that would indicate a non-singular query
 
             for ( var i = 0; i < query.Length; i++ )
             {
@@ -66,12 +66,12 @@ internal class SelectExpressionFactory : IExpressionFactory
                         quoteChar = current;
                         inQuotes = true;
                         continue;
-                    case '[':
-                        break;
-                    case ']':
-                        break;
-                    case '.': // `..` or `.*`
-                        if ( i + 1 < query.Length && query[i + 1] == '.' || query[i + 1] == '*' )
+                    case '*':
+                    case ',':
+                    case ':':
+                        return true;
+                    case '.':
+                        if ( i + 1 < query.Length && query[i + 1] == '.' ) // ..
                             return true;
                         break;
                 }

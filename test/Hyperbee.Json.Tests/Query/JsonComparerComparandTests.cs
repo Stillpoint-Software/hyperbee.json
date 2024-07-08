@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node;
+using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Filters.Parser.Expressions;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,10 +25,10 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( true, 11F, false )]
     public void ComparandWithEqualResults( object left, object right, bool areEqual )
     {
-        var accessor = new NodeValueAccessor();
+        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, left );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
 
         var result = a == b;
 
@@ -46,10 +47,10 @@ public class JsonComparerComparandTests : JsonTestBase
 
     public void ComparandWithGreaterResults( object left, object right, bool areEqual )
     {
-        var accessor = new NodeValueAccessor();
+        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, left );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
 
         var result = a >= b;
 
@@ -64,11 +65,11 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( """{ "value": { "child": 5 } }""", "hello", false )]
     public void ComparandWithJsonObjectResults( string left, object right, bool areEqual )
     {
-        var accessor = new NodeValueAccessor();
+        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
         var node = new List<JsonNode> { JsonNode.Parse( left )!["value"] };
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, node );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, node );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
 
         var result = a == b;
 
@@ -83,10 +84,10 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( """["hello","world" ]""", "hi", false )]
     public void ComparandWithLeftJsonArray( string left, object right, bool areEqual )
     {
-        var accessor = new NodeValueAccessor();
+        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, JsonNode.Parse( left ) );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, JsonNode.Parse( left ) );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
 
         var result = a == b;
 
@@ -100,10 +101,10 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( "hi", """["hello","world" ]""", false )]
     public void ComparandWithRightJsonArray( object left, string right, bool areEqual )
     {
-        var accessor = new NodeValueAccessor();
+        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, left );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, JsonNode.Parse( right ) );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, left );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, JsonNode.Parse( right ) );
 
         var result = a == b;
 
@@ -113,10 +114,10 @@ public class JsonComparerComparandTests : JsonTestBase
     [TestMethod]
     public void ComparandWithEmpty()
     {
-        var accessor = new NodeValueAccessor();
+        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, new List<JsonNode>() );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( accessor, 1 );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new List<JsonNode>() );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, 1 );
 
         Assert.IsFalse( a < b );
         Assert.IsFalse( a <= b );

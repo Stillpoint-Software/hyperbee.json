@@ -22,7 +22,7 @@ public abstract class FilterParser
     public const char ArgSeparator = ',';
 }
 
-public class FilterParser<TNode> : FilterParser
+public partial class FilterParser<TNode> : FilterParser
 {
     public static Func<TNode, TNode, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
@@ -76,36 +76,39 @@ public class FilterParser<TNode> : FilterParser
         var baseItem = items[0];
         var index = 1;
 
-        return Merge( baseItem, ref index, items, context.Descriptor ); //BF nsq
+        return Merge( baseItem, ref index, items, context ); //BF nsq
     }
+
 
     private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
     {
-        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
-            return ExprItem( ref state, expression );
+        var itemContext = new ExpressionItemContext();
 
-        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // will recurse.
-            return ExprItem( ref state, expression );
+        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, ref itemContext, context ) )
+            return ExprItem( ref state, expression, itemContext );
 
-        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
+        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) ) // will recurse.
+            return ExprItem( ref state, expression, itemContext );
 
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // may recurse for each function argument.
-            return ExprItem( ref state, expression );
+        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) )
+            return ExprItem( ref state, expression, itemContext );
 
-        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
+        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) ) // may recurse for each function argument.
+            return ExprItem( ref state, expression, itemContext );
 
-        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
+        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) )
+            return ExprItem( ref state, expression, itemContext );
+
+        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) )
+            return ExprItem( ref state, expression, itemContext );
 
         throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
 
         // Helper method to create an expression item
-        static ExprItem ExprItem( ref ParserState state, Expression expression )
+        static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionItemContext itemContext )
         {
             UpdateOperator( ref state );
-            return new ExprItem( expression, state.Operator );
+            return new ExprItem( expression, state.Operator, itemContext.NonSingleQuery );
         }
     }
 
@@ -283,7 +286,7 @@ public class FilterParser<TNode> : FilterParser
         static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
     }
 
-    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> items, ITypeDescriptor<TNode> descriptor, bool mergeOneOnly = false )
+    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> items, FilterContext<TNode> context, bool mergeOneOnly = false )
     {
         while ( index < items.Count )
         {
@@ -291,10 +294,10 @@ public class FilterParser<TNode> : FilterParser
 
             while ( !CanMergeItems( current, next ) )
             {
-                Merge( next, ref index, items, descriptor, mergeOneOnly: true ); // recursive call
+                Merge( next, ref index, items, context, mergeOneOnly: true ); // recursive call
             }
 
-            MergeItems( current, next, descriptor ); //BF nsq
+            MergeItems( current, next, context ); //BF nsq
 
             if ( mergeOneOnly )
                 return current.Expression;
@@ -328,43 +331,56 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static void MergeItems( ExprItem left, ExprItem right, ITypeDescriptor<TNode> descriptor )
+    private static void MergeItems( ExprItem left, ExprItem right, FilterContext<TNode> context )
     {
         switch ( left.Operator )
         {
             case Operator.Equals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression ); //BF nsq
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                if ( left.NonSingleQuery || right.NonSingleQuery )
+                    throw new NotSupportedException( "Unsupported non-single query" );
+
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression ); //BF nsq
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.Equal( left.Expression, right.Expression );
                 break;
             case Operator.NotEquals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                if ( left.NonSingleQuery || right.NonSingleQuery )
+                    throw new NotSupportedException( "Unsupported non-single query" );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.NotEqual( left.Expression, right.Expression );
                 break;
             case Operator.GreaterThan:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                if ( left.NonSingleQuery || right.NonSingleQuery )
+                    throw new NotSupportedException( "Unsupported non-single query" );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.GreaterThan( left.Expression, right.Expression );
                 break;
             case Operator.GreaterThanOrEqual:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                if ( left.NonSingleQuery || right.NonSingleQuery )
+                    throw new NotSupportedException( "Unsupported non-single query" );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.GreaterThanOrEqual( left.Expression, right.Expression );
                 break;
             case Operator.LessThan:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                if ( left.NonSingleQuery || right.NonSingleQuery )
+                    throw new NotSupportedException( "Unsupported non-single query" );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.LessThan( left.Expression, right.Expression );
                 break;
             case Operator.LessThanOrEqual:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+                if ( left.NonSingleQuery || right.NonSingleQuery )
+                    throw new NotSupportedException( "Unsupported non-single query" );
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
+                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.LessThanOrEqual( left.Expression, right.Expression );
                 break;
@@ -423,8 +439,9 @@ public class FilterParser<TNode> : FilterParser
             op == Operator.LessThan || op == Operator.LessThanOrEqual;
     }
 
-    private class ExprItem( Expression expression, Operator op )
+    private class ExprItem( Expression expression, Operator op, bool nonSingleQuery )
     {
+        public bool NonSingleQuery { get; set; } = nonSingleQuery;
         public Expression Expression { get; set; } = expression;
         public Operator Operator { get; set; } = op;
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 

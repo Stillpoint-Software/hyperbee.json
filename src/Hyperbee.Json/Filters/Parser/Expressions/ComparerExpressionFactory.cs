@@ -13,39 +13,38 @@ public static class ComparerExpressionFactory<TNode>
     {
         // Pre-compile the delegate to call the Comparand constructor
 
-        var accessorParam = Expression.Parameter( typeof( IValueAccessor<TNode> ), "accessor" );
+        var accessorParam = Expression.Parameter( typeof( FilterContext<TNode> ), "context" );
         var valueParam = Expression.Parameter( typeof( object ), "value" );
 
-        var constructorInfo = typeof( Comparand ).GetConstructor( [typeof( IValueAccessor<TNode> ), typeof( object )] );
+        var constructorInfo = typeof( Comparand ).GetConstructor( [typeof( FilterContext<TNode> ), typeof( object )] );
         var newExpression = Expression.New( constructorInfo!, accessorParam, valueParam );
 
-        var creator = Expression.Lambda<Func<IValueAccessor<TNode>, object, Comparand>>(
+        var creator = Expression.Lambda<Func<FilterContext<TNode>, object, Comparand>>(
             newExpression, accessorParam, valueParam ).Compile();
 
         CreateComparandExpression = Expression.Constant( creator );
     }
 
-    public static Expression GetComparand( IValueAccessor<TNode> accessor, Expression expression )
+    internal static Expression GetComparand( FilterContext<TNode> context, Expression expression )
     {
         // Handles Not operator since it maybe not have a left side.
         if ( expression == null )
             return null;
 
-        // Create an expression representing the instance of the accessor
-        var accessorExpression = Expression.Constant( accessor );
+        // Create an expression representing the instance of the context
+        var contextExpression = Expression.Constant( context );
 
         // Use the compiled delegate to create an expression to call the Comparand constructor
-        return Expression.Invoke( CreateComparandExpression, accessorExpression,
+        return Expression.Invoke( CreateComparandExpression, contextExpression,
             Expression.Convert( expression, typeof( object ) ) );
     }
 
     [DebuggerDisplay( "Value = {Value}" )]
-    public readonly struct Comparand( IValueAccessor<TNode> accessor, object value ) : IComparable<Comparand>, IEquatable<Comparand>
+    internal readonly struct Comparand( FilterContext<TNode> context, object value ) : IComparable<Comparand>, IEquatable<Comparand>
     {
         private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
 
-        private IValueAccessor<TNode> Accessor { get; } = accessor;
-        // private bool NonSingularQuery { get; } = context.NonSingularQuery; //BF nsq
+        private IValueAccessor<TNode> Accessor { get; } = context.Descriptor.Accessor;
 
         private object Value { get; } = value;
 
@@ -132,7 +131,7 @@ public static class ComparerExpressionFactory<TNode>
 
             if ( right.Value is IEnumerable<TNode> rightEnumerable1 )
             {
-                var compare = CompareEnumerableToValue( left.Accessor, rightEnumerable1, left.Value, out var typeMismatch, out var nodeCount );
+                var compare = CompareEnumerableToValue( right.Accessor, rightEnumerable1, left.Value, out var typeMismatch, out var nodeCount );
                 return AdjustResult( compare, nodeCount, operation, typeMismatch );
             }
 

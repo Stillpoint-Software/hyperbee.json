@@ -1715,7 +1715,7 @@ namespace Hyperbee.Json.Cts
                 {
                     _ = document.Select( selector ).ToArray();
                 },
-                typeof(NotSupportedException), typeof(ArgumentException) );
+                typeof( NotSupportedException ), typeof( ArgumentException ) );
         }
 
 

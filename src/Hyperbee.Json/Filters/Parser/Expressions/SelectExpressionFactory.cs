@@ -37,7 +37,7 @@ internal class SelectExpressionFactory : IExpressionFactory
             return JsonPath<TNode>.SelectInternal( current, root, query );
         }
 
-        private static bool IsNonSingularQuery( ReadOnlySpan<char> query ) 
+        private static bool IsNonSingularQuery( ReadOnlySpan<char> query )
         {
             // non-singular: `..` or `.*` or `[` or `]` 
 

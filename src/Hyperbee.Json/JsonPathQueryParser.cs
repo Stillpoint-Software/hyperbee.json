@@ -312,7 +312,7 @@ internal static class JsonPathQueryParser
                                 case SelectorKind.Filter:
                                     if ( !escaped )
                                     {
-                                        descriptor = GetSelectorDescriptor( selectorKind, selectorSpan );  
+                                        descriptor = GetSelectorDescriptor( selectorKind, selectorSpan );
                                     }
                                     else
                                     {

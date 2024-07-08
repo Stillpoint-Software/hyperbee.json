@@ -33,8 +33,51 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         private static IEnumerable<TNode> Select( TNode current, TNode root, string query, FilterContext<TNode> context )
         {
-            context.NonSingularQuery = FilterParser.IsNonSingularQuery( query ); //BF This may be the key to identifying if the query is a non-singular for comparand operations
+            context.NonSingularQuery = IsNonSingularQuery( query ); //BF This may be the key to identifying if the query is a non-singular for comparand operations
             return JsonPath<TNode>.SelectInternal( current, root, query );
+        }
+
+        private static bool IsNonSingularQuery( ReadOnlySpan<char> query ) 
+        {
+            // non-singular: `..` or `.*` or `[` or `]` 
+
+            bool inQuotes = false;
+            char quoteChar = '\0';
+
+            for ( var i = 0; i < query.Length; i++ )
+            {
+                char current = query[i];
+
+                if ( inQuotes )
+                {
+                    if ( current != '\\' && current == quoteChar )
+                    {
+                        inQuotes = false;
+                        quoteChar = '\0';
+                    }
+
+                    continue;
+                }
+
+                switch ( current )
+                {
+                    case '\'':
+                    case '"':
+                        quoteChar = current;
+                        inQuotes = true;
+                        continue;
+                    case '[':
+                        break;
+                    case ']':
+                        break;
+                    case '.': // `..` or `.*`
+                        if ( i + 1 < query.Length && query[i + 1] == '.' || query[i + 1] == '*' )
+                            return true;
+                        break;
+                }
+            }
+
+            return false;
         }
     }
 }

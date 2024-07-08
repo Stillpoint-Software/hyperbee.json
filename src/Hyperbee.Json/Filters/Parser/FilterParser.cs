@@ -20,38 +20,6 @@ public abstract class FilterParser
     public const char EndLine = '\0'; // using null character instead of \n
     public const char EndArg = ')';
     public const char ArgSeparator = ',';
-
-    internal static bool IsNonSingularQuery( ReadOnlySpan<char> query ) // BF WIP
-    {
-        bool inSingleQuotes = false;
-        bool inDoubleQuotes = false;
-
-        for ( var i = 0; i < query.Length; i++ )
-        {
-            char current = query[i];
-
-            switch ( current )
-            {
-                case '\'' when !inDoubleQuotes:
-                    inSingleQuotes = !inSingleQuotes;
-                    break;
-                case '"' when !inSingleQuotes:
-                    inDoubleQuotes = !inDoubleQuotes;
-                    break;
-            }
-
-            if ( inSingleQuotes || inDoubleQuotes )
-                continue;
-
-            if ( query[i..].StartsWith( ".*".AsSpan() ) || query[i..].StartsWith( "..".AsSpan() ) ||
-                 query[i..].StartsWith( "[".AsSpan() ) || query[i..].StartsWith( "]".AsSpan() ) )
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
 
 public class FilterParser<TNode> : FilterParser

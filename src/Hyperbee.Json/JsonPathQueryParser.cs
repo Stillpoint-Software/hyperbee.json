@@ -70,7 +70,7 @@ internal static class JsonPathQueryParser
 
         var bracketDepth = 0;
         var parenDepth = 0;
-        var literalDelimiter = '\'';
+        var quoteChar = '\'';
         var selectors = new List<SelectorDescriptor>();
 
         char[] whitespaceTerminators = [];
@@ -245,7 +245,7 @@ internal static class JsonPathQueryParser
                             escaped = true;
                             i++; // advance past the escaped character
                         }
-                        else if ( c == literalDelimiter )
+                        else if ( c == quoteChar )
                         {
                             inQuotes = false;
                         }
@@ -257,7 +257,7 @@ internal static class JsonPathQueryParser
                     {
                         case '\'':
                         case '"':
-                            literalDelimiter = c;
+                            quoteChar = c;
                             inQuotes = true;
                             break;
 
@@ -367,7 +367,7 @@ internal static class JsonPathQueryParser
                         case '\'':
                         case '"':
                             state = State.UnionElement;
-                            literalDelimiter = c;
+                            quoteChar = c;
                             selectorStart = i - 1; // capture the quote character
                             inQuotes = true;
                             break;

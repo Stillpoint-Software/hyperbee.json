@@ -134,7 +134,7 @@ namespace Hyperbee.Json.Cts
 
         # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
-        `r`n
+        
         [TestMethod( `"$name` ($testNumber)" )]
         public void Test`_$methodName`_$testNumber()
         {
@@ -145,17 +145,7 @@ namespace Hyperbee.Json.Cts
             $unitTestContent += @"
             var document = JsonNode.Parse( `"[0]`" ); // Empty node
 
-            try
-            {
-                _ = document.Select( selector ).ToArray();
-                Assert.Fail( `"Failed to throw exception`" );
-            }
-            catch ( NotSupportedException ) { }
-            catch ( ArgumentException ) { }
-            catch (Exception e)
-            {
-                Assert.Fail( $`"Invalid exception of type {e.GetType().Name}`" );
-            }
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
         }`r`n
 "@
         } else {
@@ -164,7 +154,6 @@ namespace Hyperbee.Json.Cts
                 `"`"`"$document`"`"`");
             var results = document.Select(selector);`r`n
 "@
-
             if ($null -ne $result) {
                 $unitTestContent += @"
             var expect = JsonNode.Parse(

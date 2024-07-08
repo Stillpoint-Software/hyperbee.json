@@ -29,17 +29,18 @@ namespace Hyperbee.Json.Cts
             var selector = " $";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            try
-            {
-                _ = document.Select( selector ).ToArray();
-                Assert.Fail( "Failed to throw exception" );
-            }
-            catch ( NotSupportedException ) { }
-            catch ( ArgumentException ) { }
-            catch ( Exception e )
-            {
-                Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
-            }
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            //try
+            //{
+            //    _ = document.Select( selector ).ToArray();
+            //    Assert.Fail( "Failed to throw exception" );
+            //}
+            //catch ( NotSupportedException ) { }
+            //catch ( ArgumentException ) { }
+            //catch ( Exception e )
+            //{
+            //    Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
+            //}
         }
 
 

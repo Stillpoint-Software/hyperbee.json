@@ -15,7 +15,7 @@ public static class FilterTruthyExpression
 
     public static bool IsTruthy( object value )
     {
-        return value switch
+        var truthy = value switch
         {
             null => false,
             bool boolValue => boolValue,
@@ -25,5 +25,7 @@ public static class FilterTruthyExpression
             IConvertible convertible => Convert.ToBoolean( convertible ),
             _ => true
         };
+
+        return truthy;
     }
 }

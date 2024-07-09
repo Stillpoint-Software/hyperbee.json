@@ -329,23 +329,23 @@ public class FilterParser<TNode> : FilterParser
         static bool CanMergeItems( ExprItem left, ExprItem right )
         {
             // "Not" can never be a right side operator
-            return right.Operator != Operator.Not && GetPriority( left.Operator ) >= GetPriority( right.Operator );
+            return right.Operator != Operator.Not && GetPrecedence( left.Operator ) >= GetPrecedence( right.Operator );
         }
 
         // Helper method to get the priority of an operator
-        static int GetPriority( Operator type )
+        static int GetPrecedence( Operator type )
         {
-            return type switch
+            return type switch // higher number means greater precedence
             {
                 Operator.Not => 1,
-                Operator.And or
-                    Operator.Or => 2,
+                Operator.Or => 2,
+                Operator.And => 3,
                 Operator.Equals or
                     Operator.NotEquals or
                     Operator.GreaterThan or
                     Operator.GreaterThanOrEqual or
                     Operator.LessThan or
-                    Operator.LessThanOrEqual => 3,
+                    Operator.LessThanOrEqual => 4,
                 _ => 0,
             };
         }

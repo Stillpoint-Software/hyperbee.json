@@ -166,6 +166,8 @@ function Get-UnitTestContent {
 
     # Prepare the content for the C# unit test file
     $unitTestContent = @"
+// This file was auto generated.
+
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 

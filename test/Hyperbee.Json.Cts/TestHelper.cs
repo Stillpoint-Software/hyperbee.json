@@ -1,77 +1,55 @@
-﻿using System.Text;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 
-namespace Hyperbee.Json.Cts
+namespace Hyperbee.Json.Cts;
+
+internal static class TestHelper
 {
-    internal static class TestHelper
+    // Result Helpers
+
+    public static JsonArray ConvertToJsonArraySet( JsonNode jsonNode )
     {
-        // Result Helpers
-
-        public static JsonArray ConvertToJsonArraySet( JsonNode jsonNode )
-        {
-            if ( jsonNode is JsonArray jsonArray && jsonArray[0] is JsonArray )
-                return jsonArray;
-
-            JsonArray jsonArraySet = new JsonArray( jsonNode );
-
-            return jsonArraySet;
-        }
-
-        public static JsonArray ConvertToJsonArray( IEnumerable<JsonNode> nodes, bool force = false )
-        {
-            var nodeArray = nodes.ToArray();
-
-            if ( !force && nodeArray.Length == 1 && nodeArray[0] is JsonArray array )
-                return array;
-
-            var jsonArray = new JsonArray();
-
-            foreach ( var node in nodeArray )
-            {
-                jsonArray.Add( CopyNode( node ) );
-            }
-
+        if ( jsonNode is JsonArray jsonArray && jsonArray[0] is JsonArray )
             return jsonArray;
 
-            static JsonNode? CopyNode( JsonNode? node )
-            {
-                return node == null ? null : JsonNode.Parse( node.ToJsonString() );
-            }
-        }
+        JsonArray jsonArraySet = new JsonArray( jsonNode );
 
-        public static bool MatchAny( IEnumerable<JsonNode> results, JsonNode expected )
+        return jsonArraySet;
+    }
+
+    public static JsonArray ConvertToJsonArray( IEnumerable<JsonNode> nodes, bool force = false )
+    {
+        var nodeArray = nodes.ToArray();
+
+        if ( !force && nodeArray.Length == 1 && nodeArray[0] is JsonArray array )
+            return array;
+
+        var jsonArray = new JsonArray();
+
+        foreach ( var node in nodeArray )
         {
-            var expectedSet = ConvertToJsonArraySet( expected );
-            var compare = ConvertToJsonArray( results );
-
-            return expectedSet.Any( expect => JsonNode.DeepEquals( expect, compare ) );
+            jsonArray.Add( CopyNode( node ) );
         }
 
-        public static bool MatchOne( IEnumerable<JsonNode> results, JsonNode expected )
+        return jsonArray;
+
+        static JsonNode? CopyNode( JsonNode? node )
         {
-            var expect = expected as JsonArray;
-            var compare = ConvertToJsonArray( results, force: true );
-            return JsonNode.DeepEquals( expect, compare );
+            return node == null ? null : JsonNode.Parse( node.ToJsonString() );
         }
+    }
 
-        public static void ThrowsException( Action action, params Type[] expectedExceptions )
-        {
-            try
-            {
-                action.Invoke();
-                Assert.Fail( "Failed to throw exception" );
-            }
-            catch ( Exception e ) when ( e is AssertFailedException )
-            {
-                throw;
-            }
-            catch ( Exception e )
-            {
-                if ( !expectedExceptions.Any( ex => ex.IsInstanceOfType( e ) ) )
-                {
-                    Assert.Fail( $"Invalid exception of type {e.GetType().Name}" );
-                }
-            }
-        }
+    public static bool MatchAny( IEnumerable<JsonNode> results, JsonNode expected )
+    {
+        var expectedSet = ConvertToJsonArraySet( expected );
+        var compare = ConvertToJsonArray( results );
+
+        return expectedSet.Any( expect => JsonNode.DeepEquals( expect, compare ) );
+    }
+
+    public static bool MatchOne( IEnumerable<JsonNode> results, JsonNode expected )
+    {
+        var expect = expected as JsonArray;
+        var compare = ConvertToJsonArray( results, force: true );
+        return JsonNode.DeepEquals( expect, compare );
     }
 }

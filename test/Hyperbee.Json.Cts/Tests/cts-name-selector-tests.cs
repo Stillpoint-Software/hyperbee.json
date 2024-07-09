@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts.Tests
@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Cts.Tests
     [TestClass]
     public class CtsNameSelectorTest
     {
-        
+
         [TestMethod( "double quotes (1)" )]
         public void Test_double_quotes_1()
         {
@@ -17,19 +17,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "A",
                   "b": "B"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, absent data (2)" )]
         public void Test_double_quotes__absent_data_2()
         {
@@ -40,17 +40,17 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "A",
                   "b": "B"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 []
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, array data (3)" )]
         public void Test_double_quotes__array_data_3()
         {
@@ -61,17 +61,17 @@ namespace Hyperbee.Json.Cts.Tests
                   "first",
                   "second"
                 ]
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 []
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0000 (4)" )]
         public void Test_double_quotes__embedded_U_0000_4()
         {
@@ -80,7 +80,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0001 (5)" )]
         public void Test_double_quotes__embedded_U_0001_5()
         {
@@ -89,7 +89,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0002 (6)" )]
         public void Test_double_quotes__embedded_U_0002_6()
         {
@@ -98,7 +98,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0003 (7)" )]
         public void Test_double_quotes__embedded_U_0003_7()
         {
@@ -107,7 +107,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0004 (8)" )]
         public void Test_double_quotes__embedded_U_0004_8()
         {
@@ -116,7 +116,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0005 (9)" )]
         public void Test_double_quotes__embedded_U_0005_9()
         {
@@ -125,7 +125,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0006 (10)" )]
         public void Test_double_quotes__embedded_U_0006_10()
         {
@@ -134,7 +134,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0007 (11)" )]
         public void Test_double_quotes__embedded_U_0007_11()
         {
@@ -143,7 +143,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0008 (12)" )]
         public void Test_double_quotes__embedded_U_0008_12()
         {
@@ -152,7 +152,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0009 (13)" )]
         public void Test_double_quotes__embedded_U_0009_13()
         {
@@ -161,7 +161,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+000A (14)" )]
         public void Test_double_quotes__embedded_U_000A_14()
         {
@@ -170,7 +170,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+000B (15)" )]
         public void Test_double_quotes__embedded_U_000B_15()
         {
@@ -179,7 +179,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+000C (16)" )]
         public void Test_double_quotes__embedded_U_000C_16()
         {
@@ -188,7 +188,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+000D (17)" )]
         public void Test_double_quotes__embedded_U_000D_17()
         {
@@ -197,7 +197,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+000E (18)" )]
         public void Test_double_quotes__embedded_U_000E_18()
         {
@@ -206,7 +206,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+000F (19)" )]
         public void Test_double_quotes__embedded_U_000F_19()
         {
@@ -215,7 +215,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0010 (20)" )]
         public void Test_double_quotes__embedded_U_0010_20()
         {
@@ -224,7 +224,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0011 (21)" )]
         public void Test_double_quotes__embedded_U_0011_21()
         {
@@ -233,7 +233,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0012 (22)" )]
         public void Test_double_quotes__embedded_U_0012_22()
         {
@@ -242,7 +242,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0013 (23)" )]
         public void Test_double_quotes__embedded_U_0013_23()
         {
@@ -251,7 +251,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0014 (24)" )]
         public void Test_double_quotes__embedded_U_0014_24()
         {
@@ -260,7 +260,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0015 (25)" )]
         public void Test_double_quotes__embedded_U_0015_25()
         {
@@ -269,7 +269,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0016 (26)" )]
         public void Test_double_quotes__embedded_U_0016_26()
         {
@@ -278,7 +278,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0017 (27)" )]
         public void Test_double_quotes__embedded_U_0017_27()
         {
@@ -287,7 +287,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0018 (28)" )]
         public void Test_double_quotes__embedded_U_0018_28()
         {
@@ -296,7 +296,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0019 (29)" )]
         public void Test_double_quotes__embedded_U_0019_29()
         {
@@ -305,7 +305,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+001A (30)" )]
         public void Test_double_quotes__embedded_U_001A_30()
         {
@@ -314,7 +314,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+001B (31)" )]
         public void Test_double_quotes__embedded_U_001B_31()
         {
@@ -323,7 +323,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+001C (32)" )]
         public void Test_double_quotes__embedded_U_001C_32()
         {
@@ -332,7 +332,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+001D (33)" )]
         public void Test_double_quotes__embedded_U_001D_33()
         {
@@ -341,7 +341,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+001E (34)" )]
         public void Test_double_quotes__embedded_U_001E_34()
         {
@@ -350,7 +350,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+001F (35)" )]
         public void Test_double_quotes__embedded_U_001F_35()
         {
@@ -359,7 +359,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded U+0020 (36)" )]
         public void Test_double_quotes__embedded_U_0020_36()
         {
@@ -369,19 +369,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   " ": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped double quote (37)" )]
         public void Test_double_quotes__escaped_double_quote_37()
         {
@@ -391,19 +391,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\"": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped reverse solidus (38)" )]
         public void Test_double_quotes__escaped_reverse_solidus_38()
         {
@@ -413,19 +413,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\\": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped solidus (39)" )]
         public void Test_double_quotes__escaped_solidus_39()
         {
@@ -435,19 +435,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "/": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped backspace (40)" )]
         public void Test_double_quotes__escaped_backspace_40()
         {
@@ -457,19 +457,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\b": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped form feed (41)" )]
         public void Test_double_quotes__escaped_form_feed_41()
         {
@@ -479,19 +479,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\f": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped line feed (42)" )]
         public void Test_double_quotes__escaped_line_feed_42()
         {
@@ -501,19 +501,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\n": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped carriage return (43)" )]
         public void Test_double_quotes__escaped_carriage_return_43()
         {
@@ -523,19 +523,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\r": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped tab (44)" )]
         public void Test_double_quotes__escaped_tab_44()
         {
@@ -545,19 +545,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\t": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped ☺, upper case hex (45)" )]
         public void Test_double_quotes__escaped____upper_case_hex_45()
         {
@@ -567,19 +567,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "☺": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, escaped ☺, lower case hex (46)" )]
         public void Test_double_quotes__escaped____lower_case_hex_46()
         {
@@ -589,19 +589,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "☺": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, surrogate pair 𝄞 (47)" )]
         public void Test_double_quotes__surrogate_pair____47()
         {
@@ -611,19 +611,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "𝄞": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, surrogate pair 😀 (48)" )]
         public void Test_double_quotes__surrogate_pair____48()
         {
@@ -633,19 +633,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "😀": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "double quotes, invalid escaped single quote (49)" )]
         public void Test_double_quotes__invalid_escaped_single_quote_49()
         {
@@ -654,7 +654,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, embedded double quote (50)" )]
         public void Test_double_quotes__embedded_double_quote_50()
         {
@@ -663,7 +663,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, incomplete escape (51)" )]
         public void Test_double_quotes__incomplete_escape_51()
         {
@@ -672,7 +672,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes (52)" )]
         public void Test_single_quotes_52()
         {
@@ -683,19 +683,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "A",
                   "b": "B"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, absent data (53)" )]
         public void Test_single_quotes__absent_data_53()
         {
@@ -706,17 +706,17 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "A",
                   "b": "B"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 []
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, array data (54)" )]
         public void Test_single_quotes__array_data_54()
         {
@@ -727,17 +727,17 @@ namespace Hyperbee.Json.Cts.Tests
                   "first",
                   "second"
                 ]
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 []
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0000 (55)" )]
         public void Test_single_quotes__embedded_U_0000_55()
         {
@@ -746,7 +746,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0001 (56)" )]
         public void Test_single_quotes__embedded_U_0001_56()
         {
@@ -755,7 +755,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0002 (57)" )]
         public void Test_single_quotes__embedded_U_0002_57()
         {
@@ -764,7 +764,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0003 (58)" )]
         public void Test_single_quotes__embedded_U_0003_58()
         {
@@ -773,7 +773,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0004 (59)" )]
         public void Test_single_quotes__embedded_U_0004_59()
         {
@@ -782,7 +782,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0005 (60)" )]
         public void Test_single_quotes__embedded_U_0005_60()
         {
@@ -791,7 +791,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0006 (61)" )]
         public void Test_single_quotes__embedded_U_0006_61()
         {
@@ -800,7 +800,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0007 (62)" )]
         public void Test_single_quotes__embedded_U_0007_62()
         {
@@ -809,7 +809,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0008 (63)" )]
         public void Test_single_quotes__embedded_U_0008_63()
         {
@@ -818,7 +818,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0009 (64)" )]
         public void Test_single_quotes__embedded_U_0009_64()
         {
@@ -827,7 +827,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+000A (65)" )]
         public void Test_single_quotes__embedded_U_000A_65()
         {
@@ -836,7 +836,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+000B (66)" )]
         public void Test_single_quotes__embedded_U_000B_66()
         {
@@ -845,7 +845,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+000C (67)" )]
         public void Test_single_quotes__embedded_U_000C_67()
         {
@@ -854,7 +854,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+000D (68)" )]
         public void Test_single_quotes__embedded_U_000D_68()
         {
@@ -863,7 +863,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+000E (69)" )]
         public void Test_single_quotes__embedded_U_000E_69()
         {
@@ -872,7 +872,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+000F (70)" )]
         public void Test_single_quotes__embedded_U_000F_70()
         {
@@ -881,7 +881,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0010 (71)" )]
         public void Test_single_quotes__embedded_U_0010_71()
         {
@@ -890,7 +890,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0011 (72)" )]
         public void Test_single_quotes__embedded_U_0011_72()
         {
@@ -899,7 +899,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0012 (73)" )]
         public void Test_single_quotes__embedded_U_0012_73()
         {
@@ -908,7 +908,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0013 (74)" )]
         public void Test_single_quotes__embedded_U_0013_74()
         {
@@ -917,7 +917,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0014 (75)" )]
         public void Test_single_quotes__embedded_U_0014_75()
         {
@@ -926,7 +926,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0015 (76)" )]
         public void Test_single_quotes__embedded_U_0015_76()
         {
@@ -935,7 +935,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0016 (77)" )]
         public void Test_single_quotes__embedded_U_0016_77()
         {
@@ -944,7 +944,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0017 (78)" )]
         public void Test_single_quotes__embedded_U_0017_78()
         {
@@ -953,7 +953,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0018 (79)" )]
         public void Test_single_quotes__embedded_U_0018_79()
         {
@@ -962,7 +962,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0019 (80)" )]
         public void Test_single_quotes__embedded_U_0019_80()
         {
@@ -971,7 +971,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+001A (81)" )]
         public void Test_single_quotes__embedded_U_001A_81()
         {
@@ -980,7 +980,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+001B (82)" )]
         public void Test_single_quotes__embedded_U_001B_82()
         {
@@ -989,7 +989,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+001C (83)" )]
         public void Test_single_quotes__embedded_U_001C_83()
         {
@@ -998,7 +998,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+001D (84)" )]
         public void Test_single_quotes__embedded_U_001D_84()
         {
@@ -1007,7 +1007,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+001E (85)" )]
         public void Test_single_quotes__embedded_U_001E_85()
         {
@@ -1016,7 +1016,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+001F (86)" )]
         public void Test_single_quotes__embedded_U_001F_86()
         {
@@ -1025,7 +1025,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded U+0020 (87)" )]
         public void Test_single_quotes__embedded_U_0020_87()
         {
@@ -1035,19 +1035,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   " ": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped single quote (88)" )]
         public void Test_single_quotes__escaped_single_quote_88()
         {
@@ -1057,19 +1057,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "'": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped reverse solidus (89)" )]
         public void Test_single_quotes__escaped_reverse_solidus_89()
         {
@@ -1079,19 +1079,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\\": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped solidus (90)" )]
         public void Test_single_quotes__escaped_solidus_90()
         {
@@ -1101,19 +1101,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "/": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped backspace (91)" )]
         public void Test_single_quotes__escaped_backspace_91()
         {
@@ -1123,19 +1123,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\b": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped form feed (92)" )]
         public void Test_single_quotes__escaped_form_feed_92()
         {
@@ -1145,19 +1145,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\f": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped line feed (93)" )]
         public void Test_single_quotes__escaped_line_feed_93()
         {
@@ -1167,19 +1167,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\n": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped carriage return (94)" )]
         public void Test_single_quotes__escaped_carriage_return_94()
         {
@@ -1189,19 +1189,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\r": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped tab (95)" )]
         public void Test_single_quotes__escaped_tab_95()
         {
@@ -1211,19 +1211,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "\t": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped ☺, upper case hex (96)" )]
         public void Test_single_quotes__escaped____upper_case_hex_96()
         {
@@ -1233,19 +1233,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "☺": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, escaped ☺, lower case hex (97)" )]
         public void Test_single_quotes__escaped____lower_case_hex_97()
         {
@@ -1255,19 +1255,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "☺": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, surrogate pair 𝄞 (98)" )]
         public void Test_single_quotes__surrogate_pair____98()
         {
@@ -1277,19 +1277,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "𝄞": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, surrogate pair 😀 (99)" )]
         public void Test_single_quotes__surrogate_pair____99()
         {
@@ -1299,19 +1299,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "😀": "A"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "A"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, invalid escaped double quote (100)" )]
         public void Test_single_quotes__invalid_escaped_double_quote_100()
         {
@@ -1320,7 +1320,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, embedded single quote (101)" )]
         public void Test_single_quotes__embedded_single_quote_101()
         {
@@ -1329,7 +1329,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "single quotes, incomplete escape (102)" )]
         public void Test_single_quotes__incomplete_escape_102()
         {
@@ -1338,7 +1338,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-        
+
         [TestMethod( "double quotes, empty (103)" )]
         public void Test_double_quotes__empty_103()
         {
@@ -1350,19 +1350,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "b": "B",
                   "": "C"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "C"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
-        
+
         [TestMethod( "single quotes, empty (104)" )]
         public void Test_single_quotes__empty_104()
         {
@@ -1374,17 +1374,17 @@ namespace Hyperbee.Json.Cts.Tests
                   "b": "B",
                   "": "C"
                 }
-                """);
-            var results = document.Select(selector);
+                """ );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """
                 [
                   "C"
                 ]
-                """);
+                """ );
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
+            var match = TestHelper.MatchOne( results, expect! );
+            Assert.IsTrue( match );
         }
     }
 }

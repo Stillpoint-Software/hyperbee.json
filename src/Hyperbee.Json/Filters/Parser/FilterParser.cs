@@ -151,7 +151,7 @@ public class FilterParser<TNode> : FilterParser
         // Helper method to determine if item parsing is finished
         static bool IsFinished( in ParserState state, int count, char ch )
         {
-            if( state.BracketDepth != 0)
+            if ( state.BracketDepth != 0 )
                 return false;
 
             // order of operations matters here

@@ -2029,10 +2029,25 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a || @.b && @.c]";
             var document = JsonNode.Parse(
-                """[{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]""" );
-            var results = document.Select( selector );
+                """
+                [
+                    {"a":1},
+                    {"b":2,"c":3},
+                    {"c":3},
+                    {"b":2},
+                    {"a":1,"b":2,"c":3}
+                ]
+                """ );
+
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
-                """[{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
+                """
+                [
+                    {"a":1},
+                    {"b":2,"c":3},
+                    {"a":1,"b":2,"c":3}
+                ]
+                """ );
 
             var match = TestHelper.MatchOne( results, expect! );
             Assert.IsTrue( match );

@@ -312,11 +312,13 @@ public static class JsonPath<TNode>
         }
     }
 
-    [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, First = ({Segment?.Selectors?[0]}), IsSingular = {Segment?.IsSingular}, Count = {Segment?.Selectors?.Length}" )]
+    [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, {Segment}" )]
     private record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
 
+    [DebuggerDisplay( "{_stack}" )]
     private sealed class NodeArgsStack( int capacity = 16 )
     {
+        [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         private readonly Stack<NodeArgs> _stack = new( capacity );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]

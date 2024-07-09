@@ -74,7 +74,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         return 0;
     }
 
-    public bool TryGetChildValue( in JsonNode value, string childSelector, out JsonNode childValue )
+    public bool TryGetChildValue( in JsonNode value, string childSelector, SelectorKind selectorKind, out JsonNode childValue )
     {
         switch ( value )
         {
@@ -87,6 +87,9 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 }
             case JsonArray valueArray:
                 {
+                    if ( selectorKind == SelectorKind.Name )
+                        break;
+
                     if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                     {
                         if ( index < 0 ) // flip negative index to positive

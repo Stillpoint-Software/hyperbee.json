@@ -1,7 +1,8 @@
-﻿using Hyperbee.Json.Extensions;
+﻿using System.Diagnostics;
 
 namespace Hyperbee.Json.Filters.Parser;
 
+[DebuggerDisplay( "{Buffer.ToString()}, Item = {Item.ToString()}, Operator = {Operator}, Pos = {Pos.ToString()}" )]
 public ref struct ParserState
 {
     public ReadOnlySpan<char> Buffer { get; }

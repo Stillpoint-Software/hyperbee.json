@@ -76,7 +76,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
             : 0;
     }
 
-    public bool TryGetChildValue( in JsonElement value, string childSelector, out JsonElement childValue )
+    public bool TryGetChildValue( in JsonElement value, string childSelector, SelectorKind selectorKind, out JsonElement childValue )
     {
         switch ( value.ValueKind )
         {
@@ -86,6 +86,9 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 break;
 
             case JsonValueKind.Array:
+                if ( selectorKind == SelectorKind.Name )
+                    break;
+
                 if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
                     var arrayLength = value.GetArrayLength();

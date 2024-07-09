@@ -228,7 +228,6 @@ internal static class JsonPathQueryParser
                             break;
                         default:
                             state = State.UnionElement;
-                            //i--; // replay character
                             selectorStart = i;
                             bracketDepth = 1;
                             break;

@@ -19,7 +19,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, bool, INodeType> ) Select );
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, bool, INodeType>) Select );
 
         public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context, ref ExpressionInfo expressionInfo )
         {

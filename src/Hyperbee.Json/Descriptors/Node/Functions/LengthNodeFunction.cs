@@ -15,8 +15,8 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
         if ( argumentInfo[0] )
             throw new NotSupportedException( $"Function {Name} does not support non-singular arguments." );
 
-        return Expression.Invoke( LengthExpression, 
-            Expression.Convert( arguments[0], typeof(INodeType) ) );
+        return Expression.Invoke( LengthExpression,
+            Expression.Convert( arguments[0], typeof( INodeType ) ) );
     }
 
     public static INodeType Length( INodeType input )
@@ -24,15 +24,15 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
         switch ( input.Kind )
         {
             case NodeTypeKind.NodeList:
-            {
-                var list = (NodesType<JsonNode>) input;
-                return Length( list.FirstOrDefault() );
-            }
+                {
+                    var list = (NodesType<JsonNode>) input;
+                    return Length( list.FirstOrDefault() );
+                }
             case NodeTypeKind.Value:
-            {
-                var valueType = (ValueType<string>) input;
-                return new ValueType<float>( valueType.Value.Length );
-            }
+                {
+                    var valueType = (ValueType<string>) input;
+                    return new ValueType<float>( valueType.Value.Length );
+                }
             case NodeTypeKind.Nothing:
                 return input;
             case NodeTypeKind.Node:

@@ -23,15 +23,15 @@ public class LengthElementFunction() : FilterExtensionFunction( argumentCount: 1
         switch ( input.Kind )
         {
             case NodeTypeKind.NodeList:
-            {
-                var list = (NodesType<JsonElement>) input;
-                return Length( list.FirstOrDefault() );
-            }
+                {
+                    var list = (NodesType<JsonElement>) input;
+                    return Length( list.FirstOrDefault() );
+                }
             case NodeTypeKind.Value:
-            {
-                var valueType = (ValueType<string>) input;
-                return new ValueType<float>( valueType.Value.Length );
-            }
+                {
+                    var valueType = (ValueType<string>) input;
+                    return new ValueType<float>( valueType.Value.Length );
+                }
             case NodeTypeKind.Nothing:
                 return input;
             case NodeTypeKind.Node:

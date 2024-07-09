@@ -14,7 +14,7 @@ public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         return Expression.Invoke( ValueExpression,
-            Expression.Convert( arguments[0], typeof(INodeType) ) );
+            Expression.Convert( arguments[0], typeof( INodeType ) ) );
     }
 
     public static ValueType<object> Value( INodeType arg )
@@ -41,7 +41,7 @@ public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
             JsonValueKind.Undefined => false,
             _ => false
         } );
-        
+
         static bool IsNotEmpty( JsonNode node )
         {
             return node.GetValueKind() switch

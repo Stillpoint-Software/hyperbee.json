@@ -218,7 +218,7 @@ public static class ComparerExpressionFactory<TNode>
                 value = objectValue;
             }
 
-            if( nodeCount == 0 && valueIsNothing )
+            if ( nodeCount == 0 && valueIsNothing )
             {
                 return 0;
             }
@@ -251,7 +251,7 @@ public static class ComparerExpressionFactory<TNode>
                 right = rightValue;
             }
 
-            if( leftIsNothing && rightIsNothing )
+            if ( leftIsNothing && rightIsNothing )
             {
                 return 0;
             }

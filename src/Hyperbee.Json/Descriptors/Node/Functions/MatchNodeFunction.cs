@@ -43,7 +43,7 @@ public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
             return false;
         }
 
-        if( value.GetValueKind() != JsonValueKind.String )
+        if ( value.GetValueKind() != JsonValueKind.String )
         {
             return false;
         }

@@ -25,7 +25,7 @@ internal class LiteralExpressionFactory : IExpressionFactory
             return Expression.Constant( (INodeType) new ValueType<bool>( true ) );
 
         if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( (INodeType)new ValueType<bool>( false ) );
+            return Expression.Constant( (INodeType) new ValueType<bool>( false ) );
 
         if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( null );

@@ -1336,7 +1336,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@[0, 0, 'a']]";
             var document = JsonNode.Parse(
                 """[1,[],[2],[2,3],{"a":3},{"b":4},{"a":3,"b":4}]""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """[[2],[2,3],{"a":3},{"a":3,"b":4}]""" );
 
@@ -1414,7 +1414,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@[?@>1]]";
             var document = JsonNode.Parse(
                 """[[0],[0,1],[0,1,2],[42]]""" );
-            var results = document.Select( selector ).ToArray();
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
                 """[[0,1,2],[42]]""" );
 
@@ -2028,25 +2028,10 @@ namespace Hyperbee.Json.Cts
         {
             var selector = "$[?@.a || @.b && @.c]";
             var document = JsonNode.Parse(
-                """
-                [
-                    {"a":1},
-                    {"b":2,"c":3},
-                    {"c":3},
-                    {"b":2},
-                    {"a":1,"b":2,"c":3}
-                ]
-                """ );
-
-            var results = document.Select( selector ).ToArray();
+                """[{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]""" );
+            var results = document.Select( selector );
             var expect = JsonNode.Parse(
-                """
-                [
-                    {"a":1},
-                    {"b":2,"c":3},
-                    {"a":1,"b":2,"c":3}
-                ]
-                """ );
+                """[{"a":1},{"b":2,"c":3},{"a":1,"b":2,"c":3}]""" );
 
             var match = TestHelper.MatchOne( results, expect! );
             Assert.IsTrue( match );

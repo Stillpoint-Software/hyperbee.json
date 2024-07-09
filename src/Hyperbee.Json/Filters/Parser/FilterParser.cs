@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -134,7 +134,7 @@ public class FilterParser<TNode> : FilterParser
 
             NextCharacter( ref state, out var nextChar, ref quote );
 
-            if ( IsFinished( state.Pos - itemStart, nextChar, state.Operator, state.Terminal ) )
+            if ( IsFinished( in state, state.Pos - itemStart, nextChar ) )
                 break;
 
             if ( !state.EndOfBuffer && !state.IsTerminal )
@@ -149,16 +149,19 @@ public class FilterParser<TNode> : FilterParser
         return;
 
         // Helper method to determine if item parsing is finished
-        static bool IsFinished( int count, char ch, Operator op, char terminal )
+        static bool IsFinished( in ParserState state, int count, char ch )
         {
+            if( state.BracketDepth != 0)
+                return false;
+
             // order of operations matters here
             if ( count == 0 && ch == EndArg )
                 return false;
 
-            if ( !op.IsNonOperator() && op != Operator.ClosedParen )
+            if ( !state.Operator.IsNonOperator() && state.Operator != Operator.ClosedParen )
                 return true;
 
-            if ( ch == terminal || ch == EndArg || ch == EndLine )
+            if ( ch == state.Terminal || ch == EndArg || ch == EndLine )
                 return true;
 
             return false;
@@ -221,6 +224,14 @@ public class FilterParser<TNode> : FilterParser
                 break;
             case ' ' or '\t' or '\r' or '\n':
                 state.Operator = Operator.Whitespace;
+                break;
+            case '[':
+                state.BracketDepth++;
+                state.Operator = Operator.Bracket;
+                break;
+            case ']':
+                state.BracketDepth--;
+                state.Operator = Operator.Bracket;
                 break;
             case '\'' or '\"':
                 quoteChar = nextChar; // Entering a quoted string

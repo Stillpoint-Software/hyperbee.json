@@ -32,7 +32,8 @@ public enum Operator
     Whitespace = 0xC0 | NonOperator,
     Quotes = 0xD0 | NonOperator,
     Segment = 0xE0 | NonOperator,
-    EndOfBuffer = 0xF0 | NonOperator
+    Bracket = 0xF0 | NonOperator,
+    EndOfBuffer = 0x100 | NonOperator
 }
 
 public static class OperatorExtensions

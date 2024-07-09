@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts
@@ -2027,7 +2027,7 @@ namespace Hyperbee.Json.Cts
         public void Test_filter__and_binds_more_tightly_than_or_160()
         {
             var selector = "$[?@.a || @.b && @.c]";
-            
+
             var document = JsonNode.Parse(
                 """[{"a":1},{"b":2,"c":3},{"c":3},{"b":2},{"a":1,"b":2,"c":3}]""" );
             var results = document.Select( selector );

@@ -5,17 +5,22 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionItemContext expressionItemContext, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterContext<TNode> context )
     {
-        expression = ExpressionHelper<TNode>.GetExpression( state.Item, context, ref expressionItemContext );
-        return expression != null;
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, context, ref itemContext );
+        
+        if ( expression == null )
+            return false;
+
+        itemContext.Kind = ExpressionKind.Select;
+        return true;
     }
 
     static class ExpressionHelper<TNode>
     {
         private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, FilterContext<TNode>, IEnumerable<TNode>>) Select );
 
-        public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context, ref ExpressionItemContext expressionItemContext )
+        public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context, ref ExpressionInfo expressionInfo )
         {
             if ( item.IsEmpty )
                 return null;
@@ -23,7 +28,7 @@ internal class SelectExpressionFactory : IExpressionFactory
             if ( item[0] != '$' && item[0] != '@' )
                 return null;
 
-            expressionItemContext.NonSingleQuery = QueryHelper.IsNonSingular( item ); //BF nsq - identify non-singular-query (nsq) for comparand operations
+            expressionInfo.NonSingularQuery = QueryHelper.IsNonSingular( item ); //BF nsq
 
             var queryExp = Expression.Constant( item.ToString() );
             var contextExp = Expression.Constant( context );

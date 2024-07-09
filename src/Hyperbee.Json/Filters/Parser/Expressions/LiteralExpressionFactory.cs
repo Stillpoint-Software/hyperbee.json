@@ -4,10 +4,16 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class LiteralExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionItemContext expressionItemContext, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterContext<TNode> context )
     {
         expression = GetLiteralExpression( state.Item, context );
-        return expression != null;
+
+        if ( expression == null )
+            return false;
+ 
+        expressionInfo.Kind = ExpressionKind.Literal;
+        return true;
+
     }
 
     private static ConstantExpression GetLiteralExpression<TNode>( ReadOnlySpan<char> item, FilterContext<TNode> context )
@@ -33,7 +39,7 @@ internal class LiteralExpressionFactory : IExpressionFactory
         // The current design treats all numbers are floats since we don't
         // know what's in the data or the other side of the operator yet.
 
-        if ( item[^1] == '.' ) // incomplete floating-point number. we can parse it but the RFC doesn't like it.
+        if ( item.Length > 0 && item[^1] == '.' ) // incomplete floating-point number. we can parse it but the RFC doesn't like it.
             throw new NotSupportedException( $"Incomplete floating-point number `{item.ToString()}`" );
 
         return float.TryParse( item, out float result )

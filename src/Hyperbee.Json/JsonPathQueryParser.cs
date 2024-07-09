@@ -167,6 +167,7 @@ internal static class JsonPathQueryParser
                             InsertToken( tokens, GetSelectorDescriptor( selectorKind, selectorSpan ) );
 
                             state = State.Whitespace;
+                            i--; // replay character
                             returnState = State.UnionStart;
                             break;
 
@@ -227,7 +228,7 @@ internal static class JsonPathQueryParser
                             break;
                         default:
                             state = State.UnionElement;
-                            i--; // replay character
+                            //i--; // replay character
                             selectorStart = i;
                             bracketDepth = 1;
                             break;
@@ -271,7 +272,9 @@ internal static class JsonPathQueryParser
                             break;
                         case ',':
                         case ']':
-                            if ( c == ']' && --bracketDepth > 0 ) // handle nested `]`
+                            if ( c == ']' && bracketDepth-- > 1 ) // handle nested `]`
+                                break;
+                            if ( c == ',' && bracketDepth > 1 )
                                 break;
                             if ( parenDepth > 0 )
                                 break;

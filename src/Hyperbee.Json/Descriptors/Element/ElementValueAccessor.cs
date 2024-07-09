@@ -43,12 +43,18 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public JsonElement GetElementAt( in JsonElement value, int index )
+    public bool TryGetElementAt( in JsonElement value, int index, out JsonElement element )
     {
+        element = default;
+
         if ( index < 0 ) // flip negative index to positive
             index = value.GetArrayLength() + index;
 
-        return value[index];
+        if ( index < 0 || index >= value.GetArrayLength() ) // out of bounds
+            return false;
+
+        element =value[index];
+        return true;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

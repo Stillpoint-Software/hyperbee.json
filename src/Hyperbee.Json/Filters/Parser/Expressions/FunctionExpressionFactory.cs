@@ -4,7 +4,7 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class FunctionExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionItemContext expressionItemContext, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterContext<TNode> context )
     {
         if ( context.Descriptor.Functions.TryGetCreator( state.Item.ToString(), out var functionCreator ) )
         {
@@ -14,6 +14,7 @@ internal class FunctionExpressionFactory : IExpressionFactory
             expression = functionCreator()
                 .GetExpression( ref state, context ); // will recurse for each function argument.
 
+            expressionInfo.Kind = ExpressionKind.Function;
             return true;
         }
 

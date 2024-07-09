@@ -219,8 +219,9 @@ public static class JsonPath<TNode>
                         {
                             if ( nodeKind != NodeKind.Array )
                                 continue;
-
-                            stack.Push( value, accessor.GetElementAt( value, int.Parse( selector ) ), selector, segmentNext );
+                            
+                            if ( accessor.TryGetElementAt( value, int.Parse( selector ), out var childValue ) )
+                                stack.Push( value, childValue, selector, segmentNext );
                             continue;
                         }
 
@@ -232,7 +233,8 @@ public static class JsonPath<TNode>
 
                             foreach ( var index in EnumerateSlice( value, selector, accessor ) )
                             {
-                                stack.Push( value, accessor.GetElementAt( value, index ), index.ToString(), segmentNext );
+                                if ( accessor.TryGetElementAt( value, index, out var childValue ) )
+                                    stack.Push( value, childValue, index.ToString(), segmentNext );
                             }
 
                             continue;
@@ -246,7 +248,8 @@ public static class JsonPath<TNode>
 
                             for ( var index = length - 1; index >= 0; index-- )
                             {
-                                var childValue = accessor.GetElementAt( value, index );
+                                if ( !accessor.TryGetElementAt( value, index, out var childValue ) )
+                                    continue;
 
                                 if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
                                     continue;

@@ -39,12 +39,19 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public JsonNode GetElementAt( in JsonNode value, int index )
+    public bool TryGetElementAt( in JsonNode value, int index, out JsonNode element )
     {
-        if ( index < 0 ) // flip negative index to positive
-            index = ((JsonArray) value).Count + index;
+        var array = (JsonArray) value;
+        element = null;
 
-        return value[index];
+        if ( index < 0 ) // flip negative index to positive
+            index = array.Count + index;
+
+        if ( index < 0 || index >= array.Count ) // out of bounds
+            return false;
+            
+        element = value[index];
+        return true;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

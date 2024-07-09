@@ -4,7 +4,7 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class ParenExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionItemContext expressionItemContext, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterContext<TNode> context )
     {
         if ( state.Operator == Operator.OpenParen && state.Item.IsEmpty )
         {
@@ -14,6 +14,8 @@ internal class ParenExpressionFactory : IExpressionFactory
             };
 
             expression = FilterParser<TNode>.Parse( ref localState, context ); // will recurse.
+
+            expressionInfo.Kind = ExpressionKind.Paren;
             return true;
         }
 

@@ -1337,7 +1337,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@[0, 0, 'a']]";
             var document = JsonNode.Parse(
                 """[1,[],[2],[2,3],{"a":3},{"b":4},{"a":3,"b":4}]""" );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """[[2],[2,3],{"a":3},{"a":3,"b":4}]""" );
 

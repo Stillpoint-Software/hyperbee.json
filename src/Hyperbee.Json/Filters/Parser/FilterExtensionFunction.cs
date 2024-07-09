@@ -14,7 +14,7 @@ public abstract class FilterExtensionFunction
 
     protected abstract Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo );
 
-    internal Expression GetExpression<TNode>( ref ParserState state, FilterContext<TNode> context )
+    internal Expression GetExpression<TNode>( ref ParserState state, FilterContext<TNode> filterContext )
     {
         var arguments = new Expression[_argumentCount];
 
@@ -34,10 +34,9 @@ public abstract class FilterExtensionFunction
             if ( localState.IsTerminal )
                 throw new NotSupportedException( $"Invalid arguments for filter: \"{state.Buffer}\"." );
 
-            var argument = FilterParser<TNode>.Parse( ref localState, context );
+            var argument = FilterParser<TNode>.Parse( ref localState, filterContext );
 
-            argumentInfo[i] = QueryHelper.IsNonSingular( localState.Item );
-
+            argumentInfo[i] = QueryHelper.IsNonSingular( localState.Item ); //BF - nsq
             arguments[i] = argument;
         }
 

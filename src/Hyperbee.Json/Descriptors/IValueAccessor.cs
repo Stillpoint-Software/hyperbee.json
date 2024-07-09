@@ -3,7 +3,7 @@
 public interface IValueAccessor<TNode>
 {
     IEnumerable<(TNode, string, SelectorKind)> EnumerateChildren( TNode value, bool includeValues = true );
-    TNode GetElementAt( in TNode value, int index );
+    bool TryGetElementAt( in TNode value, int index, out TNode element );
     NodeKind GetNodeKind( in TNode value );
     int GetArrayLength( in TNode value );
     bool TryGetChildValue( in TNode value, string childSelector, out TNode childValue );

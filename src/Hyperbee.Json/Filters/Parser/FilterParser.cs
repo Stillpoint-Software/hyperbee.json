@@ -22,7 +22,7 @@ public abstract class FilterParser
     public const char ArgSeparator = ',';
 }
 
-public partial class FilterParser<TNode> : FilterParser
+public class FilterParser<TNode> : FilterParser
 {
     public static Func<TNode, TNode, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
@@ -59,12 +59,8 @@ public partial class FilterParser<TNode> : FilterParser
 
         do
         {
-            var prevOp = MoveNext( ref state );
-            var exprItem = GetExprItem( ref state, context );
-
-            ThrowIfConstantIsNotCompared( prevOp, exprItem, in state );
-
-            items.Add( exprItem );
+            MoveNext( ref state );
+            items.Add( GetExprItem( ref state, context ) );
 
         } while ( state.IsParsing );
 
@@ -76,46 +72,45 @@ public partial class FilterParser<TNode> : FilterParser
         var baseItem = items[0];
         var index = 1;
 
-        return Merge( baseItem, ref index, items, context ); //BF nsq
+        return Merge( in state, baseItem, ref index, items, context ); 
     }
 
 
     private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
     {
-        var itemContext = new ExpressionItemContext();
+        var expressionInfo = new ExpressionInfo();
 
-        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, ref itemContext, context ) )
-            return ExprItem( ref state, expression, itemContext );
+        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, ref expressionInfo, context ) )
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) ) // will recurse.
-            return ExprItem( ref state, expression, itemContext );
+        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, context ) ) // will recurse.
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) )
-            return ExprItem( ref state, expression, itemContext );
+        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, context ) )
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) ) // may recurse for each function argument.
-            return ExprItem( ref state, expression, itemContext );
+        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, context ) ) // may recurse for each function argument.
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) )
-            return ExprItem( ref state, expression, itemContext );
+        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, context ) )
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref itemContext, context ) )
-            return ExprItem( ref state, expression, itemContext );
+        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, context ) )
+            return ExprItem( ref state, expression, expressionInfo );
 
         throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
 
         // Helper method to create an expression item
-        static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionItemContext itemContext )
+        static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionInfo expressionInfo )
         {
             UpdateOperator( ref state );
-            return new ExprItem( expression, state.Operator, itemContext.NonSingleQuery );
+            return new ExprItem( expression, state.Operator, expressionInfo );
         }
     }
 
-    private static Operator MoveNext( ref ParserState state )
+    private static void MoveNext( ref ParserState state )
     {
         char? quote = null;
-        var prevOp = state.Operator;
 
         // remove leading whitespace
         while ( !state.EndOfBuffer && char.IsWhiteSpace( state.Current ) )
@@ -126,7 +121,7 @@ public partial class FilterParser<TNode> : FilterParser
         {
             state.Operator = Operator.EndOfBuffer;
             state.Item = [];
-            return prevOp;
+            return;
         }
 
         // read next item
@@ -151,7 +146,7 @@ public partial class FilterParser<TNode> : FilterParser
 
         state.SetItem( itemStart, itemEnd );
 
-        return prevOp;
+        return;
 
         // Helper method to determine if item parsing is finished
         static bool IsFinished( int count, char ch, Operator op, char terminal )
@@ -286,24 +281,38 @@ public partial class FilterParser<TNode> : FilterParser
         static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
     }
 
-    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> items, FilterContext<TNode> context, bool mergeOneOnly = false )
+    private static Expression Merge( in ParserState state, ExprItem left, ref int index, List<ExprItem> items, FilterContext<TNode> context, bool mergeOneOnly = false )
     {
-        while ( index < items.Count )
+        if ( items.Count == 1 )
         {
-            var next = items[index++];
-
-            while ( !CanMergeItems( current, next ) )
+            ThrowIfInvalid( in state, left, null ); // single item, no recursion
+        }
+        else
+        {
+            while ( index < items.Count )
             {
-                Merge( next, ref index, items, context, mergeOneOnly: true ); // recursive call
+                var right = items[index++];
+
+                while ( !CanMergeItems( left, right ) )
+                {
+                    Merge( in state, right, ref index, items, context, mergeOneOnly: true ); // recursive call
+                }
+
+                ThrowIfInvalid( in state, left, right );
+                MergeItems( left, right, context );
+
+                if ( mergeOneOnly )
+                    return left.Expression;
             }
-
-            MergeItems( current, next, context ); //BF nsq
-
-            if ( mergeOneOnly )
-                return current.Expression;
         }
 
-        return current.Expression;
+        return left.Expression;
+
+        static void ThrowIfInvalid( in ParserState state, ExprItem left, ExprItem right )
+        {
+            ThrowIfConstantIsNotCompared( in state, left, right );
+            ThrowIfNonSingularCompare( in state, left, right );
+        }
 
         // Helper method to determine if two items can be merged
         static bool CanMergeItems( ExprItem left, ExprItem right )
@@ -333,12 +342,10 @@ public partial class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right, FilterContext<TNode> context )
     {
-        ThrowIfNonSingularCompare( left, right );
-
         switch ( left.Operator )
         {
             case Operator.Equals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression ); //BF nsq
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression ); 
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.Equal( left.Expression, right.Expression );
@@ -411,25 +418,30 @@ public partial class FilterParser<TNode> : FilterParser
             );
 
         left.Operator = right.Operator;
+        left.ExpressionInfo.Kind = ExpressionKind.Merged;
     }
 
-    private static void ThrowIfNonSingularCompare( ExprItem left, ExprItem right )
+    private static void ThrowIfNonSingularCompare( in ParserState state, ExprItem left, ExprItem right )
     {
-        if ( IsNonSingularCompare( left ) || IsNonSingularCompare( right ) )
-            throw new NotSupportedException( "Unsupported non-single query" );
+        if ( IsNonSingularCompare( left ) || (right != null && IsNonSingularCompare( right )) )
+            throw new NotSupportedException( $"Unsupported non-single query: {state.Buffer.ToString()}." );
 
         return;
 
         static bool IsNonSingularCompare( ExprItem item ) =>
-            item.NonSingularQuery && item.Operator.IsComparison();
+            item.ExpressionInfo.NonSingularQuery && item.Operator.IsComparison();
     }
 
-    private static void ThrowIfConstantIsNotCompared( Operator prevOp, ExprItem exprItem, in ParserState state )
+    private static void ThrowIfConstantIsNotCompared( in ParserState state, ExprItem left, ExprItem right )
     {
-        // unless the expression is an argument, constants must be compared
-        if ( !state.IsArgument && exprItem.Expression is ConstantExpression &&
-             !IsComparisonOperator( prevOp ) && !IsComparisonOperator( exprItem.Operator ) )
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}" );
+        if ( state.IsArgument )
+            return;
+
+        if ( left.ExpressionInfo.Kind == ExpressionKind.Literal && !IsComparisonOperator( left.Operator ) )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
+
+        if ( right != null && right.ExpressionInfo.Kind == ExpressionKind.Literal && !IsComparisonOperator( left.Operator ) )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
 
         return;
 
@@ -439,9 +451,9 @@ public partial class FilterParser<TNode> : FilterParser
             op == Operator.LessThan || op == Operator.LessThanOrEqual;
     }
 
-    private class ExprItem( Expression expression, Operator op, bool nonSingularQuery )
+    private class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
     {
-        public bool NonSingularQuery { get; set; } = nonSingularQuery;
+        public ExpressionInfo ExpressionInfo { get; } = expressionInfo; 
         public Expression Expression { get; set; } = expression;
         public Operator Operator { get; set; } = op;
     }

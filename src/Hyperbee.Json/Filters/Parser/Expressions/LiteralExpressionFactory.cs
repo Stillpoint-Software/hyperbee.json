@@ -10,7 +10,7 @@ internal class LiteralExpressionFactory : IExpressionFactory
 
         if ( expression == null )
             return false;
- 
+
         expressionInfo.Kind = ExpressionKind.Literal;
         return true;
 

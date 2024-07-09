@@ -8,7 +8,7 @@ internal class SelectExpressionFactory : IExpressionFactory
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterContext<TNode> context )
     {
         expression = ExpressionHelper<TNode>.GetExpression( state.Item, context, ref itemContext );
-        
+
         if ( expression == null )
             return false;
 

@@ -335,7 +335,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$[?(@[0:1]==[1])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@[0:1]==[1])]", typeof( JsonNode ) )]
-    [ExpectedException(typeof(NotSupportedException))]
+    [ExpectedException( typeof( NotSupportedException ) )]
     public void FilterExpressionWithEqualsArrayForSliceWithRange1( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED
@@ -358,7 +358,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$[?(@.*==[1,2])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.*==[1,2])]", typeof( JsonNode ) )]
-    [ExpectedException( typeof(NotSupportedException) )]
+    [ExpectedException( typeof( NotSupportedException ) )]
     public void FilterExpressionWithEqualsArrayForDotNotationWithStart( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED

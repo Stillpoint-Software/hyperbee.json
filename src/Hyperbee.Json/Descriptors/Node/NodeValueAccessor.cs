@@ -49,7 +49,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
 
         if ( index < 0 || index >= array.Count ) // out of bounds
             return false;
-            
+
         element = value[index];
         return true;
     }

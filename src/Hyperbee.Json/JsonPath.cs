@@ -219,7 +219,7 @@ public static class JsonPath<TNode>
                         {
                             if ( nodeKind != NodeKind.Array )
                                 continue;
-                            
+
                             if ( accessor.TryGetElementAt( value, int.Parse( selector ), out var childValue ) )
                                 stack.Push( value, childValue, selector, segmentNext );
                             continue;

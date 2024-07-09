@@ -72,7 +72,7 @@ public class FilterParser<TNode> : FilterParser
         var baseItem = items[0];
         var index = 1;
 
-        return Merge( in state, baseItem, ref index, items, context ); 
+        return Merge( in state, baseItem, ref index, items, context );
     }
 
 
@@ -345,7 +345,7 @@ public class FilterParser<TNode> : FilterParser
         switch ( left.Operator )
         {
             case Operator.Equals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression ); 
+                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, left.Expression );
                 right.Expression = ComparerExpressionFactory<TNode>.GetComparand( context, right.Expression );
 
                 left.Expression = Expression.Equal( left.Expression, right.Expression );
@@ -453,7 +453,7 @@ public class FilterParser<TNode> : FilterParser
 
     private class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
     {
-        public ExpressionInfo ExpressionInfo { get; } = expressionInfo; 
+        public ExpressionInfo ExpressionInfo { get; } = expressionInfo;
         public Expression Expression { get; set; } = expression;
         public Operator Operator { get; set; } = op;
     }

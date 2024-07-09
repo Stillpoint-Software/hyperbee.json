@@ -7,7 +7,7 @@ internal class NotExpressionFactory : IExpressionFactory
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterContext<TNode> context )
     {
         expression = null;
-        
+
         if ( state.Operator != Operator.Not )
             return false;
 

@@ -53,7 +53,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         if ( index < 0 || index >= value.GetArrayLength() ) // out of bounds
             return false;
 
-        element =value[index];
+        element = value[index];
         return true;
     }
 

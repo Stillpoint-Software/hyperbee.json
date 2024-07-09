@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts
@@ -28,7 +27,7 @@ namespace Hyperbee.Json.Cts
             var selector = " $";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "basic, no trailing whitespace (3)" )]
@@ -37,7 +36,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$ ";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "basic, name shorthand (4)" )]
@@ -88,7 +87,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$.&";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "basic, name shorthand, number (8)" )]
@@ -97,7 +96,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$.1";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "basic, name shorthand, absent data (9)" )]
@@ -204,7 +203,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[0 2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "basic, multiple selectors, name and index, array data (17)" )]
@@ -339,7 +338,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "basic, descendant segment, index (27)" )]
@@ -488,7 +487,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$..";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, existence, without segments (38)" )]
@@ -1379,7 +1378,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@[0:0]==0]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, non-singular query in comparison, all children (102)" )]
@@ -1388,7 +1387,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@[*]==0]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, non-singular query in comparison, descendants (103)" )]
@@ -1397,7 +1396,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@..a==0]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, non-singular query in comparison, combined (104)" )]
@@ -1406,7 +1405,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@.a[*].a==0]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, nested (105)" )]
@@ -1471,7 +1470,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0, 0]==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, index, not equal (110)" )]
@@ -1480,7 +1479,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0, 0]!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, index, less-or-equal (111)" )]
@@ -1489,7 +1488,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0, 0]<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, name, equal (112)" )]
@@ -1498,7 +1497,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@['a', 'a']==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, name, not equal (113)" )]
@@ -1507,7 +1506,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@['a', 'a']!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, name, less-or-equal (114)" )]
@@ -1516,7 +1515,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@['a', 'a']<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, combined, equal (115)" )]
@@ -1525,7 +1524,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0, '0']==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, combined, not equal (116)" )]
@@ -1534,7 +1533,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0, '0']!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, combined, less-or-equal (117)" )]
@@ -1543,7 +1542,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0, '0']<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, wildcard, equal (118)" )]
@@ -1552,7 +1551,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@.*==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, wildcard, not equal (119)" )]
@@ -1561,7 +1560,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@.*!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, wildcard, less-or-equal (120)" )]
@@ -1570,7 +1569,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@.*<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, slice, equal (121)" )]
@@ -1579,7 +1578,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0:0]==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, slice, not equal (122)" )]
@@ -1588,7 +1587,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0:0]!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, relative non-singular query, slice, less-or-equal (123)" )]
@@ -1597,7 +1596,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?(@[0:0]<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, index, equal (124)" )]
@@ -1606,7 +1605,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0, 0]==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, index, not equal (125)" )]
@@ -1615,7 +1614,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0, 0]!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, index, less-or-equal (126)" )]
@@ -1624,7 +1623,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0, 0]<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, name, equal (127)" )]
@@ -1633,7 +1632,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($['a', 'a']==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, name, not equal (128)" )]
@@ -1642,7 +1641,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($['a', 'a']!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, name, less-or-equal (129)" )]
@@ -1651,7 +1650,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($['a', 'a']<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, combined, equal (130)" )]
@@ -1660,7 +1659,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0, '0']==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, combined, not equal (131)" )]
@@ -1669,7 +1668,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0, '0']!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, combined, less-or-equal (132)" )]
@@ -1678,7 +1677,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0, '0']<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, wildcard, equal (133)" )]
@@ -1687,7 +1686,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($.*==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, wildcard, not equal (134)" )]
@@ -1696,7 +1695,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($.*!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, wildcard, less-or-equal (135)" )]
@@ -1705,7 +1704,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($.*<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, slice, equal (136)" )]
@@ -1714,7 +1713,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0:0]==42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, slice, not equal (137)" )]
@@ -1723,7 +1722,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0:0]!=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, absolute non-singular query, slice, less-or-equal (138)" )]
@@ -1732,7 +1731,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?($[0:0]<=42)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, multiple selectors (139)" )]
@@ -1923,7 +1922,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?@.a==1.]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, equals number, decimal fraction, exponent (153)" )]
@@ -2157,7 +2156,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?true]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, literal false must be compared (169)" )]
@@ -2166,7 +2165,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?false]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, literal string must be compared (170)" )]
@@ -2175,7 +2174,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?'abc']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, literal int must be compared (171)" )]
@@ -2184,7 +2183,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, literal float must be compared (172)" )]
@@ -2193,7 +2192,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?2.2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, literal null must be compared (173)" )]
@@ -2202,7 +2201,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?null]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, and, literals must be compared (174)" )]
@@ -2211,7 +2210,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?true && false]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, or, literals must be compared (175)" )]
@@ -2220,7 +2219,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?true || false]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, and, right hand literal must be compared (176)" )]
@@ -2229,7 +2228,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?true == false && false]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, or, right hand literal must be compared (177)" )]
@@ -2238,7 +2237,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?true == false || false]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, and, left hand literal must be compared (178)" )]
@@ -2247,7 +2246,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?false && true == false]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "filter, or, left hand literal must be compared (179)" )]
@@ -2256,7 +2255,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?false || true == false]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "index selector, first element (180)" )]
@@ -2307,7 +2306,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "index selector, not actually an index, overflowing index leads into general text (184)" )]
@@ -2316,7 +2315,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[231584178474632390847141970017375815706539969331281128078915168SomeRandomText]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "index selector, negative (185)" )]
@@ -2381,7 +2380,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[01]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "index selector, leading -0 (190)" )]
@@ -2390,7 +2389,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[-01]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes (191)" )]
@@ -2441,7 +2440,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0000\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0001 (195)" )]
@@ -2450,7 +2449,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0001\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0002 (196)" )]
@@ -2459,7 +2458,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0002\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0003 (197)" )]
@@ -2468,7 +2467,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0003\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0004 (198)" )]
@@ -2477,7 +2476,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0004\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0005 (199)" )]
@@ -2486,7 +2485,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0005\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0006 (200)" )]
@@ -2495,7 +2494,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0006\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0007 (201)" )]
@@ -2504,7 +2503,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0007\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0008 (202)" )]
@@ -2513,7 +2512,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\b\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0009 (203)" )]
@@ -2522,7 +2521,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\t\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+000A (204)" )]
@@ -2531,7 +2530,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\n\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+000B (205)" )]
@@ -2540,7 +2539,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u000b\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+000C (206)" )]
@@ -2549,7 +2548,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\f\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+000D (207)" )]
@@ -2558,7 +2557,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\r\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+000E (208)" )]
@@ -2567,7 +2566,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u000e\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+000F (209)" )]
@@ -2576,7 +2575,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u000f\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0010 (210)" )]
@@ -2585,7 +2584,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0010\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0011 (211)" )]
@@ -2594,7 +2593,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0011\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0012 (212)" )]
@@ -2603,7 +2602,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0012\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0013 (213)" )]
@@ -2612,7 +2611,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0013\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0014 (214)" )]
@@ -2621,7 +2620,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0014\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0015 (215)" )]
@@ -2630,7 +2629,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0015\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0016 (216)" )]
@@ -2639,7 +2638,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0016\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0017 (217)" )]
@@ -2648,7 +2647,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0017\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0018 (218)" )]
@@ -2657,7 +2656,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0018\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0019 (219)" )]
@@ -2666,7 +2665,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u0019\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+001A (220)" )]
@@ -2675,7 +2674,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u001a\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+001B (221)" )]
@@ -2684,7 +2683,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u001b\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+001C (222)" )]
@@ -2693,7 +2692,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u001c\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+001D (223)" )]
@@ -2702,7 +2701,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u001d\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+001E (224)" )]
@@ -2711,7 +2710,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u001e\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+001F (225)" )]
@@ -2720,7 +2719,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\u001f\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded U+0020 (226)" )]
@@ -2911,7 +2910,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\\'\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, embedded double quote (240)" )]
@@ -2920,7 +2919,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\"\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, incomplete escape (241)" )]
@@ -2929,7 +2928,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[\"\\\"]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes (242)" )]
@@ -2980,7 +2979,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0000']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0001 (246)" )]
@@ -2989,7 +2988,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0001']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0002 (247)" )]
@@ -2998,7 +2997,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0002']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0003 (248)" )]
@@ -3007,7 +3006,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0003']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0004 (249)" )]
@@ -3016,7 +3015,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0004']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0005 (250)" )]
@@ -3025,7 +3024,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0005']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0006 (251)" )]
@@ -3034,7 +3033,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0006']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0007 (252)" )]
@@ -3043,7 +3042,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0007']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0008 (253)" )]
@@ -3052,7 +3051,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\b']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0009 (254)" )]
@@ -3061,7 +3060,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\t']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+000A (255)" )]
@@ -3070,7 +3069,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\n']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+000B (256)" )]
@@ -3079,7 +3078,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u000b']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+000C (257)" )]
@@ -3088,7 +3087,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\f']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+000D (258)" )]
@@ -3097,7 +3096,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\r']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+000E (259)" )]
@@ -3106,7 +3105,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u000e']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+000F (260)" )]
@@ -3115,7 +3114,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u000f']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0010 (261)" )]
@@ -3124,7 +3123,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0010']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0011 (262)" )]
@@ -3133,7 +3132,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0011']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0012 (263)" )]
@@ -3142,7 +3141,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0012']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0013 (264)" )]
@@ -3151,7 +3150,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0013']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0014 (265)" )]
@@ -3160,7 +3159,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0014']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0015 (266)" )]
@@ -3169,7 +3168,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0015']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0016 (267)" )]
@@ -3178,7 +3177,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0016']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0017 (268)" )]
@@ -3187,7 +3186,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0017']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0018 (269)" )]
@@ -3196,7 +3195,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0018']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0019 (270)" )]
@@ -3205,7 +3204,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u0019']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+001A (271)" )]
@@ -3214,7 +3213,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u001a']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+001B (272)" )]
@@ -3223,7 +3222,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u001b']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+001C (273)" )]
@@ -3232,7 +3231,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u001c']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+001D (274)" )]
@@ -3241,7 +3240,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u001d']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+001E (275)" )]
@@ -3250,7 +3249,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u001e']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+001F (276)" )]
@@ -3259,7 +3258,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\u001f']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded U+0020 (277)" )]
@@ -3450,7 +3449,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\\\"']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, embedded single quote (291)" )]
@@ -3459,7 +3458,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[''']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, single quotes, incomplete escape (292)" )]
@@ -3468,7 +3467,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$['\\']";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "name selector, double quotes, empty (293)" )]
@@ -3771,7 +3770,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[1:2:3:4]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "slice selector, non-integer array index (315)" )]
@@ -3780,7 +3779,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[1:2:a]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "slice selector, zero step (316)" )]
@@ -3957,7 +3956,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[2:231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "slice selector, underflowing from value (329)" )]
@@ -3966,7 +3965,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[-231584178474632390847141970017375815706539969331281128078915168015826259279872:1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "slice selector, overflowing from value with negative step (330)" )]
@@ -3975,7 +3974,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[231584178474632390847141970017375815706539969331281128078915168015826259279872:0:-1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "slice selector, underflowing to value with negative step (331)" )]
@@ -3984,7 +3983,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[3:-231584178474632390847141970017375815706539969331281128078915168015826259279872:-1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "slice selector, overflowing step (332)" )]
@@ -3993,7 +3992,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[1:10:231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "slice selector, underflowing step (333)" )]
@@ -4002,7 +4001,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[-1:-10:-231584178474632390847141970017375815706539969331281128078915168015826259279872]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, count function (334)" )]
@@ -4053,7 +4052,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count(1)>2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, non-query arg, string (338)" )]
@@ -4062,7 +4061,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count('string')>2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, non-query arg, true (339)" )]
@@ -4071,7 +4070,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count(true)>2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, non-query arg, false (340)" )]
@@ -4080,7 +4079,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count(false)>2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, non-query arg, null (341)" )]
@@ -4089,7 +4088,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count(null)>2]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, result must be compared (342)" )]
@@ -4098,7 +4097,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count(@..*)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, no params (343)" )]
@@ -4107,7 +4106,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count()==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, count, too many params (344)" )]
@@ -4116,7 +4115,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count(@.a,@.b)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, length, string data (345)" )]
@@ -4237,7 +4236,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?length(@.a)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, length, no params (354)" )]
@@ -4246,7 +4245,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?length()==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, length, too many params (355)" )]
@@ -4255,7 +4254,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?length(@.a,@.b)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, length, non-singular query arg (356)" )]
@@ -4264,7 +4263,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?length(@.*)<3]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, length, arg is a function expression (357)" )]
@@ -4483,7 +4482,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?match(@.a, 'a.*')==true]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, match, too few params (373)" )]
@@ -4492,7 +4491,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?match(@.a)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, match, too many params (374)" )]
@@ -4501,7 +4500,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?match(@.a,@.b,@.c)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, match, arg is a function expression (375)" )]
@@ -4832,7 +4831,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?search(@.a, 'a.*')==true]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, search, too few params (399)" )]
@@ -4841,7 +4840,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?search(@.a)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, search, too many params (400)" )]
@@ -4850,7 +4849,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?search(@.a,@.b,@.c)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, search, arg is a function expression (401)" )]
@@ -4971,7 +4970,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?value()==4]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, value, too many params (410)" )]
@@ -4980,7 +4979,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?value(@.a,@.b)==4]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "functions, value, result must be compared (411)" )]
@@ -4989,7 +4988,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?value(@.a)]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, filter, space between question mark and expression (412)" )]
@@ -5222,7 +5221,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count (@.*)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, functions, newline between function name and parenthesis (429)" )]
@@ -5231,7 +5230,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count\n(@.*)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, functions, tab between function name and parenthesis (430)" )]
@@ -5240,7 +5239,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count\t(@.*)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, functions, return between function name and parenthesis (431)" )]
@@ -5249,7 +5248,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$[?count\r(@.*)==1]";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, functions, space between parenthesis and arg (432)" )]
@@ -6770,7 +6769,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$. a";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, newline between dot and name (541)" )]
@@ -6779,7 +6778,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$.\na";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, tab between dot and name (542)" )]
@@ -6788,7 +6787,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$.\ta";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, return between dot and name (543)" )]
@@ -6797,7 +6796,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$.\ra";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, space between recursive descent and name (544)" )]
@@ -6806,7 +6805,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$.. a";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, newline between recursive descent and name (545)" )]
@@ -6815,7 +6814,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$..\na";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, tab between recursive descent and name (546)" )]
@@ -6824,7 +6823,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$..\ta";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, return between recursive descent and name (547)" )]
@@ -6833,7 +6832,7 @@ namespace Hyperbee.Json.Cts
             var selector = "$..\ra";
             var document = JsonNode.Parse( "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
 
         [TestMethod( "whitespace, selectors, space between bracket and selector (548)" )]

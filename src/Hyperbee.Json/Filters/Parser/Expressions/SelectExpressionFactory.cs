@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;

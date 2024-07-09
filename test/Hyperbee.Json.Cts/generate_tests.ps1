@@ -145,7 +145,7 @@ namespace Hyperbee.Json.Cts
             $unitTestContent += @"
             var document = JsonNode.Parse( `"[0]`" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => document.Select( selector ).ToArray() );
+            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }`r`n
 "@
         } else {

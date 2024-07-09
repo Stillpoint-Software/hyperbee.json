@@ -31,7 +31,7 @@ public abstract class FilterExtensionFunction
                 IsArgument = true
             };
 
-            if ( localState.IsTerminal )
+            if ( localState.EndOfBuffer || localState.IsTerminal )
                 throw new NotSupportedException( $"Invalid arguments for filter: \"{state.Buffer}\"." );
 
             var argument = FilterParser<TNode>.Parse( ref localState, filterContext );
@@ -42,5 +42,8 @@ public abstract class FilterExtensionFunction
 
         return GetExtensionExpression( arguments, argumentInfo );
     }
+
+
+
 }
 

@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Nodes;
+﻿// This file was auto generated.
+
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts.Tests

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -8,8 +9,7 @@ internal class JsonExpressionFactory : IExpressionFactory
     {
         if ( context.Descriptor.Accessor.TryParseNode( state.Item.ToString(), out var node ) )
         {
-            expression = Expression.Constant( new[] { node } );
-
+            expression = Expression.Constant( new NodesType<TNode>( [node], false ) );
             expressionInfo.Kind = ExpressionKind.Json;
             return true;
         }

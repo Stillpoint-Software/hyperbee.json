@@ -8,36 +8,42 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "length";
-    private static readonly Expression LengthExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, float?>) Length );
-    private static readonly Expression LengthObjectExpression = Expression.Constant( (Func<object, float?>) Length );
+    private static readonly Expression LengthExpression = Expression.Constant( (Func<INodeType, INodeType>) Length );
 
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         if ( argumentInfo[0] )
             throw new NotSupportedException( $"Function {Name} does not support non-singular arguments." );
 
-        if ( arguments[0].Type == typeof( IEnumerable<JsonNode> ) )
-            return Expression.Invoke( LengthExpression, arguments[0] );
-
-        if ( arguments[0].Type == typeof( object ) )
-            return Expression.Invoke( LengthObjectExpression, arguments[0] );
-
-        if ( arguments[0].Type.IsAssignableTo( typeof( IConvertible ) ) )
-            return Expression.Invoke( LengthObjectExpression, Expression.Convert( arguments[0], typeof( object ) ) );
-
-        throw new NotSupportedException( $"Function {Name} does not support arguments with type {arguments[0].Type.Name}." );
+        return Expression.Invoke( LengthExpression, 
+            Expression.Convert( arguments[0], typeof(INodeType) ) );
     }
 
-    public static float? Length( IEnumerable<JsonNode> nodes )
+    public static INodeType Length( INodeType input )
     {
-        var jsonNodes = nodes as JsonNode[] ?? nodes.ToArray();
-
-        return Length( jsonNodes.FirstOrDefault() );
+        switch ( input.Kind )
+        {
+            case NodeTypeKind.NodeList:
+            {
+                var list = (NodesType<JsonNode>) input;
+                return Length( list.FirstOrDefault() );
+            }
+            case NodeTypeKind.Value:
+            {
+                var valueType = (ValueType<string>) input;
+                return new ValueType<float>( valueType.Value.Length );
+            }
+            case NodeTypeKind.Nothing:
+                return input;
+            case NodeTypeKind.Node:
+            default:
+                return new Nothing();
+        }
     }
 
-    public static float? Length( object value )
+    public static ValueType<float> Length( object value )
     {
-        return value switch
+        float? result = value switch
         {
             string str => str.Length,
             Array array => array.Length,
@@ -52,7 +58,8 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
             },
             _ => null
         };
-    }
 
+        return new ValueType<float>( result ?? 0F, result == null );
+    }
 
 }

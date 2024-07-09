@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
@@ -18,7 +19,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, FilterContext<TNode>, IEnumerable<TNode>>) Select );
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, bool, INodeType> ) Select );
 
         public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context, ref ExpressionInfo expressionInfo )
         {
@@ -31,17 +32,18 @@ internal class SelectExpressionFactory : IExpressionFactory
             expressionInfo.NonSingularQuery = QueryHelper.IsNonSingular( item ); //BF nsq
 
             var queryExp = Expression.Constant( item.ToString() );
-            var contextExp = Expression.Constant( context );
+            var nonSingularQueryExp = Expression.Constant( expressionInfo.NonSingularQuery );
 
             if ( item[0] == '$' ) // Current becomes root
                 context = context with { Current = context.Root };
 
-            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, contextExp ); //BF nsq - may just want to pass context
+            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, nonSingularQueryExp );
         }
 
-        private static IEnumerable<TNode> Select( TNode current, TNode root, string query, FilterContext<TNode> context )
+        private static INodeType Select( TNode current, TNode root, string query, bool nonSingularQuery )
         {
-            return JsonPath<TNode>.SelectInternal( current, root, query );
+            return new NodesType<TNode>( JsonPath<TNode>.SelectInternal( current, root, query ), nonSingularQuery );
         }
+
     }
 }

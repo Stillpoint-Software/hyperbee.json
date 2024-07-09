@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hyperbee.Json.Internal;
+﻿namespace Hyperbee.Json.Internal;
 
 internal static class QueryHelper
 {

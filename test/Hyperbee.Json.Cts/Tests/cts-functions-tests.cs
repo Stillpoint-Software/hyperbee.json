@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Nodes;
+﻿// This file was auto generated.
+
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts.Tests
@@ -792,7 +794,7 @@ namespace Hyperbee.Json.Cts.Tests
                   {}
                 ]
                 """ );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """
                 [

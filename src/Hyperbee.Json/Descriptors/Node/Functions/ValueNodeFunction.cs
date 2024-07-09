@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
@@ -10,18 +9,27 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "value";
-    public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, object>) Value );
+    public static readonly Expression ValueExpression = Expression.Constant( (Func<INodeType, ValueType<object>>) Value );
 
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
-        return Expression.Invoke( ValueExpression, arguments[0] );
+        return Expression.Invoke( ValueExpression,
+            Expression.Convert( arguments[0], typeof(INodeType) ) );
     }
 
-    public static object Value( IEnumerable<JsonNode> nodes )
+    public static ValueType<object> Value( INodeType arg )
     {
-        var node = nodes.FirstOrDefault();
+        if ( arg.Kind != NodeTypeKind.NodeList )
+            throw new NotSupportedException( $"Function {Name} does not support kind {arg.Kind}" );
 
-        return node?.GetValueKind() switch
+        var nodeArray = ((NodesType<JsonNode>) arg).ToArray();
+
+        if ( nodeArray.Length != 1 )
+            return new ValueType<object>( null, true );
+
+        var node = nodeArray.FirstOrDefault();
+
+        return new ValueType<object>( node?.GetValueKind() switch
         {
             JsonValueKind.Number => node.GetNumber<float>(),
             JsonValueKind.String => node.GetValue<string>(),
@@ -32,8 +40,8 @@ public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
             JsonValueKind.Null => false,
             JsonValueKind.Undefined => false,
             _ => false
-        };
-
+        } );
+        
         static bool IsNotEmpty( JsonNode node )
         {
             return node.GetValueKind() switch

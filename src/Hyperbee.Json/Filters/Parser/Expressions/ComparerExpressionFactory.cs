@@ -212,6 +212,17 @@ public static class ComparerExpressionFactory<TNode>
                     return 0; // Return 0 if any node matches the value
             }
 
+
+            if ( TryGetNothingValue<float, string, bool, object>( value, out var valueIsNothing, out var objectValue ) )
+            {
+                value = objectValue;
+            }
+
+            if( nodeCount == 0 && valueIsNothing )
+            {
+                return 0;
+            }
+
             if ( nodeCount == 0 && value == null ) //BF - when comparing a missing property to null $[?(@.key==null)] we need to fail
                 return -1; // Return 0 if the value is null (no nodes to compare to)
 
@@ -226,6 +237,21 @@ public static class ComparerExpressionFactory<TNode>
             typeMismatch = false;
 
             if ( left == null && right == null )
+            {
+                return 0;
+            }
+
+            if ( TryGetNothingValue<float, string, bool, object>( left, out var leftIsNothing, out var leftValue ) )
+            {
+                left = leftValue;
+            }
+
+            if ( TryGetNothingValue<float, string, bool, object>( right, out var rightIsNothing, out var rightValue ) )
+            {
+                right = rightValue;
+            }
+
+            if( leftIsNothing && rightIsNothing )
             {
                 return 0;
             }
@@ -252,6 +278,34 @@ public static class ComparerExpressionFactory<TNode>
             }
 
             return Comparer<object>.Default.Compare( left, right );
+
+        }
+
+        private static bool TryGetNothingValue<T1, T2, T3, T4>( object item, out bool isNothing, out object value )
+        {
+            switch ( item )
+            {
+                case ValueType<T1> rightT1Nothing:
+                    value = rightT1Nothing.Value;
+                    isNothing = rightT1Nothing.IsNothing;
+                    return true;
+                case ValueType<T2> rightT2Nothing:
+                    value = rightT2Nothing.Value;
+                    isNothing = rightT2Nothing.IsNothing;
+                    return true;
+                case ValueType<T3> rightT3Nothing:
+                    value = rightT3Nothing.Value;
+                    isNothing = rightT3Nothing.IsNothing;
+                    return true;
+                case ValueType<T4> rightT4Nothing:
+                    value = rightT4Nothing.Value;
+                    isNothing = rightT4Nothing.IsNothing;
+                    return true;
+                default:
+                    value = default;
+                    isNothing = false;
+                    return false;
+            }
         }
     }
 }

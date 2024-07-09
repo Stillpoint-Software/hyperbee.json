@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -21,10 +22,10 @@ internal class LiteralExpressionFactory : IExpressionFactory
         // Check for known literals (true, false, null) first
 
         if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( true );
+            return Expression.Constant( (INodeType) new ValueType<bool>( true ) );
 
         if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( false );
+            return Expression.Constant( (INodeType)new ValueType<bool>( false ) );
 
         if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
             return Expression.Constant( null );
@@ -32,7 +33,7 @@ internal class LiteralExpressionFactory : IExpressionFactory
         // Check for quoted strings
 
         if ( item.Length >= 2 && (item[0] == '"' && item[^1] == '"' || item[0] == '\'' && item[^1] == '\'') )
-            return Expression.Constant( item[1..^1].ToString() ); // remove quotes
+            return Expression.Constant( new ValueType<string>( item[1..^1].ToString() ) ); // remove quotes
 
         // Check for numbers
         //
@@ -43,7 +44,7 @@ internal class LiteralExpressionFactory : IExpressionFactory
             throw new NotSupportedException( $"Incomplete floating-point number `{item.ToString()}`" );
 
         return float.TryParse( item, out float result )
-            ? Expression.Constant( result )
+            ? Expression.Constant( (INodeType) new ValueType<float>( result ) )
             : null;
     }
 }

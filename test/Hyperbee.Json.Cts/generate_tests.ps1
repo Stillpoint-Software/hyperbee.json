@@ -42,7 +42,7 @@ function Get-JsonContent {
     if ($PSBoundParameters.ContainsKey('SavePath')) {
         $prettyJson = $jsonContent | ConvertFrom-Json -AsHashtable | ConvertTo-Json -Depth 10
         Set-Content -Path $SavePath -Value $prettyJson
-        Write-Output "JSON content saved to '$SavePath'."
+        Write-Host "JSON content saved to '$SavePath'."
     }
 
     # Convert the raw JSON string to a PowerShell hashtable to access properties
@@ -57,18 +57,28 @@ function Get-JsonContent {
     for ($i = 0; $i -lt $jsonObject.tests.Count; $i++) {
         $test = $jsonObject.tests[$i]
 
-        $name = $test['name']
+        # Split the name into category (group) and name parts
+        $fullName = $test['name']
+        $splitName = $fullName -split ',', 2
+        $group = $splitName[0].Trim()
+        $name = if ($splitName.Length -gt 1) { $splitName[1].Trim() } else { $null }
 
-        # convert json to strings BEFORE adding to ps object to prevent unwanted conversions
-        $document = ConvertTo-Json -InputObject $test['document'] -Depth 10 -Compress
-        $result = if ($test.ContainsKey('result')) { ConvertTo-Json -InputObject $test['result'] -Depth 10 -Compress } else { $null }
-        $results = if ($test.ContainsKey('results')) { ConvertTo-Json -InputObject $test['results'] -Depth 10 -Compress } else { $null }
+        # Ignore empty groups
+        if ([string]::IsNullOrWhiteSpace($group)) {
+            continue
+        }
+
+        # Convert JSON to strings BEFORE adding to PSObject to prevent unwanted conversions
+        $document = ConvertTo-Json -InputObject $test['document'] -Depth 10 
+        $result = if ($test.ContainsKey('result')) { ConvertTo-Json -InputObject $test['result'] -Depth 10  } else { $null }
+        $results = if ($test.ContainsKey('results')) { ConvertTo-Json -InputObject $test['results'] -Depth 10  } else { $null }
         $invalid_selector = if ($test.ContainsKey('invalid_selector')) { $test['invalid_selector'] } else { $null }
 
         $rawJsonSelector = $matches[$i].Groups[1].Value
 
         $item = [PSCustomObject]@{
             name             = $name
+            group            = $group
             document         = $document
             result           = $result
             results          = $results
@@ -90,21 +100,79 @@ function Convert-ToCSharpMethodName {
     return $name -replace '[^a-zA-Z0-9]', '_'
 }
 
+function FormatJson {
+    param (
+        [string]$json,
+        [int]$indent
+    )
+
+    # Ignore empty groups
+    if ([string]::IsNullOrWhiteSpace($json)) {
+        return $null
+    }
+
+    # Detect the line break format
+    $lineBreak = if ($json -contains "`r`n") { "`r`n" } else { "`n" }
+
+    # Split the JSON string into lines
+    $lines = $json -split $lineBreak
+
+    # Create the indentation string
+    $indentation = " " * $indent
+
+    # Add indentation to each line except the first
+    $formattedLines = $lines | ForEach-Object { $indentation + $_ }
+
+    # Join the lines back into a single string with the detected line break format
+    $formattedJson = $lineBreak + ($formattedLines -join $lineBreak) + $lineBreak + $indentation
+
+    return $formattedJson
+}
+
+function Convert-ToPascalCase {
+    param (
+        [string]$value
+    )
+
+    if ([string]::IsNullOrWhiteSpace($value)) {
+        return $value
+    }
+
+    $words = $value -split '\s+'  # Split the string by whitespace
+    $pascalCaseWords = $words | ForEach-Object {
+        if ([string]::IsNullOrEmpty($_)) {
+            continue
+        }
+
+        $firstLetter = $_[0].ToString().ToUpper()
+        $restOfString = $_.Substring(1).ToLower()
+        $firstLetter + $restOfString
+    }
+
+    return $pascalCaseWords -join ''
+}
+
 function Get-UnitTestContent {
     param (
         [Parameter(Mandatory=$true)]
-        [array]$JsonTests
+        [array]$JsonTests,
+        [Parameter(Mandatory=$true)]
+        [string]$group
     )
+
+    # Give the class a unique name
+    $uniquePart = Convert-ToPascalCase -value $group
+    $className = "Cts$($uniquePart)Test"
 
     # Prepare the content for the C# unit test file
     $unitTestContent = @"
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
-namespace Hyperbee.Json.Cts
+namespace Hyperbee.Json.Cts.Tests
 {
     [TestClass]
-    public class CtsJsonTest
+    public class $className
     {`r`n
 "@
 
@@ -115,7 +183,7 @@ namespace Hyperbee.Json.Cts
         $name = $test.name
         $methodName = Convert-ToCSharpMethodName $name  # Convert $test.name to C# method name
 
-        if($null -eq $name -or $name -eq "") {
+        if ($null -eq $name -or $name -eq "") {
             continue
         }
 
@@ -128,9 +196,9 @@ namespace Hyperbee.Json.Cts
 
         $invalidSelector = if ($test.invalid_selector) { $true } else { $false }
 
-        $document = $test.document
-        $result = $test.result
-        $results = $test.results
+        $document = FormatJson -json $test.document -indent 16
+        $result = FormatJson -json $test.result -indent 16
+        $results = FormatJson -json $test.results -indent 16
 
         # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
@@ -190,15 +258,30 @@ namespace Hyperbee.Json.Cts
     return $unitTestContent
 }
 
-# Generate unit-tests
+# Generate unit-tests by category
 $jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
 $savePath = Join-Path -Path $PSScriptRoot -ChildPath "CtsJsonTest.json"
 $jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $savePath
 
-$unitTestContent = Get-UnitTestContent -JsonTests $jsonContent
+# Group tests by category
+$groupedTests = $jsonContent | Group-Object -Property { $_.group }
 
-# Save the generated unit-test file
-$unitTestPath = Join-Path -Path $PSScriptRoot -ChildPath "CtsJsonTest.cs"
-Set-Content -Path $unitTestPath -Value $unitTestContent
+# Ensure the Tests subfolder exists
+$testsFolderPath = Join-Path -Path $PSScriptRoot -ChildPath "Tests"
+if (-not (Test-Path -Path $testsFolderPath)) {
+    New-Item -Path $testsFolderPath -ItemType Directory | Out-Null
+}
 
-Write-Output "C# unit test file 'CtsJsonTest.cs' generated successfully at '$unitTestPath'."
+foreach ($group in $groupedTests) {
+    $category = $group.Name
+    $categoryTests = $group.Group
+
+    $unitTestContent = Get-UnitTestContent -JsonTests $categoryTests -group $category
+
+    # Replace spaces with hyphens in the category for the filename
+    $sanitizedCategory = $category -replace ' ', '-'
+    $unitTestPath = Join-Path -Path $testsFolderPath -ChildPath ("cts-" + $sanitizedCategory + "-tests.cs")
+    Set-Content -Path $unitTestPath -Value $unitTestContent
+
+    Write-Host "C# unit test file 'cts-$sanitizedCategory-tests.cs' generated successfully at '$unitTestPath'."
+}

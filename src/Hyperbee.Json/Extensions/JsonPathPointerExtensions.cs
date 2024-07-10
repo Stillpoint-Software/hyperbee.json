@@ -10,31 +10,15 @@ namespace Hyperbee.Json.Extensions;
 // syntax supports absolute paths; dotted notation, quoted names, and simple bracketed array accessors only.
 //
 // Json path style wildcard '*', '..', and '[a,b]' multi-result selector notations are NOT supported.
-//
-// examples:
-//  $.prop1.prop2
-//  $.prop1[0]
-//  $.prop1[0].prop2
-//  $.prop1['prop.2']
-//
-//  also supports quoted member-name for dot child
-//
-//  $.'prop.2'
-//  $.prop1.'prop.2'[0].prop3
 
 public static class JsonPathPointerExtensions
 {
     public static JsonElement FromJsonPathPointer( this JsonElement jsonElement, ReadOnlySpan<char> pointer )
     {
-        return TryGetFromJsonPathPointer( jsonElement, pointer, out var value ) ? value : default;
-    }
-
-    public static bool TryGetFromJsonPathPointer( this JsonElement jsonElement, ReadOnlySpan<char> pointer, out JsonElement value )
-    {
         var query = JsonPathQueryParser.Parse( pointer );
         var segment = query.Segments.Next; // skip the root segment
 
-        return TryGetFromJsonPathPointer( jsonElement, segment, out value );
+        return TryGetFromJsonPathPointer( jsonElement, segment, out var value ) ? value : default;
     }
 
     internal static bool TryGetFromJsonPathPointer( this JsonElement jsonElement, JsonPathSegment segment, out JsonElement value )
@@ -94,23 +78,17 @@ public static class JsonPathPointerExtensions
 
     public static JsonNode FromJsonPathPointer( this JsonNode jsonNode, ReadOnlySpan<char> pointer )
     {
-        return TryGetFromJsonPathPointer( jsonNode, pointer, out var value ) ? value : default;
-    }
-
-    public static bool TryGetFromJsonPathPointer( this JsonNode jsonElement, ReadOnlySpan<char> pointer, out JsonNode value )
-    {
-        var query = JsonPathQueryParser.ParseNoCache( pointer );
-
-        if ( !query.Normalized )
-            throw new NotSupportedException( "Unsupported JsonPath pointer query format." );
-
+        var query = JsonPathQueryParser.Parse( pointer );
         var segment = query.Segments.Next; // skip the root segment
 
-        return TryGetFromJsonPathPointer( jsonElement, segment, out value );
+        return TryGetFromJsonPathPointer( jsonNode, segment, out var value ) ? value : default;
     }
 
     public static bool TryGetFromJsonPathPointer( this JsonNode jsonNode, JsonPathSegment segment, out JsonNode value )
     {
+        if ( !segment.IsNormalized )
+            throw new NotSupportedException( "Unsupported JsonPath pointer query format." );
+
         var current = jsonNode;
         value = default;
 

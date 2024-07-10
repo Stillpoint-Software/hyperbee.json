@@ -2,7 +2,7 @@
 
 internal static class QueryHelper
 {
-    public static bool IsNonSingular( ReadOnlySpan<char> query )
+    public static bool IsNonSingular( ReadOnlySpan<char> query ) //BF TODO delete
     {
         bool inQuotes = false;
         char quoteChar = '\0';

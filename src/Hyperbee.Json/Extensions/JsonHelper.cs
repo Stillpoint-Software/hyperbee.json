@@ -13,30 +13,4 @@ public static class JsonHelper
     public static dynamic ConvertToDynamic( JsonNode value ) => new DynamicJsonNode( ref value );
     public static dynamic ConvertToDynamic( JsonElement value, string path = null ) => new DynamicJsonElement( ref value, path );
     public static dynamic ConvertToDynamic( JsonDocument value ) => ConvertToDynamic( value.RootElement, "$" );
-
-    public static T ConvertToObject<T>( JsonElement value, JsonSerializerOptions options = null )
-        where T : new()
-    {
-        var bufferWriter = new ArrayBufferWriter<byte>();
-        using var writer = new Utf8JsonWriter( bufferWriter );
-
-        value.WriteTo( writer );
-        writer.Flush();
-
-        var reader = new Utf8JsonReader( bufferWriter.WrittenSpan );
-        return JsonSerializer.Deserialize<T>( ref reader, options );
-    }
-
-    public static T ConvertToObject<T>( JsonNode value, JsonSerializerOptions options = null )
-        where T : new()
-    {
-        var bufferWriter = new ArrayBufferWriter<byte>();
-        using var writer = new Utf8JsonWriter( bufferWriter );
-
-        value.WriteTo( writer );
-        writer.Flush();
-
-        var reader = new Utf8JsonReader( bufferWriter.WrittenSpan );
-        return JsonSerializer.Deserialize<T>( ref reader, options );
-    }
 }

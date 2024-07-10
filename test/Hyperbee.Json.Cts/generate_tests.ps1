@@ -50,7 +50,7 @@ function Get-JsonContent {
 
     # Use regex to extract all selector properties
     $pattern = '"selector"\s*:\s*"(.*?[^\\])"'
-    $matches = [regex]::Matches($jsonContent, $pattern)
+    $match = [regex]::Matches($jsonContent, $pattern)
 
     # Iterate through all tests and collect the properties
     $output = @()
@@ -74,7 +74,7 @@ function Get-JsonContent {
         $results = if ($test.ContainsKey('results')) { ConvertTo-Json -InputObject $test['results'] -Depth 10  } else { $null }
         $invalid_selector = if ($test.ContainsKey('invalid_selector')) { $test['invalid_selector'] } else { $null }
 
-        $rawJsonSelector = $matches[$i].Groups[1].Value
+        $rawJsonSelector = $match[$i].Groups[1].Value
 
         $item = [PSCustomObject]@{
             name             = $name
@@ -261,9 +261,12 @@ namespace Hyperbee.Json.Cts.Tests
 }
 
 # Generate unit-tests by category
-$jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
-$savePath = Join-Path -Path $PSScriptRoot -ChildPath "CtsJsonTest.json"
-$jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $savePath
+$ctsPath = Join-Path -Path $PSScriptRoot -ChildPath "cts.json"
+
+if (-not (Test-Path -Path $ctsPath)) {
+    $jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
+    $jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $ctsPath
+}
 
 # Group tests by category
 $groupedTests = $jsonContent | Group-Object -Property { $_.group }

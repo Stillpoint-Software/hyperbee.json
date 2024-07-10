@@ -1,4 +1,4 @@
-﻿// This file was auto generated.
+// This file was auto generated.
 
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
@@ -8,7 +8,7 @@ namespace Hyperbee.Json.Cts.Tests
     [TestClass]
     public class CtsWhitespaceTest
     {
-
+        
         [TestMethod( "filter, space between question mark and expression (1)" )]
         public void Test_filter__space_between_question_mark_and_expression_1()
         {
@@ -25,8 +25,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -35,12 +35,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, newline between question mark and expression (2)" )]
         public void Test_filter__newline_between_question_mark_and_expression_2()
         {
@@ -57,8 +57,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -67,12 +67,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, tab between question mark and expression (3)" )]
         public void Test_filter__tab_between_question_mark_and_expression_3()
         {
@@ -89,8 +89,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -99,12 +99,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, return between question mark and expression (4)" )]
         public void Test_filter__return_between_question_mark_and_expression_4()
         {
@@ -121,8 +121,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -131,12 +131,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, space between question mark and parenthesized expression (5)" )]
         public void Test_filter__space_between_question_mark_and_parenthesized_expression_5()
         {
@@ -153,8 +153,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -163,12 +163,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, newline between question mark and parenthesized expression (6)" )]
         public void Test_filter__newline_between_question_mark_and_parenthesized_expression_6()
         {
@@ -185,8 +185,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -195,12 +195,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, tab between question mark and parenthesized expression (7)" )]
         public void Test_filter__tab_between_question_mark_and_parenthesized_expression_7()
         {
@@ -217,8 +217,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -227,12 +227,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, return between question mark and parenthesized expression (8)" )]
         public void Test_filter__return_between_question_mark_and_parenthesized_expression_8()
         {
@@ -249,8 +249,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -259,12 +259,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, space between parenthesized expression and bracket (9)" )]
         public void Test_filter__space_between_parenthesized_expression_and_bracket_9()
         {
@@ -281,8 +281,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -291,12 +291,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, newline between parenthesized expression and bracket (10)" )]
         public void Test_filter__newline_between_parenthesized_expression_and_bracket_10()
         {
@@ -313,8 +313,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -323,12 +323,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, tab between parenthesized expression and bracket (11)" )]
         public void Test_filter__tab_between_parenthesized_expression_and_bracket_11()
         {
@@ -345,8 +345,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -355,12 +355,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, return between parenthesized expression and bracket (12)" )]
         public void Test_filter__return_between_parenthesized_expression_and_bracket_12()
         {
@@ -377,8 +377,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -387,12 +387,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, space between bracket and question mark (13)" )]
         public void Test_filter__space_between_bracket_and_question_mark_13()
         {
@@ -409,8 +409,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -419,12 +419,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, newline between bracket and question mark (14)" )]
         public void Test_filter__newline_between_bracket_and_question_mark_14()
         {
@@ -441,8 +441,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -451,12 +451,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, tab between bracket and question mark (15)" )]
         public void Test_filter__tab_between_bracket_and_question_mark_15()
         {
@@ -473,8 +473,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -483,12 +483,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "filter, return between bracket and question mark (16)" )]
         public void Test_filter__return_between_bracket_and_question_mark_16()
         {
@@ -505,8 +505,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -515,12 +515,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "e"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, space between function name and parenthesis (17)" )]
         public void Test_functions__space_between_function_name_and_parenthesis_17()
         {
@@ -529,7 +529,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "functions, newline between function name and parenthesis (18)" )]
         public void Test_functions__newline_between_function_name_and_parenthesis_18()
         {
@@ -538,7 +538,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "functions, tab between function name and parenthesis (19)" )]
         public void Test_functions__tab_between_function_name_and_parenthesis_19()
         {
@@ -547,7 +547,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "functions, return between function name and parenthesis (20)" )]
         public void Test_functions__return_between_function_name_and_parenthesis_20()
         {
@@ -556,7 +556,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "functions, space between parenthesis and arg (21)" )]
         public void Test_functions__space_between_parenthesis_and_arg_21()
         {
@@ -575,8 +575,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -587,12 +587,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, newline between parenthesis and arg (22)" )]
         public void Test_functions__newline_between_parenthesis_and_arg_22()
         {
@@ -611,8 +611,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -623,12 +623,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, tab between parenthesis and arg (23)" )]
         public void Test_functions__tab_between_parenthesis_and_arg_23()
         {
@@ -647,8 +647,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -659,12 +659,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, return between parenthesis and arg (24)" )]
         public void Test_functions__return_between_parenthesis_and_arg_24()
         {
@@ -683,8 +683,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -695,12 +695,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, space between arg and comma (25)" )]
         public void Test_functions__space_between_arg_and_comma_25()
         {
@@ -711,19 +711,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, newline between arg and comma (26)" )]
         public void Test_functions__newline_between_arg_and_comma_26()
         {
@@ -734,19 +734,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, tab between arg and comma (27)" )]
         public void Test_functions__tab_between_arg_and_comma_27()
         {
@@ -757,19 +757,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, return between arg and comma (28)" )]
         public void Test_functions__return_between_arg_and_comma_28()
         {
@@ -780,19 +780,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, space between comma and arg (29)" )]
         public void Test_functions__space_between_comma_and_arg_29()
         {
@@ -803,19 +803,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, newline between comma and arg (30)" )]
         public void Test_functions__newline_between_comma_and_arg_30()
         {
@@ -826,19 +826,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, tab between comma and arg (31)" )]
         public void Test_functions__tab_between_comma_and_arg_31()
         {
@@ -849,19 +849,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, return between comma and arg (32)" )]
         public void Test_functions__return_between_comma_and_arg_32()
         {
@@ -872,19 +872,19 @@ namespace Hyperbee.Json.Cts.Tests
                   "foo",
                   "123"
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, space between arg and parenthesis (33)" )]
         public void Test_functions__space_between_arg_and_parenthesis_33()
         {
@@ -903,8 +903,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -915,12 +915,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, newline between arg and parenthesis (34)" )]
         public void Test_functions__newline_between_arg_and_parenthesis_34()
         {
@@ -939,8 +939,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -951,12 +951,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, tab between arg and parenthesis (35)" )]
         public void Test_functions__tab_between_arg_and_parenthesis_35()
         {
@@ -975,8 +975,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -987,12 +987,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, return between arg and parenthesis (36)" )]
         public void Test_functions__return_between_arg_and_parenthesis_36()
         {
@@ -1011,8 +1011,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1023,12 +1023,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, spaces in a relative singular selector (37)" )]
         public void Test_functions__spaces_in_a_relative_singular_selector_37()
         {
@@ -1043,8 +1043,8 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1054,12 +1054,12 @@ namespace Hyperbee.Json.Cts.Tests
                     }
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, newlines in a relative singular selector (38)" )]
         public void Test_functions__newlines_in_a_relative_singular_selector_38()
         {
@@ -1074,8 +1074,8 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1085,12 +1085,12 @@ namespace Hyperbee.Json.Cts.Tests
                     }
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, tabs in a relative singular selector (39)" )]
         public void Test_functions__tabs_in_a_relative_singular_selector_39()
         {
@@ -1105,8 +1105,8 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1116,12 +1116,12 @@ namespace Hyperbee.Json.Cts.Tests
                     }
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, returns in a relative singular selector (40)" )]
         public void Test_functions__returns_in_a_relative_singular_selector_40()
         {
@@ -1136,8 +1136,8 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1147,12 +1147,12 @@ namespace Hyperbee.Json.Cts.Tests
                     }
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, spaces in an absolute singular selector (41)" )]
         public void Test_functions__spaces_in_an_absolute_singular_selector_41()
         {
@@ -1165,19 +1165,19 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, newlines in an absolute singular selector (42)" )]
         public void Test_functions__newlines_in_an_absolute_singular_selector_42()
         {
@@ -1190,19 +1190,19 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, tabs in an absolute singular selector (43)" )]
         public void Test_functions__tabs_in_an_absolute_singular_selector_43()
         {
@@ -1215,19 +1215,19 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "functions, returns in an absolute singular selector (44)" )]
         public void Test_functions__returns_in_an_absolute_singular_selector_44()
         {
@@ -1240,19 +1240,19 @@ namespace Hyperbee.Json.Cts.Tests
                   },
                   {}
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "foo"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before || (45)" )]
         public void Test_operators__space_before____45()
         {
@@ -1270,8 +1270,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1282,12 +1282,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before || (46)" )]
         public void Test_operators__newline_before____46()
         {
@@ -1305,8 +1305,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1317,12 +1317,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before || (47)" )]
         public void Test_operators__tab_before____47()
         {
@@ -1340,8 +1340,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1352,12 +1352,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before || (48)" )]
         public void Test_operators__return_before____48()
         {
@@ -1375,8 +1375,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1387,12 +1387,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after || (49)" )]
         public void Test_operators__space_after____49()
         {
@@ -1410,8 +1410,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1422,12 +1422,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after || (50)" )]
         public void Test_operators__newline_after____50()
         {
@@ -1445,8 +1445,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1457,12 +1457,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after || (51)" )]
         public void Test_operators__tab_after____51()
         {
@@ -1480,8 +1480,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1492,12 +1492,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after || (52)" )]
         public void Test_operators__return_after____52()
         {
@@ -1515,8 +1515,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "c": 3
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1527,12 +1527,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before && (53)" )]
         public void Test_operators__space_before____53()
         {
@@ -1551,8 +1551,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1561,12 +1561,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before && (54)" )]
         public void Test_operators__newline_before____54()
         {
@@ -1585,8 +1585,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1595,12 +1595,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before && (55)" )]
         public void Test_operators__tab_before____55()
         {
@@ -1619,8 +1619,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1629,12 +1629,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before && (56)" )]
         public void Test_operators__return_before____56()
         {
@@ -1653,8 +1653,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1663,12 +1663,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after && (57)" )]
         public void Test_operators__space_after____57()
         {
@@ -1687,8 +1687,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1697,12 +1697,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after && (58)" )]
         public void Test_operators__newline_after____58()
         {
@@ -1721,8 +1721,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1731,12 +1731,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after && (59)" )]
         public void Test_operators__tab_after____59()
         {
@@ -1755,8 +1755,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1765,12 +1765,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after && (60)" )]
         public void Test_operators__return_after____60()
         {
@@ -1789,8 +1789,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1799,12 +1799,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before == (61)" )]
         public void Test_operators__space_before____61()
         {
@@ -1821,8 +1821,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1831,12 +1831,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before == (62)" )]
         public void Test_operators__newline_before____62()
         {
@@ -1853,8 +1853,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1863,12 +1863,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before == (63)" )]
         public void Test_operators__tab_before____63()
         {
@@ -1885,8 +1885,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1895,12 +1895,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before == (64)" )]
         public void Test_operators__return_before____64()
         {
@@ -1917,8 +1917,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1927,12 +1927,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after == (65)" )]
         public void Test_operators__space_after____65()
         {
@@ -1949,8 +1949,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1959,12 +1959,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after == (66)" )]
         public void Test_operators__newline_after____66()
         {
@@ -1981,8 +1981,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -1991,12 +1991,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after == (67)" )]
         public void Test_operators__tab_after____67()
         {
@@ -2013,8 +2013,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2023,12 +2023,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after == (68)" )]
         public void Test_operators__return_after____68()
         {
@@ -2045,8 +2045,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2055,12 +2055,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before != (69)" )]
         public void Test_operators__space_before____69()
         {
@@ -2077,8 +2077,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2087,12 +2087,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before != (70)" )]
         public void Test_operators__newline_before____70()
         {
@@ -2109,8 +2109,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2119,12 +2119,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before != (71)" )]
         public void Test_operators__tab_before____71()
         {
@@ -2141,8 +2141,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2151,12 +2151,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before != (72)" )]
         public void Test_operators__return_before____72()
         {
@@ -2173,8 +2173,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2183,12 +2183,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after != (73)" )]
         public void Test_operators__space_after____73()
         {
@@ -2205,8 +2205,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2215,12 +2215,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after != (74)" )]
         public void Test_operators__newline_after____74()
         {
@@ -2237,8 +2237,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2247,12 +2247,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after != (75)" )]
         public void Test_operators__tab_after____75()
         {
@@ -2269,8 +2269,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2279,12 +2279,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after != (76)" )]
         public void Test_operators__return_after____76()
         {
@@ -2301,8 +2301,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2311,12 +2311,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before < (77)" )]
         public void Test_operators__space_before___77()
         {
@@ -2333,8 +2333,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2343,12 +2343,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before < (78)" )]
         public void Test_operators__newline_before___78()
         {
@@ -2365,8 +2365,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2375,12 +2375,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before < (79)" )]
         public void Test_operators__tab_before___79()
         {
@@ -2397,8 +2397,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2407,12 +2407,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before < (80)" )]
         public void Test_operators__return_before___80()
         {
@@ -2429,8 +2429,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2439,12 +2439,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after < (81)" )]
         public void Test_operators__space_after___81()
         {
@@ -2461,8 +2461,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2471,12 +2471,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after < (82)" )]
         public void Test_operators__newline_after___82()
         {
@@ -2493,8 +2493,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2503,12 +2503,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after < (83)" )]
         public void Test_operators__tab_after___83()
         {
@@ -2525,8 +2525,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2535,12 +2535,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after < (84)" )]
         public void Test_operators__return_after___84()
         {
@@ -2557,8 +2557,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2567,12 +2567,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before > (85)" )]
         public void Test_operators__space_before___85()
         {
@@ -2589,8 +2589,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2599,12 +2599,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before > (86)" )]
         public void Test_operators__newline_before___86()
         {
@@ -2621,8 +2621,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2631,12 +2631,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before > (87)" )]
         public void Test_operators__tab_before___87()
         {
@@ -2653,8 +2653,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2663,12 +2663,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before > (88)" )]
         public void Test_operators__return_before___88()
         {
@@ -2685,8 +2685,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2695,12 +2695,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after > (89)" )]
         public void Test_operators__space_after___89()
         {
@@ -2717,8 +2717,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2727,12 +2727,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after > (90)" )]
         public void Test_operators__newline_after___90()
         {
@@ -2749,8 +2749,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2759,12 +2759,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after > (91)" )]
         public void Test_operators__tab_after___91()
         {
@@ -2781,8 +2781,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2791,12 +2791,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after > (92)" )]
         public void Test_operators__return_after___92()
         {
@@ -2813,8 +2813,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2823,12 +2823,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before <= (93)" )]
         public void Test_operators__space_before____93()
         {
@@ -2849,8 +2849,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2863,12 +2863,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before <= (94)" )]
         public void Test_operators__newline_before____94()
         {
@@ -2889,8 +2889,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2903,12 +2903,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before <= (95)" )]
         public void Test_operators__tab_before____95()
         {
@@ -2929,8 +2929,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2943,12 +2943,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before <= (96)" )]
         public void Test_operators__return_before____96()
         {
@@ -2969,8 +2969,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -2983,12 +2983,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after <= (97)" )]
         public void Test_operators__space_after____97()
         {
@@ -3009,8 +3009,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3023,12 +3023,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after <= (98)" )]
         public void Test_operators__newline_after____98()
         {
@@ -3049,8 +3049,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3063,12 +3063,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after <= (99)" )]
         public void Test_operators__tab_after____99()
         {
@@ -3089,8 +3089,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3103,12 +3103,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after <= (100)" )]
         public void Test_operators__return_after____100()
         {
@@ -3129,8 +3129,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3143,12 +3143,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space before >= (101)" )]
         public void Test_operators__space_before____101()
         {
@@ -3169,8 +3169,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3183,12 +3183,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline before >= (102)" )]
         public void Test_operators__newline_before____102()
         {
@@ -3209,8 +3209,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3223,12 +3223,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab before >= (103)" )]
         public void Test_operators__tab_before____103()
         {
@@ -3249,8 +3249,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3263,12 +3263,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return before >= (104)" )]
         public void Test_operators__return_before____104()
         {
@@ -3289,8 +3289,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3303,12 +3303,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space after >= (105)" )]
         public void Test_operators__space_after____105()
         {
@@ -3329,8 +3329,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3343,12 +3343,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline after >= (106)" )]
         public void Test_operators__newline_after____106()
         {
@@ -3369,8 +3369,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3383,12 +3383,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab after >= (107)" )]
         public void Test_operators__tab_after____107()
         {
@@ -3409,8 +3409,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3423,12 +3423,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return after >= (108)" )]
         public void Test_operators__return_after____108()
         {
@@ -3449,8 +3449,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 1
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3463,12 +3463,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": 2
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space between logical not and test expression (109)" )]
         public void Test_operators__space_between_logical_not_and_test_expression_109()
         {
@@ -3488,8 +3488,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3497,12 +3497,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline between logical not and test expression (110)" )]
         public void Test_operators__newline_between_logical_not_and_test_expression_110()
         {
@@ -3522,8 +3522,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3531,12 +3531,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab between logical not and test expression (111)" )]
         public void Test_operators__tab_between_logical_not_and_test_expression_111()
         {
@@ -3556,8 +3556,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3565,12 +3565,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return between logical not and test expression (112)" )]
         public void Test_operators__return_between_logical_not_and_test_expression_112()
         {
@@ -3590,8 +3590,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3599,12 +3599,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, space between logical not and parenthesized expression (113)" )]
         public void Test_operators__space_between_logical_not_and_parenthesized_expression_113()
         {
@@ -3625,8 +3625,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3639,12 +3639,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, newline between logical not and parenthesized expression (114)" )]
         public void Test_operators__newline_between_logical_not_and_parenthesized_expression_114()
         {
@@ -3665,8 +3665,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3679,12 +3679,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, tab between logical not and parenthesized expression (115)" )]
         public void Test_operators__tab_between_logical_not_and_parenthesized_expression_115()
         {
@@ -3705,8 +3705,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3719,12 +3719,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "operators, return between logical not and parenthesized expression (116)" )]
         public void Test_operators__return_between_logical_not_and_parenthesized_expression_116()
         {
@@ -3745,8 +3745,8 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
@@ -3759,12 +3759,12 @@ namespace Hyperbee.Json.Cts.Tests
                     "d": "f"
                   }
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, space between root and bracket (117)" )]
         public void Test_selectors__space_between_root_and_bracket_117()
         {
@@ -3774,19 +3774,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, newline between root and bracket (118)" )]
         public void Test_selectors__newline_between_root_and_bracket_118()
         {
@@ -3796,19 +3796,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, tab between root and bracket (119)" )]
         public void Test_selectors__tab_between_root_and_bracket_119()
         {
@@ -3818,19 +3818,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, return between root and bracket (120)" )]
         public void Test_selectors__return_between_root_and_bracket_120()
         {
@@ -3840,19 +3840,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, space between bracket and bracket (121)" )]
         public void Test_selectors__space_between_bracket_and_bracket_121()
         {
@@ -3864,19 +3864,19 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": "ab"
                   }
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, newline between root and bracket (122)" )]
         public void Test_selectors__newline_between_root_and_bracket_122()
         {
@@ -3888,19 +3888,19 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": "ab"
                   }
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, tab between root and bracket (123)" )]
         public void Test_selectors__tab_between_root_and_bracket_123()
         {
@@ -3912,19 +3912,19 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": "ab"
                   }
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, return between root and bracket (124)" )]
         public void Test_selectors__return_between_root_and_bracket_124()
         {
@@ -3936,19 +3936,19 @@ namespace Hyperbee.Json.Cts.Tests
                     "b": "ab"
                   }
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, space between root and dot (125)" )]
         public void Test_selectors__space_between_root_and_dot_125()
         {
@@ -3958,19 +3958,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, newline between root and dot (126)" )]
         public void Test_selectors__newline_between_root_and_dot_126()
         {
@@ -3980,19 +3980,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, tab between root and dot (127)" )]
         public void Test_selectors__tab_between_root_and_dot_127()
         {
@@ -4002,19 +4002,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, return between root and dot (128)" )]
         public void Test_selectors__return_between_root_and_dot_128()
         {
@@ -4024,19 +4024,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, space between dot and name (129)" )]
         public void Test_selectors__space_between_dot_and_name_129()
         {
@@ -4045,7 +4045,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, newline between dot and name (130)" )]
         public void Test_selectors__newline_between_dot_and_name_130()
         {
@@ -4054,7 +4054,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, tab between dot and name (131)" )]
         public void Test_selectors__tab_between_dot_and_name_131()
         {
@@ -4063,7 +4063,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, return between dot and name (132)" )]
         public void Test_selectors__return_between_dot_and_name_132()
         {
@@ -4072,7 +4072,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, space between recursive descent and name (133)" )]
         public void Test_selectors__space_between_recursive_descent_and_name_133()
         {
@@ -4081,7 +4081,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, newline between recursive descent and name (134)" )]
         public void Test_selectors__newline_between_recursive_descent_and_name_134()
         {
@@ -4090,7 +4090,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, tab between recursive descent and name (135)" )]
         public void Test_selectors__tab_between_recursive_descent_and_name_135()
         {
@@ -4099,7 +4099,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, return between recursive descent and name (136)" )]
         public void Test_selectors__return_between_recursive_descent_and_name_136()
         {
@@ -4108,7 +4108,7 @@ namespace Hyperbee.Json.Cts.Tests
 
             AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
         }
-
+        
         [TestMethod( "selectors, space between bracket and selector (137)" )]
         public void Test_selectors__space_between_bracket_and_selector_137()
         {
@@ -4118,19 +4118,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, newline between bracket and selector (138)" )]
         public void Test_selectors__newline_between_bracket_and_selector_138()
         {
@@ -4140,19 +4140,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, tab between bracket and selector (139)" )]
         public void Test_selectors__tab_between_bracket_and_selector_139()
         {
@@ -4162,19 +4162,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, return between bracket and selector (140)" )]
         public void Test_selectors__return_between_bracket_and_selector_140()
         {
@@ -4184,19 +4184,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, space between selector and bracket (141)" )]
         public void Test_selectors__space_between_selector_and_bracket_141()
         {
@@ -4206,19 +4206,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, newline between selector and bracket (142)" )]
         public void Test_selectors__newline_between_selector_and_bracket_142()
         {
@@ -4228,19 +4228,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, tab between selector and bracket (143)" )]
         public void Test_selectors__tab_between_selector_and_bracket_143()
         {
@@ -4250,19 +4250,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, return between selector and bracket (144)" )]
         public void Test_selectors__return_between_selector_and_bracket_144()
         {
@@ -4272,19 +4272,19 @@ namespace Hyperbee.Json.Cts.Tests
                 {
                   "a": "ab"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, space between selector and comma (145)" )]
         public void Test_selectors__space_between_selector_and_comma_145()
         {
@@ -4295,20 +4295,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, newline between selector and comma (146)" )]
         public void Test_selectors__newline_between_selector_and_comma_146()
         {
@@ -4319,20 +4319,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, tab between selector and comma (147)" )]
         public void Test_selectors__tab_between_selector_and_comma_147()
         {
@@ -4343,20 +4343,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, return between selector and comma (148)" )]
         public void Test_selectors__return_between_selector_and_comma_148()
         {
@@ -4367,20 +4367,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, space between comma and selector (149)" )]
         public void Test_selectors__space_between_comma_and_selector_149()
         {
@@ -4391,20 +4391,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, newline between comma and selector (150)" )]
         public void Test_selectors__newline_between_comma_and_selector_150()
         {
@@ -4415,20 +4415,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, tab between comma and selector (151)" )]
         public void Test_selectors__tab_between_comma_and_selector_151()
         {
@@ -4439,20 +4439,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "selectors, return between comma and selector (152)" )]
         public void Test_selectors__return_between_comma_and_selector_152()
         {
@@ -4463,20 +4463,20 @@ namespace Hyperbee.Json.Cts.Tests
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   "ab",
                   "bc"
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, space between start and colon (153)" )]
         public void Test_slice__space_between_start_and_colon_153()
         {
@@ -4491,20 +4491,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, newline between start and colon (154)" )]
         public void Test_slice__newline_between_start_and_colon_154()
         {
@@ -4519,20 +4519,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, tab between start and colon (155)" )]
         public void Test_slice__tab_between_start_and_colon_155()
         {
@@ -4547,20 +4547,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, return between start and colon (156)" )]
         public void Test_slice__return_between_start_and_colon_156()
         {
@@ -4575,20 +4575,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, space between colon and end (157)" )]
         public void Test_slice__space_between_colon_and_end_157()
         {
@@ -4603,20 +4603,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, newline between colon and end (158)" )]
         public void Test_slice__newline_between_colon_and_end_158()
         {
@@ -4631,20 +4631,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, tab between colon and end (159)" )]
         public void Test_slice__tab_between_colon_and_end_159()
         {
@@ -4659,20 +4659,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, return between colon and end (160)" )]
         public void Test_slice__return_between_colon_and_end_160()
         {
@@ -4687,20 +4687,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, space between end and colon (161)" )]
         public void Test_slice__space_between_end_and_colon_161()
         {
@@ -4715,20 +4715,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, newline between end and colon (162)" )]
         public void Test_slice__newline_between_end_and_colon_162()
         {
@@ -4743,20 +4743,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, tab between end and colon (163)" )]
         public void Test_slice__tab_between_end_and_colon_163()
         {
@@ -4771,20 +4771,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, return between end and colon (164)" )]
         public void Test_slice__return_between_end_and_colon_164()
         {
@@ -4799,20 +4799,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, space between colon and step (165)" )]
         public void Test_slice__space_between_colon_and_step_165()
         {
@@ -4827,20 +4827,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, newline between colon and step (166)" )]
         public void Test_slice__newline_between_colon_and_step_166()
         {
@@ -4855,20 +4855,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, tab between colon and step (167)" )]
         public void Test_slice__tab_between_colon_and_step_167()
         {
@@ -4883,20 +4883,20 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
-
+        
         [TestMethod( "slice, return between colon and step (168)" )]
         public void Test_slice__return_between_colon_and_step_168()
         {
@@ -4911,18 +4911,18 @@ namespace Hyperbee.Json.Cts.Tests
                   5,
                   6
                 ]
-                """ );
-            var results = document.Select( selector );
+                """);
+            var results = document.Select(selector);
             var expect = JsonNode.Parse(
                 """
                 [
                   2,
                   4
                 ]
-                """ );
+                """);
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
+            var match = TestHelper.MatchOne(results, expect!);
+            Assert.IsTrue(match);
         }
     }
 }

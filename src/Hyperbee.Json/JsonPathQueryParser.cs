@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Internal;
 
@@ -159,8 +158,8 @@ internal static class JsonPathQueryParser
                             selectorSpan = GetSelectorSpan( state, query, selectorStart, i );
                             selectorKind = selectorSpan switch
                             {
-                                "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
-                                "@" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
+                                "$" => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
+                                "@" => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
                                 "*" => SelectorKind.Wildcard,
                                 _ => SelectorKind.Name
                             };
@@ -187,8 +186,8 @@ internal static class JsonPathQueryParser
                             selectorSpan = GetSelectorSpan( state, query, selectorStart, i );
                             selectorKind = selectorSpan switch
                             {
-                                "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
-                                "@" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
+                                "$" => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
+                                "@" => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
                                 "*" => SelectorKind.Wildcard,
                                 _ => SelectorKind.Name
                             };
@@ -204,7 +203,7 @@ internal static class JsonPathQueryParser
                             if ( i < n && query[i] == '.' ) // peek next character
                             {
                                 InsertToken( tokens, GetSelectorDescriptor( SelectorKind.Descendant, ".." ) );
-                                i++;
+                                i++; // advance past second `.`
                             }
 
                             selectorStart = i;
@@ -287,33 +286,47 @@ internal static class JsonPathQueryParser
 
                                 case SelectorKind.Name:
                                     ThrowIfInvalidQuotedName( selectorSpan );
-                                    if ( !escaped )
+                                    if ( escaped )
+                                    {
+                                        var builder = new SpanBuilder( selectorSpan.Length );
+                                        try
+                                        {
+                                            SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.SingleThenUnquote ); // unescape and then unquote
+                                            descriptor = GetSelectorDescriptor( selectorKind, builder, nullable: false );
+                                            escaped = false;
+                                        }
+                                        finally // ensure builder is disposed
+                                        {
+                                            builder.Dispose();
+                                        }
+                                    }
+                                    else
                                     {
                                         descriptor = GetSelectorDescriptor( selectorKind, selectorSpan[1..^1], nullable: false ); // unquote
                                     }
-                                    else
-                                    {
-                                        var builder = new SpanBuilder( selectorSpan.Length );
-                                        SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.SingleThenUnquote ); // unescape and then unquote
-                                        descriptor = GetSelectorDescriptor( selectorKind, builder, nullable: false );
-                                        builder.Dispose();
-                                        escaped = false;
-                                    }
+
                                     break;
 
                                 case SelectorKind.Filter:
-                                    if ( !escaped )
+                                    if ( escaped )
                                     {
-                                        descriptor = GetSelectorDescriptor( selectorKind, selectorSpan );
+                                        var builder = new SpanBuilder( selectorSpan.Length );
+                                        try
+                                        {
+                                            SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.Mixed ); // unescape one or more strings
+                                            descriptor = GetSelectorDescriptor( selectorKind, builder );
+                                            escaped = false;
+                                        }
+                                        finally // ensure builder is disposed
+                                        {
+                                            builder.Dispose();
+                                        }
                                     }
                                     else
                                     {
-                                        var builder = new SpanBuilder( selectorSpan.Length );
-                                        SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.Mixed ); // unescape one or more strings
-                                        descriptor = GetSelectorDescriptor( selectorKind, builder );
-                                        builder.Dispose();
-                                        escaped = false;
+                                        descriptor = GetSelectorDescriptor( selectorKind, selectorSpan );
                                     }
+
                                     break;
 
                                 default:
@@ -589,11 +602,12 @@ internal static class JsonPathQueryParser
             SkipWhitespace( span, ref idx );
 
             var start = idx;
+            var length = span.Length;
 
-            if ( idx < span.Length && (span[idx] == '-') )
+            if ( idx < length && (span[idx] == '-') )
                 idx++;
 
-            while ( idx < span.Length && char.IsDigit( span[idx] ) )
+            while ( idx < length && char.IsDigit( span[idx] ) )
                 idx++;
 
             // Allow empty
@@ -630,7 +644,9 @@ internal static class JsonPathQueryParser
         isValid = true;
         reason = string.Empty;
 
-        if ( input.Length == 0 )
+        var length = input.Length;
+
+        if ( length == 0 )
         {
             isValid = false;
             reason = "Input is empty.";
@@ -643,7 +659,7 @@ internal static class JsonPathQueryParser
         if ( input[0] == '-' )
         {
             start = 1;
-            if ( input.Length == 1 )
+            if ( length == 1 )
             {
                 isValid = false;
                 reason = "Invalid negative number.";
@@ -652,7 +668,7 @@ internal static class JsonPathQueryParser
         }
 
         // Check for leading zeros
-        if ( input[start] == '0' && input.Length > (start + 1) )
+        if ( input[start] == '0' && length > (start + 1) )
         {
             isValid = false;
             reason = "Leading zeros are not allowed.";
@@ -660,7 +676,7 @@ internal static class JsonPathQueryParser
         }
 
         // Check if all remaining characters are digits
-        for ( var i = start; i < input.Length; i++ )
+        for ( var i = start; i < length; i++ )
         {
             if ( char.IsDigit( input[i] ) )
                 continue;

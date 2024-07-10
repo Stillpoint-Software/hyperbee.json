@@ -71,7 +71,7 @@ internal static class JsonPathQueryParser
         bool escaped = false;
         var bracketDepth = 0;
         var parenDepth = 0;
-        
+
         char[] whitespaceTerminators = [];
         var whiteSpaceReplay = true;
 

@@ -7,7 +7,7 @@ namespace Hyperbee.Json.Filters;
 
 public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 {
-    private static readonly ConcurrentDictionary<string, Func<TNode, TNode, bool>> Compiled = new();
+    private static readonly ConcurrentDictionary<string, Func<FilterRuntimeContext<TNode>, bool>> Compiled = new();
 
     private readonly ITypeDescriptor<TNode> _typeDescriptor;
 
@@ -18,11 +18,14 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 
     public object Evaluate( string filter, TNode current, TNode root )
     {
+        // TODO: split type descriptor into design/parse and runtime.  (functions and json parsing are design time)
         var compiled = Compiled.GetOrAdd( filter, _ => FilterParser<TNode>.Compile( filter, _typeDescriptor ) );
 
         try
         {
-            return compiled( current, root );
+            // TODO: get NonSingular from segments
+            var runtimeContext = new FilterRuntimeContext<TNode>( current, root, _typeDescriptor, NonSingular: false ); 
+            return compiled( runtimeContext );
         }
         catch ( RuntimeBinderException )
         {

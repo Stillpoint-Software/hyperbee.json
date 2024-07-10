@@ -9,7 +9,7 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 {
     public const string Name = "search";
-    private static readonly Expression SearchExpression = Expression.Constant( (Func<INodeType, INodeType, bool>) Search );
+    private static readonly Expression SearchExpression = Expression.Constant( (Func<INodeType, INodeType, INodeType>) Search );
 
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
@@ -18,28 +18,28 @@ public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
                 Expression.Convert( arguments[1], typeof( INodeType ) ) );
     }
 
-    public static bool Search( INodeType input, INodeType regex )
+    public static INodeType Search( INodeType input, INodeType regex )
     {
-        if ( input.Kind != NodeTypeKind.NodeList )
-            throw new NotSupportedException( $"Function {Name} does not support kind {input.Kind}" );
-
-        if ( regex.Kind != NodeTypeKind.Value )
-            throw new NotSupportedException( $"Function {Name} does not support kind {regex.Kind}" );
-
-
-        return Search( (NodesType<JsonNode>) input, ((ValueType<string>) regex).Value );
+        return input switch
+        {
+            NodesType<JsonNode> nodes when regex is ValueType<string> stringValue => 
+                Search( nodes, stringValue.Value ),
+            NodesType<JsonNode> nodes when regex is NodesType<JsonNode> stringValue => 
+                Search( nodes, stringValue.Value.FirstOrDefault()?.GetValue<string>() ),
+            _ => ValueType.False
+        };
     }
 
-    public static bool Search( NodesType<JsonNode> nodes, string regex )
+    public static INodeType Search( NodesType<JsonNode> nodes, string regex )
     {
         var value = nodes.FirstOrDefault();
 
         if ( value?.GetValueKind() != JsonValueKind.String )
         {
-            return false;
+            return ValueType.False;
         }
 
         var regexPattern = new Regex( $"{regex.Trim( '\"', '\'' )}" );
-        return regexPattern.IsMatch( value.GetValue<string>() );
+        return new ValueType<bool>( regexPattern.IsMatch( value.GetValue<string>() ) );
     }
 }

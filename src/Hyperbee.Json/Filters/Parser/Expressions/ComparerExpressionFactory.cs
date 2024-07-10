@@ -13,40 +13,37 @@ public static class ComparerExpressionFactory<TNode>
     {
         // Pre-compile the delegate to call the Comparand constructor
 
-        var accessorParam = Expression.Parameter( typeof( FilterContext<TNode> ), "context" );
-        var valueParam = Expression.Parameter( typeof( object ), "value" );
+        var runtimeContextParam = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "context" );
+        var valueParam = Expression.Parameter( typeof( INodeType ), "value" );
 
-        var constructorInfo = typeof( Comparand ).GetConstructor( [typeof( FilterContext<TNode> ), typeof( object )] );
-        var newExpression = Expression.New( constructorInfo!, accessorParam, valueParam );
+        var constructorInfo = typeof( Comparand ).GetConstructor( [typeof( FilterRuntimeContext<TNode> ), typeof( INodeType )] );
+        var newExpression = Expression.New( constructorInfo!, runtimeContextParam, valueParam );
 
-        var creator = Expression.Lambda<Func<FilterContext<TNode>, object, Comparand>>(
-            newExpression, accessorParam, valueParam ).Compile();
+        var creator = Expression.Lambda<Func<FilterRuntimeContext<TNode>, INodeType, Comparand>>(
+            newExpression, runtimeContextParam, valueParam ).Compile();
 
         CreateComparandExpression = Expression.Constant( creator );
     }
 
-    internal static Expression GetComparand( FilterContext<TNode> context, Expression expression )
+    internal static Expression GetComparand( FilterParserContext<TNode> parserContext, Expression expression )
     {
         // Handles Not operator since it maybe not have a left side.
         if ( expression == null )
             return null;
 
-        // Create an expression representing the instance of the context
-        var contextExpression = Expression.Constant( context );
-
         // Use the compiled delegate to create an expression to call the Comparand constructor
-        return Expression.Invoke( CreateComparandExpression, contextExpression,
-            Expression.Convert( expression, typeof( object ) ) );
+        return Expression.Invoke( CreateComparandExpression, parserContext.RuntimeContext,
+            Expression.Convert( expression, typeof( INodeType ) ) );
     }
 
     [DebuggerDisplay( "Value = {Value}" )]
-    internal readonly struct Comparand( FilterContext<TNode> context, object value ) : IComparable<Comparand>, IEquatable<Comparand>
+    internal readonly struct Comparand( FilterRuntimeContext<TNode> runtimeContext, INodeType value ) : IComparable<Comparand>, IEquatable<Comparand>
     {
         private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
 
-        private IValueAccessor<TNode> Accessor { get; } = context.Descriptor.Accessor;
+        private IValueAccessor<TNode> Accessor { get; } = runtimeContext.Descriptor.Accessor;
 
-        private object Value { get; } = value;
+        private INodeType Value { get; } = value;
 
         public int CompareTo( Comparand other ) => Compare( this, other, Operator.Equals );
         public bool Equals( Comparand other ) => Compare( this, other, Operator.Equals ) == 0;
@@ -118,24 +115,24 @@ public static class ComparerExpressionFactory<TNode>
          */
         private static int Compare( Comparand left, Comparand right, Operator operation ) //BF nsq
         {
-            if ( left.Value is IEnumerable<TNode> leftEnumerable && right.Value is IEnumerable<TNode> rightEnumerable )
+            if ( left.Value is NodesType<TNode> leftEnumerable && right.Value is NodesType<TNode> rightEnumerable )
             {
                 return CompareEnumerables( left.Accessor, leftEnumerable, rightEnumerable );
             }
 
-            if ( left.Value is IEnumerable<TNode> leftEnumerable1 )
+            if ( left.Value is NodesType<TNode> leftEnumerable1 )
             {
                 var compare = CompareEnumerableToValue( left.Accessor, leftEnumerable1, right.Value, out var typeMismatch, out var nodeCount );
                 return AdjustResult( compare, nodeCount, operation, typeMismatch );
             }
 
-            if ( right.Value is IEnumerable<TNode> rightEnumerable1 )
+            if ( right.Value is NodesType<TNode> rightEnumerable1 )
             {
                 var compare = CompareEnumerableToValue( right.Accessor, rightEnumerable1, left.Value, out var typeMismatch, out var nodeCount );
                 return AdjustResult( compare, nodeCount, operation, typeMismatch );
             }
 
-            return CompareValues( left.Value, right.Value, out _ );
+            return CompareValues( left, right, out _ );
 
             static int AdjustResult( int compare, int nodeCount, Operator operation, bool typeMismatch )
             {
@@ -212,8 +209,7 @@ public static class ComparerExpressionFactory<TNode>
                     return 0; // Return 0 if any node matches the value
             }
 
-
-            if ( TryGetNothingValue<float, string, bool, object>( value, out var valueIsNothing, out var objectValue ) )
+            if ( TryGetNothingValue<float, string, bool>( value, out var valueIsNothing, out var objectValue ) )
             {
                 value = objectValue;
             }
@@ -241,12 +237,12 @@ public static class ComparerExpressionFactory<TNode>
                 return 0;
             }
 
-            if ( TryGetNothingValue<float, string, bool, object>( left, out var leftIsNothing, out var leftValue ) )
+            if ( TryGetNothingValue<float, string, bool>( left, out var leftIsNothing, out var leftValue ) )
             {
                 left = leftValue;
             }
 
-            if ( TryGetNothingValue<float, string, bool, object>( right, out var rightIsNothing, out var rightValue ) )
+            if ( TryGetNothingValue<float, string, bool>( right, out var rightIsNothing, out var rightValue ) )
             {
                 right = rightValue;
             }
@@ -281,31 +277,52 @@ public static class ComparerExpressionFactory<TNode>
 
         }
 
-        private static bool TryGetNothingValue<T1, T2, T3, T4>( object item, out bool isNothing, out object value )
+        private static bool TryGetNothingValue<T1, T2, T3>( object item, out bool isNothing, out object value )
+            where T1 : IConvertible, IComparable<T1>
+            where T2 : IConvertible, IComparable<T2>
+            where T3 : IConvertible, IComparable<T3>
         {
-            switch ( item )
+            if ( item is Comparand comparand )
+                return TryGetNothingValue<T1, T2, T3>( comparand.Value, out isNothing, out value );
+
+            if ( item is Nothing )
             {
-                case ValueType<T1> rightT1Nothing:
-                    value = rightT1Nothing.Value;
-                    isNothing = rightT1Nothing.IsNothing;
-                    return true;
-                case ValueType<T2> rightT2Nothing:
-                    value = rightT2Nothing.Value;
-                    isNothing = rightT2Nothing.IsNothing;
-                    return true;
-                case ValueType<T3> rightT3Nothing:
-                    value = rightT3Nothing.Value;
-                    isNothing = rightT3Nothing.IsNothing;
-                    return true;
-                case ValueType<T4> rightT4Nothing:
-                    value = rightT4Nothing.Value;
-                    isNothing = rightT4Nothing.IsNothing;
-                    return true;
-                default:
-                    value = default;
-                    isNothing = false;
-                    return false;
+                value = null;
+                isNothing = true;
+                return true;
             }
+
+            if ( item is Null )
+            {
+                value = null;
+                isNothing = false;
+                return true;
+            }
+
+            if ( item is ValueType<T1> rightT1Nothing )
+            {
+                value = rightT1Nothing.Value;
+                isNothing = false;
+                return true;
+            }
+
+            if ( item is ValueType<T2> rightT2Nothing )
+            {
+                value = rightT2Nothing.Value;
+                isNothing = false;
+                return true;
+            }
+
+            if ( item is ValueType<T3> rightT3Nothing )
+            {
+                value = rightT3Nothing.Value;
+                isNothing = false;
+                return true;
+            }
+
+            value = default;
+            isNothing = false;
+            return false;
         }
     }
 }

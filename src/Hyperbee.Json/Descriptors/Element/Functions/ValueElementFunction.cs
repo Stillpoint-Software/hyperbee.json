@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using Hyperbee.Json.Filters.Parser;
 
@@ -7,7 +8,7 @@ namespace Hyperbee.Json.Descriptors.Element.Functions;
 public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 )
 {
     public const string Name = "value";
-    public static readonly Expression ValueExpression = Expression.Constant( (Func<INodeType, ValueType<object>>) Value );
+    public static readonly Expression ValueExpression = Expression.Constant( (Func<INodeType, INodeType>) Value );
 
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
@@ -15,7 +16,7 @@ public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 
             Expression.Convert( arguments[0], typeof( INodeType ) ) );
     }
 
-    public static ValueType<object> Value( INodeType arg )
+    public static INodeType Value( INodeType arg )
     {
         if ( arg.Kind != NodeTypeKind.NodeList )
             throw new NotSupportedException( $"Function {Name} does not support kind {arg.Kind}" );
@@ -23,29 +24,26 @@ public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 
         var nodeArray = ((NodesType<JsonElement>) arg).ToArray();
 
         if ( nodeArray.Length != 1 )
-            return new ValueType<object>( null, true );
+            return ValueType.Nothing;
 
         var node = nodeArray.FirstOrDefault();
 
-        return new ValueType<object>( node.ValueKind switch
+        return node.ValueKind switch
         {
-            JsonValueKind.Number => node.GetSingle(),
-            JsonValueKind.String => node.GetString(),
-            JsonValueKind.Object => IsNotEmpty( node ),
-            JsonValueKind.Array => IsNotEmpty( node ),
-            JsonValueKind.True => true,
-            JsonValueKind.False => false,
-            JsonValueKind.Null => false,
-            JsonValueKind.Undefined => false,
-            _ => false
-        } );
+            JsonValueKind.Number => new ValueType<float>( node.GetSingle() ),
+            JsonValueKind.String => new ValueType<string>( node.GetString() ),
+            JsonValueKind.Object or JsonValueKind.Array => new ValueType<bool>( IsNotEmpty( node ) ),
+            JsonValueKind.True => ValueType.True,
+            JsonValueKind.False or JsonValueKind.Null or JsonValueKind.Undefined => ValueType.False,
+            _ => ValueType.False
+        };
 
         static bool IsNotEmpty( JsonElement node )
         {
             return node.ValueKind switch
             {
-                JsonValueKind.Array => node.EnumerateArray().Count() != 0,
-                JsonValueKind.Object => node.EnumerateObject().Count() != 0,
+                JsonValueKind.Array => node.EnumerateArray().Any(),
+                JsonValueKind.Object => node.EnumerateObject().Any(),
                 _ => false
             };
         }

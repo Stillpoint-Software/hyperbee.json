@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Filters.Parser.Expressions;
@@ -25,10 +27,40 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( true, 11F, false )]
     public void ComparandWithEqualResults( object left, object right, bool areEqual )
     {
-        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, left );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
+        ComparerExpressionFactory<JsonNode>.Comparand a;
+        ComparerExpressionFactory<JsonNode>.Comparand b;
+
+        switch ( left )
+        {
+            case bool leftBool when right is bool rightBool:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<bool>( leftBool ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<bool>( rightBool ) );
+                break;
+            case string leftString when right is string rightString:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<string>( leftString ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<string>( rightString ) );
+                break;
+            case string leftString when right is float rightFloat:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<string>( leftString ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( rightFloat ) );
+                break;
+            case float leftFloat when right is float rightFloat:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( leftFloat ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( rightFloat ) );
+                break;
+            case bool leftbool when right is float rightFloat:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<bool>( leftbool ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( rightFloat ) );
+                break;
+            case float leftFloat when right is bool rightBool:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( leftFloat ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<bool>( rightBool ) );
+                break;
+            default:
+                throw new NotSupportedException();
+        }
 
         var result = a == b;
 
@@ -47,14 +79,33 @@ public class JsonComparerComparandTests : JsonTestBase
 
     public void ComparandWithGreaterResults( object left, object right, bool areEqual )
     {
-        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, left );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
+        ComparerExpressionFactory<JsonNode>.Comparand a;
+        ComparerExpressionFactory<JsonNode>.Comparand b;
+
+        switch ( left )
+        {
+            case bool leftBool when right is bool rightBool:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<bool>( leftBool ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<bool>( rightBool ) );
+                break;
+            case string leftString when right is string rightString:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<string>( leftString ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<string>( rightString ) );
+                break;
+            case float leftFloat when right is float rightFloat:
+                a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( leftFloat ) );
+                b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( rightFloat ) );
+                break;
+            default:
+                throw new NotSupportedException();
+        }
 
         var result = a >= b;
 
         Assert.AreEqual( areEqual, result );
+
     }
 
     [DataTestMethod]
@@ -65,11 +116,14 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( """{ "value": { "child": 5 } }""", "hello", false )]
     public void ComparandWithJsonObjectResults( string left, object right, bool areEqual )
     {
-        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
         var node = new List<JsonNode> { JsonNode.Parse( left )!["value"] };
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, node );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new NodesType<JsonNode>(node, false) );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context,
+            right is float rightFloat
+                ? new ValueType<float>( rightFloat )
+                : new ValueType<string>( (string) right ) );
 
         var result = a == b;
 
@@ -84,10 +138,14 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( """["hello","world" ]""", "hi", false )]
     public void ComparandWithLeftJsonArray( string left, object right, bool areEqual )
     {
-        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
+        var node = JsonNode.Parse( left )!.AsArray();
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, JsonNode.Parse( left ) );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, right );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new NodesType<JsonNode>( node, false ) );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context,
+            right is float rightFloat
+                ? new ValueType<float>( rightFloat )
+                : new ValueType<string>( (string) right ) );
 
         var result = a == b;
 
@@ -101,10 +159,14 @@ public class JsonComparerComparandTests : JsonTestBase
     [DataRow( "hi", """["hello","world" ]""", false )]
     public void ComparandWithRightJsonArray( object left, string right, bool areEqual )
     {
-        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
+        var node = JsonNode.Parse( right )!.AsArray();
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, left );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, JsonNode.Parse( right ) );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context,
+                left is float leftFloat
+                    ? new ValueType<float>( leftFloat )
+                    : new ValueType<string>( (string) left ) );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new NodesType<JsonNode>( node, false ) );
 
         var result = a == b;
 
@@ -114,10 +176,10 @@ public class JsonComparerComparandTests : JsonTestBase
     [TestMethod]
     public void ComparandWithEmpty()
     {
-        var context = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new List<JsonNode>() );
-        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, 1 );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new NodesType<JsonNode>( [], false ) );
+        var b = new ComparerExpressionFactory<JsonNode>.Comparand( context, new ValueType<float>( 1F ) );
 
         Assert.IsFalse( a < b );
         Assert.IsFalse( a <= b );

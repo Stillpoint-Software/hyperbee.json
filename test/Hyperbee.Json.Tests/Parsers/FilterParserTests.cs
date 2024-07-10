@@ -174,7 +174,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "'unbalanced string\"", typeof( JsonElement ) )]
     [DataRow( " \t ", typeof( JsonElement ) )]
     [DataRow( "1 === 1", typeof( JsonElement ) )]
-    //[DataRow( "(1 == 1(", typeof( JsonElement ) )]
+    [DataRow( "(1 == 1(", typeof( JsonElement ) )]
     [DataRow( "(1 == 1)(", typeof( JsonElement ) )]
     [DataRow( "(1 == ", typeof( JsonElement ) )]
     [DataRow( "== 1", typeof( JsonElement ) )]
@@ -198,12 +198,12 @@ public class FilterParserTests : JsonTestBase
     {
         if ( sourceType == typeof( JsonElement ) )
         {
-            var elementContext = new FilterContext<JsonElement>( new ElementTypeDescriptor() );
-            return (FilterParser<JsonElement>.Parse( filter, elementContext ), elementContext.Root);
+            var elementContext = new FilterParserContext<JsonElement>( new ElementTypeDescriptor() );
+            return (FilterParser<JsonElement>.Parse( filter, elementContext ), elementContext.RuntimeContext );
         }
 
-        var nodeContext = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
-        return (FilterParser<JsonNode>.Parse( filter, nodeContext ), nodeContext.Root);
+        var nodeContext = new FilterParserContext<JsonNode>( new NodeTypeDescriptor() );
+        return (FilterParser<JsonNode>.Parse( filter, nodeContext ), nodeContext.RuntimeContext );
     }
 
     private static bool Execute( Expression expression, ParameterExpression param, Type sourceType )
@@ -211,19 +211,19 @@ public class FilterParserTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var func = Expression
-                .Lambda<Func<JsonElement, bool>>( expression, param )
+                .Lambda<Func<FilterRuntimeContext<JsonElement>, bool>>( expression, param )
                 .Compile();
-
-            return func( new JsonElement() );
+            var descriptor = new ElementTypeDescriptor();
+            return func( new FilterRuntimeContext<JsonElement>( new JsonElement(), new JsonElement(), descriptor, false ) );
         }
 
         if ( sourceType == typeof( JsonNode ) )
         {
             var func = Expression
-                .Lambda<Func<JsonNode, bool>>( expression, param )
+                .Lambda<Func<FilterRuntimeContext<JsonNode>, bool>>( expression, param )
                 .Compile();
-
-            return func( JsonNode.Parse( "{}" ) );
+            var descriptor = new NodeTypeDescriptor();
+            return func( new FilterRuntimeContext<JsonNode>( new JsonObject(), new JsonObject(), descriptor, false ) );
         }
 
         throw new NotImplementedException();
@@ -234,18 +234,20 @@ public class FilterParserTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var source = GetDocument<JsonDocument>();
-            var func = FilterParser<JsonElement>.Compile( filter, new ElementTypeDescriptor() );
+            var descriptor = new ElementTypeDescriptor();
+            var func = FilterParser<JsonElement>.Compile( filter, descriptor );
 
-            return func( source.RootElement, source.RootElement );
+            return func( new FilterRuntimeContext<JsonElement>( source.RootElement, source.RootElement, descriptor, false ) );
         }
         else
         {
             // arrange 
             var source = GetDocument<JsonNode>();
-            var func = FilterParser<JsonNode>.Compile( filter, new NodeTypeDescriptor() );
+            var descriptor = new NodeTypeDescriptor();
+            var func = FilterParser<JsonNode>.Compile( filter, descriptor );
 
             // act
-            return func( source, source );
+            return func( new FilterRuntimeContext<JsonNode>( source, source, descriptor, false ) );
         }
     }
 

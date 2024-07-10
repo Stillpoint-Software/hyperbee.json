@@ -9,7 +9,7 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
 {
     public const string Name = "match";
-    private static readonly Expression MatchExpression = Expression.Constant( (Func<INodeType, INodeType, bool>) Match );
+    private static readonly Expression MatchExpression = Expression.Constant( (Func<INodeType, INodeType, INodeType>) Match );
 
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
@@ -18,39 +18,30 @@ public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
             Expression.Convert( arguments[1], typeof( INodeType ) ) );
     }
 
-    public static bool Match( INodeType input, INodeType regex )
+    public static INodeType Match( INodeType input, INodeType regex )
     {
-        if ( input is NodesType<JsonNode> nodes )
+        return input switch
         {
-            return regex switch
-            {
-                NodesType<JsonNode> { NonSingular: false } nodeType => Match( nodes, nodeType.FirstOrDefault().GetValue<string>() ),
-                ValueType<string> stringType => Match( nodes, stringType.Value ),
-                ValueType<object> objectType => Match( nodes, objectType.Value as string ),
-                _ => false
-            };
-        }
-
-        return false;
+            NodesType<JsonNode> nodes when regex is ValueType<string> stringValue =>
+                Match( nodes, stringValue.Value ),
+            NodesType<JsonNode> nodes when regex is NodesType<JsonNode> stringValue =>
+                Match( nodes, stringValue.Value.FirstOrDefault()?.GetValue<string>() ),
+            _ => ValueType.False
+        };
     }
 
-    public static bool Match( NodesType<JsonNode> nodes, string regex )
+    private static INodeType Match( NodesType<JsonNode> nodes, string regex )
     {
         var value = nodes.FirstOrDefault();
 
-        if ( value == null )
+        if( value?.GetValueKind() != JsonValueKind.String )
         {
-            return false;
-        }
-
-        if ( value.GetValueKind() != JsonValueKind.String )
-        {
-            return false;
+            return ValueType.False;
         }
 
         var stringValue = value.GetValue<string>();
 
         var regexPattern = new Regex( $"^{regex.Trim( '\"', '\'' )}$" );
-        return regexPattern.IsMatch( stringValue );
+        return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
     }
 }

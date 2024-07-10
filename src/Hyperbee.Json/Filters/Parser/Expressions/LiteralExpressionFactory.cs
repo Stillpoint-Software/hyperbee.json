@@ -1,13 +1,14 @@
 ﻿using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
+using ValueType = Hyperbee.Json.Descriptors.ValueType;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class LiteralExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterParserContext<TNode> parserContext )
     {
-        expression = GetLiteralExpression( state.Item, context );
+        expression = GetLiteralExpression( state.Item );
 
         if ( expression == null )
             return false;
@@ -17,18 +18,18 @@ internal class LiteralExpressionFactory : IExpressionFactory
 
     }
 
-    private static ConstantExpression GetLiteralExpression<TNode>( ReadOnlySpan<char> item, FilterContext<TNode> context )
+    private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
     {
         // Check for known literals (true, false, null) first
 
         if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( (INodeType) new ValueType<bool>( true ) );
+            return Expression.Constant( ValueType.True );
 
         if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( (INodeType) new ValueType<bool>( false ) );
+            return Expression.Constant( ValueType.False );
 
         if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( null );
+            return Expression.Constant( ValueType.Null );
 
         // Check for quoted strings
 
@@ -44,7 +45,7 @@ internal class LiteralExpressionFactory : IExpressionFactory
             throw new NotSupportedException( $"Incomplete floating-point number `{item.ToString()}`" );
 
         return float.TryParse( item, out float result )
-            ? Expression.Constant( (INodeType) new ValueType<float>( result ) )
+            ? Expression.Constant( new ValueType<float>( result ) )
             : null;
     }
 }

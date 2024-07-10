@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
@@ -20,44 +21,31 @@ public class LengthElementFunction() : FilterExtensionFunction( argumentCount: 1
 
     public static INodeType Length( INodeType input )
     {
-        switch ( input.Kind )
+        return input switch
         {
-            case NodeTypeKind.NodeList:
-                {
-                    var list = (NodesType<JsonElement>) input;
-                    return Length( list.FirstOrDefault() );
-                }
-            case NodeTypeKind.Value:
-                {
-                    var valueType = (ValueType<string>) input;
-                    return new ValueType<float>( valueType.Value.Length );
-                }
-            case NodeTypeKind.Nothing:
-                return input;
-            case NodeTypeKind.Node:
-            default:
-                return new Nothing();
-        }
+            NodesType<JsonElement> nodes => Length( nodes.FirstOrDefault() ),
+            ValueType<string> valueString => new ValueType<float>( valueString.Value.Length ),
+            Null or Nothing => input,
+            _ => ValueType.Nothing
+        };
     }
 
-    public static ValueType<float> Length( object value )
+    public static INodeType Length( object value )
     {
-        float? result = value switch
+        return value switch
         {
-            string str => str.Length,
-            Array array => array.Length,
-            System.Collections.ICollection collection => collection.Count,
-            System.Collections.IEnumerable enumerable => enumerable.Cast<object>().Count(),
+            string str => new ValueType<float>( str.Length ),
+            Array array => new ValueType<float>( array.Length ),
+            System.Collections.ICollection collection => new ValueType<float>( collection.Count ),
+            System.Collections.IEnumerable enumerable => new ValueType<float>( enumerable.Cast<object>().Count() ),
             JsonElement node => node.ValueKind switch
             {
-                JsonValueKind.String => node.GetString()?.Length ?? 0,
-                JsonValueKind.Array => node.EnumerateArray().Count(),
-                JsonValueKind.Object => node.EnumerateObject().Count(),
-                _ => null
+                JsonValueKind.String => new ValueType<float>( node.GetString()?.Length ?? 0 ),
+                JsonValueKind.Array => new ValueType<float>( node.EnumerateArray().Count() ),
+                JsonValueKind.Object => new ValueType<float>( node.EnumerateObject().Count() ),
+                _ => ValueType.Null
             },
-            _ => null
+            _ => ValueType.Null
         };
-
-        return new ValueType<float>( result ?? 0F, result == null );
     }
 }

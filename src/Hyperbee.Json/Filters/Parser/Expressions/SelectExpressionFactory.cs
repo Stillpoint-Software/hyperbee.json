@@ -6,9 +6,9 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterParserContext<TNode> parserContext )
     {
-        expression = ExpressionHelper<TNode>.GetExpression( state.Item, context, ref itemContext );
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, parserContext, ref itemContext );
 
         if ( expression == null )
             return false;
@@ -19,9 +19,9 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, bool, INodeType>) Select );
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<FilterRuntimeContext<TNode>, string, bool, INodeType> ) Select );
 
-        public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context, ref ExpressionInfo expressionInfo )
+        public static Expression GetExpression( ReadOnlySpan<char> item, FilterParserContext<TNode> parserContext, ref ExpressionInfo expressionInfo )
         {
             if ( item.IsEmpty )
                 return null;
@@ -31,18 +31,19 @@ internal class SelectExpressionFactory : IExpressionFactory
 
             expressionInfo.NonSingularQuery = QueryHelper.IsNonSingular( item ); //BF nsq
 
-            var queryExp = Expression.Constant( item.ToString() );
-            var nonSingularQueryExp = Expression.Constant( expressionInfo.NonSingularQuery );
-
-            if ( item[0] == '$' ) // Current becomes root
-                context = context with { Current = context.Root };
-
-            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp, nonSingularQueryExp );
+            return Expression.Invoke( 
+                SelectExpression, 
+                parserContext.RuntimeContext, 
+                Expression.Constant( item.ToString() ),
+                Expression.Constant( expressionInfo.NonSingularQuery ));
         }
 
-        private static INodeType Select( TNode current, TNode root, string query, bool nonSingularQuery )
-        {
-            return new NodesType<TNode>( JsonPath<TNode>.SelectInternal( current, root, query ), nonSingularQuery );
+        private static INodeType Select( FilterRuntimeContext<TNode> runtimeContext, string query, bool nonSingular )
+        { 
+            // Current becomes root
+            return query[0] == '$'
+                ? new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, query ), nonSingular /*runtimeContext.NonSingular */) 
+                : new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, query ), nonSingular /*runtimeContext.NonSingular */ );
         }
 
     }

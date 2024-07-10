@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
@@ -35,17 +36,23 @@ public class FilterExtensionFunctionTests : JsonTestBase
     private class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
     {
         public const string Name = "path";
-        private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+        private static readonly Expression PathExpression = Expression.Constant( (Func<INodeType, INodeType>) Path );
 
         protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
         {
-            return Expression.Invoke( PathExpression, arguments[0] );
+            return Expression.Invoke( PathExpression,
+                Expression.Convert( arguments[0], typeof(INodeType) ) );
         }
 
-        private static string Path( IEnumerable<JsonNode> nodes )
+        private static INodeType Path( INodeType arg )
         {
-            var node = nodes.FirstOrDefault();
-            return node?.GetPath();
+            if ( arg is NodesType<JsonNode> nodes )
+            {
+                var node = nodes.FirstOrDefault();
+                return new ValueType<string>( node?.GetPath() );
+            }
+
+            return Descriptors.ValueType.Null;
         }
     }
 }

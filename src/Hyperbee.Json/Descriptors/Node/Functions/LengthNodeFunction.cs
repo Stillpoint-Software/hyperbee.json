@@ -15,51 +15,38 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
         if ( argumentInfo[0] )
             throw new NotSupportedException( $"Function {Name} does not support non-singular arguments." );
 
-        return Expression.Invoke( LengthExpression,
+        return Expression.Invoke( LengthExpression, 
             Expression.Convert( arguments[0], typeof( INodeType ) ) );
     }
 
     public static INodeType Length( INodeType input )
     {
-        switch ( input.Kind )
+        return input switch
         {
-            case NodeTypeKind.NodeList:
-                {
-                    var list = (NodesType<JsonNode>) input;
-                    return Length( list.FirstOrDefault() );
-                }
-            case NodeTypeKind.Value:
-                {
-                    var valueType = (ValueType<string>) input;
-                    return new ValueType<float>( valueType.Value.Length );
-                }
-            case NodeTypeKind.Nothing:
-                return input;
-            case NodeTypeKind.Node:
-            default:
-                return new Nothing();
-        }
+            NodesType<JsonNode> nodes => Length( nodes.FirstOrDefault() ),
+            ValueType<string> valueString => new ValueType<float>( valueString.Value.Length ),
+            Null or Nothing => input,
+            _ => ValueType.Nothing
+        };
     }
 
-    public static ValueType<float> Length( object value )
+    public static INodeType Length( object value )
     {
-        float? result = value switch
+        return value switch
         {
-            string str => str.Length,
-            Array array => array.Length,
-            System.Collections.ICollection collection => collection.Count,
-            System.Collections.IEnumerable enumerable => enumerable.Cast<object>().Count(),
+            string str => new ValueType<float>( str.Length ),
+            Array array => new ValueType<float>( array.Length ),
+            System.Collections.ICollection collection => new ValueType<float>( collection.Count ),
+            System.Collections.IEnumerable enumerable => new ValueType<float>( enumerable.Cast<object>().Count() ),
             JsonNode node => node.GetValueKind() switch
             {
-                JsonValueKind.String => node.GetValue<string>()?.Length ?? 0,
-                JsonValueKind.Array => node.AsArray().Count,
-                JsonValueKind.Object => node.AsObject().Count,
-                _ => null
+                JsonValueKind.String => new ValueType<float>( node.GetValue<string>()?.Length ?? 0 ),
+                JsonValueKind.Array => new ValueType<float>( node.AsArray().Count ),
+                JsonValueKind.Object => new ValueType<float>( node.AsObject().Count ),
+                _ => ValueType.Nothing
             },
-            _ => null
+            _ => ValueType.Nothing
         };
-
-        return new ValueType<float>( result ?? 0F, result == null );
     }
 
 }

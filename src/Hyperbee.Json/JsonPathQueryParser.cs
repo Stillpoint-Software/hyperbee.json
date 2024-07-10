@@ -66,6 +66,7 @@ internal static class JsonPathQueryParser
         var selectorStart = 0;
 
         var inQuotes = false;
+        var inFilter = false;
         var quoteChar = '\'';
         bool escaped = false;
         var bracketDepth = 0;
@@ -357,8 +358,13 @@ internal static class JsonPathQueryParser
 
                             break;
 
-                        case '.': // descent in brackets is illegal
-                            if ( i > n && query[i] == '.' )
+                        case '?':
+                            if ( !inQuotes )
+                                inFilter = true;
+                            break;
+
+                        case '.': // descent in brackets is illegal except within a filter expr
+                            if ( i < n && query[i] == '.' && !inFilter )
                                 throw new NotSupportedException( $"Invalid `..` in bracket expression at pos {i - 1}." );
                             break;
                     }
@@ -380,6 +386,7 @@ internal static class JsonPathQueryParser
                             quoteChar = c;
                             selectorStart = i - 1; // capture the quote character
                             inQuotes = true;
+                            inFilter = false;
                             break;
                         default:
                             state = State.UnionItem;
@@ -453,11 +460,7 @@ internal static class JsonPathQueryParser
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static SelectorDescriptor GetSelectorDescriptor( SelectorKind selectorKind, in SpanBuilder builder, bool nullable = true )
     {
-        var selectorValue = builder.ToString();
-
-        if ( selectorValue == string.Empty && !nullable )
-            selectorValue = null;
-
+        var selectorValue = builder.IsEmpty && !nullable ? null : builder.ToString();
         return new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue };
     }
 
@@ -471,7 +474,7 @@ internal static class JsonPathQueryParser
 
     private static SelectorKind GetValidSelectorKind( ReadOnlySpan<char> selector )
     {
-        // order matters in this method
+        // selector order matters
 
         switch ( selector )
         {
@@ -524,24 +527,11 @@ internal static class JsonPathQueryParser
         tokens.Add( new JsonPathSegment( selectors ) );
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static bool IsFilter( ReadOnlySpan<char> input )
     {
-        if ( input.Length < 2 || input[0] != '?' )
-            return false;
-
-        var start = 1;
-        var end = input.Length;
-
-        if ( input[1] == '(' )
-        {
-            start = 2;
-            if ( input[^1] == ')' )
-                end--;
-        }
-
-        var result = start < end;
-
-        return result;
+        // Check if the input starts with '?' and is at least two characters long
+        return input.Length > 1 && input[0] == '?';
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -630,12 +620,12 @@ internal static class JsonPathQueryParser
         }
 
         // Helper method to skip whitespace
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         static void SkipWhitespace( ReadOnlySpan<char> span, ref int idx )
         {
-            while ( idx < span.Length && char.IsWhiteSpace( span[idx] ) )
-            {
+            var length = span.Length;
+            while ( idx < length && char.IsWhiteSpace( span[idx] ) )
                 idx++;
-            }
         }
     }
 
@@ -678,7 +668,9 @@ internal static class JsonPathQueryParser
         // Check if all remaining characters are digits
         for ( var i = start; i < length; i++ )
         {
-            if ( char.IsDigit( input[i] ) )
+            char c = input[i];
+
+            if ( c >= '0' && c <= '9' )
                 continue;
 
             isValid = false;

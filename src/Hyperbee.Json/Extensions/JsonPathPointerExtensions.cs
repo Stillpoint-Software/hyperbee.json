@@ -65,6 +65,9 @@ public static class JsonPathPointerExtensions
 
                 case SelectorKind.Index:
                     {
+                        if ( current.ValueKind != JsonValueKind.Array )
+                            return false;
+
                         var length = current.GetArrayLength();
                         var index = int.Parse( selectorValue );
 

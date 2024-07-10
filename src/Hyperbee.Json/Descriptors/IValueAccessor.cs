@@ -9,5 +9,6 @@ public interface IValueAccessor<TNode>
     bool TryGetChildValue( in TNode value, string childSelector, SelectorKind selectorKind, out TNode childValue );
     bool TryParseNode( ReadOnlySpan<char> item, out TNode value );
     bool DeepEquals( TNode left, TNode right );
-    bool TryGetValueFromNode( TNode item, out object o );
+    bool TryGetValueFromNode( TNode item, out object value );
+    bool TryGetFromPointer( in TNode value, JsonPathSegment segment, out TNode childValue );
 }

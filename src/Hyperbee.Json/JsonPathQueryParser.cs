@@ -13,24 +13,19 @@ public enum SelectorKind
     Singular = 0x1,
     Group = 0x2,
 
-    // dot notation
-    Root = 0x4 | Singular,
-    DotName = 0x8 | Singular,
-
-    // union notation
+    // selectors
+    Root = 0x8 | Singular,
     Name = 0x10 | Singular,
     Index = 0x20 | Singular,
     Slice = 0x40 | Group,
     Filter = 0x80 | Group,
-
-    // 
     Wildcard = 0x100 | Group,
     Descendant = 0x200 | Group
 }
 
 internal static class JsonPathQueryParser
 {
-    private static readonly ConcurrentDictionary<string, JsonPathSegment> JsonPathTokens = new();
+    private static readonly ConcurrentDictionary<string, JsonPathQuery> JsonPathQueries = new();
 
     private enum State
     {
@@ -45,17 +40,17 @@ internal static class JsonPathQueryParser
         Final
     }
 
-    internal static JsonPathSegment Parse( string query, bool allowDotWhitespace = false )
+    internal static JsonPathQuery Parse( string query, bool allowDotWhitespace = false )
     {
-        return JsonPathTokens.GetOrAdd( query, x => TokenFactory( x.AsSpan(), allowDotWhitespace ) );
+        return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );
     }
 
-    internal static JsonPathSegment ParseNoCache( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
+    internal static JsonPathQuery ParseNoCache( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
     {
-        return TokenFactory( query, allowDotWhitespace );
+        return QueryFactory( query, allowDotWhitespace );
     }
 
-    private static JsonPathSegment TokenFactory( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
+    private static JsonPathQuery QueryFactory( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
     {
         var tokens = new List<JsonPathSegment>();
 
@@ -67,14 +62,14 @@ internal static class JsonPathQueryParser
 
         var selectorStart = 0;
 
+        var inQuotes = false;
+        var quoteChar = '\'';
+        bool escaped = false;
         var bracketDepth = 0;
         var parenDepth = 0;
-        var quoteChar = '\'';
-        var selectors = new List<SelectorDescriptor>();
-
         char[] whitespaceTerminators = [];
-        bool inQuotes = false;
-        bool escaped = false;
+
+        var selectors = new List<SelectorDescriptor>();
 
         var state = State.Start;
         State returnState = State.Undefined;
@@ -155,10 +150,10 @@ internal static class JsonPathQueryParser
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
                                 "@" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
                                 "*" => SelectorKind.Wildcard,
-                                _ => SelectorKind.DotName
+                                _ => SelectorKind.Name
                             };
 
-                            if ( selectorKind == SelectorKind.DotName && !selectorSpan.IsEmpty )
+                            if ( selectorKind == SelectorKind.Name && !selectorSpan.IsEmpty )
                             {
                                 ThrowIfQuoted( selectorSpan );
                                 ThrowIfNotValidUnquotedName( selectorSpan );
@@ -181,10 +176,10 @@ internal static class JsonPathQueryParser
                                 "$" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
                                 "@" when tokens.Count != 0 => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
                                 "*" => SelectorKind.Wildcard,
-                                _ => SelectorKind.DotName
+                                _ => SelectorKind.Name
                             };
 
-                            if ( selectorKind == SelectorKind.DotName && !selectorSpan.IsEmpty ) // can be null after a union
+                            if ( selectorKind == SelectorKind.Name && !selectorSpan.IsEmpty ) // can be null after a union
                             {
                                 ThrowIfQuoted( selectorSpan );
                                 ThrowIfNotValidUnquotedName( selectorSpan );
@@ -305,8 +300,9 @@ internal static class JsonPathQueryParser
                                     else
                                     {
                                         var builder = new SpanBuilder( selectorSpan.Length );
-                                        SpanHelper.Unescape( selectorSpan, ref builder, singleString: true ); // unquote and unescape
+                                        SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.SingleThenUnquote ); // unescape and then unquote
                                         descriptor = GetSelectorDescriptor( selectorKind, builder, nullable: false );
+                                        builder.Dispose();
                                         escaped = false;
                                     }
                                     break;
@@ -319,8 +315,9 @@ internal static class JsonPathQueryParser
                                     else
                                     {
                                         var builder = new SpanBuilder( selectorSpan.Length );
-                                        SpanHelper.Unescape( selectorSpan, ref builder, singleString: false ); // unescape
+                                        SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.Mixed ); // unescape one or more strings
                                         descriptor = GetSelectorDescriptor( selectorKind, builder );
+                                        builder.Dispose();
                                         escaped = false;
                                     }
                                     break;
@@ -389,10 +386,10 @@ internal static class JsonPathQueryParser
                         {
                             "*" => SelectorKind.Wildcard,
                             ".." => SelectorKind.Descendant,
-                            _ => SelectorKind.DotName
+                            _ => SelectorKind.Name
                         };
 
-                        if ( finalKind == SelectorKind.DotName )
+                        if ( finalKind == SelectorKind.Name )
                         {
                             ThrowIfQuoted( selectorSpan );
                             ThrowIfNotValidUnquotedName( selectorSpan );
@@ -411,12 +408,34 @@ internal static class JsonPathQueryParser
 
         // return tokenized query as a segment list
 
-        return TokensToSegment( tokens );
+        return BuildJsonPathQuery( query, tokens );
 
         static bool StartsOrEndsWithWhitespace( ReadOnlySpan<char> span )
         {
             return !span.IsEmpty && (char.IsWhiteSpace( span[0] ) || char.IsWhiteSpace( span[^1] ));
         }
+    }
+
+    private static JsonPathQuery BuildJsonPathQuery( ReadOnlySpan<char> query, IList<JsonPathSegment> segments )
+    {
+        if ( segments == null || segments.Count == 0 )
+            return new JsonPathQuery( query.ToString(), JsonPathSegment.Final, false );
+
+        // set the next properties
+
+        for ( var index = 0; index < segments.Count; index++ )
+        {
+            var segment = segments[index];
+
+            segment.Next = index != segments.Count - 1
+                ? segments[index + 1]
+                : JsonPathSegment.Final;
+        }
+
+        var rootSegment = segments.First();
+        var normalized = rootSegment.IsNormalized;
+
+        return new JsonPathQuery( query.ToString(), rootSegment, normalized );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -664,23 +683,6 @@ internal static class JsonPathQueryParser
         isValid = false;
         reason = "Input is too large.";
         return false;
-    }
-
-    private static JsonPathSegment TokensToSegment( IList<JsonPathSegment> tokens )
-    {
-        if ( tokens == null || tokens.Count == 0 )
-            return JsonPathSegment.Final;
-
-        // set the next properties
-
-        for ( var index = 0; index < tokens.Count; index++ )
-        {
-            tokens[index].Next = index != tokens.Count - 1
-                ? tokens[index + 1]
-                : JsonPathSegment.Final;
-        }
-
-        return tokens.First();
     }
 
     private static void ThrowIfQuoted( ReadOnlySpan<char> value )

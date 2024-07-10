@@ -12,11 +12,11 @@ public static class JsonHelper
 
     public static ReadOnlySpan<char> ConvertToBracketNotation( ReadOnlySpan<char> path )
     {
-        var segments = JsonPathQueryParser.ParseNoCache( path );
+        var query = JsonPathQueryParser.ParseNoCache( path );
 
         var builder = new StringBuilder();
 
-        foreach ( var token in segments.AsEnumerable() )
+        foreach ( var token in query.Segments.AsEnumerable() )
         {
             builder.Append( '[' );
 
@@ -27,7 +27,6 @@ public static class JsonHelper
                     case SelectorKind.Root:
                         builder.Append( "'$'" );
                         break;
-                    case SelectorKind.DotName:
                     case SelectorKind.Name:
                         builder.Append( $"'{selector.Value}'" );
                         break;

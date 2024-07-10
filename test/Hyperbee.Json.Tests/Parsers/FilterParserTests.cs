@@ -93,7 +93,7 @@ public class FilterParserTests : JsonTestBase
     public void Should_MatchExpectedResult_WhenUsingJsonPath( string filter, bool expected, Type sourceType )
     {
         // arrange & act
-        var result = CompileAndExecute( filter, sourceType );
+        var result = CompileAndExecuteFilter( filter, sourceType );
 
         // assert
         Assert.AreEqual( expected, result );
@@ -137,7 +137,7 @@ public class FilterParserTests : JsonTestBase
     public void Should_MatchExpectedResult_WhenUsingFunctions( string filter, bool expected, Type sourceType )
     {
         // arrange & act
-        var result = CompileAndExecute( filter, sourceType );
+        var result = CompileAndExecuteFilter( filter, sourceType );
 
         // assert
         Assert.AreEqual( expected, result );
@@ -155,7 +155,7 @@ public class FilterParserTests : JsonTestBase
     public void Should_MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
     {
         // arrange & act
-        var result = CompileAndExecute( filter, sourceType );
+        var result = CompileAndExecuteFilter( filter, sourceType );
 
         // assert
         Assert.AreEqual( expected, result );
@@ -166,7 +166,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "length (@.store.book) == 4", typeof( JsonElement ) )]
     public void Should_Fail_WhenHasInvalidWhitespace( string filter, Type sourceType )
     {
-        Assert.ThrowsException<NotSupportedException>( () => CompileAndExecute( filter, sourceType ) );
+        Assert.ThrowsException<NotSupportedException>( () => CompileAndExecuteFilter( filter, sourceType ) );
     }
 
     [DataTestMethod]
@@ -229,7 +229,7 @@ public class FilterParserTests : JsonTestBase
         throw new NotImplementedException();
     }
 
-    private static bool CompileAndExecute( string filter, Type sourceType )
+    private static bool CompileAndExecuteFilter( string filter, Type sourceType )
     {
         if ( sourceType == typeof( JsonElement ) )
         {

@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
@@ -175,5 +176,10 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         }
 
         return true;
+    }
+
+    public bool TryGetFromPointer( in JsonNode node, JsonPathSegment segment, out JsonNode childValue )
+    {
+        return node.TryGetFromJsonPathPointer( segment, out childValue );
     }
 }

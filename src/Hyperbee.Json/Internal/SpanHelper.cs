@@ -1,15 +1,25 @@
 ﻿namespace Hyperbee.Json.Internal;
 
+internal enum SpanUnescapeOptions
+{
+    Single,
+    SingleThenUnquote,
+    Mixed
+}   
+
 internal static class SpanHelper
 {
-    internal static void Unescape( ReadOnlySpan<char> span, ref SpanBuilder builder, bool singleString = true )
+    internal static void Unescape( ReadOnlySpan<char> span, ref SpanBuilder builder, SpanUnescapeOptions options )
     {
-        if ( singleString )
+        if ( options == SpanUnescapeOptions.Single || options == SpanUnescapeOptions.SingleThenUnquote )
         {
             if ( span.Length < 2 || span[0] != '\'' && span[0] != '"' || span[^1] != '\'' && span[^1] != '"' )
                 throw new ArgumentException( "Quoted strings must start and end with a quote." );
 
-            UnescapeQuotedString( span[1..^1], span[0], ref builder ); // unquote and unescape
+            if ( options == SpanUnescapeOptions.SingleThenUnquote )
+                UnescapeQuotedString( span[1..^1], span[0], ref builder ); // unquote and unescape
+            else
+                UnescapeQuotedString( span, span[0], ref builder ); // unquote
         }
         else
         {

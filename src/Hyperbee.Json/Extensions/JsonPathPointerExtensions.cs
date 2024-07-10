@@ -26,223 +26,135 @@ public static class JsonPathPointerExtensions
 {
     public static JsonElement FromJsonPathPointer( this JsonElement jsonElement, ReadOnlySpan<char> pointer )
     {
-        if ( IsNullOrUndefined( jsonElement ) || pointer.IsEmpty )
-            return default;
+        return TryGetFromJsonPathPointer( jsonElement, pointer, out var value ) ? value : default;
+    }
 
-        var splitter = new JsonPathPointerSplitter( pointer );
+    public static bool TryGetFromJsonPathPointer( this JsonElement jsonElement, ReadOnlySpan<char> pointer, out JsonElement value )
+    {
+        var query = JsonPathQueryParser.ParseNoCache( pointer );
+        var segment = query.Segments.Next; // skip the root segment
 
-        while ( splitter.TryMoveNext( out var name ) )
+        return TryGetFromJsonPathPointer( jsonElement, segment, out value );
+    }
+
+    internal static bool TryGetFromJsonPathPointer( this JsonElement jsonElement, JsonPathSegment segment, out JsonElement value )
+    {
+        if ( !segment.IsNormalized )
+            throw new NotSupportedException( "Unsupported JsonPath pointer query format." );
+
+        var current = jsonElement;  
+        value = default;
+
+        while ( !segment.IsFinal )
         {
-            if ( jsonElement.ValueKind == JsonValueKind.Array && int.TryParse( name, out var index ) )
+            var (selectorValue, selectorKind) = segment.Selectors[0];
+
+            switch ( selectorKind )
             {
-                jsonElement = jsonElement.EnumerateArray().ElementAtOrDefault( index );
-                continue;
+                case SelectorKind.Name:
+                {
+                    if ( current.ValueKind != JsonValueKind.Object )
+                        return false;
+
+                    if ( !current.TryGetProperty( selectorValue, out var child ) )
+                        return false;
+
+                    current = child;
+                    break;
+                }
+
+                case SelectorKind.Index:
+                {
+                    var length = current.GetArrayLength();
+                    var index = int.Parse( selectorValue );
+
+                    if ( index < 0 )
+                        index = length + index;
+
+                    if ( index < 0 || index >= length )
+                        return false;
+
+                    current = current[index];
+                    break;
+                }
+
+                default:
+                    throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
             }
 
-            jsonElement = jsonElement.TryGetProperty( name!, out var value ) ? value : default;
-
-            if ( IsNullOrUndefined( jsonElement ) )
-                return default;
+            segment = segment.Next;
         }
 
-        return jsonElement;
-
-        static bool IsNullOrUndefined( JsonElement value ) => value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined;
+        value = current;
+        return true;
     }
 
     public static JsonNode FromJsonPathPointer( this JsonNode jsonNode, ReadOnlySpan<char> pointer )
     {
-        if ( jsonNode == null || pointer.IsEmpty )
-            return default;
+        return TryGetFromJsonPathPointer( jsonNode, pointer, out var value ) ? value : default;
+    }
 
-        var splitter = new JsonPathPointerSplitter( pointer );
+    public static bool TryGetFromJsonPathPointer( this JsonNode jsonElement, ReadOnlySpan<char> pointer, out JsonNode value )
+    {
+        var query = JsonPathQueryParser.ParseNoCache( pointer );
 
-        while ( splitter.TryMoveNext( out var name ) )
+        if ( !query.Normalized )
+            throw new NotSupportedException( "Unsupported JsonPath pointer query format." );
+
+        var segment = query.Segments.Next; // skip the root segment
+
+        return TryGetFromJsonPathPointer( jsonElement, segment, out value );
+    }
+
+    public static bool TryGetFromJsonPathPointer( this JsonNode jsonNode, JsonPathSegment segment, out JsonNode value )
+    {
+        var current = jsonNode;
+        value = default;
+
+        while ( !segment.IsFinal )
         {
-            if ( jsonNode is JsonArray valueArray && int.TryParse( name, out var index ) )
+            var (selectorValue, selectorKind) = segment.Selectors[0];
+
+            switch ( selectorKind )
             {
-                jsonNode = valueArray[index];
+                case SelectorKind.Name:
+                {
+                    if ( current is not JsonObject jsonObject )
+                        return false;
 
-                if ( jsonNode == null )
-                    return default;
+                    if ( !jsonObject.TryGetPropertyValue( selectorValue, out var child ) )
+                        return false;
 
-                continue;
+                    current = child;
+                    break;
+                }
+
+                case SelectorKind.Index:
+                {
+                    if ( current is not JsonArray jsonArray )
+                        return false;
+
+                    var length = jsonArray.Count;
+                    var index = int.Parse( selectorValue );
+
+                    if ( index < 0 )
+                        index = length + index;
+
+                    if ( index < 0 || index >= length )
+                        return false;
+
+                    current = jsonArray[index];
+                    break;
+                }
+
+                default:
+                    throw new NotSupportedException( $"Unsupported {nameof(SelectorKind)}." );
             }
 
-            jsonNode = jsonNode.AsObject().TryGetPropertyValue( name!.ToString(), out var value ) ? value : default;
-
-            if ( jsonNode == null )
-                return default;
+            segment = segment.Next;
         }
 
-        return jsonNode;
+        value = current;
+        return true; 
     }
-
-    private ref struct JsonPathPointerSplitter  //TODO Support escaping of \' and bracket counting in literals. Add to unit tests.
-    {
-        // zero allocation helper that splits a json path in to parts
-
-        // this splitter only works on simple property 'keys' it does not work
-        // with complex selectors ( '..', '*', '[a,b,c]' ).
-
-        private ReadOnlySpan<char> _span;
-        private Scanner _scanner;
-
-        private enum Scanner
-        {
-            Default,
-            Quoted,
-            Bracket,
-            Trailing
-        }
-
-        private enum SpanAction
-        {
-            ReadNext,
-            TruncateLeadingCharacter,
-            YieldIdentifier
-        }
-
-        private enum BracketContent
-        {
-            Undefined,
-            Quoted,
-            Number
-        }
-
-        internal JsonPathPointerSplitter( ReadOnlySpan<char> span )
-        {
-            if ( !span.StartsWith( "$" ) )
-                throw new NotSupportedException( "Path must start with `$`." );
-
-            span = span.StartsWith( "$." ) ? span[2..] : span[1..]; // eat the leading $
-
-            _span = span;
-            _scanner = Scanner.Default;
-        }
-
-        private void TakeIdentifier( int i, out ReadOnlySpan<char> identifier )
-        {
-            identifier = i > 0 ? _span[..i].Trim( '\'' ) : default;
-            _span = _span[Math.Min( i + 1, _span.Length )..];
-        }
-
-        // ReSharper disable once RedundantAssignment
-        private void TakeLeadingCharacter( ref int i )
-        {
-            _span = _span[1..];
-            i = 0;
-        }
-
-        public bool TryMoveNext( out ReadOnlySpan<char> identifier )
-        {
-            identifier = default;
-            var i = 0;
-
-            var bracketContent = BracketContent.Undefined;
-
-            do
-            {
-                if ( _span.IsEmpty || i >= _span.Length )
-                    return false;
-
-                var c = _span[i];
-                var action = SpanAction.ReadNext;
-
-                switch ( _scanner )
-                {
-                    case Scanner.Default:
-                        switch ( c )
-                        {
-                            case '\'':
-                                _scanner = Scanner.Quoted;
-                                break;
-                            case '[':
-                                _scanner = Scanner.Bracket;
-                                action = SpanAction.YieldIdentifier;
-                                break;
-                            case '.':
-                                action = SpanAction.YieldIdentifier;
-                                break;
-                            case ' ':
-                            case '\t':
-                            case ']':
-                            case '$' when i > 0:
-                                throw new JsonException( $"Invalid character '{c}' at pos {i}." );
-                            default:
-                                if ( i + 1 == _span.Length ) // take if at the end
-                                {
-                                    i++; // capture the final character
-                                    action = SpanAction.YieldIdentifier;
-                                }
-
-                                break;
-                        }
-
-                        break;
-                    case Scanner.Quoted:
-                        switch ( c )
-                        {
-                            case '\'':
-                                _scanner = Scanner.Trailing;
-                                action = SpanAction.YieldIdentifier;
-                                break;
-                        }
-
-                        break;
-                    case Scanner.Bracket:
-                        switch ( c )
-                        {
-                            case ']':
-                                _scanner = Scanner.Trailing;
-                                action = SpanAction.YieldIdentifier;
-                                break;
-                            case var _ when bracketContent == BracketContent.Undefined:
-                                if ( c == '\'' )
-                                    bracketContent = BracketContent.Quoted;
-                                else if ( char.IsNumber( c ) )
-                                    bracketContent = BracketContent.Number;
-                                else
-                                    throw new JsonException( $"Invalid character '{c}' in bracket at pos {i}." );
-                                break;
-                            case var _ when bracketContent == BracketContent.Number && !char.IsNumber( c ):
-                                throw new JsonException( $"Invalid non-numeric {c}' in bracket at pos {i}." );
-                        }
-
-                        break;
-                    case Scanner.Trailing:
-                        switch ( c )
-                        {
-                            case '[':
-                                _scanner = Scanner.Bracket;
-                                break;
-                            case '.':
-                                _scanner = Scanner.Default;
-                                break;
-                            default:
-                                throw new JsonException( $"Invalid character '{c}' after identifier at pos {i}." );
-                        }
-
-                        action = SpanAction.TruncateLeadingCharacter;
-                        break;
-                }
-
-                switch ( action )
-                {
-                    case SpanAction.ReadNext:
-                        i++;
-                        break;
-                    case SpanAction.TruncateLeadingCharacter:
-                        TakeLeadingCharacter( ref i );
-                        break;
-                    case SpanAction.YieldIdentifier:
-                        TakeIdentifier( i, out identifier );
-                        break;
-                }
-
-            } while ( identifier.IsEmpty );
-
-            return true;
-        }
-    }
-}
+ }

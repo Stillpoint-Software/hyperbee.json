@@ -79,7 +79,16 @@ public static class JsonPath<TNode>
         if ( query == "$" || query == "@" ) // quick out for everything
             return [value];
 
-        var segmentNext = JsonPathQueryParser.Parse( query, allowDotWhitespace ).Next; // The first segment is always the root; skip it
+        var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
+        var segmentNext = compiledQuery.Segments.Next; // The first segment is always the root; skip it
+
+        if ( compiledQuery.Normalized ) // we can fast path this
+        {
+            if ( Descriptor.Accessor.TryGetFromPointer( in value, segmentNext, out var result ) )
+                return [result];
+
+            return [];
+        }
 
         return EnumerateMatches( root, new NodeArgs( default, value, default, segmentNext, NodeFlags.Default ), processor );
     }

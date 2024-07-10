@@ -399,20 +399,6 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    /*
-    [DataTestMethod]
-    [DataRow("$[0]", typeof(JsonDocument))]
-    [DataRow("$[0]", typeof(JsonNode))]
-    public void BracketNotationWithNumberOnString(string query, Type sourceType)
-    {
-        // rfc: NOT_SUPPORTED // JsonDocument can't parse
-        // consensus: []
-
-        const string json = "Hello World";
-        var source = GetDocumentFromSource(sourceType, json);
-    }
-    */
-
     [DataTestMethod]
     [DataRow( "$[':']", typeof( JsonDocument ) )]
     [DataRow( "$[':']", typeof( JsonNode ) )]
@@ -524,20 +510,6 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    /*
-    [DataTestMethod]
-    [DataRow("$['\"']", typeof(JsonDocument))]
-    [DataRow("$['\"']", typeof(JsonNode))]
-    public void BracketNotationWithQuotedDoubleQuoteLiteral(string query, Type sourceType)
-    {
-        // rfc: NOT_SUPPORTED // JsonDocument can't parse
-        // consensus: ["value"]
-
-        const string json = "{ \"\"\": \"value\", \"another\": \"entry\"}";
-        var source = GetDocumentFromSource(sourceType, json);
-    }
-    */
-
     [DataTestMethod]
     [DataRow( @"$['\\']", typeof( JsonDocument ) )]
     [DataRow( @"$['\\']", typeof( JsonNode ) )]
@@ -556,7 +528,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var matches = source.Select( query );
         var expected = new[]
         {
-            source.FromJsonPathPointer(@"$['\']")
+            source.FromJsonPathPointer(@"$['\\']")
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

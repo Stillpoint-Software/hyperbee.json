@@ -42,7 +42,7 @@ public static class JsonPathPointerExtensions
         if ( !segment.IsNormalized )
             throw new NotSupportedException( "Unsupported JsonPath pointer query format." );
 
-        var current = jsonElement;  
+        var current = jsonElement;
         value = default;
 
         while ( !segment.IsFinal )
@@ -52,31 +52,31 @@ public static class JsonPathPointerExtensions
             switch ( selectorKind )
             {
                 case SelectorKind.Name:
-                {
-                    if ( current.ValueKind != JsonValueKind.Object )
-                        return false;
+                    {
+                        if ( current.ValueKind != JsonValueKind.Object )
+                            return false;
 
-                    if ( !current.TryGetProperty( selectorValue, out var child ) )
-                        return false;
+                        if ( !current.TryGetProperty( selectorValue, out var child ) )
+                            return false;
 
-                    current = child;
-                    break;
-                }
+                        current = child;
+                        break;
+                    }
 
                 case SelectorKind.Index:
-                {
-                    var length = current.GetArrayLength();
-                    var index = int.Parse( selectorValue );
+                    {
+                        var length = current.GetArrayLength();
+                        var index = int.Parse( selectorValue );
 
-                    if ( index < 0 )
-                        index = length + index;
+                        if ( index < 0 )
+                            index = length + index;
 
-                    if ( index < 0 || index >= length )
-                        return false;
+                        if ( index < 0 || index >= length )
+                            return false;
 
-                    current = current[index];
-                    break;
-                }
+                        current = current[index];
+                        break;
+                    }
 
                 default:
                     throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
@@ -118,43 +118,43 @@ public static class JsonPathPointerExtensions
             switch ( selectorKind )
             {
                 case SelectorKind.Name:
-                {
-                    if ( current is not JsonObject jsonObject )
-                        return false;
+                    {
+                        if ( current is not JsonObject jsonObject )
+                            return false;
 
-                    if ( !jsonObject.TryGetPropertyValue( selectorValue, out var child ) )
-                        return false;
+                        if ( !jsonObject.TryGetPropertyValue( selectorValue, out var child ) )
+                            return false;
 
-                    current = child;
-                    break;
-                }
+                        current = child;
+                        break;
+                    }
 
                 case SelectorKind.Index:
-                {
-                    if ( current is not JsonArray jsonArray )
-                        return false;
+                    {
+                        if ( current is not JsonArray jsonArray )
+                            return false;
 
-                    var length = jsonArray.Count;
-                    var index = int.Parse( selectorValue );
+                        var length = jsonArray.Count;
+                        var index = int.Parse( selectorValue );
 
-                    if ( index < 0 )
-                        index = length + index;
+                        if ( index < 0 )
+                            index = length + index;
 
-                    if ( index < 0 || index >= length )
-                        return false;
+                        if ( index < 0 || index >= length )
+                            return false;
 
-                    current = jsonArray[index];
-                    break;
-                }
+                        current = jsonArray[index];
+                        break;
+                    }
 
                 default:
-                    throw new NotSupportedException( $"Unsupported {nameof(SelectorKind)}." );
+                    throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
             }
 
             segment = segment.Next;
         }
 
         value = current;
-        return true; 
+        return true;
     }
- }
+}

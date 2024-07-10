@@ -5,7 +5,7 @@ internal enum SpanUnescapeOptions
     Single,
     SingleThenUnquote,
     Mixed
-}   
+}
 
 internal static class SpanHelper
 {

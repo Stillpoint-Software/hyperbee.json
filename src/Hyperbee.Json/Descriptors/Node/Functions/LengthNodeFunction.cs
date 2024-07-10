@@ -15,7 +15,7 @@ public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
         if ( argumentInfo[0] )
             throw new NotSupportedException( $"Function {Name} does not support non-singular arguments." );
 
-        return Expression.Invoke( LengthExpression, 
+        return Expression.Invoke( LengthExpression,
             Expression.Convert( arguments[0], typeof( INodeType ) ) );
     }
 

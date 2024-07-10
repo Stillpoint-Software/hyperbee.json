@@ -34,7 +34,7 @@ public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
     {
         var value = nodes.FirstOrDefault();
 
-        if( value?.GetValueKind() != JsonValueKind.String )
+        if ( value?.GetValueKind() != JsonValueKind.String )
         {
             return ValueType.False;
         }

@@ -23,7 +23,7 @@ public readonly struct ValueType<T>( T value ) : INodeType where T : IConvertibl
     public NodeTypeKind Kind => NodeTypeKind.Value;
     public T Value { get; } = value;
 
-    public static ValueType<TValue> GetValueType<TValue>( TValue value ) where TValue : IConvertible, IComparable<TValue> => new(value);
+    public static ValueType<TValue> GetValueType<TValue>( TValue value ) where TValue : IConvertible, IComparable<TValue> => new( value );
     public static implicit operator ValueType<T>( T value ) => GetValueType( value );
 
     public int CompareTo( INodeType other )
@@ -100,8 +100,8 @@ public readonly struct Null : INodeType
 
 public static class ValueType
 {
-    public static ValueType<bool> True { get; } = new(true);
-    public static ValueType<bool> False { get; } = new(false);
+    public static ValueType<bool> True { get; } = new( true );
+    public static ValueType<bool> False { get; } = new( false );
 
     public static Null Null { get; } = new();
     public static Nothing Nothing { get; } = new();

@@ -12,7 +12,7 @@ public class CountNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         return Expression.Invoke( CountExpression,
-            Expression.Convert( arguments[0], typeof(INodeType) ) );
+            Expression.Convert( arguments[0], typeof( INodeType ) ) );
     }
 
     public static INodeType Count( INodeType arg )

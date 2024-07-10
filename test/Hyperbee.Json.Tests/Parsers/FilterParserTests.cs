@@ -199,11 +199,11 @@ public class FilterParserTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var elementContext = new FilterParserContext<JsonElement>( new ElementTypeDescriptor() );
-            return (FilterParser<JsonElement>.Parse( filter, elementContext ), elementContext.RuntimeContext );
+            return (FilterParser<JsonElement>.Parse( filter, elementContext ), elementContext.RuntimeContext);
         }
 
         var nodeContext = new FilterParserContext<JsonNode>( new NodeTypeDescriptor() );
-        return (FilterParser<JsonNode>.Parse( filter, nodeContext ), nodeContext.RuntimeContext );
+        return (FilterParser<JsonNode>.Parse( filter, nodeContext ), nodeContext.RuntimeContext);
     }
 
     private static bool Execute( Expression expression, ParameterExpression param, Type sourceType )

@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;

@@ -119,7 +119,7 @@ public class JsonComparerComparandTests : JsonTestBase
         var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
         var node = new List<JsonNode> { JsonNode.Parse( left )!["value"] };
 
-        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new NodesType<JsonNode>(node, false) );
+        var a = new ComparerExpressionFactory<JsonNode>.Comparand( context, new NodesType<JsonNode>( node, false ) );
         var b = new ComparerExpressionFactory<JsonNode>.Comparand( context,
             right is float rightFloat
                 ? new ValueType<float>( rightFloat )

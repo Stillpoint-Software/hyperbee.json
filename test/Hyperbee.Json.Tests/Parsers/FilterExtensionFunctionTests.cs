@@ -41,7 +41,7 @@ public class FilterExtensionFunctionTests : JsonTestBase
         protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
         {
             return Expression.Invoke( PathExpression,
-                Expression.Convert( arguments[0], typeof(INodeType) ) );
+                Expression.Convert( arguments[0], typeof( INodeType ) ) );
         }
 
         private static INodeType Path( INodeType arg )

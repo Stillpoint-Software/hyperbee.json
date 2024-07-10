@@ -22,9 +22,9 @@ public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
     {
         return input switch
         {
-            NodesType<JsonNode> nodes when regex is ValueType<string> stringValue => 
+            NodesType<JsonNode> nodes when regex is ValueType<string> stringValue =>
                 Search( nodes, stringValue.Value ),
-            NodesType<JsonNode> nodes when regex is NodesType<JsonNode> stringValue => 
+            NodesType<JsonNode> nodes when regex is NodesType<JsonNode> stringValue =>
                 Search( nodes, stringValue.Value.FirstOrDefault()?.GetValue<string>() ),
             _ => ValueType.False
         };

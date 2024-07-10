@@ -17,6 +17,8 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
     public IFilterEvaluator<JsonElement> FilterEvaluator =>
         _evaluator ??= new FilterEvaluator<JsonElement>( this );
 
+    public bool CanUsePointer => true;
+
     public ElementTypeDescriptor()
     {
         Functions.Register( CountElementFunction.Name, () => new CountElementFunction() );

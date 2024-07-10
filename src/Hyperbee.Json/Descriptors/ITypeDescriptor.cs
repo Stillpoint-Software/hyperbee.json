@@ -14,6 +14,7 @@ public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
     public IValueAccessor<TNode> Accessor { get; }
     public IFilterEvaluator<TNode> FilterEvaluator { get; }
+    bool CanUsePointer { get; }
 
     public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out IFilterEvaluator<TNode> filterEvaluator )
     {

@@ -31,7 +31,7 @@ public static class JsonPathPointerExtensions
 
     public static bool TryGetFromJsonPathPointer( this JsonElement jsonElement, ReadOnlySpan<char> pointer, out JsonElement value )
     {
-        var query = JsonPathQueryParser.ParseNoCache( pointer );
+        var query = JsonPathQueryParser.Parse( pointer );
         var segment = query.Segments.Next; // skip the root segment
 
         return TryGetFromJsonPathPointer( jsonElement, segment, out value );

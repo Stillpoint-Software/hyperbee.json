@@ -40,6 +40,11 @@ internal static class JsonPathQueryParser
         Final
     }
 
+    internal static JsonPathQuery Parse( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
+    {
+        return Parse( query.ToString(), allowDotWhitespace );
+    }
+
     internal static JsonPathQuery Parse( string query, bool allowDotWhitespace = false )
     {
         return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );

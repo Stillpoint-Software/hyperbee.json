@@ -17,6 +17,8 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
     public IFilterEvaluator<JsonNode> FilterEvaluator =>
         _evaluator ??= new FilterEvaluator<JsonNode>( this );
 
+    public bool CanUsePointer => true;
+
     public NodeTypeDescriptor()
     {
         Functions.Register( CountNodeFunction.Name, () => new CountNodeFunction() );

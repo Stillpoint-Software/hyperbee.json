@@ -14,7 +14,7 @@ The library is designed to be quick and extensible, allowing support for other J
 
 ## JSONPath RFC
 
-Hyperbee.Json aims to follow the RFC, and to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
+Hyperbee.Json conforms to the RFC, and aims to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
 when the RFC is unopinionated. When the RFC is unopinionated, and where the consensus is ambiguous or not aligned with our 
 performance and usability goals, we may deviate. Our goal is always to provide a robust and performant library while  
 strengthening our alignment with the RFC and the community.

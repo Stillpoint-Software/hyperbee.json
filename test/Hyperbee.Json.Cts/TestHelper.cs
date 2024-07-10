@@ -42,7 +42,6 @@ internal static class TestHelper
     {
         var expectedSet = ConvertToJsonArraySet( expected );
         var compare = ConvertToJsonArray( results );
-
         return expectedSet.Any( expect => JsonNode.DeepEquals( expect, compare ) );
     }
 

@@ -249,7 +249,7 @@ public static class JsonPath<TNode>
                             continue;
                         }
 
-                    // Array: [name1,name2,...]
+                    // Array: [name1,name2,...] Names over array
                     case SelectorKind.Name when nodeKind == NodeKind.Array:
                         {
                             var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
@@ -269,7 +269,7 @@ public static class JsonPath<TNode>
                             continue;
                         }
 
-                    // Object: [name1,name2,...]
+                    // Object: [name1,name2,...] Names over object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
                         {
                             if ( accessor.TryGetChildValue( value, selector, selectorKind, out var childValue ) )

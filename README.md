@@ -231,7 +231,6 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
 ### [JsonPath.Net](https://docs.json-everything.net/path/basics/) Json-Everything
 
 - **Pros:**
-  - Extensive JSON ecosystem.
   - Comprehensive feature set.
   - Deferred execution queries with `IEnumerable`.
   - Strong community support.
@@ -268,7 +267,7 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
 - Supports both `JsonElement`, and `JsonNode`.
 - Deferred execution queries with `IEnumerable`.
 - Extendable to support additional JSON document types and functions.
-- RFC and Consensus focused JSONPath implementation.
+- RFC conforming JSONPath implementation.
 
 ## Benchmarks
 

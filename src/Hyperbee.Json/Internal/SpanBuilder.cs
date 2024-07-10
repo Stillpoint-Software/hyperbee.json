@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Internal;
 using System;
 using System.Buffers;
 
-internal ref struct SpanBuilder
+internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
 {
     private char[] _buffer;
     private Span<char> _chars;
@@ -18,6 +18,8 @@ internal ref struct SpanBuilder
         _chars = _buffer;
         _pos = 0;
     }
+
+    public readonly bool IsEmpty => _pos == 0;
 
     public void Append( char value )
     {
@@ -35,6 +37,8 @@ internal ref struct SpanBuilder
         value.CopyTo( _chars[_pos..] );
         _pos += value.Length;
     }
+
+    public void Clear() => _pos = 0;
 
     public readonly ReadOnlySpan<char> AsSpan() => _chars[.._pos];
 

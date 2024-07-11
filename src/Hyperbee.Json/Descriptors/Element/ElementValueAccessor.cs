@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;

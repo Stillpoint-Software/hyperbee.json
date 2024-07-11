@@ -4,7 +4,6 @@ using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
-using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 

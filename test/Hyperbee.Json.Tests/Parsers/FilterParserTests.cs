@@ -173,7 +173,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "'unbalanced string\"", typeof( JsonElement ) )]
     [DataRow( " \t ", typeof( JsonElement ) )]
     [DataRow( "1 === 1", typeof( JsonElement ) )]
-    [DataRow( "(1 == 1(", typeof( JsonElement ) )]
+    [DataRow( "(1 == 1(", typeof( JsonElement ) )] // BF
     [DataRow( "(1 == 1)(", typeof( JsonElement ) )]
     [DataRow( "(1 == ", typeof( JsonElement ) )]
     [DataRow( "== 1", typeof( JsonElement ) )]

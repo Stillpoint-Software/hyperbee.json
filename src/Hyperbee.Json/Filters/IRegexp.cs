@@ -86,7 +86,6 @@ public static class IRegexp
          * This ensures that the regex matches any character except newline and carriage return characters,
          * while correctly handling surrogate pairs which are necessary for certain Unicode characters.
          *
-         *
          * Pattern:
          *   (?:
          *       (?![\r\n])   # Negative lookahead to exclude \r and \n

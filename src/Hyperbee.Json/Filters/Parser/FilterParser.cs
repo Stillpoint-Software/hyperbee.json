@@ -68,6 +68,10 @@ public class FilterParser<TNode> : FilterParser
         if ( !state.EndOfBuffer && state.IsTerminal )
             state.Pos++;
 
+        // check for paren mismatch
+        if ( state.EndOfBuffer && state.ParenDepth != 0 )
+            throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
+
         // merge the expressions
         var baseItem = items[0];
         var index = 1;
@@ -217,9 +221,11 @@ public class FilterParser<TNode> : FilterParser
                 state.Operator = Operator.Not;
                 break;
             case '(':
+                state.ParenDepth++;
                 state.Operator = Operator.OpenParen;
                 break;
             case ')':
+                state.ParenDepth--;
                 state.Operator = Operator.ClosedParen;
                 break;
             case ' ' or '\t' or '\r' or '\n':

@@ -40,7 +40,7 @@ public class MatchElementFunction() : FilterExtensionFunction( argumentCount: 2 
 
         var stringValue = value.GetString() ?? string.Empty;
 
-        var regexPattern = new Regex( $"^{IRegexp.ConvertToIRegexp(regex)}$" );
+        var regexPattern = new Regex( $"^{IRegexp.ConvertToIRegexp( regex )}$" );
         return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
     }
 }

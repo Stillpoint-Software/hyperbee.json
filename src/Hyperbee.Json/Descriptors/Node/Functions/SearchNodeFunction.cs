@@ -16,8 +16,8 @@ public class SearchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         return Expression.Invoke( SearchExpression,
-            Expression.Convert( arguments[0], typeof(INodeType) ),
-            Expression.Convert( arguments[1], typeof(INodeType) ) );
+            Expression.Convert( arguments[0], typeof( INodeType ) ),
+            Expression.Convert( arguments[1], typeof( INodeType ) ) );
     }
 
     public static INodeType Search( INodeType input, INodeType regex )

@@ -1,8 +1,11 @@
 ﻿using System.Linq.Expressions;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
@@ -14,8 +17,8 @@ public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
     protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
     {
         return Expression.Invoke( MatchExpression,
-            Expression.Convert( arguments[0], typeof( INodeType ) ),
-            Expression.Convert( arguments[1], typeof( INodeType ) ) );
+            Expression.Convert( arguments[0], typeof(INodeType) ),
+            Expression.Convert( arguments[1], typeof(INodeType) ) );
     }
 
     public static INodeType Match( INodeType input, INodeType regex )
@@ -35,13 +38,12 @@ public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
         var value = nodes.FirstOrDefault();
 
         if ( value?.GetValueKind() != JsonValueKind.String )
-        {
             return ValueType.False;
-        }
 
         var stringValue = value.GetValue<string>();
 
-        var regexPattern = new Regex( $"^{regex.Trim( '\"', '\'' )}$" );
+        var regexPattern = new Regex( $"^{IRegexp.ConvertToIRegexp( regex )}$" );
         return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
     }
 }
+

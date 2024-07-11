@@ -1,7 +1,9 @@
 ﻿using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
@@ -34,13 +36,11 @@ public class MatchElementFunction() : FilterExtensionFunction( argumentCount: 2 
         var value = nodes.FirstOrDefault();
 
         if ( value.ValueKind != JsonValueKind.String )
-        {
             return ValueType.False;
-        }
 
-        var stringValue = value.GetString() ?? String.Empty;
+        var stringValue = value.GetString() ?? string.Empty;
 
-        var regexPattern = new Regex( $"^{regex.Trim( '\"', '\'' )}$" );
+        var regexPattern = new Regex( $"^{IRegexp.ConvertToIRegexp(regex)}$" );
         return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
     }
 }

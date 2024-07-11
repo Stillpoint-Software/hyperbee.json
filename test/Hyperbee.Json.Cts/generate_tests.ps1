@@ -31,18 +31,24 @@ function Get-JsonContent {
     param (
         [Parameter(Mandatory=$true)]
         [string]$Url,
-        [string]$SavePath
+        [string]$LocalPath
     )
 
-    # Fetch the JSON content as a string
-    $response = Invoke-WebRequestWithRetry -Url $Url
-    $jsonContent = $response.Content
+    if (Test-Path -Path $LocalPath) {
+        # Read from file location
+        $jsonContent = Get-Content -Path $ctsPath -Raw
+        Write-Host "JSON content read from '$LocalPath'."
+    } else {
+        # Fetch the JSON content as a string
+        $response = Invoke-WebRequestWithRetry -Url $Url
+        $jsonContent = $response.Content
 
-    # Save the JSON content to a file in a pretty formatted way if SavePath is provided
-    if ($PSBoundParameters.ContainsKey('SavePath')) {
-        $prettyJson = $jsonContent | ConvertFrom-Json -AsHashtable | ConvertTo-Json -Depth 10
-        Set-Content -Path $SavePath -Value $prettyJson
-        Write-Host "JSON content saved to '$SavePath'."
+        # Save the JSON content to a file in a pretty formatted way if SavePath is provided
+        if ($PSBoundParameters.ContainsKey('LocalPath')) {
+            $prettyJson = $jsonContent | ConvertFrom-Json -AsHashtable | ConvertTo-Json -Depth 10
+            Set-Content -Path $SavePath -Value $prettyJson
+            Write-Host "JSON content saved to '$LocalPath'."
+        }
     }
 
     # Convert the raw JSON string to a PowerShell hashtable to access properties
@@ -205,7 +211,7 @@ namespace Hyperbee.Json.Cts.Tests
         # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
         
-        [TestMethod( `"$name` ($testNumber)" )]
+        [TestMethod( @`"$name ($testNumber)`" )]
         public void Test`_$methodName`_$testNumber()
         {
             var selector = `"$selector`";`r`n
@@ -263,10 +269,8 @@ namespace Hyperbee.Json.Cts.Tests
 # Generate unit-tests by category
 $ctsPath = Join-Path -Path $PSScriptRoot -ChildPath "cts.json"
 
-if (-not (Test-Path -Path $ctsPath)) {
-    $jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
-    $jsonContent = Get-JsonContent -Url $jsonUrl -SavePath $ctsPath
-}
+$jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
+$jsonContent = Get-JsonContent -Url $jsonUrl -LocalPath $ctsPath
 
 # Group tests by category
 $groupedTests = $jsonContent | Group-Object -Property { $_.group }

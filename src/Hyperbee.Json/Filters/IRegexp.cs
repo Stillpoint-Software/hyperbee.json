@@ -67,20 +67,15 @@ public static class IRegexp
          *      without capturing the matched text.
          *
          * 2. Negative Lookahead `(?! ... )`
-         *    - `(?![\r\n])`: Asserts that what immediately follows is not a carriage return (`\r`) or newline (`\n`).
-         *      This solves the problem of matching any character except newline and carriage return characters.
+         *    - `(?[\r\n])`: Match any character that is not a carriage return (`\r`) or newline (`\n`).
          *
-         * 3. Non-Surrogate Character `\P{Cs}`
-         *    - `\P{Cs}`: Matches any character that is not in the "Cs" (surrogate) Unicode category.
-         *      This ensures we exclude surrogate code points.
-         *
-         * 4. Surrogate Pair `\p{Cs}\p{Cs}`
+         * 3. Surrogate Pair `\p{Cs}\p{Cs}`
          *    - `\p{Cs}`: Matches any character in the "Cs" (surrogate) Unicode category.
          *    - `\p{Cs}\p{Cs}`: Matches a surrogate pair, which consists of two surrogate characters in sequence.
          *
          * Overall Pattern:
          * - The pattern matches either:
-         *   1. Any character that is not a surrogate and is not a newline (`\r` or `\n`), or
+         *   1. Any character that is not a newline (`\r` or `\n`), or
          *   2. A surrogate pair (two surrogate characters in sequence).
          *
          * This ensures that the regex matches any character except newline and carriage return characters,
@@ -88,13 +83,12 @@ public static class IRegexp
          *
          * Pattern:
          *   (?:
-         *       (?![\r\n])   # Negative lookahead to exclude \r and \n
-         *       \P{Cs}       # Match any character that is not a surrogate
+         *       (?[^\r\n])   # Match any character except \r and \n
          *       |
          *       \p{Cs}\p{Cs} # Match a surrogate pair (two surrogates in sequence)
          *   )
          */
-        var replacement = @"(?:(?![\r\n])\P{Cs}|\p{Cs}\p{Cs})".AsSpan();
+        var replacement = @"(?:[^\r\n]|\p{Cs}\p{Cs})".AsSpan(); // (?:(?![\r\n])\P{Cs}|\p{Cs}\p{Cs})
 
         var newSize = pattern.Length + dotCount * (replacement.Length - 1); // '.' is 1 char, so extra (pattern-length - 1) chars per '.'
         Span<char> buffer = newSize > 512

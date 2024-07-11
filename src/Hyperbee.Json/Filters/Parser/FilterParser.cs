@@ -69,8 +69,8 @@ public class FilterParser<TNode> : FilterParser
             state.Pos++;
 
         // check for paren mismatch
-        if ( state.EndOfBuffer && state.ParenDepth != 0 )
-            throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
+        //if ( state.EndOfBuffer && state.ParenDepth != 0 )
+         //   throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
 
         // merge the expressions
         var baseItem = items[0];

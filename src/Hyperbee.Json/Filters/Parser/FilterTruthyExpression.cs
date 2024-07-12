@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
-using Hyperbee.Json.Descriptors.Types;
-using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -43,7 +42,7 @@ public static class FilterTruthyExpression
 
     public static INodeType ConvertBoolToValueType( bool value )
     {
-        return value ? ValueType.True : ValueType.False;
+        return value ? Constants.True : Constants.False;
     }
 
 }

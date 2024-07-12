@@ -206,7 +206,10 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[] { source.FromJsonPathPointer( "$[1]" ), source.FromJsonPathPointer( "$[2]" ), source.FromJsonPathPointer( "$[4]" ) };
+        var expected = new[] {
+            source.FromJsonPathPointer( "$[1]" ),
+            source.FromJsonPathPointer( "$[2]" ),
+            source.FromJsonPathPointer( "$[4]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }

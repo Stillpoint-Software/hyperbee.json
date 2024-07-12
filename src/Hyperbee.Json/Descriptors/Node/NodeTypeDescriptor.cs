@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node.Functions;
-using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Filters;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node;
 

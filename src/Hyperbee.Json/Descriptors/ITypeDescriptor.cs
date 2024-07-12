@@ -1,6 +1,6 @@
-﻿using Hyperbee.Json.Descriptors.Types;
-using Hyperbee.Json.Filters;
+﻿using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors;
 

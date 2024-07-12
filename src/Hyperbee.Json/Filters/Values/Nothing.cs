@@ -1,4 +1,4 @@
-﻿namespace Hyperbee.Json.Descriptors.Types;
+﻿namespace Hyperbee.Json.Filters.Values;
 
 public struct Nothing : INodeType
 {

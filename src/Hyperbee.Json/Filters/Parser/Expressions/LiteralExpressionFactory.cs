@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Hyperbee.Json.Descriptors.Types;
-using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -23,13 +22,13 @@ internal class LiteralExpressionFactory : IExpressionFactory
         // Check for known literals (true, false, null) first
 
         if ( item.Equals( "true", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( ValueType.True );
+            return Expression.Constant( Constants.True );
 
         if ( item.Equals( "false", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( ValueType.False );
+            return Expression.Constant( Constants.False );
 
         if ( item.Equals( "null", StringComparison.OrdinalIgnoreCase ) )
-            return Expression.Constant( ValueType.Null );
+            return Expression.Constant( Constants.Null );
 
         // Check for quoted strings
 

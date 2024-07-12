@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Filters.Parser;
-using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
@@ -19,7 +18,7 @@ public class LengthNodeFunction() : FilterExtensionFunction( LengthMethodInfo, F
             NodesType<JsonNode> nodes => LengthImpl( nodes.FirstOrDefault() ),
             ValueType<string> valueString => new ValueType<float>( valueString.Value.Length ),
             Null or Nothing => input,
-            _ => ValueType.Nothing
+            _ => Constants.Nothing
         };
     }
 
@@ -36,9 +35,9 @@ public class LengthNodeFunction() : FilterExtensionFunction( LengthMethodInfo, F
                 JsonValueKind.String => new ValueType<float>( node.GetValue<string>()?.Length ?? 0 ),
                 JsonValueKind.Array => new ValueType<float>( node.AsArray().Count ),
                 JsonValueKind.Object => new ValueType<float>( node.AsObject().Count ),
-                _ => ValueType.Nothing
+                _ => Constants.Nothing
             },
-            _ => ValueType.Nothing
+            _ => Constants.Nothing
         };
     }
 

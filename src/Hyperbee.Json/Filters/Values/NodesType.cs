@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Hyperbee.Json.Descriptors.Types;
+namespace Hyperbee.Json.Filters.Values;
 
 public struct NodesType<TNode>( IEnumerable<TNode> value, bool nonSingular ) : INodeType, IEnumerable<TNode>
 {

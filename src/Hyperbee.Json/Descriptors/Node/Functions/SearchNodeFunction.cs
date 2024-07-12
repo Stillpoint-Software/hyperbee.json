@@ -2,10 +2,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
-using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
@@ -22,7 +21,7 @@ public class SearchNodeFunction() : FilterExtensionFunction( SearchMethodInfo, F
                 SearchImpl( nodes, stringValue.Value ),
             NodesType<JsonNode> nodes when regex is NodesType<JsonNode> stringValue =>
                 SearchImpl( nodes, stringValue.Value.FirstOrDefault()?.GetValue<string>() ),
-            _ => ValueType.False
+            _ => Constants.False
         };
     }
 
@@ -31,7 +30,7 @@ public class SearchNodeFunction() : FilterExtensionFunction( SearchMethodInfo, F
         var value = nodes.FirstOrDefault();
 
         if ( value?.GetValueKind() != JsonValueKind.String )
-            return ValueType.False;
+            return Constants.False;
 
         var regexPattern = new Regex( IRegexp.ConvertToIRegexp( regex ) );
         return new ValueType<bool>( regexPattern.IsMatch( value.GetValue<string>() ) );

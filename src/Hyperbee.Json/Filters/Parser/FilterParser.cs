@@ -344,13 +344,9 @@ public class FilterParser<TNode> : FilterParser
             Operator.GreaterThanOrEqual => NodeTypeExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
             Operator.LessThan => NodeTypeExpression<TNode>.LessThan( left.Expression, right.Expression ),
             Operator.LessThanOrEqual => NodeTypeExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
-            Operator.And => Expression.AndAlso(
-                FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
-                FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
-            Operator.Or => Expression.OrElse(
-                FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
-                FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
-            Operator.Not => Expression.Not( FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
+            Operator.And => NodeTypeExpression<TNode>.And( left.Expression, right.Expression ),
+            Operator.Or => NodeTypeExpression<TNode>.Or( left.Expression, right.Expression ),
+            Operator.Not => NodeTypeExpression<TNode>.Not( right.Expression ),
             _ => left.Expression
         };
 

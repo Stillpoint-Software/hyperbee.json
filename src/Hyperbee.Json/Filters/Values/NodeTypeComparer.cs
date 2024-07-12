@@ -1,10 +1,15 @@
-﻿using Hyperbee.Json.Filters.Parser;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Filters.Parser;
 
-namespace Hyperbee.Json.Descriptors.Types;
+namespace Hyperbee.Json.Filters.Values;
 
 public interface INodeTypeComparer
 {
     public int Compare( INodeType left, INodeType right, Operator operation );
+
+    public bool Exists( INodeType node );
 }
 
 public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTypeComparer
@@ -105,6 +110,18 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
         }
     }
 
+    public bool Exists( INodeType node )
+    {
+        return node switch
+        {
+            ValueType<bool> boolValue => boolValue.Value,
+            ValueType<float> floatValue => floatValue.Value != 0,
+            ValueType<string> stringValue => !string.IsNullOrEmpty( stringValue.Value ),
+            NodesType<TNode> nodes => nodes.Any(),
+            _ => false
+        };
+    }
+
     private int CompareEnumerables( IEnumerable<TNode> left, IEnumerable<TNode> right )
     {
         using var leftEnumerator = left.GetEnumerator();
@@ -166,7 +183,7 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
     {
         typeMismatch = false;
 
-        if ( left is null or Null or Nothing && right is null or Null or Nothing )
+        if ( left is Null or Nothing && right is Null or Nothing )
         {
             return 0;
         }
@@ -177,23 +194,19 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
             return -1;
         }
 
-        if ( left is ValueType<string> leftStringValue && right is ValueType<string> rightStringValue )
+        return left switch
         {
-            return string.Compare( leftStringValue.Value, rightStringValue.Value, StringComparison.Ordinal );
-        }
+            ValueType<string> leftStringValue when right is ValueType<string> rightStringValue =>
+                string.Compare( leftStringValue.Value, rightStringValue.Value, StringComparison.Ordinal ),
 
-        if ( left is ValueType<bool> leftBoolValue && right is ValueType<bool> rightBoolValue )
-        {
-            return leftBoolValue.Value.CompareTo( rightBoolValue.Value );
-        }
+            ValueType<bool> leftBoolValue when right is ValueType<bool> rightBoolValue =>
+                leftBoolValue.Value.CompareTo( rightBoolValue.Value ),
 
-        if ( left is ValueType<float> leftFloatValue && right is ValueType<float> rightfloatValue )
-        {
-            return Math.Abs( leftFloatValue.Value - rightfloatValue.Value ) < Tolerance ? 0 : leftFloatValue.Value.CompareTo( rightfloatValue.Value );
-        }
+            ValueType<float> leftFloatValue when right is ValueType<float> rightFloatValue =>
+                Math.Abs( leftFloatValue.Value - rightFloatValue.Value ) < Tolerance ? 0 : leftFloatValue.Value.CompareTo( rightFloatValue.Value ),
 
-        return Comparer<object>.Default.Compare( left, right );
-
+            _ => Comparer<object>.Default.Compare( left, right )
+        };
     }
 
     private static bool TryGetValueType( IValueAccessor<TNode> accessor, TNode node, out INodeType nodeType )
@@ -205,7 +218,7 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
                 string itemString => new ValueType<string>( itemString ),
                 bool itemBool => new ValueType<bool>( itemBool ),
                 float itemFloat => new ValueType<float>( itemFloat ),
-                null => ValueType.Null,
+                null => Constants.Null,
                 _ => throw new NotSupportedException( "Unsupported value type." )
             };
             return true;

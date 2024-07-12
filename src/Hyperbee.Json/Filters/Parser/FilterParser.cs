@@ -105,7 +105,7 @@ public class FilterParser<TNode> : FilterParser
         // Helper method to create an expression item
         static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionInfo expressionInfo )
         {
-            MoveNextOperator( ref state );
+            MoveNextOperator( ref state ); // will set state.Operator
             return new ExprItem( expression, state.Operator, expressionInfo );
         }
     }

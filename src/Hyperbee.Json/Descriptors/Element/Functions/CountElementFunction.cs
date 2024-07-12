@@ -24,8 +24,6 @@ public class CountElementFunction() : FilterExtensionFunction( argumentCount: 1 
                     return new ValueType<float>( 1F );
 
                 return new ValueType<float>( nodes.Count() );
-            case NodesType<string> stringValue:
-            case NodesType<float> floatValue:
             default:
                 return new ValueType<float>( 1F );
         }

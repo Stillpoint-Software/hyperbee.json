@@ -333,74 +333,31 @@ public class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right, FilterParserContext<TNode> parserContext )
     {
-        switch ( left.Operator )
+        left.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, left.Expression );
+        right.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, right.Expression );
+
+        left.Expression = left.Operator switch
         {
-            case Operator.Equals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, right.Expression );
+            Operator.Equals => NodeTypeExpression<TNode>.Equal( left.Expression, right.Expression ),
+            Operator.NotEquals => NodeTypeExpression<TNode>.NotEqual( left.Expression, right.Expression ),
+            Operator.GreaterThan => NodeTypeExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
+            Operator.GreaterThanOrEqual => NodeTypeExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
+            Operator.LessThan => NodeTypeExpression<TNode>.LessThan( left.Expression, right.Expression ),
+            Operator.LessThanOrEqual => NodeTypeExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
+            Operator.And => Expression.AndAlso(
+                FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
+                FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
+            Operator.Or => Expression.OrElse(
+                FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
+                FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
+            Operator.Not => Expression.Not( FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
+            Operator.NonOperator or Operator.Whitespace or Operator.Quotes or Operator.OpenParen or Operator.ClosedParen => left.Expression,
+            _ => left.Expression
+        };
 
-                left.Expression = Expression.Equal( left.Expression, right.Expression );
-                break;
-            case Operator.NotEquals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, right.Expression );
+        left.Expression = FilterTruthyExpression.ConvertBoolToValueTypeExpression( left.Expression );
 
-                left.Expression = Expression.NotEqual( left.Expression, right.Expression );
-                break;
-            case Operator.GreaterThan:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, right.Expression );
-
-                left.Expression = Expression.GreaterThan( left.Expression, right.Expression );
-                break;
-            case Operator.GreaterThanOrEqual:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, right.Expression );
-
-                left.Expression = Expression.GreaterThanOrEqual( left.Expression, right.Expression );
-                break;
-            case Operator.LessThan:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, right.Expression );
-
-                left.Expression = Expression.LessThan( left.Expression, right.Expression );
-                break;
-            case Operator.LessThanOrEqual:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( parserContext, right.Expression );
-
-                left.Expression = Expression.LessThanOrEqual( left.Expression, right.Expression );
-                break;
-            case Operator.And:
-                left.Expression = Expression.AndAlso(
-                    FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
-                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
-                );
-                break;
-            case Operator.Or:
-                left.Expression = Expression.OrElse(
-                    FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
-                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
-                );
-                break;
-            case Operator.Not:
-                left.Expression = Expression.Not(
-                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
-                );
-                break;
-            case Operator.NonOperator:
-            case Operator.Whitespace:
-            case Operator.Quotes:
-            case Operator.Token:
-            case Operator.OpenParen:
-            case Operator.ClosedParen:
-            default:
-                left.Expression = left.Expression;
-                break;
-        }
-
-        // Update the left-side expression
-        left.Expression = FilterTruthyExpression.ConvertTruthyExpression( left.Expression );
+        left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
         left.Operator = right.Operator;
     }

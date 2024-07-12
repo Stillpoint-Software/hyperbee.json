@@ -11,7 +11,7 @@ public ref struct ParserState
     public bool TrailingWhitespace { get; internal set; }
     public bool IsArgument { get; internal set; }
     public int BracketDepth { get; internal set; }
-    public ref int ParenDepth; 
+    public ref int ParenDepth;
 
     public Operator Operator { get; set; }
     public char Terminal { get; init; }

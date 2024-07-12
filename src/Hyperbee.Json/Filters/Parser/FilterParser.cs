@@ -57,7 +57,7 @@ public class FilterParser<TNode> : FilterParser
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
 
         // parse the expression
-        var items = new List<ExprItem>();  
+        var items = new List<ExprItem>();
 
         do
         {
@@ -121,7 +121,7 @@ public class FilterParser<TNode> : FilterParser
         // check for end of buffer
         if ( state.EndOfBuffer )
         {
-            state.Operator = Operator.NonOperator; 
+            state.Operator = Operator.NonOperator;
             state.Item = [];
             return;
         }
@@ -411,7 +411,7 @@ public class FilterParser<TNode> : FilterParser
 
         left.Expression = FilterTruthyExpression.ConvertTruthyExpression( left.Expression );
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
-        left.Operator = right.Operator; 
+        left.Operator = right.Operator;
     }
 
     private static void ThrowIfNonSingularCompare( in ParserState state, ExprItem left, ExprItem right )

@@ -1,35 +1,26 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class LengthElementFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class LengthElementFunction() : FilterExtensionFunction( LengthMethodInfo, FilterExtensionInfo.MustCompare | FilterExtensionInfo.ExpectNormalized )
 {
     public const string Name = "length";
-    private static readonly Expression LengthExpression = Expression.Constant( (Func<INodeType, INodeType>) Length );
-
-    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
-    {
-        if ( argumentInfo[0] )
-            throw new NotSupportedException( $"Function {Name} does not support non-singular arguments." );
-
-        return Expression.Invoke( LengthExpression,
-            Expression.Convert( arguments[0], typeof( INodeType ) ) );
-    }
+    private static readonly MethodInfo LengthMethodInfo = GetMethod<LengthElementFunction>( nameof(Length) );
 
     public static INodeType Length( INodeType input )
     {
         return input switch
         {
-            NodesType<JsonElement> nodes => Length( nodes.FirstOrDefault() ),
+            NodesType<JsonElement> nodes => LengthImpl( nodes.FirstOrDefault() ),
             ValueType<string> valueString => new ValueType<float>( valueString.Value.Length ),
             Null or Nothing => input,
             _ => ValueType.Nothing
         };
     }
 
-    public static INodeType Length( object value )
+    public static INodeType LengthImpl( object value )
     {
         return value switch
         {

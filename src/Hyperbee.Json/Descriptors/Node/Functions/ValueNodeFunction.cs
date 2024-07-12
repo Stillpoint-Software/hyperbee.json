@@ -1,20 +1,14 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class ValueNodeFunction() : FilterExtensionFunction( ValueMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "value";
-    public static readonly Expression ValueExpression = Expression.Constant( (Func<INodeType, INodeType>) Value );
-
-    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
-    {
-        return Expression.Invoke( ValueExpression,
-            Expression.Convert( arguments[0], typeof( INodeType ) ) );
-    }
+    private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueNodeFunction>( nameof(Value) );
 
     public static INodeType Value( INodeType arg )
     {

@@ -505,7 +505,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             """;
 
         var source = GetDocumentFromSource( sourceType, json );
-        _ = source.Select( query ).ToArray();
+        var result = source.Select( query ).ToArray();
     }
 
     [DataTestMethod]

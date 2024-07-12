@@ -28,12 +28,11 @@ public enum Operator
     GreaterThan = 0xA0 | Comparison,
     GreaterThanOrEqual = 0xB0 | Comparison,
 
-    // Specific non-operator tokens
+    // Specific non-operators
     Whitespace = 0xC0 | NonOperator,
     Quotes = 0xD0 | NonOperator,
-    Segment = 0xE0 | NonOperator,
+    Token = 0xE0 | NonOperator,
     Bracket = 0xF0 | NonOperator,
-    EndOfBuffer = 0x100 | NonOperator
 }
 
 public static class OperatorExtensions
@@ -45,5 +44,10 @@ public static class OperatorExtensions
     public static bool IsComparison( this Operator op )
     {
         return (op & Operator.Comparison) == Operator.Comparison;
+    }
+
+    public static bool IsLogical( this Operator op )
+    {
+        return (op & Operator.Logical) == Operator.Logical;
     }
 }

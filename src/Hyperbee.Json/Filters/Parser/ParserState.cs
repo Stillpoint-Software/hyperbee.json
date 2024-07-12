@@ -11,25 +11,25 @@ public ref struct ParserState
     public bool TrailingWhitespace { get; internal set; }
     public bool IsArgument { get; internal set; }
     public int BracketDepth { get; internal set; }
-    public int ParenDepth { get; internal set; }
+    public ref int ParenDepth; 
 
     public Operator Operator { get; set; }
     public char Terminal { get; init; }
 
     public readonly ref int Pos;
 
-    internal ParserState( ReadOnlySpan<char> buffer, ReadOnlySpan<char> item, ref int pos, Operator tokenType, char terminal )
+    internal ParserState( ReadOnlySpan<char> buffer, ReadOnlySpan<char> item, ref int pos, ref int parenDepth, Operator tokenType, char terminal )
     {
         Buffer = buffer;
         Item = item;
         Operator = tokenType;
         Terminal = terminal;
         Pos = ref pos;
+        ParenDepth = ref parenDepth;
     }
 
     public readonly bool EndOfBuffer => Pos >= Buffer.Length;
-    public readonly bool IsParsing => Pos < Buffer.Length && Buffer[Pos] != Terminal;
-    public readonly bool IsTerminal => Buffer[Pos] == Terminal;
+    public readonly bool IsParsing => Pos < Buffer.Length && Previous != Terminal;
 
     public readonly char Current => Buffer[Pos];
     public readonly char Previous => Buffer[Pos - 1];

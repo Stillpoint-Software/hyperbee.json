@@ -9,6 +9,7 @@
 
 #endregion
 
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Parser.Expressions;
@@ -18,8 +19,8 @@ namespace Hyperbee.Json.Filters.Parser;
 public abstract class FilterParser
 {
     public const char EndLine = '\0'; // using null character instead of \n
-    public const char EndArg = ')';
-    public const char ArgSeparator = ',';
+    public const char ArgClose = ')';
+    public const char ArgComma = ',';
 }
 
 public class FilterParser<TNode> : FilterParser
@@ -38,7 +39,8 @@ public class FilterParser<TNode> : FilterParser
         filter = filter.Trim(); // remove leading and trailing whitespace to simplify parsing
 
         var pos = 0;
-        var state = new ParserState( filter, [], ref pos, Operator.NonOperator, EndLine );
+        var parenDepth = 0;
+        var state = new ParserState( filter, [], ref pos, ref parenDepth, Operator.NonOperator, EndLine );
 
         var expression = Parse( ref state, parserContext );
 
@@ -51,26 +53,22 @@ public class FilterParser<TNode> : FilterParser
         if ( parserContext == null )
             throw new ArgumentNullException( nameof( parserContext ) );
 
-        if ( state.EndOfBuffer || state.IsTerminal )
+        if ( state.EndOfBuffer )
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
 
         // parse the expression
-        var items = new List<ExprItem>();
+        var items = new List<ExprItem>();  
 
         do
         {
             MoveNext( ref state );
-            items.Add( GetExprItem( ref state, parserContext ) );
+            items.Add( GetExprItem( ref state, parserContext ) ); // will recurse for nested expressions
 
         } while ( state.IsParsing );
 
-        // advance to next character for recursive calls.
-        if ( !state.EndOfBuffer && state.IsTerminal )
-            state.Pos++;
-
         // check for paren mismatch
-        //if ( state.EndOfBuffer && state.ParenDepth != 0 )
-         //   throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
+        if ( state.EndOfBuffer && state.ParenDepth != 0 )
+            throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
 
         // merge the expressions
         var baseItem = items[0];
@@ -107,7 +105,7 @@ public class FilterParser<TNode> : FilterParser
         // Helper method to create an expression item
         static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionInfo expressionInfo )
         {
-            UpdateOperator( ref state );
+            MoveNextOperator( ref state );
             return new ExprItem( expression, state.Operator, expressionInfo );
         }
     }
@@ -123,7 +121,7 @@ public class FilterParser<TNode> : FilterParser
         // check for end of buffer
         if ( state.EndOfBuffer )
         {
-            state.Operator = Operator.EndOfBuffer;
+            state.Operator = Operator.NonOperator; 
             state.Item = [];
             return;
         }
@@ -134,18 +132,20 @@ public class FilterParser<TNode> : FilterParser
 
         while ( true )
         {
-            itemEnd = state.Pos; // assign before the call to NextCharacter
+            itemEnd = state.Pos; // store before calling NextCharacter 
 
-            NextCharacter( ref state, out var nextChar, ref quote );
+            NextCharacter( ref state, out var nextChar, ref quote ); // will advance state.Pos
 
             if ( IsFinished( in state, state.Pos - itemStart, nextChar ) )
+            {
                 break;
+            }
 
-            if ( !state.EndOfBuffer && !state.IsTerminal )
-                continue;
-
-            itemEnd = state.Pos; // fall-through: include the terminal character
-            break;
+            if ( state.EndOfBuffer )
+            {
+                itemEnd = state.Pos; // include the final character
+                break;
+            }
         }
 
         state.SetItem( itemStart, itemEnd );
@@ -153,22 +153,43 @@ public class FilterParser<TNode> : FilterParser
         return;
 
         // Helper method to determine if item parsing is finished
-        static bool IsFinished( in ParserState state, int count, char ch )
+        static bool IsFinished( in ParserState state, int charCount, char ch )
         {
             if ( state.BracketDepth != 0 )
                 return false;
 
             // order of operations matters here
-            if ( count == 0 && ch == EndArg )
+            if ( charCount == 0 && ch == ArgClose )
                 return false;
 
-            if ( !state.Operator.IsNonOperator() && state.Operator != Operator.ClosedParen )
+            if ( !state.Operator.IsNonOperator() )
                 return true;
 
-            if ( ch == state.Terminal || ch == EndArg || ch == EndLine )
+            if ( ch == ArgClose || ch == EndLine || ch == state.Terminal ) // terminal character [ '\0' or ',' or ')' ]
                 return true;
 
             return false;
+        }
+    }
+
+    private static void MoveNextOperator( ref ParserState state )
+    {
+        if ( state.Operator.IsLogical() || state.Operator.IsComparison() )
+        {
+            return;
+        }
+
+        if ( !state.IsParsing )
+        {
+            state.Operator = Operator.NonOperator;
+            return;
+        }
+
+        char? quoteChar = null;
+
+        while ( !(state.Operator.IsLogical() || state.Operator.IsComparison()) && !state.EndOfBuffer )
+        {
+            NextCharacter( ref state, out _, ref quoteChar );
         }
     }
 
@@ -244,7 +265,7 @@ public class FilterParser<TNode> : FilterParser
                 state.Operator = Operator.Quotes;
                 break;
             default:
-                state.Operator = Operator.Segment;
+                state.Operator = Operator.Token;
                 break;
         }
 
@@ -261,43 +282,6 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static void UpdateOperator( ref ParserState state )
-    {
-        if ( !IsParenOrNop( state.Operator ) )
-            return;
-
-        if ( state.EndOfBuffer )
-        {
-            state.Operator = Operator.EndOfBuffer;
-            return;
-        }
-
-        if ( state.IsTerminal )
-        {
-            state.Operator = Operator.ClosedParen;
-            return;
-        }
-
-        char? quoteChar = null;
-        var startPos = state.Pos;
-
-        while ( IsParenOrNop( state.Operator ) && !state.EndOfBuffer )
-        {
-            NextCharacter( ref state, out _, ref quoteChar );
-        }
-
-        if ( IsParen( state.Operator ) && state.Pos > startPos )
-        {
-            state.Pos--;
-        }
-
-        return;
-
-        // Helper method to determine if an operator is a parenthesis or a no-op
-        static bool IsParenOrNop( Operator op ) => (op is Operator.OpenParen or Operator.ClosedParen) || op.IsNonOperator();
-        static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
-    }
-
     private static Expression Merge( in ParserState state, ExprItem left, ref int index, List<ExprItem> items, FilterParserContext<TNode> parserContext, bool mergeOneOnly = false )
     {
         if ( items.Count == 1 )
@@ -312,7 +296,7 @@ public class FilterParser<TNode> : FilterParser
 
                 while ( !CanMergeItems( left, right ) )
                 {
-                    Merge( in state, right, ref index, items, parserContext, mergeOneOnly: true ); // recursive call
+                    Merge( in state, right, ref index, items, parserContext, mergeOneOnly: true ); // recursive call - right becomes left
                 }
 
                 ThrowIfInvalid( in state, left, right );
@@ -417,7 +401,7 @@ public class FilterParser<TNode> : FilterParser
             case Operator.NonOperator:
             case Operator.Whitespace:
             case Operator.Quotes:
-            case Operator.Segment:
+            case Operator.Token:
             case Operator.OpenParen:
             case Operator.ClosedParen:
             default:
@@ -426,22 +410,9 @@ public class FilterParser<TNode> : FilterParser
         }
 
         left.Expression = FilterTruthyExpression.ConvertTruthyExpression( left.Expression );
-
-        // Wrap left expression in a try-catch block to handle exceptions
-        // left.Expression = left.Expression == null
-        //     ? left.Expression
-        //     : Expression.TryCatch(
-        //         left.Expression,
-        //         Expression.Catch( typeof( NotSupportedException ), Expression.Rethrow( left.Expression.Type ) ),
-        //         Expression.Catch( typeof( Exception ), Expression.Constant( false ) )
-        //     );
-
-        left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
+        left.Operator = right.Operator; 
     }
-
-
-
 
     private static void ThrowIfNonSingularCompare( in ParserState state, ExprItem left, ExprItem right )
     {
@@ -459,20 +430,14 @@ public class FilterParser<TNode> : FilterParser
         if ( state.IsArgument )
             return;
 
-        if ( left.ExpressionInfo.Kind == ExpressionKind.Literal && !IsComparisonOperator( left.Operator ) )
+        if ( left.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
 
-        if ( right != null && right.ExpressionInfo.Kind == ExpressionKind.Literal && !IsComparisonOperator( left.Operator ) )
+        if ( right != null && right.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
-
-        return;
-
-        static bool IsComparisonOperator( Operator op ) =>
-            op == Operator.Equals || op == Operator.NotEquals ||
-            op == Operator.GreaterThan || op == Operator.GreaterThanOrEqual ||
-            op == Operator.LessThan || op == Operator.LessThanOrEqual;
     }
 
+    [DebuggerDisplay( "Operator = {Operator}, {ExpressionInfo.Kind}" )]
     private class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
     {
         public ExpressionInfo ExpressionInfo { get; } = expressionInfo;

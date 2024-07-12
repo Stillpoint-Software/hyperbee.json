@@ -10,11 +10,10 @@ internal class ParenExpressionFactory : IExpressionFactory
         {
             var localState = state with
             {
-                Terminal = FilterParser.EndArg
+                Terminal = FilterParser.ArgClose
             };
 
             expression = FilterParser<TNode>.Parse( ref localState, parserContext ); // will recurse.
-
             expressionInfo.Kind = ExpressionKind.Paren;
             return true;
         }

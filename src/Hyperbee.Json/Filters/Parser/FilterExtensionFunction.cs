@@ -26,12 +26,12 @@ public abstract class FilterExtensionFunction
             {
                 Item = [],
                 Terminal = i == _argumentCount - 1
-                    ? FilterParser.EndArg
-                    : FilterParser.ArgSeparator,
+                    ? FilterParser.ArgClose
+                    : FilterParser.ArgComma,
                 IsArgument = true
             };
 
-            if ( localState.EndOfBuffer || localState.IsTerminal )
+            if ( localState.EndOfBuffer )
                 throw new NotSupportedException( $"Invalid arguments for filter: \"{state.Buffer}\"." );
 
             var argument = FilterParser<TNode>.Parse( ref localState, parserContext );
@@ -40,10 +40,7 @@ public abstract class FilterExtensionFunction
             arguments[i] = argument;
         }
 
-        return GetExtensionExpression( arguments, argumentInfo );
+        return GetExtensionExpression( arguments, argumentInfo ); //BF out enum FunctionResult.MustCompare, FunctionResult.MustNotCompare? then put on parserContext?
     }
-
-
-
 }
 

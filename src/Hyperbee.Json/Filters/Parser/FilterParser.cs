@@ -367,6 +367,9 @@ public class FilterParser<TNode> : FilterParser
 
     private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
     {
+        if ( state.IsArgument )
+            return;
+
         if ( item.ExpressionInfo.Kind != ExpressionKind.Function )
             return;
 

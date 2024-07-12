@@ -16,9 +16,10 @@ internal class FunctionExpressionFactory : IExpressionFactory
             expression = function
                 .GetExpression( ref state, parserContext ); // will recurse for each function argument.
 
-            //var functionInfo = function.FunctionInfo; //BF
+            var functionInfo = function.FunctionInfo; //BF
 
             expressionInfo.Kind = ExpressionKind.Function;
+            expressionInfo.FunctionInfo = functionInfo;
             return true;
         }
 

@@ -4,4 +4,5 @@ internal class ExpressionInfo
 {
     public bool NonSingularQuery { get; set; }
     public ExpressionKind Kind { get; set; }
+    public FilterExtensionInfo FunctionInfo { get; set; }
 }

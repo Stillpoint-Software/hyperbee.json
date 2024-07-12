@@ -354,7 +354,6 @@ public class FilterParser<TNode> : FilterParser
 
         left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
-        left.Operator = right.Operator;
     }
 
     // Throw helpers
@@ -363,6 +362,25 @@ public class FilterParser<TNode> : FilterParser
     {
         ThrowIfConstantIsNotCompared( in state, left, right );
         ThrowIfNonSingularCompare( in state, left, right );
+        ThrowIfFunctionInvalidCompare( in state, left );
+    }
+
+    private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
+    {
+        if ( item.ExpressionInfo.Kind != ExpressionKind.Function )
+            return;
+
+        if ( (item.ExpressionInfo.FunctionInfo & FilterExtensionInfo.MustCompare) == FilterExtensionInfo.MustCompare &&
+             !item.Operator.IsComparison() )
+        {
+            throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
+        }
+
+        if ( (item.ExpressionInfo.FunctionInfo & FilterExtensionInfo.MustNotCompare) == FilterExtensionInfo.MustNotCompare &&
+             item.Operator.IsComparison() )
+        {
+            throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
+        }
     }
 
     private static void ThrowIfNonSingularCompare( in ParserState state, ExprItem left, ExprItem right )

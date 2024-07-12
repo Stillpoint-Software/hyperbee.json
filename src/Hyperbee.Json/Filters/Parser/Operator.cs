@@ -41,6 +41,7 @@ public static class OperatorExtensions
     {
         return (op & Operator.NonOperator) == Operator.NonOperator;
     }
+
     public static bool IsComparison( this Operator op )
     {
         return (op & Operator.Comparison) == Operator.Comparison;

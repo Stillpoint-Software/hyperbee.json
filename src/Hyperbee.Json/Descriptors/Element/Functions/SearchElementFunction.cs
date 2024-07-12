@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Hyperbee.Json.Descriptors.Types;
@@ -8,31 +8,24 @@ using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class SearchElementFunction() : FilterExtensionFunction( argumentCount: 2 )
+public class SearchElementFunction() : FilterExtensionFunction( SearchMethodInfo, FilterExtensionInfo.MustNotCompare )
 {
     public const string Name = "search";
-    private static readonly Expression MatchExpression = Expression.Constant( (Func<INodeType, INodeType, INodeType>) Search );
-
-    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
-    {
-        return Expression.Invoke( MatchExpression,
-            Expression.Convert( arguments[0], typeof( INodeType ) ),
-            Expression.Convert( arguments[1], typeof( INodeType ) ) );
-    }
+    private static readonly MethodInfo SearchMethodInfo = GetMethod<SearchElementFunction>( nameof( Search ) );
 
     public static INodeType Search( INodeType input, INodeType regex )
     {
         return input switch
         {
             NodesType<JsonElement> nodes when regex is ValueType<string> stringValue =>
-                Search( nodes, stringValue.Value ),
+                SearchImpl( nodes, stringValue.Value ),
             NodesType<JsonElement> nodes when regex is NodesType<JsonElement> stringValue =>
-                Search( nodes, stringValue.Value.FirstOrDefault().GetString() ),
+                SearchImpl( nodes, stringValue.Value.FirstOrDefault().GetString() ),
             _ => ValueType.False
         };
     }
 
-    public static INodeType Search( NodesType<JsonElement> nodes, string regex )
+    public static INodeType SearchImpl( NodesType<JsonElement> nodes, string regex )
     {
         var value = nodes.FirstOrDefault();
 

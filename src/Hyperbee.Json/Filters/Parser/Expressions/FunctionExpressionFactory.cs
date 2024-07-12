@@ -11,8 +11,12 @@ internal class FunctionExpressionFactory : IExpressionFactory
             if ( state.TrailingWhitespace )
                 throw new NotSupportedException( "Whitespace is not allowed after a function name." );
 
-            expression = functionCreator()
+            var function = functionCreator();
+
+            expression = function
                 .GetExpression( ref state, parserContext ); // will recurse for each function argument.
+
+            //var functionInfo = function.FunctionInfo; //BF
 
             expressionInfo.Kind = ExpressionKind.Function;
             return true;

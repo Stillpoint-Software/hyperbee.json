@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
 using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Filters.Parser;
@@ -6,16 +6,10 @@ using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class ValueElementFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class ValueElementFunction() : FilterExtensionFunction( ValueMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "value";
-    public static readonly Expression ValueExpression = Expression.Constant( (Func<INodeType, INodeType>) Value );
-
-    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
-    {
-        return Expression.Invoke( ValueExpression,
-            Expression.Convert( arguments[0], typeof( INodeType ) ) );
-    }
+    private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueElementFunction>( nameof( Value ) );
 
     public static INodeType Value( INodeType arg )
     {

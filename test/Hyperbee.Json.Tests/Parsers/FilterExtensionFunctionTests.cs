@@ -1,8 +1,8 @@
-﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Descriptors.Element.Functions;
 using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
@@ -34,16 +34,10 @@ public class FilterExtensionFunctionTests : JsonTestBase
         Assert.AreEqual( "$.store.book[2].title", results[0].GetPath() );
     }
 
-    private class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+    private class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
     {
         public const string Name = "path";
-        private static readonly Expression PathExpression = Expression.Constant( (Func<INodeType, INodeType>) Path );
-
-        protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
-        {
-            return Expression.Invoke( PathExpression,
-                Expression.Convert( arguments[0], typeof( INodeType ) ) );
-        }
+        private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof( Path ) );
 
         private static INodeType Path( INodeType arg )
         {

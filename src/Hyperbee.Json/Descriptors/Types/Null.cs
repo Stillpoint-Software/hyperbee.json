@@ -2,6 +2,6 @@
 
 public struct Null : INodeType
 {
-    public NodeTypeKind Kind => NodeTypeKind.Null;
+    public readonly NodeTypeKind Kind => NodeTypeKind.Null;
     public INodeTypeComparer Comparer { get; set; }
 }

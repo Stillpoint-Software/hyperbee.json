@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
+using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser;
@@ -6,19 +8,22 @@ namespace Hyperbee.Json.Filters.Parser;
 public abstract class FilterExtensionFunction
 {
     private readonly int _argumentCount;
+    private readonly MethodInfo _methodInfo;
 
-    protected FilterExtensionFunction( int argumentCount )
+    public FilterExtensionInfo FunctionInfo { get; }
+
+    protected FilterExtensionFunction( MethodInfo methodInfo, FilterExtensionInfo filterInfo )
     {
-        _argumentCount = argumentCount;
-    }
+        _argumentCount = methodInfo.GetParameters().Length;
+        _methodInfo = methodInfo;
 
-    protected abstract Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo );
+        FunctionInfo = filterInfo;
+    }
 
     internal Expression GetExpression<TNode>( ref ParserState state, FilterParserContext<TNode> parserContext )
     {
         var arguments = new Expression[_argumentCount];
-
-        var argumentInfo = new bool[_argumentCount];
+        var expectNormalized = FunctionInfo.HasFlag( FilterExtensionInfo.ExpectNormalized );
 
         for ( var i = 0; i < _argumentCount; i++ )
         {
@@ -36,11 +41,17 @@ public abstract class FilterExtensionFunction
 
             var argument = FilterParser<TNode>.Parse( ref localState, parserContext );
 
-            argumentInfo[i] = QueryHelper.IsNonSingular( localState.Item ); //BF - nsq
-            arguments[i] = argument;
+            if ( expectNormalized )
+            {
+                if ( QueryHelper.IsNonSingular( localState.Item ) )
+                    throw new NotSupportedException( $"Function {_methodInfo.Name} does not support non-singular arguments. Error in Parameter {i + 1}." );
+            }
+
+            arguments[i] = Expression.Convert( argument, typeof( INodeType ) );
         }
 
-        return GetExtensionExpression( arguments, argumentInfo ); //BF out enum FunctionResult.MustCompare, FunctionResult.MustNotCompare? then put on parserContext?
+        return Expression.Call( _methodInfo, arguments );
     }
-}
 
+    protected static MethodInfo GetMethod<T>( string methodName ) => typeof( T ).GetMethod( methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static );
+}

@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -9,31 +9,24 @@ using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
+public class MatchNodeFunction() : FilterExtensionFunction( MatchMethodInfo, FilterExtensionInfo.MustNotCompare )
 {
     public const string Name = "match";
-    private static readonly Expression MatchExpression = Expression.Constant( (Func<INodeType, INodeType, INodeType>) Match );
-
-    protected override Expression GetExtensionExpression( Expression[] arguments, bool[] argumentInfo )
-    {
-        return Expression.Invoke( MatchExpression,
-            Expression.Convert( arguments[0], typeof( INodeType ) ),
-            Expression.Convert( arguments[1], typeof( INodeType ) ) );
-    }
+    private static readonly MethodInfo MatchMethodInfo = GetMethod<MatchNodeFunction>( nameof( Match ) );
 
     public static INodeType Match( INodeType input, INodeType regex )
     {
         return input switch
         {
             NodesType<JsonNode> nodes when regex is ValueType<string> stringValue =>
-                Match( nodes, stringValue.Value ),
+                MatchImpl( nodes, stringValue.Value ),
             NodesType<JsonNode> nodes when regex is NodesType<JsonNode> stringValue =>
-                Match( nodes, stringValue.Value.FirstOrDefault()?.GetValue<string>() ),
+                MatchImpl( nodes, stringValue.Value.FirstOrDefault()?.GetValue<string>() ),
             _ => ValueType.False
         };
     }
 
-    private static INodeType Match( NodesType<JsonNode> nodes, string regex )
+    private static INodeType MatchImpl( NodesType<JsonNode> nodes, string regex )
     {
         var value = nodes.FirstOrDefault();
 

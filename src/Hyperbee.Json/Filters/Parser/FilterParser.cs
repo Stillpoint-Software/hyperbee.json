@@ -347,7 +347,7 @@ public class FilterParser<TNode> : FilterParser
             Operator.And => NodeTypeExpression<TNode>.And( left.Expression, right.Expression ),
             Operator.Or => NodeTypeExpression<TNode>.Or( left.Expression, right.Expression ),
             Operator.Not => NodeTypeExpression<TNode>.Not( right.Expression ),
-            _ => left.Expression
+            _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };
 
         left.Expression = FilterTruthyExpression.ConvertBoolToValueTypeExpression( left.Expression );

@@ -26,9 +26,9 @@ public class NodeTypeComparerTests : JsonTestBase
     public void NodeTypeComparer_ShouldCompare_WithEqualResults( object left, object right, bool areEqual )
     {
         // Arrange
+        var comparer = GetComparer();
         var a = GetNodeType( left );
         var b = GetNodeType( right );
-        var comparer = GetComparer();
 
         // Act
         var result = comparer.Compare( a, b, Operator.Equals ) == 0;
@@ -49,9 +49,9 @@ public class NodeTypeComparerTests : JsonTestBase
     public void NodeTypeComparer_ShouldCompare_WithGreaterResults( object left, object right, bool areEqual )
     {
         // Arrange
+        var comparer = GetComparer();
         var a = GetNodeType( left );
         var b = GetNodeType( right );
-        var comparer = GetComparer();
 
         // Act
         var result = comparer.Compare( a, b, Operator.GreaterThanOrEqual ) >= 0;
@@ -68,12 +68,10 @@ public class NodeTypeComparerTests : JsonTestBase
     [DataRow( """{ "value": { "child": 5 } }""", "hello", false )]
     public void NodeTypeComparer_ShouldCompare_WithJsonObjectResults( string left, object right, bool areEqual )
     {
-        var node = new List<JsonNode> { JsonNode.Parse( left )!["value"] };
-
         // Arrange
-        var a = GetNodeType( node );
-        var b = GetNodeType( right );
         var comparer = GetComparer();
+        var a = GetNodeType( new List<JsonNode> { JsonNode.Parse( left )!["value"] } );
+        var b = GetNodeType( right );
 
         // Act
         var result = comparer.Compare( a, b, Operator.GreaterThanOrEqual ) == 0;
@@ -90,11 +88,9 @@ public class NodeTypeComparerTests : JsonTestBase
     public void NodeTypeComparer_ShouldCompare_WithLeftJsonArray( string left, object right, bool areEqual )
     {
         // Arrange
-        var node = JsonNode.Parse( left )!.AsArray();
-
-        var a = GetNodeType( node );
-        var b = GetNodeType( right );
         var comparer = GetComparer();
+        var a = GetNodeType( JsonNode.Parse( left )!.AsArray() );
+        var b = GetNodeType( right );
 
         // Act
         var result = comparer.Compare( a, b, Operator.GreaterThanOrEqual ) == 0;
@@ -111,11 +107,9 @@ public class NodeTypeComparerTests : JsonTestBase
     public void NodeTypeComparer_ShouldCompare_WithRightJsonArray( object left, string right, bool areEqual )
     {
         // Arrange
-        var node = JsonNode.Parse( right )!.AsArray();
-
-        var a = GetNodeType( left );
-        var b = GetNodeType( node );
         var comparer = GetComparer();
+        var a = GetNodeType( left );
+        var b = GetNodeType( JsonNode.Parse( right )!.AsArray() );
 
         // Act
         var result = comparer.Compare( a, b, Operator.GreaterThanOrEqual ) == 0;
@@ -127,9 +121,9 @@ public class NodeTypeComparerTests : JsonTestBase
     [TestMethod]
     public void NodeTypeComparer_ShouldCompare_WithEmpty()
     {
+        var comparer = GetComparer();
         var a = new NodesType<JsonNode>( [], false );
         var b = new ValueType<float>( 1F );
-        var comparer = GetComparer();
 
         Assert.IsFalse( comparer.Compare( a, b, Operator.LessThan ) < 0 );
         Assert.IsFalse( comparer.Compare( a, b, Operator.LessThanOrEqual ) <= 0 );

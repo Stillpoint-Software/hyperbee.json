@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class MatchNodeFunction() : FilterExtensionFunction( MatchMethodInfo, FilterExtensionInfo.MustNotCompare )
 {
     public const string Name = "match";
-    private static readonly MethodInfo MatchMethodInfo = GetMethod<MatchNodeFunction>( nameof(Match) );
+    private static readonly MethodInfo MatchMethodInfo = GetMethod<MatchNodeFunction>( nameof( Match ) );
 
     public static INodeType Match( INodeType input, INodeType regex )
     {

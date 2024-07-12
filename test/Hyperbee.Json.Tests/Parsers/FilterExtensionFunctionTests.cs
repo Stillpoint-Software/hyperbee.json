@@ -35,7 +35,7 @@ public class FilterExtensionFunctionTests : JsonTestBase
     private class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
     {
         public const string Name = "path";
-        private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof(Path) );
+        private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof( Path ) );
 
         private static INodeType Path( INodeType arg )
         {

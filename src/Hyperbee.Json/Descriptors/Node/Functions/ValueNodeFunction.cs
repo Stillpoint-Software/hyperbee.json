@@ -8,7 +8,7 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class ValueNodeFunction() : FilterExtensionFunction( ValueMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "value";
-    private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueNodeFunction>( nameof(Value) );
+    private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueNodeFunction>( nameof( Value ) );
 
     public static INodeType Value( INodeType arg )
     {

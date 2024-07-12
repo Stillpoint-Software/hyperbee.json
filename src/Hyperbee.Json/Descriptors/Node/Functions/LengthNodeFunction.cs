@@ -8,7 +8,7 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class LengthNodeFunction() : FilterExtensionFunction( LengthMethodInfo, FilterExtensionInfo.MustCompare | FilterExtensionInfo.ExpectNormalized )
 {
     public const string Name = "length";
-    private static readonly MethodInfo LengthMethodInfo = GetMethod<LengthNodeFunction>( nameof(Length) );
+    private static readonly MethodInfo LengthMethodInfo = GetMethod<LengthNodeFunction>( nameof( Length ) );
 
     public static INodeType Length( INodeType input )
     {

@@ -7,7 +7,7 @@ namespace Hyperbee.Json.Descriptors.Element.Functions;
 public class ValueElementFunction() : FilterExtensionFunction( ValueMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "value";
-    private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueElementFunction>( nameof(Value) );
+    private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueElementFunction>( nameof( Value ) );
 
     public static INodeType Value( INodeType arg )
     {

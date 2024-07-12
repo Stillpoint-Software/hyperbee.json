@@ -50,8 +50,8 @@ public abstract class FilterExtensionFunction
             arguments[i] = Expression.Convert( argument, typeof( INodeType ) );
         }
 
-        return Expression.Call( _methodInfo, arguments ); 
+        return Expression.Call( _methodInfo, arguments );
     }
 
-    protected static MethodInfo GetMethod<T>( string methodName ) => typeof(T).GetMethod( methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static );
+    protected static MethodInfo GetMethod<T>( string methodName ) => typeof( T ).GetMethod( methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static );
 }

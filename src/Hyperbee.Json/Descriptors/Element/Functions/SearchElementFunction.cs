@@ -9,7 +9,7 @@ namespace Hyperbee.Json.Descriptors.Element.Functions;
 public class SearchElementFunction() : FilterExtensionFunction( SearchMethodInfo, FilterExtensionInfo.MustNotCompare )
 {
     public const string Name = "search";
-    private static readonly MethodInfo SearchMethodInfo = GetMethod<SearchElementFunction>( nameof(Search) );
+    private static readonly MethodInfo SearchMethodInfo = GetMethod<SearchElementFunction>( nameof( Search ) );
 
     public static INodeType Search( INodeType input, INodeType regex )
     {

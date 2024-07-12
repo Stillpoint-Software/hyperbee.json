@@ -7,12 +7,12 @@ namespace Hyperbee.Json.Descriptors.Node.Functions;
 public class CountNodeFunction() : FilterExtensionFunction( CountMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "count";
-    private static readonly MethodInfo CountMethodInfo = GetMethod<CountNodeFunction>( nameof(Count) );
+    private static readonly MethodInfo CountMethodInfo = GetMethod<CountNodeFunction>( nameof( Count ) );
 
     public static INodeType Count( INodeType arg )
     {
         if ( arg.Kind != NodeTypeKind.NodeList )
-            throw new NotSupportedException( $"Function {Name} must be a node list." ); 
+            throw new NotSupportedException( $"Function {Name} must be a node list." );
 
         var nodes = (NodesType<JsonNode>) arg;
 

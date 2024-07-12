@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Filters.Values;
 
@@ -7,8 +6,6 @@ namespace Hyperbee.Json.Filters.Parser;
 
 public static class NodeTypeExpression<TNode>
 {
-    // TODO: Add, Add, Or, and Not operators
-
     private static readonly MethodInfo AreEqualMethodInfo = typeof( NodeTypeExpression<TNode> ).GetMethod( nameof( AreEqual ) );
     private static readonly MethodInfo AreNotEqualMethodInfo = typeof( NodeTypeExpression<TNode> ).GetMethod( nameof( AreNotEqual ) );
     private static readonly MethodInfo IsLessThanMethodInfo = typeof( NodeTypeExpression<TNode> ).GetMethod( nameof( IsLessThan ) );

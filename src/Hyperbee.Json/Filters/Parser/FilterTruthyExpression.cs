@@ -20,19 +20,13 @@ public static class FilterTruthyExpression
 
     public static bool IsTruthy( object value )
     {
-        // TODO: remove unused checks
         var truthy = value switch
         {
-            null => false,
-            bool boolValue => boolValue,
-            string str => !string.IsNullOrEmpty( str ) && !str.Equals( "false", StringComparison.OrdinalIgnoreCase ),
-            Array array => array.Length > 0,
-            IEnumerable enumerable => enumerable.Cast<object>().Any(),
-            IConvertible convertible => Convert.ToBoolean( convertible ),
             Nothing => false,
             Null => false,
             ValueType<bool> valueBool => valueBool.Value,
             ValueType<float> floatValue => floatValue.Value != 0,
+            IEnumerable enumerable => enumerable.Cast<object>().Any(),
             ValueType<string> valueString => !string.IsNullOrEmpty( valueString.Value ) && !valueString.Value.Equals( "false", StringComparison.OrdinalIgnoreCase ),
             _ => true
         };

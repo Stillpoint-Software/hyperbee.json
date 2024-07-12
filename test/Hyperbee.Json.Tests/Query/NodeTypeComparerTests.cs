@@ -122,7 +122,7 @@ public class NodeTypeComparerTests : JsonTestBase
     public void NodeTypeComparer_ShouldCompare_WithEmpty()
     {
         var comparer = GetComparer();
-        var a = new NodesType<JsonNode>( [], false );
+        var a = new NodesType<JsonNode>( [], true );
         var b = new ValueType<float>( 1F );
 
         Assert.IsFalse( comparer.Compare( a, b, Operator.LessThan ) < 0 );
@@ -135,8 +135,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.IsTrue( comparer.Compare( a, b, Operator.NotEquals ) != 0 );
     }
 
-    private static INodeTypeComparer GetComparer() =>
-        new NodeTypeComparer<JsonNode>( new NodeValueAccessor() );
+    private static NodeTypeComparer<JsonNode> GetComparer() => new( new NodeValueAccessor() );
 
     private static INodeType GetNodeType( object item ) =>
         item switch
@@ -144,7 +143,7 @@ public class NodeTypeComparerTests : JsonTestBase
             string itemString => new ValueType<string>( itemString ),
             float itemFloat => new ValueType<float>( itemFloat ),
             bool itemBool => new ValueType<bool>( itemBool ),
-            IEnumerable<JsonNode> nodes => new NodesType<JsonNode>( nodes, false ),
+            IEnumerable<JsonNode> nodes => new NodesType<JsonNode>( nodes, true ),
             _ => Constants.Nothing
         };
 }

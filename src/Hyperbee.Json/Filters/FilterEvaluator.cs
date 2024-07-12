@@ -23,8 +23,7 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 
         try
         {
-            // TODO: get NonSingular from segments
-            var runtimeContext = new FilterRuntimeContext<TNode>( current, root, _typeDescriptor, NonSingular: false );
+            var runtimeContext = new FilterRuntimeContext<TNode>( current, root, _typeDescriptor );
             return compiled( runtimeContext );
         }
         catch ( RuntimeBinderException )

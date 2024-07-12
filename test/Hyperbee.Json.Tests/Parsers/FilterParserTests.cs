@@ -174,7 +174,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "'unbalanced string\"", typeof( JsonElement ) )]
     [DataRow( " \t ", typeof( JsonElement ) )]
     [DataRow( "1 === 1", typeof( JsonElement ) )]
-    [DataRow( "(1 == 1(", typeof( JsonElement ) )] // BF
+    [DataRow( "(1 == 1(", typeof( JsonElement ) )]
     [DataRow( "(1 == 1)(", typeof( JsonElement ) )]
     [DataRow( "(1 == ", typeof( JsonElement ) )]
     [DataRow( "== 1", typeof( JsonElement ) )]
@@ -214,7 +214,7 @@ public class FilterParserTests : JsonTestBase
                 .Lambda<Func<FilterRuntimeContext<JsonElement>, bool>>( expression, param )
                 .Compile();
             var descriptor = new ElementTypeDescriptor();
-            return func( new FilterRuntimeContext<JsonElement>( new JsonElement(), new JsonElement(), descriptor, false ) );
+            return func( new FilterRuntimeContext<JsonElement>( new JsonElement(), new JsonElement(), descriptor ) );
         }
 
         if ( sourceType == typeof( JsonNode ) )
@@ -223,7 +223,7 @@ public class FilterParserTests : JsonTestBase
                 .Lambda<Func<FilterRuntimeContext<JsonNode>, bool>>( expression, param )
                 .Compile();
             var descriptor = new NodeTypeDescriptor();
-            return func( new FilterRuntimeContext<JsonNode>( new JsonObject(), new JsonObject(), descriptor, false ) );
+            return func( new FilterRuntimeContext<JsonNode>( new JsonObject(), new JsonObject(), descriptor ) );
         }
 
         throw new NotImplementedException();
@@ -237,7 +237,7 @@ public class FilterParserTests : JsonTestBase
             var descriptor = new ElementTypeDescriptor();
             var func = FilterParser<JsonElement>.Compile( filter, descriptor );
 
-            return func( new FilterRuntimeContext<JsonElement>( source.RootElement, source.RootElement, descriptor, false ) );
+            return func( new FilterRuntimeContext<JsonElement>( source.RootElement, source.RootElement, descriptor ) );
         }
         else
         {
@@ -247,7 +247,7 @@ public class FilterParserTests : JsonTestBase
             var func = FilterParser<JsonNode>.Compile( filter, descriptor );
 
             // act
-            return func( new FilterRuntimeContext<JsonNode>( source, source, descriptor, false ) );
+            return func( new FilterRuntimeContext<JsonNode>( source, source, descriptor ) );
         }
     }
 

@@ -2,9 +2,9 @@
 
 namespace Hyperbee.Json.Filters.Values;
 
-public struct NodesType<TNode>( IEnumerable<TNode> value, bool nonSingular ) : INodeType, IEnumerable<TNode>
+public struct NodesType<TNode>( IEnumerable<TNode> value, bool isNormalized ) : INodeType, IEnumerable<TNode>
 {
-    public readonly bool NonSingular => nonSingular;
+    public readonly bool IsNormalized => isNormalized;
     public readonly NodeTypeKind Kind => NodeTypeKind.NodeList;
 
     public INodeTypeComparer Comparer { get; set; }

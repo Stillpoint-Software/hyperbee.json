@@ -85,32 +85,6 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[?($..key)==2]", typeof( JsonDocument ) )]
-    [DataRow( "$[?($..key)==2]", typeof( JsonNode ) )]
-    public void FilterExpressionWithContainsArray( string query, Type sourceType )
-    {
-        const string json =
-            """
-            { 
-                "values": [
-                    { "key": 1, "value": 10 },
-                    { "key": 2, "value": 20 }
-                ]
-            }
-            """;
-
-        var source = GetDocumentFromSource( sourceType, json );
-
-        var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$['values']" )
-        };
-
-        Assert.IsTrue( expected.SequenceEqual( matches ) );
-    }
-
-    [DataTestMethod]
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonDocument ) )]
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonNode ) )]
     public void FilterExpressionAfterDoNotationWithWildcardAfterRecursiveDecent( string query, Type sourceType )

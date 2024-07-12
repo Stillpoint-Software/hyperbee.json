@@ -9,7 +9,7 @@ internal class JsonExpressionFactory : IExpressionFactory
     {
         if ( parserContext.Descriptor.Accessor.TryParseNode( state.Item.ToString(), out var node ) )
         {
-            expression = Expression.Constant( new NodesType<TNode>( [node], false ) );
+            expression = Expression.Constant( new NodesType<TNode>( [node], isNormalized: true ) );
             expressionInfo.Kind = ExpressionKind.Json;
             return true;
         }

@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Filters.Values;
-using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -9,6 +8,7 @@ public abstract class FilterExtensionFunction
 {
     private readonly int _argumentCount;
     private readonly MethodInfo _methodInfo;
+    private MethodInfo _throwIfNotNormalizedMethodInfo;
 
     public FilterExtensionInfo FunctionInfo { get; }
 
@@ -41,16 +41,31 @@ public abstract class FilterExtensionFunction
 
             var argument = FilterParser<TNode>.Parse( ref localState, parserContext );
 
+            // Create expression that throws if not normalized.
             if ( expectNormalized )
             {
-                if ( QueryHelper.IsNonSingular( localState.Item ) )
-                    throw new NotSupportedException( $"Function {_methodInfo.Name} does not support non-singular arguments. Error in Parameter {i + 1}." );
-            }
+                _throwIfNotNormalizedMethodInfo ??= GetMethod<FilterExtensionFunction>( nameof( ThrowIfNotNormalized ) )
+                    .MakeGenericMethod( typeof( TNode ) );
 
-            arguments[i] = Expression.Convert( argument, typeof( INodeType ) );
+                arguments[i] = Expression.Call( _throwIfNotNormalizedMethodInfo,
+                        Expression.Constant( _methodInfo.Name ),
+                        Expression.Convert( argument, typeof( INodeType ) ) );
+            }
+            else
+            {
+                arguments[i] = Expression.Convert( argument, typeof( INodeType ) );
+            }
         }
 
         return Expression.Call( _methodInfo, arguments );
+    }
+
+    public static INodeType ThrowIfNotNormalized<TNode>( string methodName, INodeType node )
+    {
+        if ( node is NodesType<TNode> { IsNormalized: false } )
+            throw new NotSupportedException( $"Function {methodName} does not support non-singular arguments." );
+
+        return node;
     }
 
     protected static MethodInfo GetMethod<T>( string methodName ) => typeof( T ).GetMethod( methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static );

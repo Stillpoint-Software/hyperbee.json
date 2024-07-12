@@ -1,6 +1,6 @@
 ﻿namespace Hyperbee.Json.Filters.Values;
 
-public struct ValueType<T>( T value ) : INodeType where T : IConvertible, IComparable<T>
+public struct ValueType<T>( T value ) : INodeType
 {
     public readonly NodeTypeKind Kind => NodeTypeKind.Value;
 

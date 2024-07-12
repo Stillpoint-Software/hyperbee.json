@@ -9,4 +9,4 @@ internal record FilterParserContext<TNode>( ITypeDescriptor<TNode> Descriptor )
 }
 
 
-public record FilterRuntimeContext<TNode>( TNode Current, TNode Root, ITypeDescriptor<TNode> Descriptor, bool NonSingular );
+public record FilterRuntimeContext<TNode>( TNode Current, TNode Root, ITypeDescriptor<TNode> Descriptor );

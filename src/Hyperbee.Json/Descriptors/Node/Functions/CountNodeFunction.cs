@@ -17,9 +17,8 @@ public class CountNodeFunction() : FilterExtensionFunction( CountMethodInfo, Fil
 
         var nodes = (NodesType<JsonNode>) arg;
 
-        if ( !nodes.NonSingular && !nodes.Any() )
+        if ( nodes.IsNormalized && !nodes.Any() )
             return new ValueType<float>( 1 );
-
 
         return new ValueType<float>( nodes.Count() );
     }

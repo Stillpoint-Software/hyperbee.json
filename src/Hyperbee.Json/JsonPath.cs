@@ -56,10 +56,11 @@ public static class JsonPath<TNode>
 
     public static IEnumerable<TNode> Select( in TNode value, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        return EnumerateMatches( value, value, query, false, processor );
+        var compiledQuery = JsonPathQueryParser.Parse( query );
+        return EnumerateMatches( value, value, compiledQuery, processor );
     }
 
-    internal static IEnumerable<TNode> SelectInternal( in TNode value, in TNode root, string query, NodeProcessorDelegate<TNode> processor = null )
+    internal static IEnumerable<TNode> SelectInternal( in TNode value, in TNode root, JsonPathQuery compiledQuery, NodeProcessorDelegate<TNode> processor = null )
     {
         // entry point for filter recursive calls
 
@@ -67,18 +68,17 @@ public static class JsonPath<TNode>
         // because the RFC ABNF does not allow whitespace in the query for dot member
         // notation, but it does allow it in the filter for function arguments.
 
-        return EnumerateMatches( value, root, query, true, processor );
+        return EnumerateMatches( value, root, compiledQuery, processor );
     }
 
-    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, string query, bool allowDotWhitespace, NodeProcessorDelegate<TNode> processor = null )
+    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, JsonPathQuery compiledQuery, NodeProcessorDelegate<TNode> processor = null )
     {
-        if ( string.IsNullOrWhiteSpace( query ) ) // invalid per the RFC ABNF
+        if ( string.IsNullOrWhiteSpace( compiledQuery.Query ) ) // invalid per the RFC ABNF
             return []; // Consensus: return empty array for empty query
 
-        if ( query == "$" || query == "@" ) // quick out for everything
+        if ( compiledQuery.Query == "$" || compiledQuery.Query == "@" ) // quick out for everything
             return [value];
 
-        var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
         var segmentNext = compiledQuery.Segments.Next; // The first segment is always the root; skip it
 
         if ( Descriptor.CanUsePointer && compiledQuery.Normalized ) // we can fast path this

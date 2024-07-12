@@ -15,7 +15,7 @@ public class CountElementFunction() : FilterExtensionFunction( CountMethodInfo, 
         switch ( input )
         {
             case NodesType<JsonElement> nodes:
-                if ( !nodes.NonSingular && !nodes.Any() )
+                if ( nodes.IsNormalized && !nodes.Any() )
                     return new ValueType<float>( 1F );
                 return new ValueType<float>( nodes.Count() );
             default:

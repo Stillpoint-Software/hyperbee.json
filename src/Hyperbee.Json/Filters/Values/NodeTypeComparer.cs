@@ -58,6 +58,9 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
      */
     public int Compare( INodeType left, INodeType right, Operator operation )
     {
+        ThrowIfNotNormalized( left );
+        ThrowIfNotNormalized( right );
+
         if ( left is NodesType<TNode> leftEnumerable && right is NodesType<TNode> rightEnumerable )
         {
             return CompareEnumerables( leftEnumerable, rightEnumerable );
@@ -105,6 +108,12 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
                 true when (operation == Operator.GreaterThan || operation == Operator.GreaterThanOrEqual) => compare > 0 ? -compare : compare,
                 _ => compare
             };
+        }
+
+        static void ThrowIfNotNormalized( INodeType nodeType )
+        {
+            if ( nodeType is NodesType<TNode> { IsNormalized: false } )
+                throw new NotSupportedException( "Unsupported non-single query." );
         }
     }
 
@@ -164,14 +173,13 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
                 return 0; // Return 0 if any node matches the value
         }
 
-        if ( nodeCount == 0 && value is Nothing ) //BF - when comparing a missing property to null $[?(@.key==null)] we need to fail
-            return 0; // Return 0 if the value is null (no nodes to compare to)
-
-        if ( nodeCount == 0 && (value == null || value is Null) ) //BF - when comparing a missing property to null $[?(@.key==null)] we need to fail
-            return -1; // Return 0 if the value is null (no nodes to compare to)
-
         if ( nodeCount == 0 )
-            return -1; // Return -1 if the list is empty (no nodes match the value)
+        {
+            if ( value is Nothing ) // Considered equal
+                return 0;
+
+            return -1;
+        }
 
         return nodeCount != 1 ? -1 : lastCompare; // Return the last comparison if there is only one node
 

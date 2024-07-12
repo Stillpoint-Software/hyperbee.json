@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Hyperbee.Json.Filters.Values;
-using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -8,7 +7,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 {
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterParserContext<TNode> parserContext )
     {
-        expression = ExpressionHelper<TNode>.GetExpression( state.Item, parserContext, ref itemContext );
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument, parserContext );
 
         if ( expression == null )
             return false;
@@ -19,9 +18,9 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<FilterRuntimeContext<TNode>, string, bool, INodeType>) Select );
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<string, bool, FilterRuntimeContext<TNode>, INodeType>) Select );
 
-        public static Expression GetExpression( ReadOnlySpan<char> item, FilterParserContext<TNode> parserContext, ref ExpressionInfo expressionInfo )
+        public static Expression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace, FilterParserContext<TNode> parserContext )
         {
             if ( item.IsEmpty )
                 return null;
@@ -29,21 +28,21 @@ internal class SelectExpressionFactory : IExpressionFactory
             if ( item[0] != '$' && item[0] != '@' )
                 return null;
 
-            expressionInfo.NonSingularQuery = QueryHelper.IsNonSingular( item ); //BF nsq
-
             return Expression.Invoke(
                 SelectExpression,
-                parserContext.RuntimeContext,
                 Expression.Constant( item.ToString() ),
-                Expression.Constant( expressionInfo.NonSingularQuery ) );
+                Expression.Constant( allowDotWhitespace ),
+                parserContext.RuntimeContext );
         }
 
-        private static INodeType Select( FilterRuntimeContext<TNode> runtimeContext, string query, bool nonSingular )
+        private static INodeType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
         {
+            var compileQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
+
             // Current becomes root
             return query[0] == '$'
-                ? new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, query ), nonSingular /*runtimeContext.NonSingular */)
-                : new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, query ), nonSingular /*runtimeContext.NonSingular */ );
+                ? new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, compileQuery ), compileQuery.Normalized )
+                : new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
         }
 
     }

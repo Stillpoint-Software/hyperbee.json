@@ -26,8 +26,8 @@ public static class FilterTruthyExpression
             Null => false,
             ValueType<bool> valueBool => valueBool.Value,
             ValueType<float> floatValue => floatValue.Value != 0,
-            IEnumerable enumerable => enumerable.Cast<object>().Any(),
             ValueType<string> valueString => !string.IsNullOrEmpty( valueString.Value ) && !valueString.Value.Equals( "false", StringComparison.OrdinalIgnoreCase ),
+            IEnumerable enumerable => enumerable.Cast<object>().Any(),  // NodesType<TNode>
             _ => true
         };
 
@@ -38,5 +38,4 @@ public static class FilterTruthyExpression
     {
         return value ? Constants.True : Constants.False;
     }
-
 }

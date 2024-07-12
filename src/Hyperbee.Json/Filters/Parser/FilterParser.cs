@@ -361,7 +361,6 @@ public class FilterParser<TNode> : FilterParser
     private static void ThrowIfInvalidComparison( in ParserState state, ExprItem left, ExprItem right )
     {
         ThrowIfConstantIsNotCompared( in state, left, right );
-        ThrowIfNonSingularCompare( in state, left, right );
         ThrowIfFunctionInvalidCompare( in state, left );
     }
 
@@ -384,17 +383,6 @@ public class FilterParser<TNode> : FilterParser
         {
             throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
         }
-    }
-
-    private static void ThrowIfNonSingularCompare( in ParserState state, ExprItem left, ExprItem right )
-    {
-        if ( IsNonSingularCompare( left ) || (right != null && IsNonSingularCompare( right )) )
-            throw new NotSupportedException( $"Unsupported non-single query: {state.Buffer.ToString()}." );
-
-        return;
-
-        static bool IsNonSingularCompare( ExprItem item ) =>
-            item.ExpressionInfo.NonSingularQuery && item.Operator.IsComparison();
     }
 
     private static void ThrowIfConstantIsNotCompared( in ParserState state, ExprItem left, ExprItem right )

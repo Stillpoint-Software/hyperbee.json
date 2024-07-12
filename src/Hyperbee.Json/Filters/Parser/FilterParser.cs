@@ -305,13 +305,6 @@ public class FilterParser<TNode> : FilterParser
 
         return left.Expression;
 
-        // Helper method to throw if the comparison is invalid
-        static void ThrowIfInvalidComparison( in ParserState state, ExprItem left, ExprItem right )
-        {
-            ThrowIfConstantIsNotCompared( in state, left, right );
-            ThrowIfNonSingularCompare( in state, left, right );
-        }
-
         // Helper method to determine if two items can be merged
         static bool CanMergeItems( ExprItem left, ExprItem right )
         {
@@ -412,6 +405,14 @@ public class FilterParser<TNode> : FilterParser
         left.Operator = right.Operator;
     }
 
+    // Throw helpers
+
+    private static void ThrowIfInvalidComparison( in ParserState state, ExprItem left, ExprItem right )
+    {
+        ThrowIfConstantIsNotCompared( in state, left, right );
+        ThrowIfNonSingularCompare( in state, left, right );
+    }
+
     private static void ThrowIfNonSingularCompare( in ParserState state, ExprItem left, ExprItem right )
     {
         if ( IsNonSingularCompare( left ) || (right != null && IsNonSingularCompare( right )) )
@@ -434,6 +435,8 @@ public class FilterParser<TNode> : FilterParser
         if ( right != null && right.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
+
+    // ExprItem
 
     [DebuggerDisplay( "Operator = {Operator}, {ExpressionInfo.Kind}" )]
     private class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )

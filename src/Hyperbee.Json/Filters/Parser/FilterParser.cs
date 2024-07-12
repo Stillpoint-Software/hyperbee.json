@@ -18,7 +18,7 @@ namespace Hyperbee.Json.Filters.Parser;
 
 public abstract class FilterParser
 {
-    public const char EndLine = '\0'; // using null character instead of \n
+    public const char EndLine = '\0'; // use null instead of newline
     public const char ArgClose = ')';
     public const char ArgComma = ',';
 }
@@ -110,7 +110,7 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static void MoveNext( ref ParserState state )
+    private static void MoveNext( ref ParserState state ) // move to the next item
     {
         char? quote = null;
 
@@ -136,7 +136,7 @@ public class FilterParser<TNode> : FilterParser
 
             NextCharacter( ref state, out var nextChar, ref quote ); // will advance state.Pos
 
-            if ( IsFinished( in state, state.Pos - itemStart, nextChar ) )
+            if ( IsFinished( in state, nextChar ) )
             {
                 break;
             }
@@ -153,26 +153,21 @@ public class FilterParser<TNode> : FilterParser
         return;
 
         // Helper method to determine if item parsing is finished
-        static bool IsFinished( in ParserState state, int charCount, char ch )
+        static bool IsFinished( in ParserState state, char ch )
         {
+            // order of operations matters
+
             if ( state.BracketDepth != 0 )
                 return false;
 
-            // order of operations matters here
-            if ( charCount == 0 && ch == ArgClose )
-                return false;
-
-            if ( !state.Operator.IsNonOperator() )
+            if ( state.Operator.IsNonOperator() == false )
                 return true;
 
-            if ( ch == ArgClose || ch == EndLine || ch == state.Terminal ) // terminal character [ '\0' or ',' or ')' ]
-                return true;
-
-            return false;
+            return ch == state.Terminal; // terminal character [ '\0' or ',' or ')' ]
         }
     }
 
-    private static void MoveNextOperator( ref ParserState state )
+    private static void MoveNextOperator( ref ParserState state ) // move to the next operator
     {
         if ( state.Operator.IsLogical() || state.Operator.IsComparison() )
         {
@@ -206,7 +201,7 @@ public class FilterParser<TNode> : FilterParser
             }
             else if ( nextChar == quoteChar && (state.Pos <= 1 || state.Buffer[state.Pos - 2] != '\\') )
             {
-                quoteChar = null; // Exiting quoted string
+                quoteChar = null; // Exiting a quoted string
             }
             return;
         }
@@ -286,7 +281,7 @@ public class FilterParser<TNode> : FilterParser
     {
         if ( items.Count == 1 )
         {
-            ThrowIfInvalid( in state, left, null ); // single item, no recursion
+            ThrowIfInvalidComparison( in state, left, null ); // single item, no recursion
         }
         else
         {
@@ -299,7 +294,8 @@ public class FilterParser<TNode> : FilterParser
                     Merge( in state, right, ref index, items, parserContext, mergeOneOnly: true ); // recursive call - right becomes left
                 }
 
-                ThrowIfInvalid( in state, left, right );
+                ThrowIfInvalidComparison( in state, left, right );
+
                 MergeItems( left, right, parserContext );
 
                 if ( mergeOneOnly )
@@ -309,7 +305,8 @@ public class FilterParser<TNode> : FilterParser
 
         return left.Expression;
 
-        static void ThrowIfInvalid( in ParserState state, ExprItem left, ExprItem right )
+        // Helper method to throw if the comparison is invalid
+        static void ThrowIfInvalidComparison( in ParserState state, ExprItem left, ExprItem right )
         {
             ThrowIfConstantIsNotCompared( in state, left, right );
             ThrowIfNonSingularCompare( in state, left, right );
@@ -409,6 +406,7 @@ public class FilterParser<TNode> : FilterParser
                 break;
         }
 
+        // Update the left-side expression
         left.Expression = FilterTruthyExpression.ConvertTruthyExpression( left.Expression );
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
         left.Operator = right.Operator; 

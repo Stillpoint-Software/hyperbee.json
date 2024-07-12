@@ -46,7 +46,7 @@ function Get-JsonContent {
         # Save the JSON content to a file in a pretty formatted way if SavePath is provided
         if ($PSBoundParameters.ContainsKey('LocalPath')) {
             $prettyJson = $jsonContent | ConvertFrom-Json -AsHashtable | ConvertTo-Json -Depth 10
-            Set-Content -Path $SavePath -Value $prettyJson
+            Set-Content -Path $LocalPath -Value $prettyJson
             Write-Host "JSON content saved to '$LocalPath'."
         }
     }
@@ -269,7 +269,7 @@ namespace Hyperbee.Json.Cts.Tests
 # Generate unit-tests by category
 $ctsPath = Join-Path -Path $PSScriptRoot -ChildPath "cts.json"
 
-$jsonUrl = "https://raw.githubusercontent.com/Stillpoint-Software/jsonpath-compliance-test-suite/main/cts.json"
+$jsonUrl = "https://raw.githubusercontent.com/jsonpath-standard/jsonpath-compliance-test-suite/main/cts.json"
 $jsonContent = Get-JsonContent -Url $jsonUrl -LocalPath $ctsPath
 
 # Group tests by category

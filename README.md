@@ -351,10 +351,11 @@ Additional documentation can be found in the project's `/docs` folder.
 
 Hyperbee.Json is built upon the great work of several open-source projects. Special thanks to:
 
-- Stefan Goessner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - System.Text.Json team for their work on the `System.Text.Json` library.
+- Stefan Goessner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - Atif Aziz's C# port of Goessner's JSONPath library [.NET JSONPath](https://github.com/atifaziz/JSONPath).  
 - Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).
+- [JSONPath Compliance Test Suite Team](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite).
 
 ## Contributing
 

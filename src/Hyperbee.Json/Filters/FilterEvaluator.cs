@@ -16,9 +16,9 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
         _typeDescriptor = typeDescriptor;
     }
 
-    public object Evaluate( string filter, TNode current, TNode root )
+    public bool Evaluate( string filter, TNode current, TNode root )
     {
-        // TODO: split type descriptor into design/parse and runtime.  (functions and json parsing are design time)
+        // Feature: split type descriptor into design/parse and runtime.  (functions and json parsing are design time)
         var compiled = Compiled.GetOrAdd( filter, _ => FilterParser<TNode>.Compile( filter, _typeDescriptor ) );
 
         try
@@ -29,7 +29,7 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
         }
         catch ( RuntimeBinderException )
         {
-            return null; // missing members should act falsy
+            return false; // missing members should act falsy
         }
         catch ( NotSupportedException )
         {

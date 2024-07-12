@@ -205,9 +205,7 @@ public static class JsonPath<TNode>
                         {
                             foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                             {
-                                var result = filterEvaluator.Evaluate( selector[1..], childValue, root ); // remove the leading '?' character
-
-                                if ( !Truthy( result ) )
+                                if ( !filterEvaluator.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
                                     continue;
 
                                 // optimization: quicker return for tail values
@@ -287,12 +285,6 @@ public static class JsonPath<TNode>
             } // end for group selector
 
         } while ( stack.TryPop( out args ) );
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static bool Truthy( object value )
-    {
-        return value is not null and not IConvertible || Convert.ToBoolean( value, CultureInfo.InvariantCulture );
     }
 
     private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )

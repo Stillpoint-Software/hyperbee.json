@@ -4,13 +4,20 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class FunctionExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterParserContext<TNode> parserContext )
     {
-        if ( context.Descriptor.Functions.TryGetCreator( state.Item.ToString(), out var functionCreator ) )
+        if ( parserContext.Descriptor.Functions.TryGetCreator( state.Item.ToString(), out var functionCreator ) )
         {
-            expression = functionCreator()
-                .GetExpression( ref state, context ); // will recurse for each function argument.
+            if ( state.TrailingWhitespace )
+                throw new NotSupportedException( "Whitespace is not allowed after a function name." );
 
+            var function = functionCreator();
+
+            expression = function
+                .GetExpression( ref state, parserContext ); // will recurse for each function argument.
+
+            expressionInfo.Kind = ExpressionKind.Function;
+            expressionInfo.FunctionInfo = function.FunctionInfo;
             return true;
         }
 

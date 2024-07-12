@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Tests.Parsers;
@@ -33,10 +34,10 @@ public class JsonPathQueryParserTests
     public void Should_TokenizeJsonPath( string jsonPath, string expected )
     {
         // act
-        var pathSegment = JsonPathQueryParser.Parse( jsonPath );
+        var compiledQuery = JsonPathQueryParser.Parse( jsonPath );
 
         // arrange
-        var result = SegmentsToString( pathSegment );
+        var result = SegmentsToString( compiledQuery.Segments );
 
         // assert
         Assert.AreEqual( expected, result );
@@ -55,5 +56,19 @@ public class JsonPathQueryParserTests
                 return $"{{{selectorsString}|{selectorType}}}";
             }
         }
+    }
+
+    [TestMethod]
+    public void ShouldFilterExpressionWithParentAxisOperator()
+    {
+        // NOT-SUPPORTED: parent axis operator is not supported
+
+        // act & assert
+        const string jsonPath = "$[*].bookmarks[ ? (@.page == 45)]^^^";
+
+        Assert.ThrowsException<NotSupportedException>( () =>
+        {
+            _ = JsonPathQueryParser.Parse( jsonPath );
+        } );
     }
 }

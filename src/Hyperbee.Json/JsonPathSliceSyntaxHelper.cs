@@ -5,6 +5,7 @@ namespace Hyperbee.Json;
 
 internal static class JsonPathSliceSyntaxHelper
 {
+    // parse slice expression and return normalized bounds
     public static (int Lower, int Upper, int Step) ParseExpression( ReadOnlySpan<char> sliceExpr, int length, bool reverse = false )
     {
         // parse the slice expression and return normalized bounds
@@ -34,7 +35,7 @@ internal static class JsonPathSliceSyntaxHelper
             }
         }
 
-        var step = ParsePart( stepSpan, defaultValue: 1 );
+        var step = ParseStep( stepSpan, length );
 
         if ( step == 0 ) // step 0 should return an empty array
             return (0, 0, 0);
@@ -46,10 +47,28 @@ internal static class JsonPathSliceSyntaxHelper
 
         // helper to parse string part to an int
 
+        static int ParseStep( ReadOnlySpan<char> part, int length )
+        {
+            // a little magic for overflow and underflow conditions cause by massive steps.
+            // just scope the step to length + 1 or -length - 1.
+
+            if ( !part.IsEmpty && long.TryParse( part, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) )
+            {
+                return n switch
+                {
+                    > 0 when n > length => length + 1,
+                    < 0 when -n > length => -(length + 1),
+                    _ => (int) n
+                };
+            }
+
+            return 1;
+        }
+
         static int ParsePart( ReadOnlySpan<char> part, int defaultValue )
         {
-            if ( !part.IsEmpty )
-                return int.TryParse( part, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) ? n : defaultValue;
+            if ( !part.IsEmpty && int.TryParse( part, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) )
+                return n;
 
             return defaultValue;
         }
@@ -86,7 +105,7 @@ internal static class JsonPathSliceSyntaxHelper
 
     private static (int Lower, int Upper, int Step) ReverseBoundedValues( int lower, int upper, int step )
     {
-        step *= -1;
+        step = -step;
 
         // adjust upper for correct reverse iteration
         // upper may not be lower + (n * step) aligned

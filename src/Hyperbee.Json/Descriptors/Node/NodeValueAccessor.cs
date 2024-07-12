@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
@@ -13,7 +14,6 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         {
             case JsonArray arrayValue:
                 for ( var index = arrayValue.Count - 1; index >= 0; index-- )
-
                 {
                     var child = arrayValue[index];
 
@@ -40,9 +40,19 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public JsonNode GetElementAt( in JsonNode value, int index )
+    public bool TryGetElementAt( in JsonNode value, int index, out JsonNode element )
     {
-        return value[index];
+        var array = (JsonArray) value;
+        element = null;
+
+        if ( index < 0 ) // flip negative index to positive
+            index = array.Count + index;
+
+        if ( index < 0 || index >= array.Count ) // out of bounds
+            return false;
+
+        element = value[index];
+        return true;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -65,7 +75,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         return 0;
     }
 
-    public bool TryGetChildValue( in JsonNode value, string childSelector, out JsonNode childValue )
+    public bool TryGetChildValue( in JsonNode value, string childSelector, SelectorKind selectorKind, out JsonNode childValue )
     {
         switch ( value )
         {
@@ -78,8 +88,14 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                 }
             case JsonArray valueArray:
                 {
+                    if ( selectorKind == SelectorKind.Name )
+                        break;
+
                     if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                     {
+                        if ( index < 0 ) // flip negative index to positive
+                            index = valueArray.Count + index;
+
                         if ( index >= 0 && index < valueArray.Count )
                         {
                             childValue = value[index];
@@ -160,5 +176,10 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         }
 
         return true;
+    }
+
+    public bool TryGetFromPointer( in JsonNode node, JsonPathSegment segment, out JsonNode childValue )
+    {
+        return node.TryGetFromJsonPathPointer( segment, out childValue );
     }
 }

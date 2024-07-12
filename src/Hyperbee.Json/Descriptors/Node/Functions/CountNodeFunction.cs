@@ -1,21 +1,25 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class CountNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class CountNodeFunction() : FilterExtensionFunction( CountMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "count";
-    private static readonly Expression CountExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, float>) Count );
+    private static readonly MethodInfo CountMethodInfo = GetMethod<CountNodeFunction>( nameof( Count ) );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    public static INodeType Count( INodeType arg )
     {
-        return Expression.Invoke( CountExpression, arguments[0] );
-    }
+        if ( arg.Kind != NodeTypeKind.NodeList )
+            throw new NotSupportedException( $"Function {Name} must be a node list." );
 
-    public static float Count( IEnumerable<JsonNode> nodes )
-    {
-        return nodes.Count();
+        var nodes = (NodesType<JsonNode>) arg;
+
+        if ( nodes.IsNormalized && !nodes.Any() )
+            return new ValueType<float>( 1 );
+
+        return new ValueType<float>( nodes.Count() );
     }
 }

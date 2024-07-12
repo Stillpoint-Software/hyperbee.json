@@ -1,6 +1,5 @@
 ﻿using System.Dynamic;
 using System.Text.Json;
-using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Dynamic;
 
@@ -11,9 +10,9 @@ public class DynamicJsonElement : DynamicObject
 
     public static implicit operator double( DynamicJsonElement proxy ) => proxy.Value.GetDouble();
     public static implicit operator decimal( DynamicJsonElement proxy ) => proxy.Value.GetDecimal();
-    public static implicit operator short( DynamicJsonElement proxy ) => proxy.Value.GetNumberAsInt16();
-    public static implicit operator int( DynamicJsonElement proxy ) => proxy.Value.GetNumberAsInt32();
-    public static implicit operator long( DynamicJsonElement proxy ) => proxy.Value.GetNumberAsInt64();
+    public static implicit operator short( DynamicJsonElement proxy ) => GetNumberAsInt16( proxy.Value );
+    public static implicit operator int( DynamicJsonElement proxy ) => GetNumberAsInt32( proxy.Value );
+    public static implicit operator long( DynamicJsonElement proxy ) => GetNumberAsInt64( proxy.Value );
     public static implicit operator bool( DynamicJsonElement proxy ) => proxy.Value.GetBoolean();
     public static implicit operator byte( DynamicJsonElement proxy ) => proxy.Value.GetByte();
     public static implicit operator sbyte( DynamicJsonElement proxy ) => proxy.Value.GetSByte();
@@ -77,5 +76,31 @@ public class DynamicJsonElement : DynamicObject
 
         result = null;
         return false;
+    }
+
+    // Value extensions
+
+    private static short GetNumberAsInt16( JsonElement value )
+    {
+        if ( value.TryGetInt16( out var number ) )
+            return number;
+
+        return (short) value.GetDouble(); // for cases where the number contains fractional digits
+    }
+
+    private static int GetNumberAsInt32( JsonElement value )
+    {
+        if ( value.TryGetInt32( out var number ) )
+            return number;
+
+        return (int) value.GetDouble(); // for cases where the number contains fractional digits
+    }
+
+    private static long GetNumberAsInt64( JsonElement value )
+    {
+        if ( value.TryGetInt64( out var number ) )
+            return number;
+
+        return (long) value.GetDouble(); // for cases where the number contains fractional digits
     }
 }

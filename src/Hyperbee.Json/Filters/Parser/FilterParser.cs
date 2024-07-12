@@ -9,8 +9,8 @@
 
 #endregion
 
+using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Reflection;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Parser.Expressions;
 
@@ -18,40 +18,43 @@ namespace Hyperbee.Json.Filters.Parser;
 
 public abstract class FilterParser
 {
-    public const char EndLine = '\n';
-    public const char EndArg = ')';
-    public const char ArgSeparator = ',';
+    public const char EndLine = '\0'; // use null instead of newline
+    public const char ArgClose = ')';
+    public const char ArgComma = ',';
 }
 
 public class FilterParser<TNode> : FilterParser
 {
-    public static Func<TNode, TNode, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
+    public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
-        var context = new FilterContext<TNode>( descriptor );
+        var context = new FilterParserContext<TNode>( descriptor );
 
         var expression = Parse( filter, context );
 
-        return Expression.Lambda<Func<TNode, TNode, bool>>( expression, context.Current, context.Root ).Compile();
+        return Expression.Lambda<Func<FilterRuntimeContext<TNode>, bool>>( expression, context.RuntimeContext ).Compile();
     }
 
-    internal static Expression Parse( ReadOnlySpan<char> filter, FilterContext<TNode> context )
+    internal static Expression Parse( ReadOnlySpan<char> filter, FilterParserContext<TNode> parserContext )
     {
-        var pos = 0;
-        var state = new ParserState( filter, [], ref pos, Operator.Nop, EndLine );
+        filter = filter.Trim(); // remove leading and trailing whitespace to simplify parsing
 
-        var expression = Parse( ref state, context );
+        var pos = 0;
+        var parenDepth = 0;
+        var state = new ParserState( filter, [], ref pos, ref parenDepth, Operator.NonOperator, EndLine );
+
+        var expression = Parse( ref state, parserContext );
 
         return FilterTruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse( ref ParserState state, FilterContext<TNode> context ) // recursion entrypoint
+    internal static Expression Parse( ref ParserState state, FilterParserContext<TNode> parserContext ) // recursion entrypoint
     {
         // validate input
-        if ( context == null )
-            throw new ArgumentNullException( nameof( context ) );
+        if ( parserContext == null )
+            throw new ArgumentNullException( nameof( parserContext ) );
 
-        if ( state.EndOfBuffer || state.IsTerminal )
-            throw new ArgumentException( $"Invalid filter: \"{state.Buffer}\"", nameof( state ) );
+        if ( state.EndOfBuffer )
+            throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
 
         // parse the expression
         var items = new List<ExprItem>();
@@ -59,52 +62,55 @@ public class FilterParser<TNode> : FilterParser
         do
         {
             MoveNext( ref state );
-            items.Add( GetExprItem( ref state, context ) );
+            items.Add( GetExprItem( ref state, parserContext ) ); // will recurse for nested expressions
 
         } while ( state.IsParsing );
 
-        // advance to next character for recursive calls.
-        if ( !state.EndOfBuffer && state.IsTerminal )
-            state.Pos++;
+        // check for paren mismatch
+        if ( state.EndOfBuffer && state.ParenDepth != 0 )
+            throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
 
         // merge the expressions
         var baseItem = items[0];
         var index = 1;
 
-        return Merge( baseItem, ref index, items, context.Descriptor );
+        return Merge( in state, baseItem, ref index, items, parserContext );
     }
 
-    private static ExprItem GetExprItem( ref ParserState state, FilterContext<TNode> context )
+
+    private static ExprItem GetExprItem( ref ParserState state, FilterParserContext<TNode> parserContext )
     {
-        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, context ) )
-            return ExprItem( ref state, expression );
+        var expressionInfo = new ExpressionInfo();
 
-        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // will recurse.
-            return ExprItem( ref state, expression );
+        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, ref expressionInfo, parserContext ) )
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
+        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, parserContext ) ) // will recurse.
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, context ) ) // may recurse for each function argument.
-            return ExprItem( ref state, expression );
+        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, parserContext ) )
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
+        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, parserContext ) ) // may recurse for each function argument.
+            return ExprItem( ref state, expression, expressionInfo );
 
-        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, context ) )
-            return ExprItem( ref state, expression );
+        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, parserContext ) )
+            return ExprItem( ref state, expression, expressionInfo );
+
+        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, parserContext ) )
+            return ExprItem( ref state, expression, expressionInfo );
 
         throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
 
         // Helper method to create an expression item
-        static ExprItem ExprItem( ref ParserState state, Expression expression )
+        static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionInfo expressionInfo )
         {
-            UpdateOperator( ref state );
-            return new ExprItem( expression, state.Operator );
+            MoveNextOperator( ref state ); // will set state.Operator
+            return new ExprItem( expression, state.Operator, expressionInfo );
         }
     }
 
-    private static void MoveNext( ref ParserState state )
+    private static void MoveNext( ref ParserState state ) // move to the next item
     {
         char? quote = null;
 
@@ -115,7 +121,7 @@ public class FilterParser<TNode> : FilterParser
         // check for end of buffer
         if ( state.EndOfBuffer )
         {
-            state.Operator = Operator.Nop;
+            state.Operator = Operator.NonOperator;
             state.Item = [];
             return;
         }
@@ -126,37 +132,59 @@ public class FilterParser<TNode> : FilterParser
 
         while ( true )
         {
-            itemEnd = state.Pos; // assign before the call to NextCharacter
+            itemEnd = state.Pos; // store before calling NextCharacter 
 
-            NextCharacter( ref state, out var nextChar, ref quote );
+            NextCharacter( ref state, out var nextChar, ref quote ); // will advance state.Pos
 
-            if ( IsFinished( state.Pos - itemStart, nextChar, state.Operator, state.Terminal ) )
+            if ( IsFinished( in state, nextChar ) )
+            {
                 break;
+            }
 
-            if ( !state.EndOfBuffer && !state.IsTerminal )
-                continue;
-
-            itemEnd = state.Pos; // fall-through: include the terminal character
-            break;
+            if ( state.EndOfBuffer )
+            {
+                itemEnd = state.Pos; // include the final character
+                break;
+            }
         }
 
         state.SetItem( itemStart, itemEnd );
+
         return;
 
         // Helper method to determine if item parsing is finished
-        static bool IsFinished( int count, char ch, Operator op, char terminal )
+        static bool IsFinished( in ParserState state, char ch )
         {
-            // order of operations matters here
-            if ( count == 0 && ch == EndArg )
+            // order of operations matters
+
+            if ( state.BracketDepth != 0 )
                 return false;
 
-            if ( op != Operator.Nop && op != Operator.ClosedParen )
+            if ( state.Operator.IsNonOperator() == false )
                 return true;
 
-            if ( ch == terminal || ch == EndArg || ch == EndLine )
-                return true;
+            return ch == state.Terminal; // terminal character [ '\0' or ',' or ')' ]
+        }
+    }
 
-            return false;
+    private static void MoveNextOperator( ref ParserState state ) // move to the next operator
+    {
+        if ( state.Operator.IsLogical() || state.Operator.IsComparison() )
+        {
+            return;
+        }
+
+        if ( !state.IsParsing )
+        {
+            state.Operator = Operator.NonOperator;
+            return;
+        }
+
+        char? quoteChar = null;
+
+        while ( !(state.Operator.IsLogical() || state.Operator.IsComparison()) && !state.EndOfBuffer )
+        {
+            NextCharacter( ref state, out _, ref quoteChar );
         }
     }
 
@@ -164,6 +192,21 @@ public class FilterParser<TNode> : FilterParser
     {
         nextChar = state.Buffer[state.Pos++];
 
+        // Handle escape characters within quotes
+        if ( quoteChar.HasValue )
+        {
+            if ( nextChar == '\\' && state.Pos < state.Buffer.Length )
+            {
+                nextChar = state.Buffer[state.Pos++];
+            }
+            else if ( nextChar == quoteChar && (state.Pos <= 1 || state.Buffer[state.Pos - 2] != '\\') )
+            {
+                quoteChar = null; // Exiting a quoted string
+            }
+            return;
+        }
+
+        // Normal character handling
         switch ( nextChar )
         {
             case '&' when Next( ref state, '&' ):
@@ -194,20 +237,30 @@ public class FilterParser<TNode> : FilterParser
                 state.Operator = Operator.Not;
                 break;
             case '(':
+                state.ParenDepth++;
                 state.Operator = Operator.OpenParen;
                 break;
             case ')':
+                state.ParenDepth--;
                 state.Operator = Operator.ClosedParen;
                 break;
-            case ' ' or '\t' when quoteChar == null:
-                state.Operator = Operator.Nop;
+            case ' ' or '\t' or '\r' or '\n':
+                state.Operator = Operator.Whitespace;
                 break;
-            case '\'' or '\"' when state.Pos > 0 && state.Previous != '\\':
-                quoteChar = quoteChar == null ? nextChar : null;
-                state.Operator = Operator.Nop;
+            case '[':
+                state.BracketDepth++;
+                state.Operator = Operator.Bracket;
+                break;
+            case ']':
+                state.BracketDepth--;
+                state.Operator = Operator.Bracket;
+                break;
+            case '\'' or '\"':
+                quoteChar = nextChar; // Entering a quoted string
+                state.Operator = Operator.Quotes;
                 break;
             default:
-                state.Operator = Operator.Nop;
+                state.Operator = Operator.Token;
                 break;
         }
 
@@ -216,7 +269,7 @@ public class FilterParser<TNode> : FilterParser
         // Helper method to check if the next character is the expected character
         static bool Next( ref ParserState state, char expected )
         {
-            if ( state.EndOfBuffer || state.Current != expected )
+            if ( state.EndOfBuffer || state.Buffer[state.Pos] != expected )
                 return false;
 
             state.Pos++;
@@ -224,167 +277,132 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static void UpdateOperator( ref ParserState state )
+    private static Expression Merge( in ParserState state, ExprItem left, ref int index, List<ExprItem> items, FilterParserContext<TNode> parserContext, bool mergeOneOnly = false )
     {
-        if ( !IsParenOrNop( state.Operator ) )
-            return;
-
-        if ( state.EndOfBuffer )
+        if ( items.Count == 1 )
         {
-            state.Operator = Operator.Nop;
-            return;
+            ThrowIfInvalidComparison( in state, left, null ); // single item, no recursion
         }
-
-        if ( state.IsTerminal )
+        else
         {
-            state.Operator = Operator.ClosedParen;
-            return;
-        }
-
-        char? quoteChar = null;
-        var startPos = state.Pos;
-
-        while ( IsParenOrNop( state.Operator ) && !state.EndOfBuffer )
-        {
-            NextCharacter( ref state, out _, ref quoteChar );
-        }
-
-        if ( IsParen( state.Operator ) && state.Pos > startPos )
-        {
-            state.Pos--;
-        }
-
-        return;
-
-        // Helper method to determine if an operator is a parenthesis or a no-op
-        static bool IsParenOrNop( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen or Operator.Nop;
-        static bool IsParen( Operator op ) => op is Operator.OpenParen or Operator.ClosedParen;
-    }
-
-    private static Expression Merge( ExprItem current, ref int index, List<ExprItem> items, ITypeDescriptor<TNode> descriptor, bool mergeOneOnly = false )
-    {
-        while ( index < items.Count )
-        {
-            var next = items[index++];
-
-            while ( !CanMergeItems( current, next ) )
+            while ( index < items.Count )
             {
-                Merge( next, ref index, items, descriptor, mergeOneOnly: true ); // recursive call
+                var right = items[index++];
+
+                while ( !CanMergeItems( left, right ) )
+                {
+                    Merge( in state, right, ref index, items, parserContext, mergeOneOnly: true ); // recursive call - right becomes left
+                }
+
+                ThrowIfInvalidComparison( in state, left, right );
+
+                MergeItems( left, right, parserContext );
+
+                if ( mergeOneOnly )
+                    return left.Expression;
             }
-
-            MergeItems( current, next, descriptor );
-
-            if ( mergeOneOnly )
-                return current.Expression;
         }
 
-        return current.Expression;
+        return left.Expression;
 
         // Helper method to determine if two items can be merged
         static bool CanMergeItems( ExprItem left, ExprItem right )
         {
             // "Not" can never be a right side operator
-            return right.Operator != Operator.Not && GetPriority( left.Operator ) >= GetPriority( right.Operator );
+            return right.Operator != Operator.Not && GetPrecedence( left.Operator ) >= GetPrecedence( right.Operator );
         }
 
         // Helper method to get the priority of an operator
-        static int GetPriority( Operator type )
+        static int GetPrecedence( Operator type )
         {
-            return type switch
+            return type switch // higher number means greater precedence
             {
                 Operator.Not => 1,
-                Operator.And or
-                    Operator.Or => 2,
+                Operator.Or => 2,
+                Operator.And => 3,
                 Operator.Equals or
                     Operator.NotEquals or
                     Operator.GreaterThan or
                     Operator.GreaterThanOrEqual or
                     Operator.LessThan or
-                    Operator.LessThanOrEqual => 3,
+                    Operator.LessThanOrEqual => 4,
                 _ => 0,
             };
         }
     }
 
-    private static void MergeItems( ExprItem left, ExprItem right, ITypeDescriptor<TNode> descriptor )
+    private static void MergeItems( ExprItem left, ExprItem right, FilterParserContext<TNode> parserContext )
     {
-        switch ( left.Operator )
+        left.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, left.Expression );
+        right.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, right.Expression );
+
+        left.Expression = left.Operator switch
         {
-            case Operator.Equals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
+            Operator.Equals => NodeTypeExpression<TNode>.Equal( left.Expression, right.Expression ),
+            Operator.NotEquals => NodeTypeExpression<TNode>.NotEqual( left.Expression, right.Expression ),
+            Operator.GreaterThan => NodeTypeExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
+            Operator.GreaterThanOrEqual => NodeTypeExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
+            Operator.LessThan => NodeTypeExpression<TNode>.LessThan( left.Expression, right.Expression ),
+            Operator.LessThanOrEqual => NodeTypeExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
+            Operator.And => NodeTypeExpression<TNode>.And( left.Expression, right.Expression ),
+            Operator.Or => NodeTypeExpression<TNode>.Or( left.Expression, right.Expression ),
+            Operator.Not => NodeTypeExpression<TNode>.Not( right.Expression ),
+            _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
+        };
 
-                left.Expression = Expression.Equal( left.Expression, right.Expression );
-                break;
-            case Operator.NotEquals:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
-
-                left.Expression = Expression.NotEqual( left.Expression, right.Expression );
-                break;
-            case Operator.GreaterThan:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
-
-                left.Expression = Expression.GreaterThan( left.Expression, right.Expression );
-                break;
-            case Operator.GreaterThanOrEqual:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
-
-                left.Expression = Expression.GreaterThanOrEqual( left.Expression, right.Expression );
-                break;
-            case Operator.LessThan:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
-
-                left.Expression = Expression.LessThan( left.Expression, right.Expression );
-                break;
-            case Operator.LessThanOrEqual:
-                left.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, left.Expression );
-                right.Expression = ComparerExpressionFactory<TNode>.GetComparand( descriptor.Accessor, right.Expression );
-
-                left.Expression = Expression.LessThanOrEqual( left.Expression, right.Expression );
-                break;
-            case Operator.And:
-                left.Expression = Expression.AndAlso(
-                    FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
-                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
-                );
-                break;
-            case Operator.Or:
-                left.Expression = Expression.OrElse(
-                    FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
-                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
-                );
-                break;
-            case Operator.Not:
-                left.Expression = Expression.Not(
-                    FilterTruthyExpression.IsTruthyExpression( right.Expression )
-                );
-                break;
-            case Operator.Nop:
-            case Operator.OpenParen:
-            case Operator.ClosedParen:
-            default:
-                left.Expression = left.Expression;
-                break;
-        }
-
-        // Wrap left expression in a try-catch block to handle exceptions
-        left.Expression = left.Expression == null
-            ? left.Expression
-            : Expression.TryCatch(
-                left.Expression,
-                Expression.Catch( typeof( NotSupportedException ), Expression.Rethrow( left.Expression.Type ) ),
-                Expression.Catch( typeof( Exception ), Expression.Constant( false ) )
-            );
+        left.Expression = FilterTruthyExpression.ConvertBoolToValueTypeExpression( left.Expression );
 
         left.Operator = right.Operator;
+        left.ExpressionInfo.Kind = ExpressionKind.Merged;
     }
 
-    private class ExprItem( Expression expression, Operator op )
+    // Throw helpers
+
+    private static void ThrowIfInvalidComparison( in ParserState state, ExprItem left, ExprItem right )
     {
+        ThrowIfConstantIsNotCompared( in state, left, right );
+        ThrowIfFunctionInvalidCompare( in state, left );
+    }
+
+    private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
+    {
+        if ( state.IsArgument )
+            return;
+
+        if ( item.ExpressionInfo.Kind != ExpressionKind.Function )
+            return;
+
+        if ( (item.ExpressionInfo.FunctionInfo & FilterExtensionInfo.MustCompare) == FilterExtensionInfo.MustCompare &&
+             !item.Operator.IsComparison() )
+        {
+            throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
+        }
+
+        if ( (item.ExpressionInfo.FunctionInfo & FilterExtensionInfo.MustNotCompare) == FilterExtensionInfo.MustNotCompare &&
+             item.Operator.IsComparison() )
+        {
+            throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
+        }
+    }
+
+    private static void ThrowIfConstantIsNotCompared( in ParserState state, ExprItem left, ExprItem right )
+    {
+        if ( state.IsArgument )
+            return;
+
+        if ( left.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
+
+        if ( right != null && right.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
+    }
+
+    // ExprItem
+
+    [DebuggerDisplay( "Operator = {Operator}, {ExpressionInfo.Kind}" )]
+    private class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
+    {
+        public ExpressionInfo ExpressionInfo { get; } = expressionInfo;
         public Expression Expression { get; set; } = expression;
         public Operator Operator { get; set; } = op;
     }

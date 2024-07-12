@@ -2,6 +2,9 @@
 
 namespace Hyperbee.Json;
 
+public record JsonPathQuery( string Query, JsonPathSegment Segments, bool Normalized );
+
+
 [DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
 public record SelectorDescriptor
 {
@@ -60,6 +63,24 @@ public class JsonPathSegment
             yield return current;
 
             current = current.Next;
+        }
+    }
+
+    public bool IsNormalized
+    {
+        get
+        {
+            var current = this;
+
+            while ( current != Final )
+            {
+                if ( !current.IsSingular )
+                    return false;
+
+                current = current.Next;
+            }
+
+            return true;
         }
     }
 

@@ -9,8 +9,8 @@ namespace Hyperbee.Json.Benchmark;
 
 public class FilterExpressionParserEvaluator
 {
-    private FilterContext<JsonNode> _nodeExecutionContext;
-    private FilterContext<JsonElement> _elementExecutionContext;
+    private FilterParserContext<JsonNode> _nodeExecutionParserContext;
+    private FilterParserContext<JsonElement> _elementExecutionParserContext;
 
     [Params( "(\"world\" == 'world') && (true || false)" )]
     public string Filter;
@@ -18,20 +18,20 @@ public class FilterExpressionParserEvaluator
     [GlobalSetup]
     public void Setup()
     {
-        _nodeExecutionContext = new FilterContext<JsonNode>( new NodeTypeDescriptor() );
+        _nodeExecutionParserContext = new FilterParserContext<JsonNode>( new NodeTypeDescriptor() );
 
-        _elementExecutionContext = new FilterContext<JsonElement>( new ElementTypeDescriptor() );
+        _elementExecutionParserContext = new FilterParserContext<JsonElement>( new ElementTypeDescriptor() );
     }
 
     [Benchmark]
     public void JsonPathFilterParser_JsonElement()
     {
-        FilterParser<JsonElement>.Parse( Filter, _elementExecutionContext );
+        FilterParser<JsonElement>.Parse( Filter, _elementExecutionParserContext );
     }
 
     [Benchmark]
     public void JsonPathFilterParser_JsonNode()
     {
-        FilterParser<JsonNode>.Parse( Filter, _nodeExecutionContext );
+        FilterParser<JsonNode>.Parse( Filter, _nodeExecutionParserContext );
     }
 }

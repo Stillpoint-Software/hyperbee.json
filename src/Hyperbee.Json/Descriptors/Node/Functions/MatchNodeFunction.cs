@@ -1,30 +1,41 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class MatchNodeFunction() : FilterExtensionFunction( argumentCount: 2 )
+public class MatchNodeFunction() : FilterExtensionFunction( MatchMethodInfo, FilterExtensionInfo.MustNotCompare )
 {
     public const string Name = "match";
-    private static readonly Expression MatchExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string, bool>) Match );
+    private static readonly MethodInfo MatchMethodInfo = GetMethod<MatchNodeFunction>( nameof( Match ) );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    public static INodeType Match( INodeType input, INodeType regex )
     {
-        return Expression.Invoke( MatchExpression, arguments[0], arguments[1] );
+        return input switch
+        {
+            NodesType<JsonNode> nodes when regex is ValueType<string> stringValue =>
+                MatchImpl( nodes, stringValue.Value ),
+            NodesType<JsonNode> nodes when regex is NodesType<JsonNode> stringValue =>
+                MatchImpl( nodes, stringValue.Value.FirstOrDefault()?.GetValue<string>() ),
+            _ => Constants.False
+        };
     }
 
-    public static bool Match( IEnumerable<JsonNode> nodes, string regex )
+    private static INodeType MatchImpl( NodesType<JsonNode> nodes, string regex )
     {
-        var value = nodes.FirstOrDefault()?.GetValue<string>();
+        var value = nodes.FirstOrDefault();
 
-        if ( value == null )
-        {
-            return false;
-        }
+        if ( value?.GetValueKind() != JsonValueKind.String )
+            return Constants.False;
 
-        var regexPattern = new Regex( regex.Trim( '\"', '\'' ) );
-        return regexPattern.IsMatch( $"^{value}$" );
+        var stringValue = value.GetValue<string>();
+
+        var regexPattern = new Regex( $"^{IRegexp.ConvertToIRegexp( regex )}$" );
+        return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
     }
 }
+

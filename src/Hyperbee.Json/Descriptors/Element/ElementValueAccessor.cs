@@ -43,9 +43,18 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public JsonElement GetElementAt( in JsonElement value, int index )
+    public bool TryGetElementAt( in JsonElement value, int index, out JsonElement element )
     {
-        return value[index];
+        element = default;
+
+        if ( index < 0 ) // flip negative index to positive
+            index = value.GetArrayLength() + index;
+
+        if ( index < 0 || index >= value.GetArrayLength() ) // out of bounds
+            return false;
+
+        element = value[index];
+        return true;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -67,7 +76,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
             : 0;
     }
 
-    public bool TryGetChildValue( in JsonElement value, string childSelector, out JsonElement childValue )
+    public bool TryGetChildValue( in JsonElement value, string childSelector, SelectorKind selectorKind, out JsonElement childValue )
     {
         switch ( value.ValueKind )
         {
@@ -77,9 +86,17 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 break;
 
             case JsonValueKind.Array:
+                if ( selectorKind == SelectorKind.Name )
+                    break;
+
                 if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
-                    if ( index >= 0 && index < value.GetArrayLength() )
+                    var arrayLength = value.GetArrayLength();
+
+                    if ( index < 0 ) // flip negative index to positive
+                        index = arrayLength + index;
+
+                    if ( index >= 0 && index < arrayLength )
                     {
                         childValue = value[index];
                         return true;
@@ -162,5 +179,10 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         }
 
         return true;
+    }
+
+    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
+    {
+        return element.TryGetFromJsonPathPointer( segment, out childValue );
     }
 }

@@ -1,36 +1,36 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class ValueNodeFunction() : FilterExtensionFunction( ValueMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "value";
-    public static readonly Expression ValueExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, object>) Value );
+    private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueNodeFunction>( nameof( Value ) );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    public static INodeType Value( INodeType arg )
     {
-        return Expression.Invoke( ValueExpression, arguments[0] );
-    }
+        if ( arg.Kind != NodeTypeKind.NodeList )
+            throw new NotSupportedException( $"Function {Name} does not support kind {arg.Kind}" );
 
-    public static object Value( IEnumerable<JsonNode> nodes )
-    {
-        var node = nodes.FirstOrDefault();
+        var nodeArray = ((NodesType<JsonNode>) arg).ToArray();
+
+        if ( nodeArray.Length != 1 )
+            return Constants.Nothing;
+
+        var node = nodeArray.FirstOrDefault();
 
         return node?.GetValueKind() switch
         {
-            JsonValueKind.Number => node.GetNumber<float>(),
-            JsonValueKind.String => node.GetValue<string>(),
-            JsonValueKind.Object => IsNotEmpty( node ),
-            JsonValueKind.Array => IsNotEmpty( node ),
-            JsonValueKind.True => true,
-            JsonValueKind.False => false,
-            JsonValueKind.Null => false,
-            JsonValueKind.Undefined => false,
-            _ => false
+            JsonValueKind.Number => new ValueType<float>( node.GetValue<float>() ),
+            JsonValueKind.String => new ValueType<string>( node.GetValue<string>() ),
+            JsonValueKind.Object or JsonValueKind.Array => new ValueType<bool>( IsNotEmpty( node ) ),
+            JsonValueKind.True => Constants.True,
+            JsonValueKind.False or JsonValueKind.Null or JsonValueKind.Undefined => Constants.False,
+            _ => Constants.False
         };
 
         static bool IsNotEmpty( JsonNode node )
@@ -43,5 +43,4 @@ public class ValueNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
             };
         }
     }
-
 }

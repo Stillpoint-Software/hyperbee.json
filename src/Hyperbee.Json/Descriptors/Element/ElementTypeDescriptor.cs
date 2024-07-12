@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Hyperbee.Json.Descriptors.Element.Functions;
 using Hyperbee.Json.Filters;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
@@ -8,6 +9,7 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 {
     private FilterEvaluator<JsonElement> _evaluator;
     private ElementValueAccessor _accessor;
+    private NodeTypeComparer<JsonElement> _comparer;
 
     public FunctionRegistry Functions { get; } = new();
 
@@ -16,6 +18,11 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 
     public IFilterEvaluator<JsonElement> FilterEvaluator =>
         _evaluator ??= new FilterEvaluator<JsonElement>( this );
+
+    public INodeTypeComparer Comparer =>
+        _comparer ??= new NodeTypeComparer<JsonElement>( Accessor );
+
+    public bool CanUsePointer => true;
 
     public ElementTypeDescriptor()
     {

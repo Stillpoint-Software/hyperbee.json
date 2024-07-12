@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq;
+using System.Reflection;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -32,20 +31,20 @@ public class FilterExtensionFunctionTests : JsonTestBase
         Assert.AreEqual( "$.store.book[2].title", results[0].GetPath() );
     }
 
-    private class PathNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+    private class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
     {
         public const string Name = "path";
-        private static readonly Expression PathExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, string>) Path );
+        private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof( Path ) );
 
-        protected override Expression GetExtensionExpression( Expression[] arguments )
+        private static INodeType Path( INodeType arg )
         {
-            return Expression.Invoke( PathExpression, arguments[0] );
-        }
+            if ( arg is NodesType<JsonNode> nodes )
+            {
+                var node = nodes.FirstOrDefault();
+                return new ValueType<string>( node?.GetPath() );
+            }
 
-        private static string Path( IEnumerable<JsonNode> nodes )
-        {
-            var node = nodes.FirstOrDefault();
-            return node?.GetPath();
+            return Constants.Null;
         }
     }
 }

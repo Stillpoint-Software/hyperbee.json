@@ -1,29 +1,44 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class LengthNodeFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class LengthNodeFunction() : FilterExtensionFunction( LengthMethodInfo, FilterExtensionInfo.MustCompare | FilterExtensionInfo.ExpectNormalized )
 {
     public const string Name = "length";
-    private static readonly Expression LengthExpression = Expression.Constant( (Func<IEnumerable<JsonNode>, float>) Length );
+    private static readonly MethodInfo LengthMethodInfo = GetMethod<LengthNodeFunction>( nameof( Length ) );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    public static INodeType Length( INodeType input )
     {
-        return Expression.Invoke( LengthExpression, arguments[0] );
-    }
-
-    public static float Length( IEnumerable<JsonNode> nodes )
-    {
-        var node = nodes.FirstOrDefault();
-        return node?.GetValueKind() switch
+        return input switch
         {
-            JsonValueKind.String => node.GetValue<string>()?.Length ?? 0,
-            JsonValueKind.Array => node.AsArray().Count,
-            JsonValueKind.Object => node.AsObject().Count,
-            _ => 0
+            NodesType<JsonNode> nodes => LengthImpl( nodes.FirstOrDefault() ),
+            ValueType<string> valueString => new ValueType<float>( valueString.Value.Length ),
+            Null or Nothing => input,
+            _ => Constants.Nothing
         };
     }
+
+    public static INodeType LengthImpl( object value )
+    {
+        return value switch
+        {
+            string str => new ValueType<float>( str.Length ),
+            Array array => new ValueType<float>( array.Length ),
+            System.Collections.ICollection collection => new ValueType<float>( collection.Count ),
+            System.Collections.IEnumerable enumerable => new ValueType<float>( enumerable.Cast<object>().Count() ),
+            JsonNode node => node.GetValueKind() switch
+            {
+                JsonValueKind.String => new ValueType<float>( node.GetValue<string>()?.Length ?? 0 ),
+                JsonValueKind.Array => new ValueType<float>( node.AsArray().Count ),
+                JsonValueKind.Object => new ValueType<float>( node.AsObject().Count ),
+                _ => Constants.Nothing
+            },
+            _ => Constants.Nothing
+        };
+    }
+
 }

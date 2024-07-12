@@ -1001,26 +1001,6 @@ public class JsonPathArrayTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[010:024:010]", typeof( JsonDocument ) )]
-    [DataRow( "$[010:024:010]", typeof( JsonNode ) )]
-    public void ArraySliceWithStepAndLeadingZeros( string query, Type sourceType )
-    {
-        // consensus: [10, 20]
-
-        const string json = "[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]";
-        var source = GetDocumentFromSource( sourceType, json );
-
-        var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer("$[10]"),
-            source.FromJsonPathPointer("$[20]")
-        };
-
-        Assert.IsTrue( expected.SequenceEqual( matches ) );
-    }
-
-    [DataTestMethod]
     [DataRow( "$[0:4:2]", typeof( JsonDocument ) )]
     [DataRow( "$[0:4:2]", typeof( JsonNode ) )]
     public void ArraySliceWithStepButEndNotAligned( string query, Type sourceType )

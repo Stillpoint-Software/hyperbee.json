@@ -1,20 +1,26 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, FilterContext<TNode> context )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterParserContext<TNode> parserContext )
     {
-        expression = ExpressionHelper<TNode>.GetExpression( state.Item, context );
-        return expression != null;
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument, parserContext );
+
+        if ( expression == null )
+            return false;
+
+        itemContext.Kind = ExpressionKind.Select;
+        return true;
     }
 
     static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<TNode, TNode, string, IEnumerable<TNode>>) Select );
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<string, bool, FilterRuntimeContext<TNode>, INodeType>) Select );
 
-        public static Expression GetExpression( ReadOnlySpan<char> item, FilterContext<TNode> context )
+        public static Expression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace, FilterParserContext<TNode> parserContext )
         {
             if ( item.IsEmpty )
                 return null;
@@ -22,17 +28,22 @@ internal class SelectExpressionFactory : IExpressionFactory
             if ( item[0] != '$' && item[0] != '@' )
                 return null;
 
-            var queryExp = Expression.Constant( item.ToString() );
-
-            if ( item[0] == '$' ) // Current becomes root
-                context = context with { Current = context.Root };
-
-            return Expression.Invoke( SelectExpression, context.Current, context.Root, queryExp );
+            return Expression.Invoke(
+                SelectExpression,
+                Expression.Constant( item.ToString() ),
+                Expression.Constant( allowDotWhitespace ),
+                parserContext.RuntimeContext );
         }
 
-        private static IEnumerable<TNode> Select( TNode current, TNode root, string query )
+        private static INodeType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
         {
-            return JsonPath<TNode>.SelectInternal( current, root, query );
+            var compileQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
+
+            // Current becomes root
+            return query[0] == '$'
+                ? new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, compileQuery ), compileQuery.Normalized )
+                : new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
         }
+
     }
 }

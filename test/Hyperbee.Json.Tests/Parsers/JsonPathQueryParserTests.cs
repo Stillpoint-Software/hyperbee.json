@@ -34,10 +34,10 @@ public class JsonPathQueryParserTests
     public void Should_TokenizeJsonPath( string jsonPath, string expected )
     {
         // act
-        var pathSegment = JsonPathQueryParser.Parse( jsonPath );
+        var compiledQuery = JsonPathQueryParser.Parse( jsonPath );
 
         // arrange
-        var result = SegmentsToString( pathSegment );
+        var result = SegmentsToString( compiledQuery.Segments );
 
         // assert
         Assert.AreEqual( expected, result );

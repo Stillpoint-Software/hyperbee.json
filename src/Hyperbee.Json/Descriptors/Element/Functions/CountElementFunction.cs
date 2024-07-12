@@ -1,22 +1,25 @@
-﻿using System.Linq.Expressions;
+﻿using System.Reflection;
 using System.Text.Json;
-
 using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class CountElementFunction() : FilterExtensionFunction( argumentCount: 1 )
+public class CountElementFunction() : FilterExtensionFunction( CountMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "count";
-    private static readonly Expression CountExpression = Expression.Constant( (Func<IEnumerable<JsonElement>, float>) Count );
+    private static readonly MethodInfo CountMethodInfo = GetMethod<CountElementFunction>( nameof( Count ) );
 
-    protected override Expression GetExtensionExpression( Expression[] arguments )
+    public static INodeType Count( INodeType input )
     {
-        return Expression.Invoke( CountExpression, arguments[0] );
-    }
-
-    public static float Count( IEnumerable<JsonElement> elements )
-    {
-        return elements.Count();
+        switch ( input )
+        {
+            case NodesType<JsonElement> nodes:
+                if ( nodes.IsNormalized && !nodes.Any() )
+                    return new ValueType<float>( 1F );
+                return new ValueType<float>( nodes.Count() );
+            default:
+                return new ValueType<float>( 1F );
+        }
     }
 }

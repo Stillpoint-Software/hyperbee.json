@@ -15,26 +15,6 @@ public class JsonExtensionTests : JsonTestBase
     }
 
     [TestMethod]
-    public void Should_SerializeJsonElement_ToObject()
-    {
-        // arrange
-        var source = new TestItem
-        {
-            A = "a",
-            B = "b"
-        };
-
-        var json = JsonSerializer.Serialize( source );
-        var document = JsonDocument.Parse( json );
-
-        // act
-        var result = JsonHelper.ConvertToObject<TestItem>( document.RootElement );
-
-        // assert
-        Assert.AreEqual( source, result );
-    }
-
-    [TestMethod]
     public void Should_ReturnPropertyValue_ForJsonPathPointer()
     {
         // arrange

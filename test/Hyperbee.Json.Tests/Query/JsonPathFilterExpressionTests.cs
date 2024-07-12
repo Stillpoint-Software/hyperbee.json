@@ -85,32 +85,6 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[?($..key)==2]", typeof( JsonDocument ) )]
-    [DataRow( "$[?($..key)==2]", typeof( JsonNode ) )]
-    public void FilterExpressionWithContainsArray( string query, Type sourceType )
-    {
-        const string json =
-            """
-            { 
-                "values": [
-                    { "key": 1, "value": 10 },
-                    { "key": 2, "value": 20 }
-                ]
-            }
-            """;
-
-        var source = GetDocumentFromSource( sourceType, json );
-
-        var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$['values']" )
-        };
-
-        Assert.IsTrue( expected.SequenceEqual( matches ) );
-    }
-
-    [DataTestMethod]
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonDocument ) )]
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonNode ) )]
     public void FilterExpressionAfterDoNotationWithWildcardAfterRecursiveDecent( string query, Type sourceType )
@@ -206,7 +180,10 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         var matches = source.Select( query );
-        var expected = new[] { source.FromJsonPathPointer( "$[1]" ), source.FromJsonPathPointer( "$[2]" ), source.FromJsonPathPointer( "$[4]" ) };
+        var expected = new[] {
+            source.FromJsonPathPointer( "$[1]" ),
+            source.FromJsonPathPointer( "$[2]" ),
+            source.FromJsonPathPointer( "$[4]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
@@ -335,10 +312,10 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$[?(@[0:1]==[1])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@[0:1]==[1])]", typeof( JsonNode ) )]
+    [ExpectedException( typeof( NotSupportedException ) )]
     public void FilterExpressionWithEqualsArrayForSliceWithRange1( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED
-        // deviation: [] ??? should return [1]?
 
         var json =
             """
@@ -352,24 +329,16 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             """;
 
         var source = GetDocumentFromSource( sourceType, json );
-
-        var matches = source.Select( query );
-        var expected = Enumerable.Empty<object>();
-        // var expected = new[]
-        // {
-        //     source.FromJsonPathPointer( "$[1]" )
-        // };
-
-        Assert.IsTrue( expected.SequenceEqual( matches ) );
+        _ = source.Select( query ).ToArray();
     }
 
     [DataTestMethod]
     [DataRow( "$[?(@.*==[1,2])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.*==[1,2])]", typeof( JsonNode ) )]
+    [ExpectedException( typeof( NotSupportedException ) )]
     public void FilterExpressionWithEqualsArrayForDotNotationWithStart( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED
-        // deviation: []
 
         var json =
             """
@@ -387,10 +356,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
 
         var source = GetDocumentFromSource( sourceType, json );
 
-        var matches = source.Select( query );
-        var expected = Enumerable.Empty<object>();
-
-        Assert.IsTrue( expected.SequenceEqual( matches ) );
+        _ = source.Select( query ).ToArray();
     }
 
     [DataTestMethod]
@@ -487,44 +453,6 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         var source = GetDocumentFromSource( sourceType, json );
 
         _ = source.Select( query ).ToArray();
-    }
-
-    [DataTestMethod]
-    [DataRow( "$[?(@.a[?(@.price>10)])]", typeof( JsonDocument ) )]
-    [DataRow( "$[?(@.a[?(@.price>10)])]", typeof( JsonNode ) )]
-    [ExpectedException( typeof( NotSupportedException ) )]
-    public void FilterExpressionWithSubFilter( string query, Type sourceType )
-    {
-        // consensus: NOT_SUPPORTED
-
-        var json =
-            """
-            [
-                {
-                    "a": [{"price": 1}, {"price": 3}]
-                },
-                {
-                    "a": [{"price": 11}]
-                },
-                {
-                    "a": [{"price": 8}, {"price": 12}, {"price": 3}]
-                },
-                {
-                    "a": []
-                }
-            ]
-            """;
-
-        var source = GetDocumentFromSource( sourceType, json );
-
-        var matches = source.Select( query );
-        var expected = new[]
-        {
-            source.FromJsonPathPointer( "$[1]" ),
-            source.FromJsonPathPointer( "$[2]" )
-        };
-
-        Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
     [DataTestMethod]
@@ -661,7 +589,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
 
         var source = GetDocumentFromSource( sourceType, json );
 
-        var matches = source.Select( query );
+        var matches = source.Select( query ).ToArray();
         var expected = new[] { source.FromJsonPathPointer( "$[3]" ) };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );

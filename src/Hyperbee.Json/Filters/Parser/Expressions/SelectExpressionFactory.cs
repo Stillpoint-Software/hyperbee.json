@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;

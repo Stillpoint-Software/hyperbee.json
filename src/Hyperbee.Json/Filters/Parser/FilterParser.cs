@@ -351,7 +351,6 @@ public class FilterParser<TNode> : FilterParser
                 FilterTruthyExpression.IsTruthyExpression( left.Expression! ),
                 FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
             Operator.Not => Expression.Not( FilterTruthyExpression.IsTruthyExpression( right.Expression ) ),
-            Operator.NonOperator or Operator.Whitespace or Operator.Quotes or Operator.OpenParen or Operator.ClosedParen => left.Expression,
             _ => left.Expression
         };
 

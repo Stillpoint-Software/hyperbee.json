@@ -1,7 +1,9 @@
 ﻿using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Filters.Parser;
+using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 

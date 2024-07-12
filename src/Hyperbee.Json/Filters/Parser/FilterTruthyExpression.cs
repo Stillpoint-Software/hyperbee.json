@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
-using Hyperbee.Json.Descriptors;
-using ValueType = Hyperbee.Json.Descriptors.ValueType;
+using Hyperbee.Json.Descriptors.Types;
+using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
 
 namespace Hyperbee.Json.Filters.Parser;
 

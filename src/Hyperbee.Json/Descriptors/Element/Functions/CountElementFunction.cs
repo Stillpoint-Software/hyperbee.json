@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Text.Json;
-
+using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;

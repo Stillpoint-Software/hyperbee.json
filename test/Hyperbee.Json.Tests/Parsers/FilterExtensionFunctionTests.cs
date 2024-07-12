@@ -3,10 +3,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ValueType = Hyperbee.Json.Descriptors.Types.ValueType;
 
 namespace Hyperbee.Json.Tests.Parsers;
 
@@ -51,7 +53,7 @@ public class FilterExtensionFunctionTests : JsonTestBase
                 return new ValueType<string>( node?.GetPath() );
             }
 
-            return Descriptors.ValueType.Null;
+            return ValueType.Null;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿// using System;
 // using System.Collections.Generic;
+// using System.Diagnostics;
 // using System.Text.Json.Nodes;
 // using Hyperbee.Json.Descriptors;
 // using Hyperbee.Json.Descriptors.Node;
@@ -27,6 +28,19 @@
 //     [DataRow( true, 11F, false )]
 //     public void ComparandWithEqualResults( object left, object right, bool areEqual )
 //     {
+//
+//         INodeType leftNode = left switch
+//         {
+//             string leftString => NodesType<string>( leftString),
+//             float leftfloat => NodesType<float>( leftfloat ),
+//             bool leftbool => NodesType<bool>( leftbool ),
+//             _ => Nothing,
+//         };
+//
+//         ValueType<string> rightString = new( (string) left );
+//
+//
+//
 //         var context = new FilterRuntimeContext<JsonNode>( null, null, new NodeTypeDescriptor(), false );
 //
 //         ComparerExpressionFactory<JsonNode>.Comparand a;

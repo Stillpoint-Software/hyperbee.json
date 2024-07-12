@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Hyperbee.Json.Descriptors.Element.Functions;
+using Hyperbee.Json.Descriptors.Types;
 using Hyperbee.Json.Filters;
 
 namespace Hyperbee.Json.Descriptors.Element;

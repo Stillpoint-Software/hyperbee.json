@@ -16,7 +16,7 @@ namespace Hyperbee.Json.Tests.Parsers;
 public class FilterParserTests : JsonTestBase
 {
     [DataTestMethod]
-    [DataRow( "((1 == 1))", true, typeof(JsonElement) )]
+    [DataRow( "((1 == 1))", true, typeof( JsonElement ) )]
     [DataRow( "((\"world\" == 'world') && (1 == 1))", true, typeof( JsonElement ) )]
     [DataRow( "1 == 1", true, typeof( JsonElement ) )]
     [DataRow( "(1 == 1)", true, typeof( JsonElement ) )]

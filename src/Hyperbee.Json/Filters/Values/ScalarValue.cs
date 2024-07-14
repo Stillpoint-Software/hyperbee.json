@@ -19,7 +19,7 @@ public struct ScalarValue<T>( T value ) : IValueType where T : IConvertible
 
 public static class Scalar
 {
-    public static ScalarValue<T> Value<T>( T value ) where T : IConvertible => new(value);
+    public static ScalarValue<T> Value<T>( T value ) where T : IConvertible => new( value );
 
     public static ScalarValue<bool> True { get; } = new( true );
     public static ScalarValue<bool> False { get; } = new( false );

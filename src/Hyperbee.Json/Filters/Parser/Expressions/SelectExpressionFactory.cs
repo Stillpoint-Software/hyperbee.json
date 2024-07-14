@@ -18,7 +18,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<string, bool, FilterRuntimeContext<TNode>, INodeType>) Select );
+        private static readonly Expression SelectExpression = Expression.Constant( (Func<string, bool, FilterRuntimeContext<TNode>, IValueType>) Select );
 
         public static Expression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace, FilterParserContext<TNode> parserContext )
         {
@@ -35,14 +35,14 @@ internal class SelectExpressionFactory : IExpressionFactory
                 parserContext.RuntimeContext );
         }
 
-        private static INodeType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
+        private static IValueType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
         {
             var compileQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
 
             // Current becomes root
             return query[0] == '$'
-                ? new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, compileQuery ), compileQuery.Normalized )
-                : new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
+                ? new NodeList<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, compileQuery ), compileQuery.Normalized )
+                : new NodeList<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
         }
 
     }

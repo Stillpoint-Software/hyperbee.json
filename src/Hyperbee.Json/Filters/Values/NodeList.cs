@@ -1,13 +1,14 @@
 ﻿using System.Collections;
+using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Filters.Values;
 
-public struct NodesType<TNode>( IEnumerable<TNode> value, bool isNormalized ) : INodeType, IEnumerable<TNode>
+public struct NodeList<TNode>( IEnumerable<TNode> value, bool isNormalized ) : IValueType, IEnumerable<TNode>
 {
     public readonly bool IsNormalized => isNormalized;
-    public readonly NodeTypeKind Kind => NodeTypeKind.NodeList;
+    public readonly ValueKind Kind => ValueKind.NodeList;
 
-    public INodeTypeComparer Comparer { get; set; }
+    public IValueTypeComparer Comparer { get; set; }
 
     public IEnumerable<TNode> Value { get; } = value;
 

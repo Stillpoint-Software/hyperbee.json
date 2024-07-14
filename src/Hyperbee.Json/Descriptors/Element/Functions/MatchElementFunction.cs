@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
@@ -12,28 +11,15 @@ public class MatchElementFunction() : FilterExtensionFunction( MatchMethodInfo, 
     public const string Name = "match";
     private static readonly MethodInfo MatchMethodInfo = GetMethod<MatchElementFunction>( nameof( Match ) );
 
-    public static INodeType Match( INodeType input, INodeType regex )
+    public static ScalarValue<bool> Match( IValueType input, IValueType pattern )
     {
-        return input switch
-        {
-            NodesType<JsonElement> nodes when regex is ValueType<string> stringValue =>
-                MatchImpl( nodes, stringValue.Value ),
-            NodesType<JsonElement> nodes when regex is NodesType<JsonElement> stringValue =>
-                MatchImpl( nodes, stringValue.Value.FirstOrDefault().GetString() ),
-            _ => Constants.False
-        };
-    }
+        if ( !input.TryGetValue<string>( out var value ) || value == null )
+            return false;
 
-    public static INodeType MatchImpl( NodesType<JsonElement> nodes, string regex )
-    {
-        var value = nodes.FirstOrDefault();
+        if ( !pattern.TryGetValue<string>( out var patternValue ) || patternValue == null )
+            return false;
 
-        if ( value.ValueKind != JsonValueKind.String )
-            return Constants.False;
-
-        var stringValue = value.GetString() ?? string.Empty;
-
-        var regexPattern = new Regex( $"^{IRegexp.ConvertToIRegexp( regex )}$" );
-        return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
+        var regex = new Regex( $"^{IRegexp.ConvertToIRegexp( patternValue )}$" );
+        return regex.IsMatch( value );
     }
 }

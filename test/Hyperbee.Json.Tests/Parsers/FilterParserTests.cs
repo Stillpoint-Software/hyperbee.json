@@ -120,8 +120,8 @@ public class FilterParserTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "count(@.store.book) == 1", true, typeof( JsonElement ) )]
-    [DataRow( "count(@.store.book.*) == 4", true, typeof( JsonElement ) )]
+    [DataRow( "count(@.store.book) == 1", true, typeof( JsonElement ) )] //
+    [DataRow( "count(@.store.book.*) == 4", true, typeof( JsonElement ) )] //
     [DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]
     [DataRow( "length(@.store.book[0].category) == 9", true, typeof( JsonElement ) )]
     [DataRow( "match(@.store.book[0].title, \"Sayings.*\" )", true, typeof( JsonElement ) )]

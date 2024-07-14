@@ -344,7 +344,7 @@ Here is a performance comparison of various queries on the standard book store d
 
 ```
 
-## Additioal Documentation
+## Additional Documentation
 
 Additional documentation can be found in the project's `/docs` folder.
 

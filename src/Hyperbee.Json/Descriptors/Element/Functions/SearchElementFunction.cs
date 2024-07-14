@@ -12,28 +12,15 @@ public class SearchElementFunction() : FilterExtensionFunction( SearchMethodInfo
     public const string Name = "search";
     private static readonly MethodInfo SearchMethodInfo = GetMethod<SearchElementFunction>( nameof( Search ) );
 
-    public static INodeType Search( INodeType input, INodeType regex )
+    public static ScalarValue<bool> Search( IValueType input, IValueType pattern )
     {
-        return input switch
-        {
-            NodesType<JsonElement> nodes when regex is ValueType<string> stringValue =>
-                SearchImpl( nodes, stringValue.Value ),
-            NodesType<JsonElement> nodes when regex is NodesType<JsonElement> stringValue =>
-                SearchImpl( nodes, stringValue.Value.FirstOrDefault().GetString() ),
-            _ => Constants.False
-        };
-    }
+        if ( !input.TryGetValue<string>( out var value ) || value == null )
+            return false;
 
-    public static INodeType SearchImpl( NodesType<JsonElement> nodes, string regex )
-    {
-        var value = nodes.FirstOrDefault();
+        if ( !pattern.TryGetValue<string>( out var patternValue ) || patternValue == null )
+            return false;
 
-        if ( value.ValueKind != JsonValueKind.String )
-            return Constants.False;
-
-        var stringValue = value.GetString() ?? string.Empty;
-
-        var regexPattern = new Regex( IRegexp.ConvertToIRegexp( regex ) );
-        return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
+        var regex = new Regex( IRegexp.ConvertToIRegexp( patternValue ) );
+        return regex.IsMatch( value );
     }
 }

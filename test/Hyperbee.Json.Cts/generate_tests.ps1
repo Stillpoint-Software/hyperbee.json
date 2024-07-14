@@ -43,7 +43,7 @@ function Get-JsonContent {
         $response = Invoke-WebRequestWithRetry -Url $Url
         $jsonContent = $response.Content
 
-        # Save the JSON content to a file in a pretty formatted way if SavePath is provided
+        # Save the JSON content to a file if path was provided
         if ($PSBoundParameters.ContainsKey('LocalPath')) {
             $prettyJson = $jsonContent | ConvertFrom-Json -AsHashtable | ConvertTo-Json -Depth 10
             Set-Content -Path $LocalPath -Value $prettyJson

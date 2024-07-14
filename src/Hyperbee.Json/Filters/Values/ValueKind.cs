@@ -1,10 +1,9 @@
 ﻿namespace Hyperbee.Json.Filters.Values;
 
-public enum NodeTypeKind
+public enum ValueKind
 {
     Null,
     Nothing,
-    Value,
-    Node,
+    Scalar,
     NodeList
 }

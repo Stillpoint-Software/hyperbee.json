@@ -1,16 +1,16 @@
 ﻿using Hyperbee.Json.Descriptors;
-using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Filters.Values;
 
-namespace Hyperbee.Json.Filters.Values;
+namespace Hyperbee.Json.Filters.Parser;
 
-public interface INodeTypeComparer
+public interface IValueTypeComparer
 {
-    public int Compare( INodeType left, INodeType right, Operator operation );
+    public int Compare( IValueType left, IValueType right, Operator operation );
 
-    public bool Exists( INodeType node );
+    public bool Exists( IValueType node );
 }
 
-public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTypeComparer
+public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValueTypeComparer
 {
     private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
 
@@ -56,23 +56,23 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
      * - Check if one is a NodeList and the other is a Value.
      * - Compare directly if both are Values.
      */
-    public int Compare( INodeType left, INodeType right, Operator operation )
+    public int Compare( IValueType left, IValueType right, Operator operation )
     {
         ThrowIfNotNormalized( left );
         ThrowIfNotNormalized( right );
 
-        if ( left is NodesType<TNode> leftEnumerable && right is NodesType<TNode> rightEnumerable )
+        if ( left is NodeList<TNode> leftEnumerable && right is NodeList<TNode> rightEnumerable )
         {
             return CompareEnumerables( leftEnumerable, rightEnumerable );
         }
 
-        if ( left is NodesType<TNode> leftEnumerable1 )
+        if ( left is NodeList<TNode> leftEnumerable1 )
         {
             var compare = CompareEnumerableToValue( leftEnumerable1, right, out var typeMismatch, out var nodeCount );
             return AdjustResult( compare, nodeCount, operation, typeMismatch );
         }
 
-        if ( right is NodesType<TNode> rightEnumerable1 )
+        if ( right is NodeList<TNode> rightEnumerable1 )
         {
             var compare = CompareEnumerableToValue( rightEnumerable1, left, out var typeMismatch, out var nodeCount );
             return AdjustResult( compare, nodeCount, operation, typeMismatch );
@@ -104,27 +104,28 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
 
             return (nodeCount != 1 || typeMismatch) switch // Test for a non-single value set, or a type comparison mismatch
             {
-                true when (operation == Operator.LessThan || operation == Operator.LessThanOrEqual) => compare < 0 ? -compare : compare,
-                true when (operation == Operator.GreaterThan || operation == Operator.GreaterThanOrEqual) => compare > 0 ? -compare : compare,
+                true when operation == Operator.LessThan || operation == Operator.LessThanOrEqual => compare < 0 ? -compare : compare,
+                true when operation == Operator.GreaterThan || operation == Operator.GreaterThanOrEqual => compare > 0 ? -compare : compare,
                 _ => compare
             };
         }
 
-        static void ThrowIfNotNormalized( INodeType nodeType )
+        static void ThrowIfNotNormalized( IValueType nodeType )
         {
-            if ( nodeType is NodesType<TNode> { IsNormalized: false } )
+            if ( nodeType is NodeList<TNode> { IsNormalized: false } )
                 throw new NotSupportedException( "Unsupported non-single query." );
         }
     }
 
-    public bool Exists( INodeType node )
+    public bool Exists( IValueType node )
     {
         return node switch
         {
-            ValueType<bool> boolValue => boolValue.Value,
-            ValueType<float> floatValue => floatValue.Value != 0,
-            ValueType<string> stringValue => !string.IsNullOrEmpty( stringValue.Value ),
-            NodesType<TNode> nodes => nodes.Any(),
+            ScalarValue<bool> boolValue => boolValue.Value,
+            ScalarValue<int> intValue => intValue.Value != 0,
+            ScalarValue<float> floatValue => floatValue.Value != 0,
+            ScalarValue<string> stringValue => !string.IsNullOrEmpty( stringValue.Value ),
+            NodeList<TNode> nodes => nodes.Any(),
             _ => false
         };
     }
@@ -154,7 +155,7 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
         return 0; // Sequences are equal
     }
 
-    private int CompareEnumerableToValue( IEnumerable<TNode> enumeration, INodeType value, out bool typeMismatch, out int nodeCount )
+    private int CompareEnumerableToValue( IEnumerable<TNode> enumeration, IValueType value, out bool typeMismatch, out int nodeCount )
     {
         nodeCount = 0;
         typeMismatch = false;
@@ -175,7 +176,7 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
 
         if ( nodeCount == 0 )
         {
-            if ( value is Nothing ) // Considered equal
+            if ( value.Kind == ValueKind.Nothing ) // Considered equal
                 return 0;
 
             return -1;
@@ -185,16 +186,16 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
 
     }
 
-    private static int CompareValues( INodeType left, INodeType right, out bool typeMismatch )
+    private static int CompareValues( IValueType left, IValueType right, out bool typeMismatch )
     {
         typeMismatch = false;
 
-        if ( left is Null or Nothing && right is Null or Nothing )
+        if ( IsNullOrNothing( left ) && IsNullOrNothing( right ) )
         {
             return 0;
         }
 
-        if ( left?.GetType() != right?.GetType() )
+        if ( IsTypeMismatch( left, right ) && !IsFloatToIntComparison( left, right ) )
         {
             typeMismatch = true; // Type mismatch: important for non-equality comparisons
             return -1;
@@ -202,29 +203,46 @@ public class NodeTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : INodeTy
 
         return left switch
         {
-            ValueType<string> leftStringValue when right is ValueType<string> rightStringValue =>
+            ScalarValue<string> leftStringValue when right is ScalarValue<string> rightStringValue =>
                 string.Compare( leftStringValue.Value, rightStringValue.Value, StringComparison.Ordinal ),
 
-            ValueType<bool> leftBoolValue when right is ValueType<bool> rightBoolValue =>
+            ScalarValue<bool> leftBoolValue when right is ScalarValue<bool> rightBoolValue =>
                 leftBoolValue.Value.CompareTo( rightBoolValue.Value ),
 
-            ValueType<float> leftFloatValue when right is ValueType<float> rightFloatValue =>
+            ScalarValue<float> leftFloatValue when right is ScalarValue<float> rightFloatValue =>
                 Math.Abs( leftFloatValue.Value - rightFloatValue.Value ) < Tolerance ? 0 : leftFloatValue.Value.CompareTo( rightFloatValue.Value ),
+
+            ScalarValue<int> leftIntValue when right is ScalarValue<int> rightIntValue =>
+                leftIntValue.Value.CompareTo( rightIntValue.Value ),
+
+            ScalarValue<int> leftIntValue when right is ScalarValue<float> rightFloatValue =>
+                Math.Abs( leftIntValue.Value - rightFloatValue.Value ) < Tolerance ? 0 : rightFloatValue.Value.CompareTo( leftIntValue.Value ),
+
+            ScalarValue<float> leftFloatValue when right is ScalarValue<int> rightIntValue =>
+                Math.Abs( leftFloatValue.Value - rightIntValue.Value ) < Tolerance ? 0 : leftFloatValue.Value.CompareTo( rightIntValue.Value ),
 
             _ => Comparer<object>.Default.Compare( left, right )
         };
+
+        // Helpers
+        static bool IsTypeMismatch( IValueType left, IValueType right ) => left?.GetType() != right?.GetType();
+        static bool IsNullOrNothing( IValueType value ) => value is Null or Nothing;
+        
+        static bool IsFloatToIntComparison( IValueType left, IValueType right ) => 
+            left is ScalarValue<int> && right is ScalarValue<float> || left is ScalarValue<float> && right is ScalarValue<int>;
     }
 
-    private static bool TryGetValueType( IValueAccessor<TNode> accessor, TNode node, out INodeType nodeType )
+    private static bool TryGetValueType( IValueAccessor<TNode> accessor, TNode node, out IValueType nodeType )
     {
         if ( accessor.TryGetValueFromNode( node, out var itemValue ) )
         {
             nodeType = itemValue switch
             {
-                string itemString => new ValueType<string>( itemString ),
-                bool itemBool => new ValueType<bool>( itemBool ),
-                float itemFloat => new ValueType<float>( itemFloat ),
-                null => Constants.Null,
+                string itemString => new ScalarValue<string>( itemString ),
+                bool itemBool => new ScalarValue<bool>( itemBool ),
+                float itemFloat => new ScalarValue<float>( itemFloat ),
+                int itemInt => new ScalarValue<int>( itemInt ),
+                null => Scalar.Null,
                 _ => throw new NotSupportedException( "Unsupported value type." )
             };
             return true;

@@ -157,9 +157,26 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
             case JsonValueKind.String:
                 value = node.GetValue<string>();
                 break;
+
             case JsonValueKind.Number:
-                value = node.GetValue<float>();
-                break;
+                if ( node is JsonValue jsonValue )
+                {
+                    if ( jsonValue.TryGetValue( out int intValue ) )
+                    {
+                        value = intValue;
+                        break;
+                    }
+                    
+                    if ( jsonValue.TryGetValue( out float floatValue ) )
+                    {
+                        value = floatValue;
+                        break;
+                    }
+                }
+
+                value = false;
+                return false;
+
             case JsonValueKind.True:
                 value = true;
                 break;
@@ -177,6 +194,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
 
         return true;
     }
+
 
     public bool TryGetFromPointer( in JsonNode node, JsonPathSegment segment, out JsonNode childValue )
     {

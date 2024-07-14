@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Filters.Values;
 
@@ -10,36 +11,23 @@ public class ValueElementFunction() : FilterExtensionFunction( ValueMethodInfo, 
     public const string Name = "value";
     private static readonly MethodInfo ValueMethodInfo = GetMethod<ValueElementFunction>( nameof( Value ) );
 
-    public static INodeType Value( INodeType arg )
+    public static IValueType Value( IValueType argument )
     {
-        if ( arg.Kind != NodeTypeKind.NodeList )
-            throw new NotSupportedException( $"Function {Name} does not support kind {arg.Kind}" );
+        if ( argument is not NodeList<JsonElement> nodes )
+            throw new NotSupportedException( $"Function `{Name}` does not support kind {argument.Kind}" );
 
-        var nodeArray = ((NodesType<JsonElement>) arg).ToArray();
-
-        if ( nodeArray.Length != 1 )
-            return Constants.Nothing;
-
-        var node = nodeArray.FirstOrDefault();
+        var node = nodes.OneOrDefault();
 
         return node.ValueKind switch
         {
-            JsonValueKind.Number => new ValueType<float>( node.GetSingle() ),
-            JsonValueKind.String => new ValueType<string>( node.GetString() ),
-            JsonValueKind.Object or JsonValueKind.Array => new ValueType<bool>( IsNotEmpty( node ) ),
-            JsonValueKind.True => Constants.True,
-            JsonValueKind.False or JsonValueKind.Null or JsonValueKind.Undefined => Constants.False,
-            _ => Constants.False
+            JsonValueKind.Number when node.TryGetInt32( out var intValue )=> Scalar.Value( intValue ),
+            JsonValueKind.Number => Scalar.Value( node.GetSingle() ),
+            JsonValueKind.String => Scalar.Value( node.GetString() ),
+            JsonValueKind.Object => Scalar.Value( node.EnumerateObject().Any() ),
+            JsonValueKind.Array => Scalar.Value( node.GetArrayLength() != 0 ),
+            JsonValueKind.True => Scalar.True,
+            JsonValueKind.False => Scalar.False,
+            _ => Scalar.Nothing
         };
-
-        static bool IsNotEmpty( JsonElement node )
-        {
-            return node.ValueKind switch
-            {
-                JsonValueKind.Array => node.EnumerateArray().Any(),
-                JsonValueKind.Object => node.EnumerateObject().Any(),
-                _ => false
-            };
-        }
     }
 }

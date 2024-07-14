@@ -333,24 +333,24 @@ public class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right, FilterParserContext<TNode> parserContext )
     {
-        left.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, left.Expression );
-        right.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, right.Expression );
+        left.Expression = ComparerBinder<TNode>.BindComparerExpression( parserContext, left.Expression );
+        right.Expression = ComparerBinder<TNode>.BindComparerExpression( parserContext, right.Expression );
 
         left.Expression = left.Operator switch
         {
-            Operator.Equals => NodeTypeExpression<TNode>.Equal( left.Expression, right.Expression ),
-            Operator.NotEquals => NodeTypeExpression<TNode>.NotEqual( left.Expression, right.Expression ),
-            Operator.GreaterThan => NodeTypeExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
-            Operator.GreaterThanOrEqual => NodeTypeExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
-            Operator.LessThan => NodeTypeExpression<TNode>.LessThan( left.Expression, right.Expression ),
-            Operator.LessThanOrEqual => NodeTypeExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
-            Operator.And => NodeTypeExpression<TNode>.And( left.Expression, right.Expression ),
-            Operator.Or => NodeTypeExpression<TNode>.Or( left.Expression, right.Expression ),
-            Operator.Not => NodeTypeExpression<TNode>.Not( right.Expression ),
+            Operator.Equals => CompareExpression<TNode>.Equal( left.Expression, right.Expression ),
+            Operator.NotEquals => CompareExpression<TNode>.NotEqual( left.Expression, right.Expression ),
+            Operator.GreaterThan => CompareExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
+            Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
+            Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression ),
+            Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
+            Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression ),
+            Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
+            Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };
 
-        left.Expression = FilterTruthyExpression.ConvertBoolToValueTypeExpression( left.Expression );
+        left.Expression = FilterTruthyExpression.ConvertBoolToScalarExpression( left.Expression );
 
         left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;

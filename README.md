@@ -228,7 +228,6 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
   - Comprehensive feature set.
   - Deferred execution queries with `IEnumerable`.
   - Strong community support.
-  - .NET Foundation Project.
   
 - **Cons:**
   - No support for `JsonElement`.
@@ -250,7 +249,6 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
   - Comprehensive feature set.
   - Documentation and examples.
   - Strong community support.
-  - .NET Foundation Project.
 
 - **Cons:**
   - No support for `JsonElement`, or `JsonNode`.

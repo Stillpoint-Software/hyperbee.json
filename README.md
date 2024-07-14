@@ -193,18 +193,15 @@ You can also extend the supported function set by registering your own functions
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
 ```csharp
-public class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
+private class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "path";
     private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof( Path ) );
 
-    private static INodeType Path( INodeType arg )
+    private static ScalarValue<string> Path( IValueType argument )
     {
-        if ( arg is not NodesType<JsonNode> nodes )
-            return Constants.Null;
-
-        var node = nodes.FirstOrDefault();
-        return new ValueType<string>( node?.GetPath() );
+        return argument.TryGetNode<JsonNode>( out var node ) ? node?.GetPath() : null;
+    }
 }
 ```
 

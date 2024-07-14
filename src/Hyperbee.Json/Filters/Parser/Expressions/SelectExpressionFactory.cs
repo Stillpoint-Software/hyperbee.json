@@ -19,8 +19,8 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     private static class ExpressionHelper<TNode>
     {
-        private static readonly MethodInfo SelectMethod = typeof(ExpressionHelper<TNode>)
-            .GetMethod( nameof(Select), BindingFlags.NonPublic | BindingFlags.Static );
+        private static readonly MethodInfo SelectMethod = typeof( ExpressionHelper<TNode> )
+            .GetMethod( nameof( Select ), BindingFlags.NonPublic | BindingFlags.Static );
 
         public static MethodCallExpression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace, FilterParserContext<TNode> parserContext )
         {

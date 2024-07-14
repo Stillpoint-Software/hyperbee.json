@@ -376,9 +376,6 @@ public class FilterParser<TNode> : FilterParser
             //
             // static IValueType BindComparerExpression(FilterParserContext<TNode> parserContext, IValueType value)
             // {
-            //    if (value == null)
-            //        return null;
-            //
             //    value.Comparer = parserContext.Descriptor.Comparer;
             //    return value;
             // }

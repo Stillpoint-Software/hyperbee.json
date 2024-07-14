@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Filters.Values;
 
@@ -10,11 +8,6 @@ namespace Hyperbee.Json.Filters.Parser
     {
         private readonly int _argumentCount;
         private readonly MethodInfo _methodInfo;
-
-        private static readonly MethodInfo __validateArgumentMethod =
-            typeof( FilterExtensionFunction ).GetMethod( nameof( ValidateArgument ), BindingFlags.Public | BindingFlags.Static );
-
-        private static readonly ConcurrentDictionary<Type, MethodInfo> CachedGenericMethods = new();
 
         public FilterExtensionInfo FunctionInfo { get; }
 
@@ -49,7 +42,7 @@ namespace Hyperbee.Json.Filters.Parser
                 arguments[i] = ArgumentExpression<TNode>( expectNormalized, argument );
             }
 
-            // Call the method and cast the result to INodeType
+            // Call the method and cast the result to INodeType 
             var callExpression = Expression.Call( _methodInfo, arguments );
             var castExpression = Expression.Convert( callExpression, typeof( IValueType ) );
 
@@ -60,12 +53,9 @@ namespace Hyperbee.Json.Filters.Parser
         {
             if ( expectNormalized )
             {
-                var validateArgumentMethod = CachedGenericMethods.GetOrAdd( typeof( TNode ),
-                    type => __validateArgumentMethod.MakeGenericMethod( type ) );
-
                 // Create expression that throws if not normalized.
                 return Expression.Call(
-                    validateArgumentMethod,
+                    ExpressionHelper<TNode>.ValidateArgumentMethod,
                     Expression.Constant( _methodInfo.Name ),
                     Expression.Convert( argument, typeof( IValueType ) )
                 );
@@ -74,15 +64,21 @@ namespace Hyperbee.Json.Filters.Parser
             return Expression.Convert( argument, typeof( IValueType ) );
         }
 
-        public static IValueType ValidateArgument<TNode>( string methodName, IValueType argument )
-        {
-            if ( argument is NodeList<TNode> { IsNormalized: false } )
-                throw new NotSupportedException( $"Function {methodName} does not support non-singular arguments." );
-
-            return argument;
-        }
-
         protected static MethodInfo GetMethod<T>( string methodName ) =>
             typeof( T ).GetMethod( methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static );
+
+        private static class ExpressionHelper<TNode> // this helper removes need for MakeGenericMethod
+        {
+            public static readonly MethodInfo ValidateArgumentMethod = typeof(ExpressionHelper<TNode>)
+                .GetMethod( nameof( ValidateArgument ), BindingFlags.NonPublic | BindingFlags.Static );
+
+            static IValueType ValidateArgument( string methodName, IValueType argument )
+            {
+                if ( argument is NodeList<TNode> { IsNormalized: false } )
+                    throw new NotSupportedException( $"Function {methodName} does not support non-singular arguments." );
+
+                return argument;
+            }
+        }
     }
 }

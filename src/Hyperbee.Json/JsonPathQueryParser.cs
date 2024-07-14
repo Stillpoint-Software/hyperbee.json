@@ -49,11 +49,6 @@ internal static class JsonPathQueryParser
         return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );
     }
 
-    internal static JsonPathQuery ParseNoCache( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
-    {
-        return QueryFactory( query, allowDotWhitespace );
-    }
-
     private static JsonPathQuery QueryFactory( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
     {
         // RFC - query cannot start or end with whitespace
@@ -450,6 +445,9 @@ internal static class JsonPathQueryParser
         return new JsonPathQuery( query.ToString(), rootSegment, normalized );
     }
 
+    internal static void ClearCache() => JsonPathQueries.Clear();
+
+
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static SelectorDescriptor GetSelectorDescriptor( SelectorKind selectorKind, ReadOnlySpan<char> selectorSpan, bool nullable = true )
     {
@@ -776,7 +774,7 @@ internal static class JsonPathQueryParser
             if ( span.Length != 6 || span[1] != 'u' )
                 return false;
 
-            for ( int i = 2; i < 6; i++ )
+            for ( var i = 2; i < 6; i++ )
             {
                 if ( !char.IsAsciiHexDigit( span[i] ) )
                     return false;

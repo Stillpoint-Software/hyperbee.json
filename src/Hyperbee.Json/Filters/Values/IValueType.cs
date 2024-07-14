@@ -4,18 +4,18 @@ namespace Hyperbee.Json.Filters.Values;
 
 public interface IValueType
 {
-    public ValueKind Kind { get; }
+    public ValueKind ValueKind { get; }
     public IValueTypeComparer Comparer { get; set; }
 }
 
 public struct Null : IValueType
 {
-    public readonly ValueKind Kind => ValueKind.Null;
+    public readonly ValueKind ValueKind => ValueKind.Null;
     public IValueTypeComparer Comparer { get; set; }
 }
 
 public struct Nothing : IValueType
 {
-    public readonly ValueKind Kind => ValueKind.Nothing;
+    public readonly ValueKind ValueKind => ValueKind.Nothing;
     public IValueTypeComparer Comparer { get; set; }
 }

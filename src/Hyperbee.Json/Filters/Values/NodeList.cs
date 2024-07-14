@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Filters.Values;
 public struct NodeList<TNode>( IEnumerable<TNode> value, bool isNormalized ) : IValueType, IEnumerable<TNode>
 {
     public readonly bool IsNormalized => isNormalized;
-    public readonly ValueKind Kind => ValueKind.NodeList;
+    public readonly ValueKind ValueKind => ValueKind.NodeList;
 
     public IValueTypeComparer Comparer { get; set; }
 

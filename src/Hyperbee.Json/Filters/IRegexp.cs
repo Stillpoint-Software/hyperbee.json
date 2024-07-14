@@ -27,9 +27,7 @@ public static class IRegexp
             return string.Empty;
 
         var patternSize = pattern.Length;
-        Span<bool> dotPositions = patternSize > 256
-            ? new bool[patternSize]
-            : stackalloc bool[patternSize];
+        Span<bool> dotPositions = patternSize > 256 ? new bool[patternSize] : stackalloc bool[patternSize];
 
         var inCharacterClass = false;
         var dotCount = 0;
@@ -90,10 +88,8 @@ public static class IRegexp
          */
         var replacement = @"(?:[^\r\n]|\p{Cs}\p{Cs})".AsSpan();
 
-        var newSize = pattern.Length + dotCount * (replacement.Length - 1); // '.' is 1 char, so extra (pattern-length - 1) chars per '.'
-        Span<char> buffer = newSize > 512
-            ? new char[newSize]
-            : stackalloc char[newSize];
+        var newSize = pattern.Length + dotCount * (replacement.Length - 1); 
+        Span<char> buffer = newSize > 512 ? new char[newSize] : stackalloc char[newSize];
 
         var bufferIndex = 0;
 

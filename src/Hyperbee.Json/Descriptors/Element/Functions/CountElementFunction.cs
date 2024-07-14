@@ -12,7 +12,7 @@ public class CountElementFunction() : FilterExtensionFunction( CountMethodInfo, 
 
     public static ScalarValue<int> Count( IValueType argument )
     {
-        if ( argument.Kind != ValueKind.NodeList )
+        if ( argument.ValueKind != ValueKind.NodeList )
             throw new NotSupportedException( $"Function `{Name}` must be a node list." );
 
         var nodes = (NodeList<JsonElement>) argument;

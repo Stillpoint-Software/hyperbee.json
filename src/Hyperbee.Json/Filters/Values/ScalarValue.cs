@@ -4,7 +4,7 @@ namespace Hyperbee.Json.Filters.Values;
 
 public struct ScalarValue<T>( T value ) : IValueType where T : IConvertible
 {
-    public readonly ValueKind Kind => ValueKind.Scalar;
+    public readonly ValueKind ValueKind => ValueKind.Scalar;
     public IValueTypeComparer Comparer { get; set; } = null;
 
     public T Value { get; } = value;

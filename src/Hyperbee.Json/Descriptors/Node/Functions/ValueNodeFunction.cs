@@ -15,7 +15,7 @@ public class ValueNodeFunction() : FilterExtensionFunction( ValueMethodInfo, Fil
     public static IValueType Value( IValueType argument )
     {
         if ( argument is not NodeList<JsonNode> nodes )
-            throw new NotSupportedException( $"Function `{Name}` does not support kind {argument.Kind}" );
+            throw new NotSupportedException( $"Function `{Name}` does not support kind {argument.ValueKind}" );
 
         var node = nodes.OneOrDefault();
 

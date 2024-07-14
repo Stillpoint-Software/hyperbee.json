@@ -8,15 +8,11 @@ namespace Hyperbee.Json.Filters.Parser;
 public static class FilterTruthyExpression
 {
     private static readonly MethodInfo IsTruthyMethodInfo = typeof( FilterTruthyExpression ).GetMethod( nameof( IsTruthy ) );
-    private static readonly MethodInfo ConvertBoolToScalarMethod = typeof( FilterTruthyExpression ).GetMethod( nameof( ConvertBoolToScalar ) );
 
     public static Expression IsTruthyExpression( Expression expression ) =>
         expression.Type == typeof( bool )
             ? expression
             : Expression.Call( IsTruthyMethodInfo, expression );
-
-    public static Expression ConvertBoolToScalarExpression( Expression expression ) =>
-        Expression.Call( ConvertBoolToScalarMethod, expression );
 
     public static bool IsTruthy( object value )
     {
@@ -33,10 +29,5 @@ public static class FilterTruthyExpression
         };
 
         return truthy;
-    }
-
-    public static IValueType ConvertBoolToScalar( bool value )
-    {
-        return value ? Scalar.True : Scalar.False;
     }
 }

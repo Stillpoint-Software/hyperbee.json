@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Parser.Expressions;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -350,10 +351,25 @@ public class FilterParser<TNode> : FilterParser
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };
 
-        left.Expression = FilterTruthyExpression.ConvertBoolToScalarExpression( left.Expression );
+        left.Expression = ConvertBoolToScalarExpression( left.Expression );
 
         left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
+
+        return;
+
+        static Expression ConvertBoolToScalarExpression( Expression leftExpression )
+        {
+            // convert bool result to Scalar.True or Scalar.False
+            Expression conditionalExpression = Expression.Condition(
+                leftExpression,
+                Expression.Constant( Scalar.True, typeof(IValueType) ),
+                Expression.Constant( Scalar.False, typeof(IValueType) )
+            );
+
+            return conditionalExpression;
+        }
+
     }
 
     // Throw helpers

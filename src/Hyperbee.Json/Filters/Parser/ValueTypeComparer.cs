@@ -176,7 +176,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
 
         if ( nodeCount == 0 )
         {
-            if ( value.Kind == ValueKind.Nothing ) // Considered equal
+            if ( value.ValueKind == ValueKind.Nothing ) // Considered equal
                 return 0;
 
             return -1;

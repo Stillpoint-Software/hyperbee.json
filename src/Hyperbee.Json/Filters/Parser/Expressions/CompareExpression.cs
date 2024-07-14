@@ -24,7 +24,6 @@ public static class CompareExpression<TNode>
     public static Expression GreaterThan( Expression left, Expression right ) => Expression.Call( IsGreaterThanMethod, left, right );
     public static Expression GreaterThanOrEqual( Expression left, Expression right ) => Expression.Call( IsGreaterThanOrEqualMethod, left, right );
 
-    // Binary operators
     public static Expression And( Expression left, Expression right ) => Expression.Call( AndAlsoMethod, left, right );
     public static Expression Or( Expression left, Expression right ) => Expression.Call( OrElseMethod, left, right );
     public static Expression Not( Expression expression ) => Expression.Call( NotMethod, expression );
@@ -41,8 +40,7 @@ public static class CompareExpression<TNode>
         if ( left is ScalarValue<bool> leftBoolValue && right is ScalarValue<bool> rightBoolValue )
             return leftBoolValue.Value && rightBoolValue.Value;
 
-        return left.Comparer.Exists( left ) &&
-               right.Comparer.Exists( right );
+        return left.Comparer.Exists( left ) && right.Comparer.Exists( right );
     }
 
     public static bool OrElse( IValueType left, IValueType right )
@@ -50,8 +48,7 @@ public static class CompareExpression<TNode>
         if ( left is ScalarValue<bool> leftBoolValue && right is ScalarValue<bool> rightBoolValue )
             return leftBoolValue.Value || rightBoolValue.Value;
 
-        return left.Comparer.Exists( left ) ||
-               right.Comparer.Exists( right );
+        return left.Comparer.Exists( left ) || right.Comparer.Exists( right );
     }
 
     public static bool NotBoolean( IValueType value )

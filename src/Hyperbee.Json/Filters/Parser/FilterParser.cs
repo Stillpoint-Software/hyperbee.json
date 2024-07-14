@@ -334,8 +334,8 @@ public class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right, FilterParserContext<TNode> parserContext )
     {
-        left.Expression = ComparerBinder<TNode>.BindComparerExpression( parserContext, left.Expression );
-        right.Expression = ComparerBinder<TNode>.BindComparerExpression( parserContext, right.Expression );
+        left.Expression = BindComparerExpression( parserContext, left.Expression );
+        right.Expression = BindComparerExpression( parserContext, right.Expression );
 
         left.Expression = left.Operator switch
         {
@@ -370,6 +370,40 @@ public class FilterParser<TNode> : FilterParser
             return conditionalExpression;
         }
 
+        static Expression BindComparerExpression( FilterParserContext<TNode> parserContext, Expression expression )
+        {
+            // Create an Expression that does:
+            //
+            // static IValueType BindComparerExpression(FilterParserContext<TNode> parserContext, IValueType value)
+            // {
+            //    if (value == null)
+            //        return null;
+            //
+            //    value.Comparer = parserContext.Descriptor.Comparer;
+            //    return value;
+            // }
+
+            if ( expression == null )
+                return null;
+
+            var valueVariable = Expression.Variable( typeof(IValueType), "value" );
+            
+            var valueAssign = Expression.Assign(
+                valueVariable,
+                Expression.Convert( expression, typeof(IValueType) ) );
+
+            var comparerAssign = Expression.Assign(
+                Expression.PropertyOrField( valueVariable, "Comparer" ),
+                Expression.Constant( parserContext.Descriptor.Comparer, typeof(IValueTypeComparer) )
+            );
+
+            return Expression.Block(
+                [valueVariable],
+                valueAssign,
+                comparerAssign,
+                valueVariable
+            );
+        }
     }
 
     // Throw helpers

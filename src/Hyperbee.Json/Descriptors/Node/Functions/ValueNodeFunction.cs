@@ -18,7 +18,7 @@ public class ValueNodeFunction() : FilterExtensionFunction( ValueMethodInfo, Fil
             throw new NotSupportedException( $"Function `{Name}` does not support kind {argument.Kind}" );
 
         var node = nodes.OneOrDefault();
-        
+
         return node?.GetValueKind() switch
         {
             JsonValueKind.Number when node.AsValue().TryGetValue<int>( out var intValue ) => Scalar.Value( intValue ),

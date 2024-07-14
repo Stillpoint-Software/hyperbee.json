@@ -18,13 +18,13 @@ public struct ScalarValue<T>( T value ) : IValueType where T : IConvertible
 
 public static class Scalar
 {
-    public static ScalarValue<float> Value( float value ) => new(value);
-    public static ScalarValue<int> Value( int value ) => new(value);
-    public static ScalarValue<bool> Value( bool value ) => new(value);
-    public static ScalarValue<string> Value( string value ) => new(value);
+    public static ScalarValue<float> Value( float value ) => new( value );
+    public static ScalarValue<int> Value( int value ) => new( value );
+    public static ScalarValue<bool> Value( bool value ) => new( value );
+    public static ScalarValue<string> Value( string value ) => new( value );
 
-    public static ScalarValue<bool> True { get; } = new(true);
-    public static ScalarValue<bool> False { get; } = new(false);
+    public static ScalarValue<bool> True { get; } = new( true );
+    public static ScalarValue<bool> False { get; } = new( false );
 
     public static Null Null { get; } = new();
     public static Nothing Nothing { get; } = new();

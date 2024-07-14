@@ -7,9 +7,9 @@ namespace Hyperbee.Json.Descriptors.Node;
 
 public static class ValueTypeExtensions
 {
-    public static bool TryGetValue<T>(this IValueType input, out T value) where T : IConvertible
+    public static bool TryGetValue<T>( this IValueType input, out T value ) where T : IConvertible
     {
-        switch (input)
+        switch ( input )
         {
             case ScalarValue<T> valueType:
                 value = valueType.Value;
@@ -17,7 +17,7 @@ public static class ValueTypeExtensions
 
             case NodeList<JsonNode> nodesType:
                 var node = nodesType.FirstOrDefault();
-                if (node.TryConvertTo(out value))
+                if ( node.TryConvertTo( out value ) )
                     return true;
                 break;
         }
@@ -38,44 +38,44 @@ public static class ValueTypeExtensions
         return false;
     }
 
-    private static bool TryConvertTo<T>(this JsonNode node, out T value) where T : IConvertible
+    private static bool TryConvertTo<T>( this JsonNode node, out T value ) where T : IConvertible
     {
         value = default;
         try
         {
-            if (typeof(T) == typeof(string) && node is JsonValue jsonValue && jsonValue.TryGetValue(out string stringValue))
+            if ( typeof( T ) == typeof( string ) && node is JsonValue jsonValue && jsonValue.TryGetValue( out string stringValue ) )
             {
-                value = (T)(IConvertible)stringValue;
+                value = (T) (IConvertible) stringValue;
                 return true;
             }
 
-            if (typeof(T) == typeof(int) && node is JsonValue jsonInt && jsonInt.TryGetValue(out int intValue))
+            if ( typeof( T ) == typeof( int ) && node is JsonValue jsonInt && jsonInt.TryGetValue( out int intValue ) )
             {
-                value = (T)(IConvertible)intValue;
+                value = (T) (IConvertible) intValue;
                 return true;
             }
 
-            if (typeof(T) == typeof(float) && node is JsonValue jsonFloat && jsonFloat.TryGetValue(out float floatValue))
+            if ( typeof( T ) == typeof( float ) && node is JsonValue jsonFloat && jsonFloat.TryGetValue( out float floatValue ) )
             {
-                value = (T)(IConvertible)floatValue;
+                value = (T) (IConvertible) floatValue;
                 return true;
             }
 
-            if ( typeof(T) == typeof(float) && node is JsonArray jsonArray )
+            if ( typeof( T ) == typeof( float ) && node is JsonArray jsonArray )
             {
                 value = (T) (IConvertible) jsonArray.Count;
                 return true;
             }
 
-            if ( typeof(T) == typeof(float) && node is JsonObject jsonObject )
+            if ( typeof( T ) == typeof( float ) && node is JsonObject jsonObject )
             {
                 value = (T) (IConvertible) jsonObject.Count;
                 return true;
             }
 
-            if (typeof(T) == typeof(bool) && node is JsonValue jsonBool && jsonBool.TryGetValue(out bool boolValue))
+            if ( typeof( T ) == typeof( bool ) && node is JsonValue jsonBool && jsonBool.TryGetValue( out bool boolValue ) )
             {
-                value = (T)(IConvertible)boolValue;
+                value = (T) (IConvertible) boolValue;
                 return true;
             }
         }

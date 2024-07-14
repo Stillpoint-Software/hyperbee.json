@@ -166,7 +166,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                         value = intValue;
                         break;
                     }
-                    
+
                     if ( jsonValue.TryGetValue( out float floatValue ) )
                     {
                         value = floatValue;

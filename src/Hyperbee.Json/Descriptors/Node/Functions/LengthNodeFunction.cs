@@ -25,8 +25,8 @@ public class LengthNodeFunction() : FilterExtensionFunction( LengthMethodInfo, F
                 JsonValueKind.Object => Scalar.Value( node.AsObject().Count ),
                 _ => Scalar.Nothing
             };
-        } 
-        
+        }
+
         return Scalar.Nothing;
     }
 }

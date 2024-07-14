@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Filters.Parser;
 public static class ComparerBinder<TNode>
 {
     private static readonly Expression BindComparerFunc = Expression.Constant( (Func<FilterParserContext<TNode>, IValueType, IValueType>) BindComparer );
-    
+
     internal static Expression BindComparerExpression( FilterParserContext<TNode> parserContext, Expression expression )
     {
         if ( expression == null )

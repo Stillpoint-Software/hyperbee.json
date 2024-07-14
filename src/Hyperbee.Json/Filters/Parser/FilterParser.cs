@@ -386,15 +386,15 @@ public class FilterParser<TNode> : FilterParser
             if ( expression == null )
                 return null;
 
-            var valueVariable = Expression.Variable( typeof(IValueType), "value" );
-            
+            var valueVariable = Expression.Variable( typeof( IValueType ), "value" );
+
             var valueAssign = Expression.Assign(
                 valueVariable,
-                Expression.Convert( expression, typeof(IValueType) ) );
+                Expression.Convert( expression, typeof( IValueType ) ) );
 
             var comparerAssign = Expression.Assign(
                 Expression.PropertyOrField( valueVariable, "Comparer" ),
-                Expression.Constant( parserContext.Descriptor.Comparer, typeof(IValueTypeComparer) )
+                Expression.Constant( parserContext.Descriptor.Comparer, typeof( IValueTypeComparer ) )
             );
 
             return Expression.Block(

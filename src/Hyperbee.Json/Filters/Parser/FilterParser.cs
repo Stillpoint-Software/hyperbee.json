@@ -363,8 +363,8 @@ public class FilterParser<TNode> : FilterParser
             // convert bool result to Scalar.True or Scalar.False
             Expression conditionalExpression = Expression.Condition(
                 leftExpression,
-                Expression.Constant( Scalar.True, typeof(IValueType) ),
-                Expression.Constant( Scalar.False, typeof(IValueType) )
+                Expression.Constant( Scalar.True, typeof( IValueType ) ),
+                Expression.Constant( Scalar.False, typeof( IValueType ) )
             );
 
             return conditionalExpression;

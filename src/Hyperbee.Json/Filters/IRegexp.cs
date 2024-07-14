@@ -88,7 +88,7 @@ public static class IRegexp
          */
         var replacement = @"(?:[^\r\n]|\p{Cs}\p{Cs})".AsSpan();
 
-        var newSize = pattern.Length + dotCount * (replacement.Length - 1); 
+        var newSize = pattern.Length + dotCount * (replacement.Length - 1);
         Span<char> buffer = newSize > 512 ? new char[newSize] : stackalloc char[newSize];
 
         var bufferIndex = 0;

@@ -4,7 +4,6 @@ namespace Hyperbee.Json;
 
 public record JsonPathQuery( string Query, JsonPathSegment Segments, bool Normalized );
 
-
 [DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
 public record SelectorDescriptor
 {

@@ -41,10 +41,9 @@ internal class SelectExpressionFactory : IExpressionFactory
         {
             var compileQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
 
-            // Current becomes root
-            return query[0] == '$'
-                ? new NodeList<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, compileQuery ), compileQuery.Normalized )
-                : new NodeList<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
+            var value = query[0] == '$' ? runtimeContext.Root : runtimeContext.Current;
+
+            return new NodeList<TNode>( JsonPath<TNode>.SelectInternal( value, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
         }
     }
 }

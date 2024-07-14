@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Filters.Values;
 
-namespace Hyperbee.Json.Filters.Parser;
+namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 public static class FilterTruthyExpression
 {

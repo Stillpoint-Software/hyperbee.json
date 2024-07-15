@@ -122,8 +122,8 @@ public class NodeTypeComparerTests : JsonTestBase
     public void NodeTypeComparer_ShouldCompare_WithEmpty()
     {
         var comparer = GetComparer();
-        var a = new NodesType<JsonNode>( [], true );
-        var b = new ValueType<float>( 1F );
+        var a = new NodeList<JsonNode>( [], true );
+        var b = new ScalarValue<float>( 1F );
 
         Assert.IsFalse( comparer.Compare( a, b, Operator.LessThan ) < 0 );
         Assert.IsFalse( comparer.Compare( a, b, Operator.LessThanOrEqual ) <= 0 );
@@ -135,15 +135,15 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.IsTrue( comparer.Compare( a, b, Operator.NotEquals ) != 0 );
     }
 
-    private static NodeTypeComparer<JsonNode> GetComparer() => new( new NodeValueAccessor() );
+    private static ValueTypeComparer<JsonNode> GetComparer() => new( new NodeValueAccessor() );
 
-    private static INodeType GetNodeType( object item ) =>
+    private static IValueType GetNodeType( object item ) =>
         item switch
         {
-            string itemString => new ValueType<string>( itemString ),
-            float itemFloat => new ValueType<float>( itemFloat ),
-            bool itemBool => new ValueType<bool>( itemBool ),
-            IEnumerable<JsonNode> nodes => new NodesType<JsonNode>( nodes, true ),
-            _ => Constants.Nothing
+            string itemString => new ScalarValue<string>( itemString ),
+            float itemFloat => new ScalarValue<float>( itemFloat ),
+            bool itemBool => new ScalarValue<bool>( itemBool ),
+            IEnumerable<JsonNode> nodes => new NodeList<JsonNode>( nodes, true ),
+            _ => Scalar.Nothing
         };
 }

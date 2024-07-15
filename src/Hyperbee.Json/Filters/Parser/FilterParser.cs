@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Parser.Expressions;
+using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser;
 
@@ -333,27 +334,73 @@ public class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right, FilterParserContext<TNode> parserContext )
     {
-        left.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, left.Expression );
-        right.Expression = NodeTypeComparerBinderExpression<TNode>.BindComparerExpression( parserContext, right.Expression );
+        left.Expression = BindComparerExpression( parserContext, left.Expression );
+        right.Expression = BindComparerExpression( parserContext, right.Expression );
 
         left.Expression = left.Operator switch
         {
-            Operator.Equals => NodeTypeExpression<TNode>.Equal( left.Expression, right.Expression ),
-            Operator.NotEquals => NodeTypeExpression<TNode>.NotEqual( left.Expression, right.Expression ),
-            Operator.GreaterThan => NodeTypeExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
-            Operator.GreaterThanOrEqual => NodeTypeExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
-            Operator.LessThan => NodeTypeExpression<TNode>.LessThan( left.Expression, right.Expression ),
-            Operator.LessThanOrEqual => NodeTypeExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
-            Operator.And => NodeTypeExpression<TNode>.And( left.Expression, right.Expression ),
-            Operator.Or => NodeTypeExpression<TNode>.Or( left.Expression, right.Expression ),
-            Operator.Not => NodeTypeExpression<TNode>.Not( right.Expression ),
+            Operator.Equals => CompareExpression<TNode>.Equal( left.Expression, right.Expression ),
+            Operator.NotEquals => CompareExpression<TNode>.NotEqual( left.Expression, right.Expression ),
+            Operator.GreaterThan => CompareExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
+            Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
+            Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression ),
+            Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
+            Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression ),
+            Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
+            Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };
 
-        left.Expression = FilterTruthyExpression.ConvertBoolToValueTypeExpression( left.Expression );
+        left.Expression = ConvertBoolToScalarExpression( left.Expression );
 
         left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
+
+        return;
+
+        static Expression ConvertBoolToScalarExpression( Expression leftExpression )
+        {
+            // convert bool result to Scalar.True or Scalar.False
+            Expression conditionalExpression = Expression.Condition(
+                leftExpression,
+                Expression.Constant( Scalar.True, typeof( IValueType ) ),
+                Expression.Constant( Scalar.False, typeof( IValueType ) )
+            );
+
+            return conditionalExpression;
+        }
+
+        static Expression BindComparerExpression( FilterParserContext<TNode> parserContext, Expression expression )
+        {
+            // Create an Expression that does:
+            //
+            // static IValueType BindComparerExpression(FilterParserContext<TNode> parserContext, IValueType value)
+            // {
+            //    value.Comparer = parserContext.Descriptor.Comparer;
+            //    return value;
+            // }
+
+            if ( expression == null )
+                return null;
+
+            var valueVariable = Expression.Variable( typeof( IValueType ), "value" );
+
+            var valueAssign = Expression.Assign(
+                valueVariable,
+                Expression.Convert( expression, typeof( IValueType ) ) );
+
+            var comparerAssign = Expression.Assign(
+                Expression.PropertyOrField( valueVariable, "Comparer" ),
+                Expression.Constant( parserContext.Descriptor.Comparer, typeof( IValueTypeComparer ) )
+            );
+
+            return Expression.Block(
+                [valueVariable],
+                valueAssign,
+                comparerAssign,
+                valueVariable
+            );
+        }
     }
 
     // Throw helpers

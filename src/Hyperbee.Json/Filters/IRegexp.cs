@@ -27,9 +27,7 @@ public static class IRegexp
             return string.Empty;
 
         var patternSize = pattern.Length;
-        Span<bool> dotPositions = patternSize > 256
-            ? new bool[patternSize]
-            : stackalloc bool[patternSize];
+        Span<bool> dotPositions = patternSize > 256 ? new bool[patternSize] : stackalloc bool[patternSize];
 
         var inCharacterClass = false;
         var dotCount = 0;
@@ -66,8 +64,8 @@ public static class IRegexp
          *    - The entire pattern is wrapped in a non-capturing group to group the regex parts together
          *      without capturing the matched text.
          *
-         * 2. Negative Lookahead `(?! ... )`
-         *    - `(?[\r\n])`: Match any character that is not a carriage return (`\r`) or newline (`\n`).
+         * 2. Negative Character Class `[^ ...]`
+         *    - `[^\r\n]`: Match any character that is not a carriage return (`\r`) or newline (`\n`).
          *
          * 3. Surrogate Pair `\p{Cs}\p{Cs}`
          *    - `\p{Cs}`: Matches any character in the "Cs" (surrogate) Unicode category.
@@ -88,12 +86,10 @@ public static class IRegexp
          *       \p{Cs}\p{Cs} # Match a surrogate pair (two surrogates in sequence)
          *   )
          */
-        var replacement = @"(?:[^\r\n]|\p{Cs}\p{Cs})".AsSpan(); // (?:(?![\r\n])\P{Cs}|\p{Cs}\p{Cs})
+        var replacement = @"(?:[^\r\n]|\p{Cs}\p{Cs})".AsSpan();
 
-        var newSize = pattern.Length + dotCount * (replacement.Length - 1); // '.' is 1 char, so extra (pattern-length - 1) chars per '.'
-        Span<char> buffer = newSize > 512
-            ? new char[newSize]
-            : stackalloc char[newSize];
+        var newSize = pattern.Length + dotCount * (replacement.Length - 1);
+        Span<char> buffer = newSize > 512 ? new char[newSize] : stackalloc char[newSize];
 
         var bufferIndex = 0;
 

@@ -193,18 +193,15 @@ You can also extend the supported function set by registering your own functions
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
 ```csharp
-public class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
+private class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "path";
     private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof( Path ) );
 
-    private static INodeType Path( INodeType arg )
+    private static ScalarValue<string> Path( IValueType argument )
     {
-        if ( arg is not NodesType<JsonNode> nodes )
-            return Constants.Null;
-
-        var node = nodes.FirstOrDefault();
-        return new ValueType<string>( node?.GetPath() );
+        return argument.TryGetNode<JsonNode>( out var node ) ? node?.GetPath() : null;
+    }
 }
 ```
 
@@ -231,7 +228,6 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
   - Comprehensive feature set.
   - Deferred execution queries with `IEnumerable`.
   - Strong community support.
-  - .NET Foundation Project.
   
 - **Cons:**
   - No support for `JsonElement`.
@@ -253,7 +249,6 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
   - Comprehensive feature set.
   - Documentation and examples.
   - Strong community support.
-  - .NET Foundation Project.
 
 - **Cons:**
   - No support for `JsonElement`, or `JsonNode`.
@@ -344,7 +339,7 @@ Here is a performance comparison of various queries on the standard book store d
 
 ```
 
-## Additioal Documentation
+## Additional Documentation
 
 Additional documentation can be found in the project's `/docs` folder.
 

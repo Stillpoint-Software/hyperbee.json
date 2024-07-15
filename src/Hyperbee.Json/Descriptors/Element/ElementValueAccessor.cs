@@ -162,8 +162,21 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 value = element.GetString();
                 break;
             case JsonValueKind.Number:
-                value = element.GetSingle();
-                break;
+                if ( element.TryGetInt32( out int intValue ) )
+                {
+                    value = intValue;
+                    break;
+                }
+
+                if ( element.TryGetSingle( out float floatValue ) )
+                {
+                    value = floatValue;
+                    break;
+                }
+
+                value = false;
+                return false;
+
             case JsonValueKind.True:
                 value = true;
                 break;
@@ -180,6 +193,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
         return true;
     }
+
 
     public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
     {

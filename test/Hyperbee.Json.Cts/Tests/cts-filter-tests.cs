@@ -1153,7 +1153,7 @@ namespace Hyperbee.Json.Cts.Tests
                   }
                 ]
                 """ );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """
                 []
@@ -3031,7 +3031,7 @@ namespace Hyperbee.Json.Cts.Tests
                   }
                 ]
                 """ );
-            var results = document.Select( selector );
+            var results = document.Select( selector ).ToArray();
             var expect = JsonNode.Parse(
                 """
                 [

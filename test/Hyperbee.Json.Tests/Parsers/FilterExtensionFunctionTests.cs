@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Descriptors.Element;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Filters.Values;
@@ -36,15 +37,9 @@ public class FilterExtensionFunctionTests : JsonTestBase
         public const string Name = "path";
         private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof( Path ) );
 
-        private static INodeType Path( INodeType arg )
+        private static ScalarValue<string> Path( IValueType argument )
         {
-            if ( arg is NodesType<JsonNode> nodes )
-            {
-                var node = nodes.FirstOrDefault();
-                return new ValueType<string>( node?.GetPath() );
-            }
-
-            return Constants.Null;
+            return argument.TryGetNode<JsonNode>( out var node ) ? node?.GetPath() : null;
         }
     }
 }

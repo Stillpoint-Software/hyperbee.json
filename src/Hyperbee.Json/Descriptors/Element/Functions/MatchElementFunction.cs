@@ -6,10 +6,10 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class MatchElementFunction() : FilterExtensionFunction( MatchMethodInfo, FilterExtensionInfo.MustNotCompare )
+public class MatchElementFunction() : FilterExtensionFunction( MatchMethod, FilterExtensionInfo.MustNotCompare )
 {
     public const string Name = "match";
-    private static readonly MethodInfo MatchMethodInfo = GetMethod<MatchElementFunction>( nameof( Match ) );
+    private static readonly MethodInfo MatchMethod = GetMethod<MatchElementFunction>( nameof( Match ) );
 
     public static ScalarValue<bool> Match( IValueType input, IValueType pattern )
     {

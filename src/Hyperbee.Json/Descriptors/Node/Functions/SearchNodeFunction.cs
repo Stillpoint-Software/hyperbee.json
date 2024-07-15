@@ -6,10 +6,10 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class SearchNodeFunction() : FilterExtensionFunction( SearchMethodInfo, FilterExtensionInfo.MustNotCompare )
+public class SearchNodeFunction() : FilterExtensionFunction( SearchMethod, FilterExtensionInfo.MustNotCompare )
 {
     public const string Name = "search";
-    private static readonly MethodInfo SearchMethodInfo = GetMethod<SearchNodeFunction>( nameof( Search ) );
+    private static readonly MethodInfo SearchMethod = GetMethod<SearchNodeFunction>( nameof( Search ) );
 
     public static ScalarValue<bool> Search( IValueType input, IValueType pattern )
     {

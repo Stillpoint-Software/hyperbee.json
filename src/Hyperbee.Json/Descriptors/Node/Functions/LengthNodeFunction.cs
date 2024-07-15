@@ -6,10 +6,10 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class LengthNodeFunction() : FilterExtensionFunction( LengthMethodInfo, FilterExtensionInfo.MustCompare | FilterExtensionInfo.ExpectNormalized )
+public class LengthNodeFunction() : FilterExtensionFunction( LengthMethod, FilterExtensionInfo.MustCompare | FilterExtensionInfo.ExpectNormalized )
 {
     public const string Name = "length";
-    private static readonly MethodInfo LengthMethodInfo = GetMethod<LengthNodeFunction>( nameof( Length ) );
+    private static readonly MethodInfo LengthMethod = GetMethod<LengthNodeFunction>( nameof( Length ) );
 
     public static IValueType Length( IValueType input )
     {

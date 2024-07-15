@@ -5,10 +5,10 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class CountNodeFunction() : FilterExtensionFunction( CountMethodInfo, FilterExtensionInfo.MustCompare )
+public class CountNodeFunction() : FilterExtensionFunction( CountMethod, FilterExtensionInfo.MustCompare )
 {
     public const string Name = "count";
-    private static readonly MethodInfo CountMethodInfo = GetMethod<CountNodeFunction>( nameof( Count ) );
+    private static readonly MethodInfo CountMethod = GetMethod<CountNodeFunction>( nameof( Count ) );
 
     public static ScalarValue<int> Count( IValueType argument )
     {

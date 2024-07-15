@@ -7,14 +7,14 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 public static class FilterTruthyExpression
 {
-    private static readonly MethodInfo IsTruthyMethodInfo = typeof( FilterTruthyExpression ).GetMethod( nameof( IsTruthy ) );
+    private static readonly MethodInfo IsTruthyMethod = typeof( FilterTruthyExpression ).GetMethod( nameof( IsTruthy ) );
 
     public static Expression IsTruthyExpression( Expression expression ) =>
         expression.Type == typeof( bool )
             ? expression
-            : Expression.Call( IsTruthyMethodInfo, expression );
+            : Expression.Call( IsTruthyMethod, expression );
 
-    public static bool IsTruthy( object value )
+    private static bool IsTruthy( object value )
     {
         var truthy = value switch
         {

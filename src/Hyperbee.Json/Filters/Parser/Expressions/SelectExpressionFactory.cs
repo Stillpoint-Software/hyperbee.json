@@ -26,7 +26,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
     private static class ExpressionHelper<TNode>
     {
-        private static readonly MethodInfo SelectMethod = 
+        private static readonly MethodInfo SelectMethod =
             typeof( ExpressionHelper<TNode> )
                 .GetMethod( nameof( Select ), BindingFlags.NonPublic | BindingFlags.Static );
 
@@ -43,8 +43,8 @@ internal class SelectExpressionFactory : IExpressionFactory
         {
             var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
 
-            var value = query[0] == '$' 
-                ? runtimeContext.Root 
+            var value = query[0] == '$'
+                ? runtimeContext.Root
                 : runtimeContext.Current;
 
             var nodes = JsonPath<TNode>.SelectInternal( value, runtimeContext.Root, compiledQuery );

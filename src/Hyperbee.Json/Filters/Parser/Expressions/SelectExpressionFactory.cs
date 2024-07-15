@@ -1,14 +1,15 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterParserContext<TNode> parserContext )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, ITypeDescriptor<TNode> descriptor )
     {
-        expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument, parserContext );
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument );
 
         if ( expression == null )
             return false;
@@ -22,7 +23,7 @@ internal class SelectExpressionFactory : IExpressionFactory
         private static readonly MethodInfo SelectMethod = typeof( ExpressionHelper<TNode> )
             .GetMethod( nameof( Select ), BindingFlags.NonPublic | BindingFlags.Static );
 
-        public static MethodCallExpression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace, FilterParserContext<TNode> parserContext )
+        public static MethodCallExpression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace )
         {
             if ( item.IsEmpty )
                 return null;
@@ -34,7 +35,7 @@ internal class SelectExpressionFactory : IExpressionFactory
                 SelectMethod,
                 Expression.Constant( item.ToString() ),
                 Expression.Constant( allowDotWhitespace ),
-                parserContext.RuntimeContext );
+                FilterParser<TNode>.RuntimeContextExpression );
         }
 
         private static IValueType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )

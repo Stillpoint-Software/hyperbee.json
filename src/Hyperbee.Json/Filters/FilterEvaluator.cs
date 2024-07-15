@@ -5,6 +5,8 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace Hyperbee.Json.Filters;
 
+public record FilterRuntimeContext<TNode>( TNode Current, TNode Root, ITypeDescriptor<TNode> Descriptor );
+
 public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
 {
     private static readonly ConcurrentDictionary<string, Func<FilterRuntimeContext<TNode>, bool>> Compiled = new();

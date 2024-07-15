@@ -69,7 +69,7 @@ namespace Hyperbee.Json.Filters.Parser
 
         private static class ExpressionHelper<TNode> // this helper removes need for MakeGenericMethod
         {
-            public static readonly MethodInfo ValidateArgumentMethod = 
+            public static readonly MethodInfo ValidateArgumentMethod =
                 typeof( ExpressionHelper<TNode> ).GetMethod( nameof( ValidateArgument ), BindingFlags.NonPublic | BindingFlags.Static );
 
             static IValueType ValidateArgument( string methodName, IValueType argument )

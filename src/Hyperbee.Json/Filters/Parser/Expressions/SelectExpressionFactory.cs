@@ -9,6 +9,12 @@ internal class SelectExpressionFactory : IExpressionFactory
 {
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, ITypeDescriptor<TNode> descriptor )
     {
+        var item = state.Item;
+        expression = null;
+
+        if ( item.IsEmpty || item[0] != '$' && item[0] != '@' )
+            return false;
+
         expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument );
 
         if ( expression == null )
@@ -25,12 +31,6 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         public static MethodCallExpression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace )
         {
-            if ( item.IsEmpty )
-                return null;
-
-            if ( item[0] != '$' && item[0] != '@' )
-                return null;
-
             return Expression.Call(
                 SelectMethod,
                 Expression.Constant( item.ToString() ),

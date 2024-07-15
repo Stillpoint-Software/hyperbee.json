@@ -7,6 +7,12 @@ internal class FunctionExpressionFactory : IExpressionFactory
 {
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, ITypeDescriptor<TNode> descriptor )
     {
+        if ( state.Item.IsEmpty || !char.IsLetter( state.Item[0] ) )
+        {
+            expression = null;
+            return false;
+        }
+
         if ( descriptor.Functions.TryGetActivator( state.Item.ToString(), out var functionActivator ) )
         {
             if ( state.TrailingWhitespace )

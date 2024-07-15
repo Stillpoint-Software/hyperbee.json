@@ -15,7 +15,6 @@ internal class LiteralExpressionFactory : IExpressionFactory
 
         expressionInfo.Kind = ExpressionKind.Literal;
         return true;
-
     }
 
     private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
@@ -37,9 +36,6 @@ internal class LiteralExpressionFactory : IExpressionFactory
             return Expression.Constant( Scalar.Value( item[1..^1].ToString() ) ); // remove quotes
 
         // Check for numbers
-        //
-        // The current design treats all numbers are floats since we don't
-        // know what's in the data or the other side of the operator yet.
 
         if ( int.TryParse( item, out int intResult ) )
             return Expression.Constant( Scalar.Value( intResult ) );

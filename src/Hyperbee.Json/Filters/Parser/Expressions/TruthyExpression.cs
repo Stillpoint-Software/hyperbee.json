@@ -5,9 +5,9 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
-public static class FilterTruthyExpression
+public static class TruthyExpression
 {
-    private static readonly MethodInfo IsTruthyMethod = typeof( FilterTruthyExpression ).GetMethod( nameof( IsTruthy ), BindingFlags.NonPublic | BindingFlags.Static );
+    private static readonly MethodInfo IsTruthyMethod = typeof( TruthyExpression ).GetMethod( nameof( IsTruthy ), BindingFlags.NonPublic | BindingFlags.Static );
 
     public static Expression IsTruthyExpression( Expression expression ) =>
         expression.Type == typeof( bool )

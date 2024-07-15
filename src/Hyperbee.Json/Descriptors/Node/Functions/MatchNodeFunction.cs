@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class MatchNodeFunction() : FilterExtensionFunction( MatchMethod, FilterExtensionInfo.MustNotCompare )
+public class MatchNodeFunction() : ExtensionFunction( MatchMethod, ExtensionInfo.MustNotCompare )
 {
     public const string Name = "match";
     private static readonly MethodInfo MatchMethod = GetMethod<MatchNodeFunction>( nameof( Match ) );

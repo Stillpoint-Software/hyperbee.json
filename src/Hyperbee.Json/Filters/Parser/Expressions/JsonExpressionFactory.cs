@@ -6,12 +6,12 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class JsonExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, ITypeDescriptor<TNode> descriptor )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
     {
         if ( descriptor.Accessor.TryParseNode( state.Item.ToString(), out var node ) )
         {
             expression = Expression.Constant( new NodeList<TNode>( [node], isNormalized: true ) );
-            expressionInfo.Kind = ExpressionKind.Json;
+            exprInfo.Kind = ExpressionKind.Json;
             return true;
         }
 

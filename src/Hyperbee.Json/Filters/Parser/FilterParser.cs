@@ -26,6 +26,7 @@ public abstract class FilterParser
 
 public class FilterParser<TNode> : FilterParser
 {
+    // use a common instance
     internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" );
 
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
@@ -44,7 +45,7 @@ public class FilterParser<TNode> : FilterParser
 
         var expression = Parse( ref state, descriptor );
 
-        return FilterTruthyExpression.IsTruthyExpression( expression );
+        return TruthyExpression.IsTruthyExpression( expression );
     }
 
     internal static Expression Parse( ref ParserState state, ITypeDescriptor<TNode> descriptor ) // recursion entrypoint
@@ -418,13 +419,13 @@ public class FilterParser<TNode> : FilterParser
         if ( item.ExpressionInfo.Kind != ExpressionKind.Function )
             return;
 
-        if ( (item.ExpressionInfo.FunctionInfo & FilterExtensionInfo.MustCompare) == FilterExtensionInfo.MustCompare &&
+        if ( (item.ExpressionInfo.FunctionInfo & ExtensionInfo.MustCompare) == ExtensionInfo.MustCompare &&
              !item.Operator.IsComparison() )
         {
             throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
         }
 
-        if ( (item.ExpressionInfo.FunctionInfo & FilterExtensionInfo.MustNotCompare) == FilterExtensionInfo.MustNotCompare &&
+        if ( (item.ExpressionInfo.FunctionInfo & ExtensionInfo.MustNotCompare) == ExtensionInfo.MustNotCompare &&
              item.Operator.IsComparison() )
         {
             throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
@@ -445,8 +446,8 @@ public class FilterParser<TNode> : FilterParser
 
     // ExprItem
 
-    [DebuggerDisplay( "Operator = {Operator}, {ExpressionInfo.Kind}" )]
-    private class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
+    [DebuggerDisplay( "{ExpressionInfo.Kind}, Operator = {Operator}" )]
+    private sealed class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
     {
         public ExpressionInfo ExpressionInfo { get; } = expressionInfo;
         public Expression Expression { get; set; } = expression;

@@ -5,25 +5,25 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser
 {
-    public abstract class FilterExtensionFunction
+    public abstract class ExtensionFunction
     {
         private readonly int _argumentCount;
         private readonly MethodInfo _methodInfo;
 
-        public FilterExtensionInfo FunctionInfo { get; }
+        public ExtensionInfo FunctionInfo { get; }
 
-        protected FilterExtensionFunction( MethodInfo methodInfo, FilterExtensionInfo filterInfo )
+        protected ExtensionFunction( MethodInfo methodInfo, ExtensionInfo info )
         {
             _argumentCount = methodInfo.GetParameters().Length;
             _methodInfo = methodInfo;
 
-            FunctionInfo = filterInfo;
+            FunctionInfo = info;
         }
 
         internal Expression GetExpression<TNode>( ref ParserState state, ITypeDescriptor<TNode> descriptor )
         {
             var arguments = new Expression[_argumentCount];
-            var expectNormalized = FunctionInfo.HasFlag( FilterExtensionInfo.ExpectNormalized );
+            var expectNormalized = FunctionInfo.HasFlag( ExtensionInfo.ExpectNormalized );
 
             for ( var i = 0; i < _argumentCount; i++ )
             {

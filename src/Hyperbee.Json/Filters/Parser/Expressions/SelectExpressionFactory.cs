@@ -7,7 +7,7 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, ITypeDescriptor<TNode> descriptor )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
     {
         var item = state.Item;
         expression = null;
@@ -20,14 +20,15 @@ internal class SelectExpressionFactory : IExpressionFactory
         if ( expression == null )
             return false;
 
-        itemContext.Kind = ExpressionKind.Select;
+        exprInfo.Kind = ExpressionKind.Select;
         return true;
     }
 
     private static class ExpressionHelper<TNode>
     {
-        private static readonly MethodInfo SelectMethod = typeof( ExpressionHelper<TNode> )
-            .GetMethod( nameof( Select ), BindingFlags.NonPublic | BindingFlags.Static );
+        private static readonly MethodInfo SelectMethod = 
+            typeof( ExpressionHelper<TNode> )
+                .GetMethod( nameof( Select ), BindingFlags.NonPublic | BindingFlags.Static );
 
         public static MethodCallExpression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace )
         {
@@ -40,11 +41,15 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         private static IValueType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
         {
-            var compileQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
+            var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
 
-            var value = query[0] == '$' ? runtimeContext.Root : runtimeContext.Current;
+            var value = query[0] == '$' 
+                ? runtimeContext.Root 
+                : runtimeContext.Current;
 
-            return new NodeList<TNode>( JsonPath<TNode>.SelectInternal( value, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
+            var nodes = JsonPath<TNode>.SelectInternal( value, runtimeContext.Root, compiledQuery );
+
+            return new NodeList<TNode>( nodes, compiledQuery.Normalized );
         }
     }
 }

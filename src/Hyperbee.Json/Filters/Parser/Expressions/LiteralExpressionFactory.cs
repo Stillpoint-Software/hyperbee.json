@@ -6,14 +6,14 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class LiteralExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, ITypeDescriptor<TNode> descriptor )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
     {
         expression = GetLiteralExpression( state.Item );
 
         if ( expression == null )
             return false;
 
-        expressionInfo.Kind = ExpressionKind.Literal;
+        exprInfo.Kind = ExpressionKind.Literal;
         return true;
     }
 

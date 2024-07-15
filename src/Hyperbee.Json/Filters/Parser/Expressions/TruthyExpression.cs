@@ -14,7 +14,7 @@ public static class TruthyExpression
             ? expression
             : Expression.Call( IsTruthyMethod, expression );
 
-    private static bool IsTruthy( object value )
+    private static bool IsTruthy( IValueType value )
     {
         var truthy = value switch
         {
@@ -24,10 +24,17 @@ public static class TruthyExpression
             ScalarValue<int> intValue => intValue.Value != 0,
             ScalarValue<float> floatValue => floatValue.Value != 0,
             ScalarValue<string> valueString => !string.IsNullOrEmpty( valueString.Value ) && !valueString.Value.Equals( "false", StringComparison.OrdinalIgnoreCase ),
-            IEnumerable enumerable => enumerable.Cast<object>().Any(),  // NodeList<TNode>
+            IEnumerable enumerable => Any( enumerable ), // NodeList<TNode>
             _ => true
         };
 
         return truthy;
+
+        static bool Any( IEnumerable enumerable ) // Avoid cast to object: enumerable.Cast<object>().Any()
+        {
+            var enumerator = enumerable.GetEnumerator();
+            using var disposable = enumerator as IDisposable;
+            return enumerator.MoveNext();
+        }
     }
 }

@@ -13,22 +13,22 @@ internal class FunctionExpressionFactory : IExpressionFactory
             return false;
         }
 
-        if ( descriptor.Functions.TryGetActivator( state.Item.ToString(), out var functionActivator ) )
+        if ( !descriptor.Functions.TryGetActivator( state.Item.ToString(), out var functionActivator ) )
         {
-            if ( state.TrailingWhitespace )
-                throw new NotSupportedException( "Whitespace is not allowed after a function name." );
-
-            var function = functionActivator();
-
-            expression = function
-                .GetExpression( ref state, descriptor ); // will recurse for each function argument.
-
-            exprInfo.Kind = ExpressionKind.Function;
-            exprInfo.FunctionInfo = function.FunctionInfo;
-            return true;
+            expression = null;
+            return false;
         }
 
-        expression = null;
-        return false;
+        if ( state.TrailingWhitespace )
+            throw new NotSupportedException( "Whitespace is not allowed after a function name." );
+
+        var function = functionActivator();
+
+        expression = function
+            .GetExpression( ref state, descriptor ); // will recurse for each function argument.
+
+        exprInfo.Kind = ExpressionKind.Function;
+        exprInfo.FunctionInfo = function.FunctionInfo;
+        return true;
     }
 }

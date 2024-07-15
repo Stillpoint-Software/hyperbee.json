@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
@@ -10,16 +10,14 @@ internal class SelectExpressionFactory : IExpressionFactory
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
     {
         var item = state.Item;
-        expression = null;
 
         if ( item.IsEmpty || item[0] != '$' && item[0] != '@' )
+        {
+            expression = null;
             return false;
+        }
 
         expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument );
-
-        if ( expression == null )
-            return false;
-
         exprInfo.Kind = ExpressionKind.Select;
         return true;
     }
@@ -43,9 +41,9 @@ internal class SelectExpressionFactory : IExpressionFactory
         {
             var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
 
-            var value = query[0] == '$'
-                ? runtimeContext.Root
-                : runtimeContext.Current;
+            var value = query[0] == '$' 
+                ? runtimeContext.Root 
+                : runtimeContext.Current; // @
 
             var nodes = JsonPath<TNode>.SelectInternal( value, runtimeContext.Root, compiledQuery );
 

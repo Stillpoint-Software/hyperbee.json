@@ -200,13 +200,13 @@ public class FilterParserTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var elementDescriptor = new ElementTypeDescriptor();
-            var elementRuntimeContext = Expression.Parameter( typeof(FilterRuntimeContext<JsonElement>), "runtimeContext" );
-            return (FilterParser<JsonElement>.Parse( filter, elementDescriptor ), elementRuntimeContext );
+            var elementRuntimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonElement> ), "runtimeContext" );
+            return (FilterParser<JsonElement>.Parse( filter, elementDescriptor ), elementRuntimeContext);
         }
 
         var nodeDescriptor = new NodeTypeDescriptor();
-        var nodeRuntimeContext = Expression.Parameter( typeof(FilterRuntimeContext<JsonNode>), "runtimeContext" );
-        return (FilterParser<JsonNode>.Parse( filter, nodeDescriptor ), nodeRuntimeContext );
+        var nodeRuntimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonNode> ), "runtimeContext" );
+        return (FilterParser<JsonNode>.Parse( filter, nodeDescriptor ), nodeRuntimeContext);
     }
 
     private static bool Execute( Expression expression, ParameterExpression param, Type sourceType )

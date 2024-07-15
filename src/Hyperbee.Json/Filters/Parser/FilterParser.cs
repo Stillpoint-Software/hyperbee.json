@@ -26,7 +26,7 @@ public abstract class FilterParser
 
 public class FilterParser<TNode> : FilterParser
 {
-    internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof(FilterRuntimeContext<TNode>), "runtimeContext" );
+    internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" );
 
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
     {
@@ -51,7 +51,7 @@ public class FilterParser<TNode> : FilterParser
     {
         // validate input
         if ( descriptor == null )
-            throw new ArgumentNullException( nameof(descriptor) );
+            throw new ArgumentNullException( nameof( descriptor ) );
 
         if ( state.EndOfBuffer )
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );

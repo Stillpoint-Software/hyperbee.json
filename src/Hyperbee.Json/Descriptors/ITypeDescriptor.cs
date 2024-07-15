@@ -3,7 +3,7 @@ using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 
-public delegate FilterExtensionFunction FunctionCreator();
+public delegate FilterExtensionFunction FunctionActivator();
 
 public interface ITypeDescriptor
 {

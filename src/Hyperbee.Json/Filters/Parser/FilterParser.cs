@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -371,7 +371,7 @@ public class FilterParser<TNode> : FilterParser
 
         static Expression ConvertExpression<TType>( Expression expression )
         {
-            return expression == null ? null : Expression.Convert( expression, typeof(TType) );
+            return expression == null ? null : Expression.Convert( expression, typeof( TType ) );
         }
     }
 

@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using Hyperbee.Json.Filters.Parser;
 using Microsoft.CSharp.RuntimeBinder;
 

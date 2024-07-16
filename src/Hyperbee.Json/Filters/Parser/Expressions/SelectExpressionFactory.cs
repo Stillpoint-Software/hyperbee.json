@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
@@ -41,8 +41,8 @@ internal class SelectExpressionFactory : IExpressionFactory
         {
             var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
 
-            var value = query[0] == '$' 
-                ? runtimeContext.Root 
+            var value = query[0] == '$'
+                ? runtimeContext.Root
                 : runtimeContext.Current; // @
 
             var nodes = JsonPath<TNode>.SelectInternal( value, runtimeContext.Root, compiledQuery );

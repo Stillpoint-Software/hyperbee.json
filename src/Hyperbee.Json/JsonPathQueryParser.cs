@@ -270,7 +270,7 @@ internal static class JsonPathQueryParser
                                 throw new NotSupportedException( "Invalid bracket expression syntax. Bracket expression cannot be empty." );
 
                             // validate the selector and get its kind
-                            selectorKind = GetValidSelectorKind( selectorSpan );
+                            selectorKind = GetUnionSelectorKind( selectorSpan );
 
                             // create the selector descriptor
                             SelectorDescriptor descriptor;
@@ -470,7 +470,7 @@ internal static class JsonPathQueryParser
         return length <= 0 ? [] : buffer.Slice( start, length ).Trim();
     }
 
-    private static SelectorKind GetValidSelectorKind( ReadOnlySpan<char> selector )
+    private static SelectorKind GetUnionSelectorKind( ReadOnlySpan<char> selector )
     {
         // selector order matters
 

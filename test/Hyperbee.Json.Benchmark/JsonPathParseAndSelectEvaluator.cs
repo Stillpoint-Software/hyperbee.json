@@ -8,7 +8,7 @@ using JsonEverything = Json.Path;
 
 namespace Hyperbee.Json.Benchmark;
 
-public class JsonPathParseAndSelect
+public class JsonPathParseAndSelectEvaluator
 {
     [Params(
         "$.store.book[0]",

@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
@@ -25,7 +25,7 @@ internal class FunctionExpressionFactory : IExpressionFactory
         var function = functionActivator();
 
         expression = function
-            .GetExpression( ref state, descriptor ); // will recurse for each function argument.
+            .GetExpression<TNode>( ref state ); // will recurse for each function argument.
 
         exprInfo.Kind = ExpressionKind.Function;
         exprInfo.FunctionInfo = function.FunctionInfo;

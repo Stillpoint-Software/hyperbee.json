@@ -1,20 +1,18 @@
-﻿using Hyperbee.Json.Filters.Parser;
+﻿using System.Diagnostics;
 
 namespace Hyperbee.Json.Filters.Values;
 
-public struct ScalarValue<T>( T value ) : IValueType where T : IConvertible
+[DebuggerDisplay( "{ValueKind}, Value = {Value}" )]
+public readonly struct ScalarValue<TType>( TType value ) : IValueType where TType : IConvertible
 {
-    public readonly ValueKind ValueKind => ValueKind.Scalar;
-    public IValueTypeComparer Comparer { get; set; } = null;
+    public ValueKind ValueKind => ValueKind.Scalar;
 
-    public T Value { get; } = value;
+    public TType Value { get; } = value;
 
-    // Implicit conversion operators for bool, string, float, and int
-
-    public static implicit operator ScalarValue<T>( bool value ) => new( (T) (IConvertible) value );
-    public static implicit operator ScalarValue<T>( string value ) => new( (T) (IConvertible) value );
-    public static implicit operator ScalarValue<T>( int value ) => new( (T) (IConvertible) value );
-    public static implicit operator ScalarValue<T>( float value ) => new( (T) (IConvertible) value );
+    public static implicit operator ScalarValue<TType>( bool value ) => new( (TType) (IConvertible) value );
+    public static implicit operator ScalarValue<TType>( string value ) => new( (TType) (IConvertible) value );
+    public static implicit operator ScalarValue<TType>( int value ) => new( (TType) (IConvertible) value );
+    public static implicit operator ScalarValue<TType>( float value ) => new( (TType) (IConvertible) value );
 }
 
 public static class Scalar

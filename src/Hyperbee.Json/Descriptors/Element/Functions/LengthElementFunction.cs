@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Filters.Values;
 
@@ -11,22 +10,21 @@ public class LengthElementFunction() : ExtensionFunction( LengthMethod, Extensio
     public const string Name = "length";
     private static readonly MethodInfo LengthMethod = GetMethod<LengthElementFunction>( nameof( Length ) );
 
-    public static IValueType Length( IValueType argument )
+    public static IValueType Length( IValueType input )
     {
-        if ( argument.TryGetValue<string>( out var stringValue ) )
+        switch ( input.ValueKind )
         {
-            return new ScalarValue<float>( stringValue.Length );
-        }
+            case ValueKind.Scalar when input.TryGetValue<string>( out var stringValue ):
+                return Scalar.Value( stringValue.Length );
 
-        if ( argument.TryGetNode<JsonElement>( out var node ) )
-        {
-            return node.ValueKind switch
-            {
-                JsonValueKind.String => new ScalarValue<float>( node.GetString()?.Length ?? 0 ),
-                JsonValueKind.Array => new ScalarValue<float>( node.GetArrayLength() ),
-                JsonValueKind.Object => new ScalarValue<float>( node.EnumerateObject().Count() ),
-                _ => Scalar.Nothing
-            };
+            case ValueKind.NodeList when input.TryGetNode<JsonElement>( out var node ):
+                return node.ValueKind switch
+                {
+                    JsonValueKind.String => Scalar.Value( node.GetString()?.Length ?? 0 ),
+                    JsonValueKind.Array => Scalar.Value( node.GetArrayLength() ),
+                    JsonValueKind.Object => Scalar.Value( node.EnumerateObject().Count() ),
+                    _ => Scalar.Nothing
+                };
         }
 
         return Scalar.Nothing;

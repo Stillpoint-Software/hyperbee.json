@@ -6,56 +6,102 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 public static class CompareExpression<TNode>
 {
-    private static readonly MethodInfo AreEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( AreEqual ) );
-    private static readonly MethodInfo AreNotEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( AreNotEqual ) );
-    private static readonly MethodInfo IsLessThanMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsLessThan ) );
-    private static readonly MethodInfo IsLessThanOrEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsLessThanOrEqual ) );
-    private static readonly MethodInfo IsGreaterThanMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsGreaterThan ) );
-    private static readonly MethodInfo IsGreaterThanOrEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsGreaterThanOrEqual ) );
+    // Expressions
 
-    private static readonly MethodInfo AndAlsoMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( AndAlso ) );
-    private static readonly MethodInfo OrElseMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( OrElse ) );
-    private static readonly MethodInfo NotMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( NotBoolean ) );
+    public static Expression Equal( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( AreEqualMethod, left, right, comparer );
 
-    public static Expression Equal( Expression left, Expression right ) => Expression.Call( AreEqualMethod, left, right );
-    public static Expression NotEqual( Expression left, Expression right ) => Expression.Call( AreNotEqualMethod, left, right );
-    public static Expression LessThan( Expression left, Expression right ) => Expression.Call( IsLessThanMethod, left, right );
-    public static Expression LessThanOrEqual( Expression left, Expression right ) => Expression.Call( IsLessThanOrEqualMethod, left, right );
-    public static Expression GreaterThan( Expression left, Expression right ) => Expression.Call( IsGreaterThanMethod, left, right );
-    public static Expression GreaterThanOrEqual( Expression left, Expression right ) => Expression.Call( IsGreaterThanOrEqualMethod, left, right );
+    public static Expression NotEqual( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( AreNotEqualMethod, left, right, comparer );
+ 
+    public static Expression LessThan( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( IsLessThanMethod, left, right, comparer );
 
-    public static Expression And( Expression left, Expression right ) => Expression.Call( AndAlsoMethod, left, right );
-    public static Expression Or( Expression left, Expression right ) => Expression.Call( OrElseMethod, left, right );
-    public static Expression Not( Expression expression ) => Expression.Call( NotMethod, expression );
+    public static Expression LessThanOrEqual( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( IsLessThanOrEqualMethod, left, right, comparer );
+ 
+    public static Expression GreaterThan( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( IsGreaterThanMethod, left, right, comparer );
 
-    public static bool AreEqual( IValueType left, IValueType right ) => left.Comparer.Compare( left, right, Operator.Equals ) == 0;
-    public static bool AreNotEqual( IValueType left, IValueType right ) => left.Comparer.Compare( left, right, Operator.NotEquals ) != 0;
-    public static bool IsLessThan( IValueType left, IValueType right ) => left.Comparer.Compare( left, right, Operator.LessThan ) < 0;
-    public static bool IsLessThanOrEqual( IValueType left, IValueType right ) => left.Comparer.Compare( left, right, Operator.LessThanOrEqual ) <= 0;
-    public static bool IsGreaterThan( IValueType left, IValueType right ) => left.Comparer.Compare( left, right, Operator.GreaterThan ) > 0;
-    public static bool IsGreaterThanOrEqual( IValueType left, IValueType right ) => left.Comparer.Compare( left, right, Operator.GreaterThanOrEqual ) >= 0;
+    public static Expression GreaterThanOrEqual( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( IsGreaterThanOrEqualMethod, left, right, comparer );
 
-    public static bool AndAlso( IValueType left, IValueType right )
+    public static Expression And( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( AndAlsoMethod, left, right, comparer );
+    
+    public static Expression Or( Expression left, Expression right, Expression comparer ) 
+        => Expression.Call( OrElseMethod, left, right, comparer );
+    
+    public static Expression Not( Expression expression, Expression comparer ) 
+        => Expression.Call( NotMethod, expression, comparer );
+
+    // MethodInfo
+
+    private const BindingFlags BindingAttr = BindingFlags.Static | BindingFlags.NonPublic;
+
+    private static readonly MethodInfo AreEqualMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(AreEqual), BindingAttr );
+    private static readonly MethodInfo AreNotEqualMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(AreNotEqual), BindingAttr );
+    private static readonly MethodInfo IsLessThanMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(IsLessThan), BindingAttr );
+    private static readonly MethodInfo IsLessThanOrEqualMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(IsLessThanOrEqual), BindingAttr );
+    private static readonly MethodInfo IsGreaterThanMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(IsGreaterThan), BindingAttr );
+    private static readonly MethodInfo IsGreaterThanOrEqualMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(IsGreaterThanOrEqual), BindingAttr );
+    private static readonly MethodInfo AndAlsoMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(AndAlso), BindingAttr );
+    private static readonly MethodInfo OrElseMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(OrElse), BindingAttr );
+    private static readonly MethodInfo NotMethod = typeof(CompareExpression<TNode>).GetMethod( nameof(NotBoolean), BindingAttr );
+
+    // Methods
+
+    private static bool AreEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    {
+        return comparer.Compare( left, right, Operator.Equals ) == 0;
+    }
+
+    private static bool AreNotEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    {
+        return comparer.Compare( left, right, Operator.NotEquals ) != 0;
+    }
+
+    private static bool IsLessThan( IValueType left, IValueType right, IValueTypeComparer comparer )
+    {
+        return comparer.Compare( left, right, Operator.LessThan ) < 0;
+    }
+
+    private static bool IsLessThanOrEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    {
+        return comparer.Compare( left, right, Operator.LessThanOrEqual ) <= 0;
+    }
+
+    private static bool IsGreaterThan( IValueType left, IValueType right, IValueTypeComparer comparer )
+    {
+        return comparer.Compare( left, right, Operator.GreaterThan ) > 0;
+    }
+
+    private static bool IsGreaterThanOrEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    {
+        return comparer.Compare( left, right, Operator.GreaterThanOrEqual ) >= 0;
+    }
+
+    private static bool AndAlso( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         if ( left is ScalarValue<bool> leftBoolValue && right is ScalarValue<bool> rightBoolValue )
             return leftBoolValue.Value && rightBoolValue.Value;
 
-        return left.Comparer.Exists( left ) && right.Comparer.Exists( right );
+        return comparer.Exists( left ) && comparer.Exists( right );
     }
 
-    public static bool OrElse( IValueType left, IValueType right )
+    private static bool OrElse( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         if ( left is ScalarValue<bool> leftBoolValue && right is ScalarValue<bool> rightBoolValue )
             return leftBoolValue.Value || rightBoolValue.Value;
 
-        return left.Comparer.Exists( left ) || right.Comparer.Exists( right );
+        return comparer.Exists( left ) || comparer.Exists( right );
     }
 
-    public static bool NotBoolean( IValueType value )
+    private static bool NotBoolean( IValueType value, IValueTypeComparer comparer )
     {
         if ( value is ScalarValue<bool> { Value: false } )
             return true;
 
-        return !value.Comparer.Exists( value );
+        return !comparer.Exists( value );
     }
 }

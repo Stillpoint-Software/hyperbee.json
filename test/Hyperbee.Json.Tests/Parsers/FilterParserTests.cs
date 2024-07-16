@@ -3,8 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Descriptors.Element;
-using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
@@ -199,34 +197,41 @@ public class FilterParserTests : JsonTestBase
     {
         if ( sourceType == typeof( JsonElement ) )
         {
-            var elementDescriptor = new ElementTypeDescriptor();
-            var elementRuntimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonElement> ), "runtimeContext" );
-            return (FilterParser<JsonElement>.Parse( filter, elementDescriptor ), elementRuntimeContext);
+            var runtimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonElement> ), "runtimeContext" );
+            return (FilterParser<JsonElement>.Parse( filter ), runtimeContext);
         }
 
-        var nodeDescriptor = new NodeTypeDescriptor();
-        var nodeRuntimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonNode> ), "runtimeContext" );
-        return (FilterParser<JsonNode>.Parse( filter, nodeDescriptor ), nodeRuntimeContext);
+        if ( sourceType == typeof(JsonNode) )
+        {
+            var runtimeContext = Expression.Parameter( typeof(FilterRuntimeContext<JsonNode>), "runtimeContext" );
+            return (FilterParser<JsonNode>.Parse( filter ), runtimeContext);
+        }
+
+        throw new NotImplementedException();
     }
 
     private static bool Execute( Expression expression, ParameterExpression param, Type sourceType )
     {
         if ( sourceType == typeof( JsonElement ) )
         {
-            var func = Expression
+            var filterFunc = Expression
                 .Lambda<Func<FilterRuntimeContext<JsonElement>, bool>>( expression, param )
                 .Compile();
-            var descriptor = new ElementTypeDescriptor();
-            return func( new FilterRuntimeContext<JsonElement>( new JsonElement(), new JsonElement(), descriptor ) );
+
+            var runtimeContext = new FilterRuntimeContext<JsonElement>( new JsonElement(), new JsonElement() );
+
+            return filterFunc( runtimeContext );
         }
 
         if ( sourceType == typeof( JsonNode ) )
         {
-            var func = Expression
+            var filterFunc = Expression
                 .Lambda<Func<FilterRuntimeContext<JsonNode>, bool>>( expression, param )
                 .Compile();
-            var descriptor = new NodeTypeDescriptor();
-            return func( new FilterRuntimeContext<JsonNode>( new JsonObject(), new JsonObject(), descriptor ) );
+
+            var runtimeContext = new FilterRuntimeContext<JsonNode>( new JsonObject(), new JsonObject() );
+
+            return filterFunc( runtimeContext );
         }
 
         throw new NotImplementedException();
@@ -237,40 +242,25 @@ public class FilterParserTests : JsonTestBase
         if ( sourceType == typeof( JsonElement ) )
         {
             var source = GetDocument<JsonDocument>();
-            var descriptor = new ElementTypeDescriptor();
-            var func = FilterParser<JsonElement>.Compile( filter, descriptor );
+            var filterFunc = FilterParser<JsonElement>.Compile( filter );
+            var runtimeContext = new FilterRuntimeContext<JsonElement>( source.RootElement, source.RootElement );
 
-            return func( new FilterRuntimeContext<JsonElement>( source.RootElement, source.RootElement, descriptor ) );
+            return filterFunc( runtimeContext );
         }
         else
         {
-            // arrange 
             var source = GetDocument<JsonNode>();
-            var descriptor = new NodeTypeDescriptor();
-            var func = FilterParser<JsonNode>.Compile( filter, descriptor );
+            var filterFunc = FilterParser<JsonNode>.Compile( filter );
+            var runtimeContext = new FilterRuntimeContext<JsonNode>( source, source );
 
-            // act
-            return func( new FilterRuntimeContext<JsonNode>( source, source, descriptor ) );
+            return filterFunc( runtimeContext );
         }
     }
 
     private static float Select( string filter, Type sourceType )
     {
-        if ( sourceType == typeof( JsonElement ) )
-        {
-            // arrange 
-            var source = GetDocument<JsonDocument>();
-
-            // act
-            return source.Select( filter ).First().GetSingle();
-        }
-        else
-        {
-            // arrange 
-            var source = GetDocument<JsonNode>();
-
-            // act
-            return source.Select( filter ).First().GetValue<float>();
-        }
+        return sourceType == typeof( JsonElement ) 
+            ? GetDocument<JsonDocument>().Select( filter ).First().GetSingle() 
+            : GetDocument<JsonNode>().Select( filter ).First().GetValue<float>();
     }
 }

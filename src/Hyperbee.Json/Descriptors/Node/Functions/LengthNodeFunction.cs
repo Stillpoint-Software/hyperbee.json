@@ -13,18 +13,19 @@ public class LengthNodeFunction() : ExtensionFunction( LengthMethod, ExtensionIn
 
     public static IValueType Length( IValueType input )
     {
-        if ( input.TryGetValue<string>( out var stringValue ) )
-            return Scalar.Value( stringValue.Length );
-
-        if ( input.TryGetNode<JsonNode>( out var node ) )
+        switch ( input.ValueKind )
         {
-            return node?.GetValueKind() switch
-            {
-                JsonValueKind.String => Scalar.Value( node.GetValue<string>()?.Length ?? 0 ),
-                JsonValueKind.Array => Scalar.Value( node.AsArray().Count ),
-                JsonValueKind.Object => Scalar.Value( node.AsObject().Count ),
-                _ => Scalar.Nothing
-            };
+            case ValueKind.Scalar when input.TryGetValue<string>( out var stringValue ):
+                return Scalar.Value( stringValue.Length );
+
+            case ValueKind.NodeList when input.TryGetNode<JsonNode>( out var node ):
+                return node?.GetValueKind() switch
+                {
+                    JsonValueKind.String => Scalar.Value( node.GetValue<string>()?.Length ?? 0 ),
+                    JsonValueKind.Array => Scalar.Value( node.AsArray().Count ),
+                    JsonValueKind.Object => Scalar.Value( node.AsObject().Count ),
+                    _ => Scalar.Nothing
+                };
         }
 
         return Scalar.Nothing;

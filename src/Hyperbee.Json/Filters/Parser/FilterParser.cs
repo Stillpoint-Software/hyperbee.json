@@ -28,14 +28,16 @@ public class FilterParser<TNode> : FilterParser
 {
     // use a common instance
     internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" );
+    internal static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
-    public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
+    public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter )
     {
-        var expression = Parse( filter, descriptor );
+        var expression = Parse( filter );
+
         return Expression.Lambda<Func<FilterRuntimeContext<TNode>, bool>>( expression, RuntimeContextExpression ).Compile();
     }
 
-    internal static Expression Parse( ReadOnlySpan<char> filter, ITypeDescriptor<TNode> descriptor )
+    internal static Expression Parse( ReadOnlySpan<char> filter )
     {
         filter = filter.Trim(); // remove leading and trailing whitespace to simplify parsing
 
@@ -43,17 +45,13 @@ public class FilterParser<TNode> : FilterParser
         var parenDepth = 0;
         var state = new ParserState( filter, [], ref pos, ref parenDepth, Operator.NonOperator, EndLine );
 
-        var expression = Parse( ref state, descriptor );
+        var expression = Parse( ref state );
 
         return TruthyExpression.IsTruthyExpression( expression );
     }
 
-    internal static Expression Parse( ref ParserState state, ITypeDescriptor<TNode> descriptor ) // recursion entrypoint
+    internal static Expression Parse( ref ParserState state ) // recursion entrypoint
     {
-        // validate input
-        if ( descriptor == null )
-            throw new ArgumentNullException( nameof( descriptor ) );
-
         if ( state.EndOfBuffer )
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
 
@@ -63,7 +61,7 @@ public class FilterParser<TNode> : FilterParser
         do
         {
             MoveNext( ref state );
-            items.Add( GetExprItem( ref state, descriptor ) ); // will recurse for nested expressions
+            items.Add( GetExprItem( ref state ) ); // will recurse for nested expressions
 
         } while ( state.IsParsing );
 
@@ -75,30 +73,30 @@ public class FilterParser<TNode> : FilterParser
         var baseItem = items[0];
         var index = 1;
 
-        return Merge( in state, baseItem, ref index, items, descriptor );
+        return Merge( in state, baseItem, ref index, items );
     }
 
 
-    private static ExprItem GetExprItem( ref ParserState state, ITypeDescriptor<TNode> descriptor )
+    private static ExprItem GetExprItem( ref ParserState state )
     {
         var expressionInfo = new ExpressionInfo();
 
-        if ( NotExpressionFactory.TryGetExpression( ref state, out var expression, ref expressionInfo, descriptor ) )
+        if ( NotExpressionFactory.TryGetExpression<TNode>( ref state, out var expression, ref expressionInfo ) )
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( ParenExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, descriptor ) ) // will recurse.
+        if ( ParenExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) ) // will recurse.
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( SelectExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, descriptor ) )
+        if ( SelectExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, descriptor ) ) // may recurse for each function argument.
+        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) ) // may recurse for each function argument.
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( LiteralExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, descriptor ) )
+        if ( LiteralExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, descriptor ) )
+        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) )
             return ExprItem( ref state, expression, expressionInfo );
 
         throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
@@ -278,11 +276,11 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static Expression Merge( in ParserState state, ExprItem left, ref int index, List<ExprItem> items, ITypeDescriptor<TNode> descriptor, bool mergeOneOnly = false )
+    private static Expression Merge( in ParserState state, ExprItem left, ref int index, List<ExprItem> items, bool mergeOneOnly = false )
     {
         if ( items.Count == 1 )
         {
-            ThrowIfInvalidComparison( in state, left, null ); // single item, no recursion
+            ThrowIfInvalidCompare( in state, left, null ); // single item, no recursion
         }
         else
         {
@@ -292,12 +290,12 @@ public class FilterParser<TNode> : FilterParser
 
                 while ( !CanMergeItems( left, right ) )
                 {
-                    Merge( in state, right, ref index, items, descriptor, mergeOneOnly: true ); // recursive call - right becomes left
+                    Merge( in state, right, ref index, items, mergeOneOnly: true ); // recursive call - right becomes left
                 }
 
-                ThrowIfInvalidComparison( in state, left, right );
+                ThrowIfInvalidCompare( in state, left, right );
 
-                MergeItems( left, right, descriptor );
+                MergeItems( left, right );
 
                 if ( mergeOneOnly )
                     return left.Expression;
@@ -332,80 +330,49 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static void MergeItems( ExprItem left, ExprItem right, ITypeDescriptor<TNode> descriptor )
+    private static void MergeItems( ExprItem left, ExprItem right )
     {
-        left.Expression = BindComparerExpression( descriptor, left.Expression );
-        right.Expression = BindComparerExpression( descriptor, right.Expression );
+        left.Expression = ConvertExpression<IValueType>( left.Expression );
+        right.Expression = ConvertExpression<IValueType>( right.Expression );
+
+        var comparer = Expression.Constant( Descriptor.Comparer, typeof( IValueTypeComparer ) );
 
         left.Expression = left.Operator switch
         {
-            Operator.Equals => CompareExpression<TNode>.Equal( left.Expression, right.Expression ),
-            Operator.NotEquals => CompareExpression<TNode>.NotEqual( left.Expression, right.Expression ),
-            Operator.GreaterThan => CompareExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
-            Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
-            Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression ),
-            Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
-            Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression ),
-            Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
-            Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
+            Operator.Equals => CompareExpression<TNode>.Equal( left.Expression, right.Expression, comparer ),
+            Operator.NotEquals => CompareExpression<TNode>.NotEqual( left.Expression, right.Expression, comparer ),
+            Operator.GreaterThan => CompareExpression<TNode>.GreaterThan( left.Expression, right.Expression, comparer ),
+            Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression, comparer ),
+            Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression, comparer ),
+            Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression, comparer ),
+            Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression, comparer ),
+            Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression, comparer ),
+            Operator.Not => CompareExpression<TNode>.Not( right.Expression, comparer ),
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };
 
-        left.Expression = ConvertBoolToScalarExpression( left.Expression );
+        left.Expression = ConvertBoolToValueTypeExpression( left.Expression );
 
         left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
 
         return;
 
-        static Expression ConvertBoolToScalarExpression( Expression leftExpression )
+        static Expression ConvertBoolToValueTypeExpression( Expression leftExpression )
         {
-            // convert bool result to Scalar.True or Scalar.False
-            Expression conditionalExpression = Expression.Condition(
-                leftExpression,
-                Expression.Constant( Scalar.True, typeof( IValueType ) ),
-                Expression.Constant( Scalar.False, typeof( IValueType ) )
-            );
-
-            return conditionalExpression;
+            // Convert to ScalarValue<bool> using implicit operator and then return as a IValueType
+            return ConvertExpression<IValueType>( ConvertExpression<ScalarValue<bool>>( leftExpression ) );
         }
 
-        static Expression BindComparerExpression( ITypeDescriptor<TNode> descriptor, Expression expression )
+        static Expression ConvertExpression<TType>( Expression expression )
         {
-            // Create an Expression that does:
-            //
-            // static IValueType BindComparerExpression(ITypeDescriptor<TNode> descriptor, IValueType value)
-            // {
-            //    value.Comparer = parserContext.Descriptor.Comparer;
-            //    return value;
-            // }
-
-            if ( expression == null )
-                return null;
-
-            var valueVariable = Expression.Variable( typeof( IValueType ), "value" );
-
-            var valueAssign = Expression.Assign(
-                valueVariable,
-                Expression.Convert( expression, typeof( IValueType ) ) );
-
-            var comparerAssign = Expression.Assign(
-                Expression.PropertyOrField( valueVariable, "Comparer" ),
-                Expression.Constant( descriptor.Comparer, typeof( IValueTypeComparer ) )
-            );
-
-            return Expression.Block(
-                [valueVariable],
-                valueAssign,
-                comparerAssign,
-                valueVariable
-            );
+            return expression == null ? null : Expression.Convert( expression, typeof( TType ) );
         }
     }
 
     // Throw helpers
 
-    private static void ThrowIfInvalidComparison( in ParserState state, ExprItem left, ExprItem right )
+    private static void ThrowIfInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
     {
         ThrowIfConstantIsNotCompared( in state, left, right );
         ThrowIfFunctionInvalidCompare( in state, left );

@@ -17,7 +17,7 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
         _accessor ??= new NodeValueAccessor();
 
     public IFilterEvaluator<JsonNode> FilterEvaluator =>
-        _evaluator ??= new FilterEvaluator<JsonNode>( this );
+        _evaluator ??= new FilterEvaluator<JsonNode>();
 
     public IValueTypeComparer Comparer =>
         _comparer ??= new ValueTypeComparer<JsonNode>( Accessor );

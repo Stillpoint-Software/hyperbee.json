@@ -17,7 +17,7 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
         _accessor ??= new ElementValueAccessor();
 
     public IFilterEvaluator<JsonElement> FilterEvaluator =>
-        _evaluator ??= new FilterEvaluator<JsonElement>( this );
+        _evaluator ??= new FilterEvaluator<JsonElement>();
 
     public IValueTypeComparer Comparer =>
         _comparer ??= new ValueTypeComparer<JsonElement>( Accessor );

@@ -9,10 +9,12 @@ public static class TruthyExpression
 {
     private static readonly MethodInfo IsTruthyMethod = typeof( TruthyExpression ).GetMethod( nameof( IsTruthy ), BindingFlags.NonPublic | BindingFlags.Static );
 
-    public static Expression IsTruthyExpression( Expression expression ) =>
-        expression.Type == typeof( bool )
+    public static Expression IsTruthyExpression( Expression expression )
+    {
+        return expression.Type == typeof( bool )
             ? expression
             : Expression.Call( IsTruthyMethod, expression );
+    }
 
     private static bool IsTruthy( IValueType value )
     {

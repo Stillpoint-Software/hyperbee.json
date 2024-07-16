@@ -20,7 +20,7 @@ public class ValueElementFunction() : ExtensionFunction( ValueMethod, ExtensionI
 
         return node.ValueKind switch
         {
-            JsonValueKind.Number when node.TryGetInt32( out var intValue ) => Scalar.Value( intValue ),
+            JsonValueKind.Number when node.TryGetInt32( out var value ) => Scalar.Value( value ),
             JsonValueKind.Number => Scalar.Value( node.GetSingle() ),
             JsonValueKind.String => Scalar.Value( node.GetString() ),
             JsonValueKind.Object => Scalar.Value( node.EnumerateObject().Any() ),

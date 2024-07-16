@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser;
@@ -20,7 +19,7 @@ public abstract class ExtensionFunction
         FunctionInfo = info;
     }
 
-    internal Expression GetExpression<TNode>( ref ParserState state, ITypeDescriptor<TNode> descriptor )
+    internal Expression GetExpression<TNode>( ref ParserState state )
     {
         var arguments = new Expression[_argumentCount];
         var expectNormalized = FunctionInfo.HasFlag( ExtensionInfo.ExpectNormalized );
@@ -39,7 +38,7 @@ public abstract class ExtensionFunction
             if ( localState.EndOfBuffer )
                 throw new NotSupportedException( $"Invalid arguments for filter: \"{state.Buffer}\"." );
 
-            var argument = FilterParser<TNode>.Parse( ref localState, descriptor );
+            var argument = FilterParser<TNode>.Parse( ref localState );
             arguments[i] = ArgumentExpression<TNode>( expectNormalized, argument );
         }
 

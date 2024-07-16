@@ -11,7 +11,7 @@ public static class TruthyExpression
 
     public static Expression IsTruthyExpression( Expression expression )
     {
-        return expression.Type == typeof(bool)
+        return expression.Type == typeof( bool )
             ? expression
             : Expression.Call( IsTruthyMethod, expression );
     }

@@ -1,20 +1,21 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class JsonExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterParserContext<TNode> parserContext )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
     {
-        if ( parserContext.Descriptor.Accessor.TryParseNode( state.Item.ToString(), out var node ) )
+        if ( !descriptor.Accessor.TryParseNode( state.Item.ToString(), out var node ) )
         {
-            expression = Expression.Constant( new NodeList<TNode>( [node], isNormalized: true ) );
-            expressionInfo.Kind = ExpressionKind.Json;
-            return true;
+            expression = null;
+            return false;
         }
 
-        expression = null;
-        return false;
+        expression = Expression.Constant( new NodeList<TNode>( [node], isNormalized: true ) );
+        exprInfo.Kind = ExpressionKind.Json;
+        return true;
     }
 }

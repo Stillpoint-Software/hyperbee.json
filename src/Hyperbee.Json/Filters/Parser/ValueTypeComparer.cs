@@ -238,10 +238,10 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         {
             nodeType = itemValue switch
             {
-                string itemString => new ScalarValue<string>( itemString ),
-                bool itemBool => new ScalarValue<bool>( itemBool ),
-                float itemFloat => new ScalarValue<float>( itemFloat ),
-                int itemInt => new ScalarValue<int>( itemInt ),
+                string itemString => Scalar.Value( itemString ),
+                bool itemBool => Scalar.Value( itemBool ),
+                float itemFloat => Scalar.Value( itemFloat ),
+                int itemInt => Scalar.Value( itemInt ),
                 null => Scalar.Null,
                 _ => throw new NotSupportedException( "Unsupported value type." )
             };

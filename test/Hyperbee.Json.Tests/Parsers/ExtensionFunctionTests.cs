@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Hyperbee.Json.Tests.Parsers;
 
 [TestClass]
-public class FilterExtensionFunctionTests : JsonTestBase
+public class ExtensionFunctionTests : JsonTestBase
 {
     [TestMethod]
     public void Should_CallCustomFunction()
@@ -32,10 +32,10 @@ public class FilterExtensionFunctionTests : JsonTestBase
         Assert.AreEqual( "$.store.book[2].title", results[0].GetPath() );
     }
 
-    private class PathNodeFunction() : FilterExtensionFunction( PathMethodInfo, FilterExtensionInfo.MustCompare )
+    private class PathNodeFunction() : ExtensionFunction( PathMethod, ExtensionInfo.MustCompare )
     {
         public const string Name = "path";
-        private static readonly MethodInfo PathMethodInfo = GetMethod<PathNodeFunction>( nameof( Path ) );
+        private static readonly MethodInfo PathMethod = GetMethod<PathNodeFunction>( nameof( Path ) );
 
         private static ScalarValue<string> Path( IValueType argument )
         {

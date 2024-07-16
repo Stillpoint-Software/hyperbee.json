@@ -3,5 +3,5 @@
 internal class ExpressionInfo
 {
     public ExpressionKind Kind { get; set; }
-    public FilterExtensionInfo FunctionInfo { get; set; }
+    public ExtensionInfo FunctionInfo { get; set; }
 }

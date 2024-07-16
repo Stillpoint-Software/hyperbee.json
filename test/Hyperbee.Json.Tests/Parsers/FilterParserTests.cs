@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Element;
 using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -198,12 +199,14 @@ public class FilterParserTests : JsonTestBase
     {
         if ( sourceType == typeof( JsonElement ) )
         {
-            var elementContext = new FilterParserContext<JsonElement>( new ElementTypeDescriptor() );
-            return (FilterParser<JsonElement>.Parse( filter, elementContext ), elementContext.RuntimeContext);
+            var elementDescriptor = new ElementTypeDescriptor();
+            var elementRuntimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonElement> ), "runtimeContext" );
+            return (FilterParser<JsonElement>.Parse( filter, elementDescriptor ), elementRuntimeContext);
         }
 
-        var nodeContext = new FilterParserContext<JsonNode>( new NodeTypeDescriptor() );
-        return (FilterParser<JsonNode>.Parse( filter, nodeContext ), nodeContext.RuntimeContext);
+        var nodeDescriptor = new NodeTypeDescriptor();
+        var nodeRuntimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonNode> ), "runtimeContext" );
+        return (FilterParser<JsonNode>.Parse( filter, nodeDescriptor ), nodeRuntimeContext);
     }
 
     private static bool Execute( Expression expression, ParameterExpression param, Type sourceType )

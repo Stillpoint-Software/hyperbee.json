@@ -1,7 +1,7 @@
 ﻿namespace Hyperbee.Json.Filters.Parser;
 
 [Flags]
-public enum FilterExtensionInfo
+public enum ExtensionInfo
 {
     MustCompare = 0x01,
     MustNotCompare = 0x02,

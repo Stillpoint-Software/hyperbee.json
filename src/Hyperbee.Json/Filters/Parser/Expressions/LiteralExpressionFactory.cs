@@ -1,20 +1,20 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class LiteralExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterParserContext<TNode> parserContext )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
     {
         expression = GetLiteralExpression( state.Item );
 
         if ( expression == null )
             return false;
 
-        expressionInfo.Kind = ExpressionKind.Literal;
+        exprInfo.Kind = ExpressionKind.Literal;
         return true;
-
     }
 
     private static ConstantExpression GetLiteralExpression( ReadOnlySpan<char> item )
@@ -36,9 +36,6 @@ internal class LiteralExpressionFactory : IExpressionFactory
             return Expression.Constant( Scalar.Value( item[1..^1].ToString() ) ); // remove quotes
 
         // Check for numbers
-        //
-        // The current design treats all numbers are floats since we don't
-        // know what's in the data or the other side of the operator yet.
 
         if ( int.TryParse( item, out int intResult ) )
             return Expression.Constant( Scalar.Value( intResult ) );

@@ -201,9 +201,9 @@ public class FilterParserTests : JsonTestBase
             return (FilterParser<JsonElement>.Parse( filter ), runtimeContext);
         }
 
-        if ( sourceType == typeof(JsonNode) )
+        if ( sourceType == typeof( JsonNode ) )
         {
-            var runtimeContext = Expression.Parameter( typeof(FilterRuntimeContext<JsonNode>), "runtimeContext" );
+            var runtimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonNode> ), "runtimeContext" );
             return (FilterParser<JsonNode>.Parse( filter ), runtimeContext);
         }
 
@@ -259,8 +259,8 @@ public class FilterParserTests : JsonTestBase
 
     private static float Select( string filter, Type sourceType )
     {
-        return sourceType == typeof( JsonElement ) 
-            ? GetDocument<JsonDocument>().Select( filter ).First().GetSingle() 
+        return sourceType == typeof( JsonElement )
+            ? GetDocument<JsonDocument>().Select( filter ).First().GetSingle()
             : GetDocument<JsonNode>().Select( filter ).First().GetValue<float>();
     }
 }

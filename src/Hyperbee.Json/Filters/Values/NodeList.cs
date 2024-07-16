@@ -12,6 +12,4 @@ public readonly struct NodeList<TNode>( IEnumerable<TNode> value, bool isNormali
     public IEnumerator<TNode> GetEnumerator() => Value.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    public TNode AsNode() => Value.FirstOrDefault(); //BF
 }

@@ -11,15 +11,15 @@ public class SearchNodeFunction() : ExtensionFunction( SearchMethod, ExtensionIn
     public const string Name = "search";
     private static readonly MethodInfo SearchMethod = GetMethod<SearchNodeFunction>( nameof( Search ) );
 
-    public static ScalarValue<bool> Search( IValueType input, IValueType pattern )
+    public static ScalarValue<bool> Search( IValueType argValue, IValueType argPattern )
     {
-        if ( !input.TryGetValue<string>( out var value ) || value == null )
+        if ( !argValue.TryGetValue<string>( out var value ) || value == null )
             return false;
 
-        if ( !pattern.TryGetValue<string>( out var patternValue ) || patternValue == null )
+        if ( !argPattern.TryGetValue<string>( out var pattern ) || pattern == null )
             return false;
 
-        var regex = new Regex( IRegexp.ConvertToIRegexp( patternValue ) );
+        var regex = new Regex( IRegexp.ConvertToIRegexp( pattern ) );
         return regex.IsMatch( value );
     }
 }

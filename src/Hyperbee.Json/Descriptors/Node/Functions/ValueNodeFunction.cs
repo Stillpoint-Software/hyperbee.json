@@ -21,7 +21,7 @@ public class ValueNodeFunction() : ExtensionFunction( ValueMethod, ExtensionInfo
 
         return node?.GetValueKind() switch
         {
-            JsonValueKind.Number when node.AsValue().TryGetValue<int>( out var intValue ) => Scalar.Value( intValue ),
+            JsonValueKind.Number when node.AsValue().TryGetValue<int>( out var value ) => Scalar.Value( value ),
             JsonValueKind.Number => Scalar.Value( node.GetValue<float>() ),
             JsonValueKind.String => Scalar.Value( node.GetValue<string>() ),
             JsonValueKind.Object => Scalar.Value( node.AsObject().Count != 0 ),

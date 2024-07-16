@@ -280,7 +280,7 @@ public class FilterParser<TNode> : FilterParser
     {
         if ( items.Count == 1 )
         {
-            ThrowIfInvalidComparison( in state, left, null ); // single item, no recursion
+            ThrowIfInvalidCompare( in state, left, null ); // single item, no recursion
         }
         else
         {
@@ -293,7 +293,7 @@ public class FilterParser<TNode> : FilterParser
                     Merge( in state, right, ref index, items, mergeOneOnly: true ); // recursive call - right becomes left
                 }
 
-                ThrowIfInvalidComparison( in state, left, right );
+                ThrowIfInvalidCompare( in state, left, right );
 
                 MergeItems( left, right );
 
@@ -372,7 +372,7 @@ public class FilterParser<TNode> : FilterParser
 
     // Throw helpers
 
-    private static void ThrowIfInvalidComparison( in ParserState state, ExprItem left, ExprItem right )
+    private static void ThrowIfInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
     {
         ThrowIfConstantIsNotCompared( in state, left, right );
         ThrowIfFunctionInvalidCompare( in state, left );

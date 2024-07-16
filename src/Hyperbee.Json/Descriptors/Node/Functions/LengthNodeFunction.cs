@@ -11,14 +11,14 @@ public class LengthNodeFunction() : ExtensionFunction( LengthMethod, ExtensionIn
     public const string Name = "length";
     private static readonly MethodInfo LengthMethod = GetMethod<LengthNodeFunction>( nameof( Length ) );
 
-    public static IValueType Length( IValueType input )
+    public static IValueType Length( IValueType argument )
     {
-        switch ( input.ValueKind )
+        switch ( argument.ValueKind )
         {
-            case ValueKind.Scalar when input.TryGetValue<string>( out var stringValue ):
-                return Scalar.Value( stringValue.Length );
+            case ValueKind.Scalar when argument.TryGetValue<string>( out var value ):
+                return Scalar.Value( value.Length );
 
-            case ValueKind.NodeList when input.TryGetNode<JsonNode>( out var node ):
+            case ValueKind.NodeList when argument.TryGetNode<JsonNode>( out var node ):
                 return node?.GetValueKind() switch
                 {
                     JsonValueKind.String => Scalar.Value( node.GetValue<string>()?.Length ?? 0 ),

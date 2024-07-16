@@ -137,13 +137,15 @@ public class NodeTypeComparerTests : JsonTestBase
 
     private static ValueTypeComparer<JsonNode> GetComparer() => new( new NodeValueAccessor() );
 
-    private static IValueType GetNodeType( object item ) =>
-        item switch
+    private static IValueType GetNodeType( object item )
+    {
+        return item switch
         {
-            string itemString => new ScalarValue<string>( itemString ),
-            float itemFloat => new ScalarValue<float>( itemFloat ),
-            bool itemBool => new ScalarValue<bool>( itemBool ),
+            string itemString => Scalar.Value( itemString ),
+            float itemFloat => Scalar.Value( itemFloat ),
+            bool itemBool => Scalar.Value( itemBool ),
             IEnumerable<JsonNode> nodes => new NodeList<JsonNode>( nodes, true ),
             _ => Scalar.Nothing
         };
+    }
 }

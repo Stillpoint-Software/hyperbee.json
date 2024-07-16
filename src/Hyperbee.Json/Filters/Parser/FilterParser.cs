@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -33,6 +33,7 @@ public class FilterParser<TNode> : FilterParser
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter )
     {
         var expression = Parse( filter );
+
         return Expression.Lambda<Func<FilterRuntimeContext<TNode>, bool>>( expression, RuntimeContextExpression ).Compile();
     }
 
@@ -89,13 +90,13 @@ public class FilterParser<TNode> : FilterParser
         if ( SelectExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( FunctionExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo, Descriptor ) ) // may recurse for each function argument.
+        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) ) // may recurse for each function argument.
             return ExprItem( ref state, expression, expressionInfo );
 
         if ( LiteralExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( JsonExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo, Descriptor ) )
+        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) )
             return ExprItem( ref state, expression, expressionInfo );
 
         throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
@@ -350,28 +351,22 @@ public class FilterParser<TNode> : FilterParser
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };
 
-        left.Expression = ConvertBoolToScalarExpression( left.Expression );
+        left.Expression = ConvertBoolToValueTypeExpression( left.Expression );
 
         left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
 
         return;
 
-        static Expression ConvertBoolToScalarExpression( Expression leftExpression )
+        static Expression ConvertBoolToValueTypeExpression( Expression leftExpression )
         {
-            // convert bool result to Scalar.True or Scalar.False
-            Expression conditionalExpression = Expression.Condition(
-                leftExpression,
-                Expression.Constant( Scalar.True, typeof( IValueType ) ),
-                Expression.Constant( Scalar.False, typeof( IValueType ) )
-            );
-
-            return conditionalExpression;
+            // Convert to ScalarValue<bool> using implicit operator and then return as a IValueType
+            return ConvertExpression<IValueType>( ConvertExpression<ScalarValue<bool>>( leftExpression ) );
         }
 
         static Expression ConvertExpression<TType>( Expression expression )
         {
-            return expression == null ? null : Expression.Convert( expression, typeof(TType) );
+            return expression != null ? Expression.Convert( expression, typeof(TType) ) : null;
         }
     }
 

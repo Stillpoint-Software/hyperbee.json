@@ -21,11 +21,12 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                     var length = value.GetArrayLength();
                     var results = new (JsonElement, string, SelectorKind)[length];
 
-                    for ( var index = length - 1; index >= 0; index-- )
+                    var reverseIndex = length - 1;
+                    for ( var index = 0; index < length; index++, reverseIndex-- )
                     {
                         var child = value[index];
                         if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
-                            results[index] = (child, index.ToString(), SelectorKind.Index);
+                            results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
                     }
 
                     return results;

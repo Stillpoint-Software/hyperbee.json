@@ -20,11 +20,12 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                     var length = arrayValue.Count;
                     var results = new (JsonNode, string, SelectorKind)[length];
 
-                    for ( var index = length - 1; index >= 0; index-- )
+                    var reverseIndex = length - 1;
+                    for ( var index = 0; index < length; index++, reverseIndex-- )
                     {
                         var child = arrayValue[index];
                         if ( includeValues || child is JsonObject or JsonArray )
-                            results[index] = (child, index.ToString(), SelectorKind.Index);
+                            results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
                     }
 
                     return results;

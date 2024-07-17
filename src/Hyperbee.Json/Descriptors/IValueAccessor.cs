@@ -1,4 +1,6 @@
-﻿namespace Hyperbee.Json.Descriptors;
+﻿using System.Text.Json.Nodes;
+
+namespace Hyperbee.Json.Descriptors;
 
 public interface IValueAccessor<TNode>
 {
@@ -6,9 +8,9 @@ public interface IValueAccessor<TNode>
     bool TryGetElementAt( in TNode value, int index, out TNode element );
     NodeKind GetNodeKind( in TNode value );
     int GetArrayLength( in TNode value );
-    bool TryGetChildValue( in TNode value, string childSelector, SelectorKind selectorKind, out TNode childValue );
+    bool TryGetChild( in TNode value, string childSelector, SelectorKind selectorKind, out TNode childValue );
     bool TryParseNode( ReadOnlySpan<char> item, out TNode value );
     bool DeepEquals( TNode left, TNode right );
-    bool TryGetValueFromNode( TNode item, out object value );
+    bool TryGetValueFromNode( TNode item, out IConvertible value );
     bool TryGetFromPointer( in TNode value, JsonPathSegment segment, out TNode childValue );
 }

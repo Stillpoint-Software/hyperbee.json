@@ -218,6 +218,14 @@ JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
 var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
 ```
 
+## Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json) ?
+
+- High Performance.
+- Supports both `JsonElement`, and `JsonNode`.
+- Deferred execution queries with `IEnumerable`.
+- Extendable to support additional JSON document types and functions.
+- RFC conforming JSONPath implementation.
+
 ## Comparison with Other Libraries
 
 There are excellent libraries available for RFC-9535 .NET JsonPath.
@@ -231,6 +239,7 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
   
 - **Cons:**
   - No support for `JsonElement`.
+  - More memory intensive.
   - Not quite as fast as other `System.Text.Json` implementations.
    
 ### [JsonCons.NET](https://danielaparker.github.io/JsonCons.Net/articles/JsonPath/JsonConsJsonPath.html)
@@ -247,19 +256,12 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
 
 - **Pros:**
   - Comprehensive feature set.
+  - Deferred execution queries with `IEnumerable`.
   - Documentation and examples.
   - Strong community support.
 
 - **Cons:**
   - No support for `JsonElement`, or `JsonNode`.
-
-### Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json) ?
-
-- High Performance.
-- Supports both `JsonElement`, and `JsonNode`.
-- Deferred execution queries with `IEnumerable`.
-- Extendable to support additional JSON document types and functions.
-- RFC conforming JSONPath implementation.
 
 ## Benchmarks
 
@@ -305,38 +307,37 @@ Here is a performance comparison of various queries on the standard book store d
 ```
 
 ```
-| Method                  | Filter                           | Mean      | Error      | StdDev    | Allocated
-|------------------------ |--------------------------------- |---------- |----------- |---------- |----------
-| Hyperbee_JsonElement    | $..* `First()`                   |  3.186 us |  0.6615 us | 0.0363 us |    4.3 KB
-| Hyperbee_JsonNode       | $..* `First()`                   |  3.521 us |  0.1192 us | 0.0065 us |   3.45 KB
-| JsonEverything_JsonNode | $..* `First()`                   |  3.545 us |  0.7400 us | 0.0406 us |   3.53 KB
-| JsonCons_JsonElement    | $..* `First()`                   |  5.793 us |  1.3811 us | 0.0757 us |   8.48 KB
-| Newtonsoft_JObject      | $..* `First()`                   |  9.119 us |  5.3278 us | 0.2920 us |  14.22 KB
-|                         |                                  |           |            |           |          
-| JsonCons_JsonElement    | $..*                             |  6.098 us |  2.0947 us | 0.1148 us |   8.45 KB
-| Hyperbee_JsonElement    | $..*                             |  8.812 us |  1.6812 us | 0.0922 us |   11.1 KB
-| Hyperbee_JsonNode       | $..*                             | 10.621 us |  1.2452 us | 0.0683 us |  10.91 KB
-| Newtonsoft_JObject      | $..*                             | 11.037 us |  5.4690 us | 0.2998 us |  14.86 KB
-| JsonEverything_JsonNode | $..*                             | 23.329 us |  2.2255 us | 0.1220 us |  36.81 KB
-|                         |                                  |           |            |           |          
-| Hyperbee_JsonElement    | $..price                         |  5.248 us |  3.4306 us | 0.1880 us |   6.45 KB
-| JsonCons_JsonElement    | $..price                         |  5.402 us |  0.3285 us | 0.0180 us |   5.65 KB
-| Hyperbee_JsonNode       | $..price                         |  8.483 us |  2.0999 us | 0.1151 us |   8.86 KB
-| Newtonsoft_JObject      | $..price                         | 10.109 us |  9.6403 us | 0.5284 us |   14.4 KB
-| JsonEverything_JsonNode | $..price                         | 17.054 us | 10.5303 us | 0.5772 us |  27.63 KB
-|                         |                                  |           |            |           |          
-| Hyperbee_JsonElement    | $.store.book[?(@.price == 8.99)] |  4.486 us |  3.2931 us | 0.1805 us |   5.82 KB
-| JsonCons_JsonElement    | $.store.book[?(@.price == 8.99)] |  5.381 us |  3.3826 us | 0.1854 us |   5.05 KB
-| Hyperbee_JsonNode       | $.store.book[?(@.price == 8.99)] |  7.354 us |  4.9887 us | 0.2734 us |   8.47 KB
-| Newtonsoft_JObject      | $.store.book[?(@.price == 8.99)] | 10.519 us |  3.5514 us | 0.1947 us |  15.84 KB
-| JsonEverything_JsonNode | $.store.book[?(@.price == 8.99)] | 11.912 us |  7.6346 us | 0.4185 us |  15.85 KB
-|                         |                                  |           |            |           |          
-| Hyperbee_JsonElement    | $.store.book[0]                  |  2.722 us |  0.5813 us | 0.0319 us |   2.27 KB
-| JsonCons_JsonElement    | $.store.book[0]                  |  3.150 us |  1.7316 us | 0.0949 us |   3.21 KB
-| Hyperbee_JsonNode       | $.store.book[0]                  |  3.339 us |  0.1733 us | 0.0095 us |   2.77 KB
-| JsonEverything_JsonNode | $.store.book[0]                  |  4.974 us |  3.2013 us | 0.1755 us |   5.96 KB
-| Newtonsoft_JObject      | $.store.book[0]                  |  9.482 us |  7.0303 us | 0.3854 us |  14.56 KB
-
+| Method                  | Filter                           | Mean      | Error     | StdDev    | Allocated 
+|------------------------ |--------------------------------- |---------- |---------- |---------- |----------
+| Hyperbee_JsonElement    | $..* `First()`                   |  3.210 us | 0.2597 us | 0.0142 us |   3.95 KB 
+| Hyperbee_JsonNode       | $..* `First()`                   |  3.366 us | 2.7086 us | 0.1485 us |    3.4 KB 
+| JsonEverything_JsonNode | $..* `First()`                   |  3.408 us | 3.2650 us | 0.1790 us |   3.53 KB 
+| JsonCons_JsonElement    | $..* `First()`                   |  6.090 us | 6.1994 us | 0.3398 us |   8.48 KB 
+| Newtonsoft_JObject      | $..* `First()`                   |  9.366 us | 1.4505 us | 0.0795 us |  14.22 KB 
+|                         |                                  |           |           |           |           
+| JsonCons_JsonElement    | $..*                             |  5.812 us | 1.3734 us | 0.0753 us |   8.45 KB 
+| Hyperbee_JsonElement    | $..*                             |  7.929 us | 1.5446 us | 0.0847 us |   8.66 KB 
+| Hyperbee_JsonNode       | $..*                             | 10.061 us | 9.3866 us | 0.5145 us |  10.58 KB 
+| Newtonsoft_JObject      | $..*                             | 11.061 us | 0.9381 us | 0.0514 us |  14.86 KB 
+| JsonEverything_JsonNode | $..*                             | 23.492 us | 1.7850 us | 0.0978 us |  36.81 KB 
+|                         |                                  |           |           |           |           
+| Hyperbee_JsonElement    | $..price                         |  4.813 us | 3.2103 us | 0.1760 us |   4.63 KB 
+| JsonCons_JsonElement    | $..price                         |  5.244 us | 2.4403 us | 0.1338 us |   5.65 KB 
+| Hyperbee_JsonNode       | $..price                         |  7.741 us | 6.5786 us | 0.3606 us |    7.8 KB 
+| Newtonsoft_JObject      | $..price                         | 10.335 us | 7.3216 us | 0.4013 us |   14.4 KB 
+| JsonEverything_JsonNode | $..price                         | 16.982 us | 9.8753 us | 0.5413 us |  27.63 KB 
+|                         |                                  |           |           |           |           
+| Hyperbee_JsonElement    | $.store.book[?(@.price == 8.99)] |  4.464 us | 2.2718 us | 0.1245 us |   5.68 KB 
+| JsonCons_JsonElement    | $.store.book[?(@.price == 8.99)] |  5.262 us | 4.0734 us | 0.2233 us |   5.05 KB 
+| Hyperbee_JsonNode       | $.store.book[?(@.price == 8.99)] |  7.423 us | 0.7463 us | 0.0409 us |   8.31 KB 
+| Newtonsoft_JObject      | $.store.book[?(@.price == 8.99)] | 10.386 us | 7.7620 us | 0.4255 us |  15.84 KB 
+| JsonEverything_JsonNode | $.store.book[?(@.price == 8.99)] | 12.621 us | 4.5079 us | 0.2471 us |  15.85 KB 
+|                         |                                  |           |           |           |           
+| Hyperbee_JsonElement    | $.store.book[0]                  |  2.787 us | 1.3694 us | 0.0751 us |   2.27 KB 
+| JsonCons_JsonElement    | $.store.book[0]                  |  3.297 us | 0.1607 us | 0.0088 us |   3.21 KB 
+| Hyperbee_JsonNode       | $.store.book[0]                  |  3.345 us | 0.5145 us | 0.0282 us |   2.77 KB 
+| JsonEverything_JsonNode | $.store.book[0]                  |  4.875 us | 2.6974 us | 0.1479 us |   5.96 KB 
+| Newtonsoft_JObject      | $.store.book[0]                  |  9.134 us | 5.0882 us | 0.2789 us |  14.56 KB 
 ```
 
 ## Additional Documentation

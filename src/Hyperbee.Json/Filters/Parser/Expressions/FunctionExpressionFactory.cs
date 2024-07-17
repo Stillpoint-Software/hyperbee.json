@@ -24,8 +24,7 @@ internal class FunctionExpressionFactory : IExpressionFactory
 
         var function = functionActivator();
 
-        expression = function
-            .GetExpression<TNode>( ref state ); // will recurse for each function argument.
+        expression = function.GetExpression<TNode>( ref state ); // will recurse for each function argument.
 
         exprInfo.Kind = ExpressionKind.Function;
         exprInfo.FunctionInfo = function.FunctionInfo;

@@ -35,7 +35,7 @@ public enum Operator
     Bracket = 0xF0 | NonOperator,
 }
 
-public static class OperatorExtensions
+internal static class OperatorExtensions
 {
     public static bool IsNonOperator( this Operator op )
     {

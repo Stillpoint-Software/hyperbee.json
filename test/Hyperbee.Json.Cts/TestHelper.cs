@@ -9,7 +9,7 @@ internal static class TestHelper
     public static JsonArray ConvertToJsonArraySet( JsonNode jsonNode )
     {
         if ( jsonNode is JsonArray jsonArray && jsonArray[0] is JsonArray )
-            return jsonArray;
+            return jsonArray; // already a set
 
         JsonArray jsonArraySet = new JsonArray( jsonNode );
 
@@ -21,7 +21,7 @@ internal static class TestHelper
         var nodeArray = nodes.ToArray();
 
         if ( !force && nodeArray.Length == 1 && nodeArray[0] is JsonArray array )
-            return array;
+            return array; // already an array
 
         var jsonArray = new JsonArray();
 

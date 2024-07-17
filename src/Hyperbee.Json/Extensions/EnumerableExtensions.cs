@@ -12,6 +12,6 @@ public static class EnumerableExtensions
             return default;
 
         var singleItem = iterator.Current;
-        return iterator.MoveNext() ? default : singleItem;
+        return iterator.MoveNext() ? default : singleItem; // More than one element returns default
     }
 }

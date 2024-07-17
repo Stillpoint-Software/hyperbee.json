@@ -4,7 +4,7 @@ using Hyperbee.Json.Dynamic;
 
 namespace Hyperbee.Json.Extensions;
 
-public static class JsonHelper
+public static class JsonDynamicHelper
 {
     // conversion
 

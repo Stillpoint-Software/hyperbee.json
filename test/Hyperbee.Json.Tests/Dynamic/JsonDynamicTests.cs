@@ -21,7 +21,7 @@ public class JsonDynamicTests : JsonTestBase
     public void DynamicJsonElement_ShouldReturnCorrectResults()
     {
         var source = GetDocument<JsonDocument>();
-        var element = JsonHelper.ConvertToDynamic( source );
+        var element = JsonDynamicHelper.ConvertToDynamic( source );
 
         var book = element.store.book[0];
         var author = book.author;

@@ -3,7 +3,7 @@
 namespace Hyperbee.Json.Filters.Parser;
 
 [DebuggerDisplay( "{Buffer.ToString()}, Item = {Item.ToString()}, Operator = {Operator}, Pos = {Pos.ToString()}" )]
-public ref struct ParserState
+internal ref struct ParserState
 {
     public ReadOnlySpan<char> Buffer { get; }
     public ReadOnlySpan<char> Item { get; internal set; }

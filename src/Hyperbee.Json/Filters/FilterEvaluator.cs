@@ -29,7 +29,7 @@ public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
         }
         catch ( Exception ex )
         {
-            throw new FilterException( "Error compiling filter expression.", ex );
+            throw new FilterCompilerException( "Error compiling filter expression.", ex );
         }
     }
 }

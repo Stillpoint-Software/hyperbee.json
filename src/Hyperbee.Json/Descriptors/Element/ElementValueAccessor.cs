@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
@@ -10,36 +11,41 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 {
     public IEnumerable<(JsonElement, string, SelectorKind)> EnumerateChildren( JsonElement value, bool includeValues = true )
     {
+        // allocating is faster than using yield return and less memory intensive
+        // because we avoid calling reverse on the enumerable (which anyway allocates a new array)
+
         switch ( value.ValueKind )
         {
             case JsonValueKind.Array:
                 {
-                    for ( var index = value.GetArrayLength() - 1; index >= 0; index-- )
+                    var length = value.GetArrayLength();
+                    var results = new (JsonElement, string, SelectorKind)[length];
+
+                    for ( var index = length - 1; index >= 0; index-- )
                     {
                         var child = value[index];
-
                         if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
-                            yield return (child, index.ToString(), SelectorKind.Index);
+                            results[index] = (child, index.ToString(), SelectorKind.Index);
                     }
 
-                    break;
+                    return results;
                 }
             case JsonValueKind.Object:
                 {
-                    if ( includeValues )
+                    var results = new Stack<(JsonElement, string, SelectorKind)>(); // stack will reverse the list
+                    foreach ( var child in value.EnumerateObject() )
                     {
-                        foreach ( var child in value.EnumerateObject().Reverse() )
-                            yield return (child.Value, child.Name, SelectorKind.Name);
-                    }
-                    else
-                    {
-                        foreach ( var child in value.EnumerateObject().Where( property => property.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object ).Reverse() )
-                            yield return (child.Value, child.Name, SelectorKind.Name);
+                        if ( includeValues || child.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
+                        {
+                            results.Push( (child.Value, child.Name, SelectorKind.Name) );
+                        }
                     }
 
-                    break;
+                    return results;
                 }
         }
+
+        return [];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -76,7 +82,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
             : 0;
     }
 
-    public bool TryGetChildValue( in JsonElement value, string childSelector, SelectorKind selectorKind, out JsonElement childValue )
+    public bool TryGetChild( in JsonElement value, string childSelector, SelectorKind selectorKind, out JsonElement childValue )
     {
         switch ( value.ValueKind )
         {
@@ -154,7 +160,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         return false;
     }
 
-    public bool TryGetValueFromNode( JsonElement element, out object value )
+    public bool TryGetValueFromNode( JsonElement element, out IConvertible value )
     {
         switch ( element.ValueKind )
         {

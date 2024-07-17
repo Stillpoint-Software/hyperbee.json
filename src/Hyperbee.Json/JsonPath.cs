@@ -141,7 +141,7 @@ public static class JsonPath<TNode>
                     continue; // don't allow indexing in to objects
 
                 // try to access object or array using name or index
-                if ( accessor.TryGetChildValue( value, selector, selectorKind, out var childValue ) )
+                if ( accessor.TryGetChild( value, selector, selectorKind, out var childValue ) )
                     stack.Push( value, childValue, selector, segmentNext );
 
                 continue;
@@ -269,7 +269,7 @@ public static class JsonPath<TNode>
                     // Object: [name1,name2,...] Names over object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
                         {
-                            if ( accessor.TryGetChildValue( value, selector, selectorKind, out var childValue ) )
+                            if ( accessor.TryGetChild( value, selector, selectorKind, out var childValue ) )
                                 stack.Push( value, childValue, selector, segmentNext );
 
                             continue;

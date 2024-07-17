@@ -1,19 +1,19 @@
 ﻿namespace Hyperbee.Json.Filters;
 
 [Serializable]
-public class FilterException : Exception
+public class FilterCompilerException : Exception
 {
-    public FilterException()
+    public FilterCompilerException()
         : base( "JsonPath filter evaluator exception." )
     {
     }
 
-    public FilterException( string message )
+    public FilterCompilerException( string message )
         : base( message )
     {
     }
 
-    public FilterException( string message, Exception innerException )
+    public FilterCompilerException( string message, Exception innerException )
         : base( message, innerException )
     {
     }

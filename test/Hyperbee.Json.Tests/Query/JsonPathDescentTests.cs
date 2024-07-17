@@ -8,13 +8,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Hyperbee.Json.Tests.Query;
 
 [TestClass]
-public class JsonPathRecursiveDescentTests : JsonTestBase
+public class JsonPathDescentTests : JsonTestBase
 {
     [DataTestMethod]
     [DataRow( "$..", typeof( JsonDocument ) )]
     [DataRow( "$..", typeof( JsonNode ) )]
     [ExpectedException( typeof( NotSupportedException ) )]
-    public void RecursiveDescent( string query, Type sourceType )
+    public void Descent( string query, Type sourceType )
     {
         // consensus: none
 
@@ -33,7 +33,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$..*", typeof( JsonDocument ) )]
     [DataRow( "$..*", typeof( JsonNode ) )]
-    public void RecursiveDescentOnNestedArrays( string query, Type sourceType )
+    public void DescentOnNestedArrays( string query, Type sourceType )
     {
         const string json = """
         [
@@ -60,7 +60,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
     [DataRow( "$.key..", typeof( JsonDocument ) )]
     [DataRow( "$.key..", typeof( JsonNode ) )]
     [ExpectedException( typeof( NotSupportedException ) )]
-    public void RecursiveDescentAfterDotNotation( string query, Type sourceType )
+    public void DescentAfterDotNotation( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED
 
@@ -82,7 +82,7 @@ public class JsonPathRecursiveDescentTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "$..[1].key", typeof( JsonDocument ) )]
     [DataRow( "$..[1].key", typeof( JsonNode ) )]
-    public void DotNotationAfterBracketNotationAfterRecursiveDescent( string query, Type sourceType )
+    public void DotNotationAfterBracketNotationAfterDescent( string query, Type sourceType )
     {
         // consensus: [200, 42, 500]
 

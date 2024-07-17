@@ -26,7 +26,6 @@ public abstract class FilterParser
 
 public class FilterParser<TNode> : FilterParser
 {
-    // use a common instance
     internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" );
     internal static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
@@ -56,12 +55,12 @@ public class FilterParser<TNode> : FilterParser
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
 
         // parse the expression
-        var items = new List<ExprItem>();
+        var items = new Queue<ExprItem>();
 
         do
         {
             MoveNext( ref state );
-            items.Add( GetExprItem( ref state ) ); // will recurse for nested expressions
+            items.Enqueue( GetExprItem( ref state ) ); // will recurse for nested expressions
 
         } while ( state.IsParsing );
 
@@ -70,10 +69,9 @@ public class FilterParser<TNode> : FilterParser
             throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
 
         // merge the expressions
-        var baseItem = items[0];
-        var index = 1;
+        var baseItem = items.Dequeue();
 
-        return Merge( in state, baseItem, ref index, items );
+        return Merge( in state, baseItem, items );
     }
 
 
@@ -276,21 +274,21 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static Expression Merge( in ParserState state, ExprItem left, ref int index, List<ExprItem> items, bool mergeOneOnly = false )
+    private static Expression Merge( in ParserState state, ExprItem left, Queue<ExprItem> items, bool mergeOneOnly = false )
     {
-        if ( items.Count == 1 )
+        if ( items.Count == 0 )
         {
             ThrowIfInvalidCompare( in state, left, null ); // single item, no recursion
         }
         else
         {
-            while ( index < items.Count )
+            while ( items.Count > 0 )
             {
-                var right = items[index++];
+                var right = items.Dequeue();
 
                 while ( !CanMergeItems( left, right ) )
                 {
-                    Merge( in state, right, ref index, items, mergeOneOnly: true ); // recursive call - right becomes left
+                    Merge( in state, right, items, mergeOneOnly: true ); // recursive call - right becomes left
                 }
 
                 ThrowIfInvalidCompare( in state, left, right );
@@ -360,7 +358,7 @@ public class FilterParser<TNode> : FilterParser
 
         static Expression ConvertBoolToValueTypeExpression( Expression leftExpression )
         {
-            // Convert to ScalarValue<bool> using implicit operator and then return as a IValueType
+            // Convert bool to ScalarValue<bool> implicit operator and then return as an IValueType
             return ConvertExpression<IValueType>( ConvertExpression<ScalarValue<bool>>( leftExpression ) );
         }
 
@@ -386,17 +384,13 @@ public class FilterParser<TNode> : FilterParser
         if ( item.ExpressionInfo.Kind != ExpressionKind.Function )
             return;
 
-        if ( (item.ExpressionInfo.FunctionInfo & ExtensionInfo.MustCompare) == ExtensionInfo.MustCompare &&
-             !item.Operator.IsComparison() )
-        {
-            throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
-        }
+        var functionInfo = item.ExpressionInfo.FunctionInfo;
 
-        if ( (item.ExpressionInfo.FunctionInfo & ExtensionInfo.MustNotCompare) == ExtensionInfo.MustNotCompare &&
-             item.Operator.IsComparison() )
-        {
+        if ( functionInfo.HasFlag( ExtensionInfo.MustCompare ) && !item.Operator.IsComparison() )
+            throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
+
+        if ( functionInfo.HasFlag( ExtensionInfo.MustNotCompare ) && item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
-        }
     }
 
     private static void ThrowIfConstantIsNotCompared( in ParserState state, ExprItem left, ExprItem right )

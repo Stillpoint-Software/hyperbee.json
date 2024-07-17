@@ -153,7 +153,7 @@ public class JsonPathUnionTests : JsonTestBase
     public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )
     {
         // consensus: ["cc1", "cc2", "cc3", "cc5", "dd1", "dd2", "dd4"]
-        //            any order
+        // any order
 
         const string json = """
         [

@@ -10,33 +10,39 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
 {
     public IEnumerable<(JsonNode, string, SelectorKind)> EnumerateChildren( JsonNode value, bool includeValues = true )
     {
+        // allocating is faster than using yield return and less memory intensive
+        // because we avoid calling reverse on the enumerable (which anyway allocates a new array)
+
         switch ( value )
         {
             case JsonArray arrayValue:
-                for ( var index = arrayValue.Count - 1; index >= 0; index-- )
+            {
+                var length = arrayValue.Count;
+                var results = new (JsonNode, string, SelectorKind)[length];
+
+                for ( var index = length - 1; index >= 0; index-- )
                 {
                     var child = arrayValue[index];
-
                     if ( includeValues || child is JsonObject or JsonArray )
-                        yield return (child, index.ToString(), SelectorKind.Index);
+                        results[index] = (child, index.ToString(), SelectorKind.Index);
                 }
 
-                break;
+                return results;
+            }
             case JsonObject objectValue:
-
-                if ( includeValues )
+            {
+                var results = new Stack<(JsonNode, string, SelectorKind)>(); // stack will reverse the list
+                foreach ( var child in objectValue )
                 {
-                    foreach ( var child in objectValue.Reverse() )
-                        yield return (child.Value, child.Key, SelectorKind.Name);
-                }
-                else
-                {
-                    foreach ( var child in objectValue.Where( property => property.Value is JsonObject or JsonArray ).Reverse() )
-                        yield return (child.Value, child.Key, SelectorKind.Name);
+                    if ( includeValues || child.Value is JsonObject or JsonArray )
+                        results.Push( (child.Value, child.Key, SelectorKind.Name) );
                 }
 
-                break;
+                return results;
+            }
         }
+
+        return [];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -75,7 +81,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         return 0;
     }
 
-    public bool TryGetChildValue( in JsonNode value, string childSelector, SelectorKind selectorKind, out JsonNode childValue )
+    public bool TryGetChild( in JsonNode value, string childSelector, SelectorKind selectorKind, out JsonNode childValue )
     {
         switch ( value )
         {
@@ -150,7 +156,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         }
     }
 
-    public bool TryGetValueFromNode( JsonNode node, out object value )
+    public bool TryGetValueFromNode( JsonNode node, out IConvertible value )
     {
         switch ( node?.GetValueKind() )
         {

@@ -80,7 +80,7 @@ internal static class JsonPathQueryParser
         {
             // Read next character
             char c = i < n ? query[i++] : '\0';
-            
+
             if ( state != State.Whitespace && c == '\0' ) // whitespace is a sub-state, allow it to exit
                 state = State.Finish; // end of input
 
@@ -145,7 +145,7 @@ internal static class JsonPathQueryParser
                     {
                         case '[': // end-of-child
                         case '.': // end-of-child
-                            
+
                             if ( i == n && c == '.' ) // dot( . ) is not allowed at the end of the query
                                 throw new NotSupportedException( $"Missing character after `.` at pos {i - 1}." );
 
@@ -177,7 +177,7 @@ internal static class JsonPathQueryParser
                                     }
                                     selectorStart = i;
                                     break;
- 
+
                                 case '[': // transition to union
                                     state = State.Whitespace;
                                     whiteSpaceReplay = false;

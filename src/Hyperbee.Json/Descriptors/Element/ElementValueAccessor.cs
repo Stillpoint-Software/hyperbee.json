@@ -17,32 +17,32 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         switch ( value.ValueKind )
         {
             case JsonValueKind.Array:
-            {
-                var length = value.GetArrayLength();
-                var results = new (JsonElement, string, SelectorKind)[length];
-
-                for ( var index = length - 1; index >= 0; index-- )
                 {
-                    var child = value[index];
-                    if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
-                        results[index] = (child, index.ToString(), SelectorKind.Index);
-                }
+                    var length = value.GetArrayLength();
+                    var results = new (JsonElement, string, SelectorKind)[length];
 
-                return results;
-            }
-            case JsonValueKind.Object:
-            {
-                var results = new Stack<(JsonElement, string, SelectorKind)>(); // stack will reverse the list
-                foreach ( var child in value.EnumerateObject() )
-                {
-                    if ( includeValues || child.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
+                    for ( var index = length - 1; index >= 0; index-- )
                     {
-                        results.Push( (child.Value, child.Name, SelectorKind.Name) );
+                        var child = value[index];
+                        if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
+                            results[index] = (child, index.ToString(), SelectorKind.Index);
                     }
-                }
 
-                return results;
-            }
+                    return results;
+                }
+            case JsonValueKind.Object:
+                {
+                    var results = new Stack<(JsonElement, string, SelectorKind)>(); // stack will reverse the list
+                    foreach ( var child in value.EnumerateObject() )
+                    {
+                        if ( includeValues || child.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
+                        {
+                            results.Push( (child.Value, child.Name, SelectorKind.Name) );
+                        }
+                    }
+
+                    return results;
+                }
         }
 
         return [];

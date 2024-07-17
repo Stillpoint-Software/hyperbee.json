@@ -16,30 +16,30 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         switch ( value )
         {
             case JsonArray arrayValue:
-            {
-                var length = arrayValue.Count;
-                var results = new (JsonNode, string, SelectorKind)[length];
-
-                for ( var index = length - 1; index >= 0; index-- )
                 {
-                    var child = arrayValue[index];
-                    if ( includeValues || child is JsonObject or JsonArray )
-                        results[index] = (child, index.ToString(), SelectorKind.Index);
-                }
+                    var length = arrayValue.Count;
+                    var results = new (JsonNode, string, SelectorKind)[length];
 
-                return results;
-            }
+                    for ( var index = length - 1; index >= 0; index-- )
+                    {
+                        var child = arrayValue[index];
+                        if ( includeValues || child is JsonObject or JsonArray )
+                            results[index] = (child, index.ToString(), SelectorKind.Index);
+                    }
+
+                    return results;
+                }
             case JsonObject objectValue:
-            {
-                var results = new Stack<(JsonNode, string, SelectorKind)>(); // stack will reverse the list
-                foreach ( var child in objectValue )
                 {
-                    if ( includeValues || child.Value is JsonObject or JsonArray )
-                        results.Push( (child.Value, child.Key, SelectorKind.Name) );
-                }
+                    var results = new Stack<(JsonNode, string, SelectorKind)>(); // stack will reverse the list
+                    foreach ( var child in objectValue )
+                    {
+                        if ( includeValues || child.Value is JsonObject or JsonArray )
+                            results.Push( (child.Value, child.Key, SelectorKind.Name) );
+                    }
 
-                return results;
-            }
+                    return results;
+                }
         }
 
         return [];

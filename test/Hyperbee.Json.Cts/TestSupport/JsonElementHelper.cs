@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Cts.TestSupport;
 public class JsonPathDocument( string source ) : IJsonDocument
 {
     private JsonDocument Document { get; } = JsonDocument.Parse( source );
-    
+
     public dynamic Root => Document.RootElement;
     public IEnumerable<dynamic> Select( string query ) => Document.Select( query ).Cast<object>();
 }

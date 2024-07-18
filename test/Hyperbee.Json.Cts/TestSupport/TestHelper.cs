@@ -7,10 +7,10 @@ internal static class TestHelper
 {
     public static IJsonDocument Parse( Type target, string source )
     {
-        if ( target == typeof(JsonElement) )
+        if ( target == typeof( JsonElement ) )
             return new JsonPathDocument( source );
 
-        if ( target == typeof(JsonNode) )
+        if ( target == typeof( JsonNode ) )
             return new JsonPathNode( source );
 
         throw new NotSupportedException();
@@ -18,10 +18,10 @@ internal static class TestHelper
 
     public static bool MatchAny( Type target, IEnumerable<dynamic> results, dynamic expected )
     {
-        if ( target == typeof(JsonElement) )
+        if ( target == typeof( JsonElement ) )
             return JsonElementHelper.MatchAny( results.Cast<JsonElement>(), expected );
 
-        if ( target == typeof(JsonNode) )
+        if ( target == typeof( JsonNode ) )
             return JsonNodeHelper.MatchAny( results.Cast<JsonNode>(), expected );
 
         throw new NotSupportedException();
@@ -29,10 +29,10 @@ internal static class TestHelper
 
     public static bool MatchOne( Type target, IEnumerable<dynamic> results, dynamic expected )
     {
-        if ( target == typeof(JsonElement) )
+        if ( target == typeof( JsonElement ) )
             return JsonElementHelper.MatchOne( results.Cast<JsonElement>(), expected );
 
-        if ( target == typeof(JsonNode) )
+        if ( target == typeof( JsonNode ) )
             return JsonNodeHelper.MatchOne( results.Cast<JsonNode>(), expected );
 
         throw new NotSupportedException();

@@ -2,7 +2,7 @@
 
 namespace Hyperbee.Json.Tests.TestSupport;
 
-public interface IJsonPathSource
+public interface IJsonDocument
 {
     IEnumerable<dynamic> Select( string query );
     dynamic FromJsonPathPointer( string pathLiteral );

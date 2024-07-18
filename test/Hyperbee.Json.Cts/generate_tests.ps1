@@ -174,14 +174,15 @@ function Get-UnitTestContent {
     $unitTestContent = @"
 // This file was auto generated.
 
+using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Cts.TestSupport;
 
-namespace Hyperbee.Json.Cts.Tests
+namespace Hyperbee.Json.Cts.Tests;
+
+[TestClass]
+public class $className
 {
-    [TestClass]
-    public class $className
-    {`r`n
 "@
 
     $testNumber = 0
@@ -211,47 +212,49 @@ namespace Hyperbee.Json.Cts.Tests
         # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
         
-        [TestMethod( @`"$name ($testNumber)`" )]
-        public void Test`_$methodName`_$testNumber()
-        {
-            var selector = `"$selector`";`r`n
+    [DataTestMethod( @`"$name ($testNumber)`" )]
+    [DataRow( typeof(JsonNode) )]
+    [DataRow(typeof(JsonElement))]
+    public void Test`_$methodName`_$testNumber( Type documentType )
+    {
+        const string selector = `"$selector`";`r`n
 "@
         
         if ($invalidSelector) {
             $unitTestContent += @"
-            var document = JsonNode.Parse( `"[0]`" ); // Empty node
+        var document = TestHelper.Parse( documentType, `"[0]`" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
-        }`r`n
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
+    }`r`n
 "@
         } else {
             $unitTestContent += @"
-            var document = JsonNode.Parse(
-                `"`"`"$document`"`"`");
-            var results = document.Select(selector);`r`n
+        var document = TestHelper.Parse( documentType,
+            `"`"`"$document`"`"`");
+        var results = document.Select(selector);`r`n
 "@
             if ($null -ne $result) {
                 $unitTestContent += @"
-            var expect = JsonNode.Parse(
-                `"`"`"$result`"`"`");
+        var expect = TestHelper.Parse( documentType,
+            `"`"`"$result`"`"`").Root;
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
-        }`r`n
+        var match = TestHelper.MatchOne(documentType, results, expect);
+        Assert.IsTrue(match);
+    }`r`n
 "@
             } elseif ($null -ne $results) {
                 $unitTestContent += @"
-            var expectOneOf = JsonNode.Parse(
-                `"`"`"$results`"`"`");
+        var expectOneOf = TestHelper.Parse( documentType,
+            `"`"`"$results`"`"`").Root;
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
-        }`r`n
+        var match = TestHelper.MatchAny(documentType, results, expectOneOf);
+        Assert.IsTrue(match);
+    }`r`n
 "@
             } else {
                 $unitTestContent += @"
-            Assert.Fail(`"missing results`");
-        }`r`n
+        Assert.Fail(`"missing results`");
+    }`r`n
 "@
             }
         }
@@ -259,8 +262,8 @@ namespace Hyperbee.Json.Cts.Tests
 
     # Close the class and namespace
     $unitTestContent += @"
-    }
-}`r`n
+}
+`r`n
 "@
 
     return $unitTestContent

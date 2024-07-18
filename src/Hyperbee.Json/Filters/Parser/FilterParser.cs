@@ -26,7 +26,7 @@ public abstract class FilterParser
 
 public class FilterParser<TNode> : FilterParser
 {
-    internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" );
+    internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" ); // must use a common instance
     internal static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter )
@@ -38,7 +38,7 @@ public class FilterParser<TNode> : FilterParser
 
     internal static Expression Parse( ReadOnlySpan<char> filter )
     {
-        filter = filter.Trim(); // remove leading and trailing whitespace to simplify parsing
+        filter = filter.Trim(); // remove leading and trailing whitespace simplifies parsing
 
         var pos = 0;
         var parenDepth = 0;
@@ -160,7 +160,7 @@ public class FilterParser<TNode> : FilterParser
             if ( state.Operator.IsNonOperator() == false )
                 return true;
 
-            return ch == state.Terminal; // terminal character [ '\0' or ',' or ')' ]
+            return ch == state.TerminalCharacter; // [ '\0' or ',' or ')' ]
         }
     }
 

@@ -10,27 +10,27 @@ public class JsonTestBase
 {
     protected static string DocumentDefault { get; set; } = "BookStore.json";
 
-    protected static string ReadJsonString( string filename = null )
+    protected static string ReadJsonString( string resourceName = null )
     {
-        using var stream = GetManifestStream( filename );
+        using var stream = GetManifestStream( resourceName );
         using var reader = new StreamReader( stream! );
         return reader.ReadToEnd();
     }
 
-    private static Stream GetManifestStream( string filename = null )
+    private static Stream GetManifestStream( string resourceName = null )
     {
-        filename ??= DocumentDefault;
+        resourceName ??= DocumentDefault;
 
         return Assembly
             .GetExecutingAssembly()
-            .GetManifestResourceStream( $"Hyperbee.Json.Tests.TestDocuments.{filename}" );
+            .GetManifestResourceStream( $"Hyperbee.Json.Tests.TestDocuments.{resourceName}" );
     }
 
-    public static TType GetDocument<TType>( string filename = null )
+    public static TType GetDocument<TType>( string resourceName = null )
     {
         var type = typeof( TType );
 
-        var stream = GetManifestStream( filename );
+        var stream = GetManifestStream( resourceName );
 
         if ( type == typeof( JsonDocument ) )
             return (TType) (object) JsonDocument.Parse( stream! );
@@ -44,19 +44,19 @@ public class JsonTestBase
         throw new NotSupportedException();
     }
 
-    public static IJsonPathSource GetDocumentFromResource( Type target, string filename = null )
+    public static IJsonDocument GetDocumentAdapter( Type target )
     {
-        var source = ReadJsonString( filename );
-        return GetDocumentFromSource( target, source );
+        var source = ReadJsonString();
+        return GetDocumentAdapter( target, source );
     }
 
-    public static IJsonPathSource GetDocumentFromSource( Type target, string source )
+    public static IJsonDocument GetDocumentAdapter( Type target, string source )
     {
         if ( target == typeof( JsonDocument ) )
-            return new JsonDocumentSource( source );
+            return new JsonPathDocument( source );
 
         if ( target == typeof( JsonNode ) )
-            return new JsonNodeSource( source );
+            return new JsonPathNode( source );
 
         throw new NotSupportedException();
     }

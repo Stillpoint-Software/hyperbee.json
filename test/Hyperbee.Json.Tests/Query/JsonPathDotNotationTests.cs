@@ -27,7 +27,7 @@ public class JsonPathDotNotationTests : JsonTestBase
             }
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
@@ -47,7 +47,7 @@ public class JsonPathDotNotationTests : JsonTestBase
             "''": "nice"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
@@ -67,7 +67,7 @@ public class JsonPathDotNotationTests : JsonTestBase
             "\u5c6c\u6027": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
@@ -76,7 +76,7 @@ public class JsonPathDotNotationTests : JsonTestBase
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
     [DataTestMethod]
@@ -90,7 +90,7 @@ public class JsonPathDotNotationTests : JsonTestBase
             "$a": 2
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {

@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
@@ -25,8 +24,11 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                     for ( var index = 0; index < length; index++, reverseIndex-- )
                     {
                         var child = value[index];
+
                         if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
+                        {
                             results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
+                        }
                     }
 
                     return results;
@@ -200,7 +202,6 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
         return true;
     }
-
 
     public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
     {

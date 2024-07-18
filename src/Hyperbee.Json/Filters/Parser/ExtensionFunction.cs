@@ -30,7 +30,7 @@ public abstract class ExtensionFunction
             {
                 Item = [],
                 IsArgument = true,
-                Terminal = i == _argumentCount - 1
+                TerminalCharacter = i == _argumentCount - 1
                     ? FilterParser.ArgClose
                     : FilterParser.ArgComma
             };

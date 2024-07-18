@@ -18,7 +18,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         // consensus: none
 
         const string json = "42";
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
@@ -27,7 +27,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches.First() ) == 42 );
+        Assert.IsTrue( TestHelper.GetInt32( matches.First() ) == 42 );
     }
 
     [DataTestMethod]
@@ -36,7 +36,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     public void RootOnScalarFalse( string query, Type sourceType )
     {
         const string json = "false";
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
@@ -45,7 +45,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
-        Assert.IsTrue( JsonValueHelper.GetBoolean( matches.First() ) == false );
+        Assert.IsTrue( TestHelper.GetBoolean( matches.First() ) == false );
     }
 
     [DataTestMethod]
@@ -54,7 +54,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
     public void RootOnScalarTrue( string query, Type sourceType )
     {
         const string json = "true";
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
@@ -63,6 +63,6 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
-        Assert.IsTrue( JsonValueHelper.GetBoolean( matches.First() ) );
+        Assert.IsTrue( TestHelper.GetBoolean( matches.First() ) );
     }
 }

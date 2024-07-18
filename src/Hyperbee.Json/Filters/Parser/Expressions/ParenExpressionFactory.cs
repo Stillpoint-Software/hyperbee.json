@@ -15,7 +15,7 @@ internal class ParenExpressionFactory : IExpressionFactory
 
         var localState = state with
         {
-            Terminal = FilterParser.ArgClose
+            TerminalCharacter = FilterParser.ArgClose
         };
 
         expression = FilterParser<TNode>.Parse( ref localState ); // will recurse.

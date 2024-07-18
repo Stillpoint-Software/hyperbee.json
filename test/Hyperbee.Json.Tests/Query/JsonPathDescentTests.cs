@@ -25,7 +25,7 @@ public class JsonPathDescentTests : JsonTestBase
         ]
         """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         _ = source.Select( query ).ToList();
     }
@@ -42,7 +42,7 @@ public class JsonPathDescentTests : JsonTestBase
         ]
         """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
@@ -74,7 +74,7 @@ public class JsonPathDescentTests : JsonTestBase
         }
         """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         _ = source.Select( query ).ToList();
     }
@@ -127,7 +127,7 @@ public class JsonPathDescentTests : JsonTestBase
         }
         """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]

@@ -24,8 +24,11 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
                     for ( var index = 0; index < length; index++, reverseIndex-- )
                     {
                         var child = arrayValue[index];
+
                         if ( includeValues || child is JsonObject or JsonArray )
+                        {
                             results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
+                        }
                     }
 
                     return results;
@@ -201,7 +204,6 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
 
         return true;
     }
-
 
     public bool TryGetFromPointer( in JsonNode node, JsonPathSegment segment, out JsonNode childValue )
     {

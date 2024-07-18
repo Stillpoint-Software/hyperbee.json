@@ -111,7 +111,8 @@ public static class JsonPath<TNode>
             if ( key != null )
                 processor?.Invoke( parent, value, key, segmentNext );
 
-            // yield matches
+            // yield match
+
             if ( segmentNext.IsFinal )
             {
                 yield return value;
@@ -237,7 +238,9 @@ public static class JsonPath<TNode>
                             if ( nodeKind != NodeKind.Array )
                                 continue;
 
-                            foreach ( var index in EnumerateSlice( value, selector, accessor ) )
+                            var (upper, lower, step) = GetSliceRange( value, selector, accessor );
+
+                            for ( var index = lower; step > 0 ? index < upper : index > upper; index += step )
                             {
                                 if ( accessor.TryGetElementAt( value, index, out var childValue ) )
                                     stack.Push( value, childValue, index.ToString(), segmentNext );
@@ -286,30 +289,21 @@ public static class JsonPath<TNode>
         } while ( stack.TryPop( out args ) );
     }
 
-    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
+    private static (int Upper, int Lower, int Step) GetSliceRange( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
     {
         var length = accessor.GetArrayLength( value );
 
         if ( length == 0 )
-            yield break;
+            return (0, 0, 0);
 
         var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
-        switch ( step )
+        if ( step < 0 )
         {
-            case > 0:
-                {
-                    for ( var index = lower; index < upper; index += step )
-                        yield return index;
-                    break;
-                }
-            case < 0:
-                {
-                    for ( var index = upper; index > lower; index += step )
-                        yield return index;
-                    break;
-                }
+            (lower, upper) = (upper, lower);
         }
+
+        return (upper, lower, step);
     }
 
     [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, {Segment}" )]

@@ -1,203 +1,225 @@
 ﻿// This file was auto generated.
 
+using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Cts.TestSupport;
 
-namespace Hyperbee.Json.Cts.Tests
+namespace Hyperbee.Json.Cts.Tests;
+
+[TestClass]
+public class CtsIndexSelectorTest
 {
-    [TestClass]
-    public class CtsIndexSelectorTest
+    [DataTestMethod( @"first element (1)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_first_element_1( Type documentType )
     {
-
-        [TestMethod( @"first element (1)" )]
-        public void Test_first_element_1()
-        {
-            var selector = "$[0]";
-            var document = JsonNode.Parse(
-                """
+        const string selector = "$[0]";
+        var document = TestHelper.Parse( documentType,
+            """
                 [
                   "first",
                   "second"
                 ]
                 """ );
-            var results = document.Select( selector );
-            var expect = JsonNode.Parse(
-                """
+        var results = document.Select( selector );
+        var expect = TestHelper.Parse( documentType,
+            """
                 [
                   "first"
                 ]
-                """ );
+                """ ).Root;
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
-        }
+        var match = TestHelper.MatchOne( documentType, results, expect );
+        Assert.IsTrue( match );
+    }
 
-        [TestMethod( @"second element (2)" )]
-        public void Test_second_element_2()
-        {
-            var selector = "$[1]";
-            var document = JsonNode.Parse(
-                """
+    [DataTestMethod( @"second element (2)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_second_element_2( Type documentType )
+    {
+        const string selector = "$[1]";
+        var document = TestHelper.Parse( documentType,
+            """
                 [
                   "first",
                   "second"
                 ]
                 """ );
-            var results = document.Select( selector );
-            var expect = JsonNode.Parse(
-                """
+        var results = document.Select( selector );
+        var expect = TestHelper.Parse( documentType,
+            """
                 [
                   "second"
                 ]
-                """ );
+                """ ).Root;
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
-        }
+        var match = TestHelper.MatchOne( documentType, results, expect );
+        Assert.IsTrue( match );
+    }
 
-        [TestMethod( @"out of bound (3)" )]
-        public void Test_out_of_bound_3()
-        {
-            var selector = "$[2]";
-            var document = JsonNode.Parse(
-                """
+    [DataTestMethod( @"out of bound (3)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_out_of_bound_3( Type documentType )
+    {
+        const string selector = "$[2]";
+        var document = TestHelper.Parse( documentType,
+            """
                 [
                   "first",
                   "second"
                 ]
                 """ );
-            var results = document.Select( selector );
-            var expect = JsonNode.Parse(
-                """
+        var results = document.Select( selector );
+        var expect = TestHelper.Parse( documentType,
+            """
                 []
-                """ );
+                """ ).Root;
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
-        }
+        var match = TestHelper.MatchOne( documentType, results, expect );
+        Assert.IsTrue( match );
+    }
 
-        [TestMethod( @"overflowing index (4)" )]
-        public void Test_overflowing_index_4()
-        {
-            var selector = "$[231584178474632390847141970017375815706539969331281128078915168015826259279872]";
-            var document = JsonNode.Parse( "[0]" ); // Empty node
+    [DataTestMethod( @"overflowing index (4)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_overflowing_index_4( Type documentType )
+    {
+        const string selector = "$[231584178474632390847141970017375815706539969331281128078915168015826259279872]";
+        var document = TestHelper.Parse( documentType, "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
-        }
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
+    }
 
-        [TestMethod( @"not actually an index, overflowing index leads into general text (5)" )]
-        public void Test_not_actually_an_index__overflowing_index_leads_into_general_text_5()
-        {
-            var selector = "$[231584178474632390847141970017375815706539969331281128078915168SomeRandomText]";
-            var document = JsonNode.Parse( "[0]" ); // Empty node
+    [DataTestMethod( @"not actually an index, overflowing index leads into general text (5)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_not_actually_an_index__overflowing_index_leads_into_general_text_5( Type documentType )
+    {
+        const string selector = "$[231584178474632390847141970017375815706539969331281128078915168SomeRandomText]";
+        var document = TestHelper.Parse( documentType, "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
-        }
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
+    }
 
-        [TestMethod( @"negative (6)" )]
-        public void Test_negative_6()
-        {
-            var selector = "$[-1]";
-            var document = JsonNode.Parse(
-                """
+    [DataTestMethod( @"negative (6)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_negative_6( Type documentType )
+    {
+        const string selector = "$[-1]";
+        var document = TestHelper.Parse( documentType,
+            """
                 [
                   "first",
                   "second"
                 ]
                 """ );
-            var results = document.Select( selector );
-            var expect = JsonNode.Parse(
-                """
+        var results = document.Select( selector );
+        var expect = TestHelper.Parse( documentType,
+            """
                 [
                   "second"
                 ]
-                """ );
+                """ ).Root;
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
-        }
+        var match = TestHelper.MatchOne( documentType, results, expect );
+        Assert.IsTrue( match );
+    }
 
-        [TestMethod( @"more negative (7)" )]
-        public void Test_more_negative_7()
-        {
-            var selector = "$[-2]";
-            var document = JsonNode.Parse(
-                """
+    [DataTestMethod( @"more negative (7)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_more_negative_7( Type documentType )
+    {
+        const string selector = "$[-2]";
+        var document = TestHelper.Parse( documentType,
+            """
                 [
                   "first",
                   "second"
                 ]
                 """ );
-            var results = document.Select( selector );
-            var expect = JsonNode.Parse(
-                """
+        var results = document.Select( selector );
+        var expect = TestHelper.Parse( documentType,
+            """
                 [
                   "first"
                 ]
-                """ );
+                """ ).Root;
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
-        }
+        var match = TestHelper.MatchOne( documentType, results, expect );
+        Assert.IsTrue( match );
+    }
 
-        [TestMethod( @"negative out of bound (8)" )]
-        public void Test_negative_out_of_bound_8()
-        {
-            var selector = "$[-3]";
-            var document = JsonNode.Parse(
-                """
+    [DataTestMethod( @"negative out of bound (8)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_negative_out_of_bound_8( Type documentType )
+    {
+        const string selector = "$[-3]";
+        var document = TestHelper.Parse( documentType,
+            """
                 [
                   "first",
                   "second"
                 ]
                 """ );
-            var results = document.Select( selector );
-            var expect = JsonNode.Parse(
-                """
+        var results = document.Select( selector );
+        var expect = TestHelper.Parse( documentType,
+            """
                 []
-                """ );
+                """ ).Root;
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
-        }
+        var match = TestHelper.MatchOne( documentType, results, expect );
+        Assert.IsTrue( match );
+    }
 
-        [TestMethod( @"on object (9)" )]
-        public void Test_on_object_9()
-        {
-            var selector = "$[0]";
-            var document = JsonNode.Parse(
-                """
+    [DataTestMethod( @"on object (9)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_on_object_9( Type documentType )
+    {
+        const string selector = "$[0]";
+        var document = TestHelper.Parse( documentType,
+            """
                 {
                   "foo": 1
                 }
                 """ );
-            var results = document.Select( selector );
-            var expect = JsonNode.Parse(
-                """
+        var results = document.Select( selector );
+        var expect = TestHelper.Parse( documentType,
+            """
                 []
-                """ );
+                """ ).Root;
 
-            var match = TestHelper.MatchOne( results, expect! );
-            Assert.IsTrue( match );
-        }
+        var match = TestHelper.MatchOne( documentType, results, expect );
+        Assert.IsTrue( match );
+    }
 
-        [TestMethod( @"leading 0 (10)" )]
-        public void Test_leading_0_10()
-        {
-            var selector = "$[01]";
-            var document = JsonNode.Parse( "[0]" ); // Empty node
+    [DataTestMethod( @"leading 0 (10)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_leading_0_10( Type documentType )
+    {
+        const string selector = "$[01]";
+        var document = TestHelper.Parse( documentType, "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
-        }
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
+    }
 
-        [TestMethod( @"leading -0 (11)" )]
-        public void Test_leading__0_11()
-        {
-            var selector = "$[-01]";
-            var document = JsonNode.Parse( "[0]" ); // Empty node
+    [DataTestMethod( @"leading -0 (11)" )]
+    [DataRow( typeof( JsonNode ) )]
+    [DataRow( typeof( JsonElement ) )]
+    public void Test_leading__0_11( Type documentType )
+    {
+        const string selector = "$[-01]";
+        var document = TestHelper.Parse( documentType, "[0]" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
-        }
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 }
+
 

@@ -1,12 +1,19 @@
 ﻿using System.Text.Json.Nodes;
+using Hyperbee.Json.Extensions;
 
-namespace Hyperbee.Json.Cts;
+namespace Hyperbee.Json.Cts.TestSupport;
 
-internal static class TestHelper
+public class JsonPathNode( string source ) : IJsonDocument
 {
-    // Result Helpers
+    private JsonNode? Document { get; } = JsonNode.Parse( source );
 
-    public static JsonArray ConvertToJsonArraySet( JsonNode jsonNode )
+    public dynamic Root => Document!;
+    public IEnumerable<dynamic> Select( string query ) => Document.Select( query );
+}
+
+internal static class JsonNodeHelper
+{
+    private static JsonArray ConvertToJsonArraySet( JsonNode jsonNode )
     {
         if ( jsonNode is JsonArray jsonArray && jsonArray[0] is JsonArray )
             return jsonArray; // already a set
@@ -16,7 +23,7 @@ internal static class TestHelper
         return jsonArraySet;
     }
 
-    public static JsonArray ConvertToJsonArray( IEnumerable<JsonNode> nodes, bool force = false )
+    private static JsonArray ConvertToJsonArray( IEnumerable<JsonNode> nodes, bool force = false )
     {
         var nodeArray = nodes.ToArray();
 
@@ -52,3 +59,4 @@ internal static class TestHelper
         return JsonNode.DeepEquals( expect, compare );
     }
 }
+

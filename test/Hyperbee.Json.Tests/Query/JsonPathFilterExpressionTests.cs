@@ -24,7 +24,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
               {"key": "value"}
             ]
             """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$[1]" ) };
@@ -46,7 +46,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
               }
             }
             """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$['another']" ) };
@@ -76,7 +76,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$[0]" ), source.FromJsonPathPointer( "$[2]" ), source.FromJsonPathPointer( "$[3]" ), source.FromJsonPathPointer( "$[6]" ) };
@@ -127,7 +127,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -177,7 +177,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] {
@@ -231,7 +231,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
 
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$[0]" ), source.FromJsonPathPointer( "$[1]" ), source.FromJsonPathPointer( "$[2]" ), source.FromJsonPathPointer( "$[3]" ), source.FromJsonPathPointer( "$[6]" ) };
@@ -301,7 +301,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$[0]" ) };
@@ -328,7 +328,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
         _ = source.Select( query ).ToArray();
     }
 
@@ -354,7 +354,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         _ = source.Select( query ).ToArray();
     }
@@ -376,7 +376,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$[0]" ), source.FromJsonPathPointer( "$[2]" ) };
@@ -450,7 +450,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
 
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         _ = source.Select( query ).ToArray();
     }
@@ -472,7 +472,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$[2]" ) };
@@ -530,7 +530,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
 
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[] { source.FromJsonPathPointer( "$[2]" ) };
@@ -587,7 +587,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             ]
             """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToArray();
         var expected = new[] { source.FromJsonPathPointer( "$[3]" ) };

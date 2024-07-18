@@ -266,19 +266,11 @@ internal static class JsonPathQueryParser
 
                                 case SelectorKind.Name:
                                     ThrowIfInvalidQuotedName( selectorSpan );
+
                                     if ( escaped )
                                     {
-                                        var builder = new SpanBuilder( selectorSpan.Length );
-                                        try
-                                        {
-                                            SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.SingleThenUnquote ); // unescape and then unquote
-                                            descriptor = GetSelectorDescriptor( selectorKind, builder, nullable: false );
-                                            escaped = false;
-                                        }
-                                        finally // ensure builder is disposed
-                                        {
-                                            builder.Dispose();
-                                        }
+                                        descriptor = GetUnescapedSelectorDescriptor( selectorKind, selectorSpan, nullable: false, SpanUnescapeOptions.SingleThenUnquote ); // unescape and then unquote
+                                        escaped = false;
                                     }
                                     else
                                     {
@@ -288,19 +280,11 @@ internal static class JsonPathQueryParser
                                     break;
 
                                 case SelectorKind.Filter:
+
                                     if ( escaped )
                                     {
-                                        var builder = new SpanBuilder( selectorSpan.Length );
-                                        try
-                                        {
-                                            SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.Mixed ); // unescape one or more strings
-                                            descriptor = GetSelectorDescriptor( selectorKind, builder );
-                                            escaped = false;
-                                        }
-                                        finally // ensure builder is disposed
-                                        {
-                                            builder.Dispose();
-                                        }
+                                        descriptor = GetUnescapedSelectorDescriptor( selectorKind, selectorSpan, nullable: true, SpanUnescapeOptions.Multiple ); // unescape one or more strings
+                                        escaped = false;
                                     }
                                     else
                                     {
@@ -444,6 +428,23 @@ internal static class JsonPathQueryParser
     {
         var selectorValue = builder.IsEmpty && !nullable ? null : builder.ToString();
         return new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue };
+    }
+
+    private static SelectorDescriptor GetUnescapedSelectorDescriptor( SelectorKind selectorKind, ReadOnlySpan<char> selectorSpan, bool nullable, SpanUnescapeOptions unescapeOptions )
+    {
+        // SpanBuilder must be disposed, but it is a ref struct, so we can't use `using`
+
+        var builder = new SpanBuilder( selectorSpan.Length );
+
+        try
+        {
+            SpanHelper.Unescape( selectorSpan, ref builder, unescapeOptions ); // unescape and then unquote
+            return GetSelectorDescriptor( selectorKind, builder, nullable );
+        }
+        finally // ensure builder is disposed
+        {
+            builder.Dispose();
+        }
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

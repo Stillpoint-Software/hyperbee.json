@@ -51,37 +51,37 @@ public static class CompareExpression<TNode>
 
     // Methods
 
-    private static bool AreEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> AreEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         return comparer.Compare( left, right, Operator.Equals ) == 0;
     }
 
-    private static bool AreNotEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> AreNotEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         return comparer.Compare( left, right, Operator.NotEquals ) != 0;
     }
 
-    private static bool IsLessThan( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> IsLessThan( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         return comparer.Compare( left, right, Operator.LessThan ) < 0;
     }
 
-    private static bool IsLessThanOrEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> IsLessThanOrEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         return comparer.Compare( left, right, Operator.LessThanOrEqual ) <= 0;
     }
 
-    private static bool IsGreaterThan( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> IsGreaterThan( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         return comparer.Compare( left, right, Operator.GreaterThan ) > 0;
     }
 
-    private static bool IsGreaterThanOrEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> IsGreaterThanOrEqual( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         return comparer.Compare( left, right, Operator.GreaterThanOrEqual ) >= 0;
     }
 
-    private static bool AndAlso( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> AndAlso( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         if ( left is ScalarValue<bool> leftBoolValue && right is ScalarValue<bool> rightBoolValue )
             return leftBoolValue.Value && rightBoolValue.Value;
@@ -89,7 +89,7 @@ public static class CompareExpression<TNode>
         return comparer.Exists( left ) && comparer.Exists( right );
     }
 
-    private static bool OrElse( IValueType left, IValueType right, IValueTypeComparer comparer )
+    private static ScalarValue<bool> OrElse( IValueType left, IValueType right, IValueTypeComparer comparer )
     {
         if ( left is ScalarValue<bool> leftBoolValue && right is ScalarValue<bool> rightBoolValue )
             return leftBoolValue.Value || rightBoolValue.Value;
@@ -97,7 +97,7 @@ public static class CompareExpression<TNode>
         return comparer.Exists( left ) || comparer.Exists( right );
     }
 
-    private static bool NotBoolean( IValueType value, IValueTypeComparer comparer )
+    private static ScalarValue<bool> NotBoolean( IValueType value, IValueTypeComparer comparer )
     {
         if ( value is ScalarValue<bool> { Value: false } )
             return true;

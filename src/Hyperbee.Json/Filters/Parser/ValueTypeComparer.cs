@@ -195,7 +195,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
             return 0;
         }
 
-        if ( IsTypeMismatch( left, right ) && !IsFloatToIntComparison( left, right ) )
+        if ( IsTypeMismatch( left, right ) && !IsFloatToIntOperation( left, right ) )
         {
             typeMismatch = true; // Type mismatch: important for non-equality comparisons
             return -1;
@@ -228,7 +228,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         static bool IsTypeMismatch( IValueType left, IValueType right ) => left?.GetType() != right?.GetType();
         static bool IsNullOrNothing( IValueType value ) => value is Null or Nothing;
 
-        static bool IsFloatToIntComparison( IValueType left, IValueType right ) =>
+        static bool IsFloatToIntOperation( IValueType left, IValueType right ) =>
             left is ScalarValue<int> && right is ScalarValue<float> || left is ScalarValue<float> && right is ScalarValue<int>;
     }
 

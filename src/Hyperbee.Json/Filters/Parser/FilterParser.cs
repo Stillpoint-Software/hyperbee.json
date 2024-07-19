@@ -10,6 +10,7 @@
 #endregion
 
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Parser.Expressions;
@@ -131,7 +132,7 @@ public class FilterParser<TNode> : FilterParser
         {
             itemEnd = state.Pos; // store before calling NextCharacter 
 
-            NextCharacter( ref state, out var nextChar, ref quote ); // will advance state.Pos
+            NextCharacter( ref state, itemStart, out var nextChar, ref quote ); // will advance state.Pos
 
             if ( IsFinished( in state, nextChar ) )
             {
@@ -178,14 +179,15 @@ public class FilterParser<TNode> : FilterParser
         }
 
         char? quoteChar = null;
+        var start = state.Pos;
 
         while ( !(state.Operator.IsLogical() || state.Operator.IsComparison()) && !state.EndOfBuffer )
         {
-            NextCharacter( ref state, out _, ref quoteChar );
+            NextCharacter( ref state, start, out _, ref quoteChar );
         }
     }
 
-    private static void NextCharacter( ref ParserState state, out char nextChar, ref char? quoteChar )
+    private static void NextCharacter( ref ParserState state, int start, out char nextChar, ref char? quoteChar )
     {
         nextChar = state.Buffer[state.Pos++];
 
@@ -230,6 +232,11 @@ public class FilterParser<TNode> : FilterParser
             case '<':
                 state.Operator = Operator.LessThan;
                 break;
+            case 'i' when Next( ref state, 'n' ):
+                state.Operator = IsInOperator( state )
+                    ? Operator.In
+                    : Operator.Token; // `in` must be surrounded by whitespace
+                break;
             case '!':
                 state.Operator = Operator.Not;
                 break;
@@ -240,6 +247,24 @@ public class FilterParser<TNode> : FilterParser
             case ')':
                 state.ParenDepth--;
                 state.Operator = Operator.ClosedParen;
+                break;
+            case '+':
+                state.Operator = IsAddSubtractOperator( state, start )
+                    ? Operator.Add
+                    : Operator.Token; // +1 -1 1e+2 1e-2
+                break;
+            case '-':
+                state.Operator = IsAddSubtractOperator( state, start )
+                    ? Operator.Subtract
+                    : Operator.Token; // +1 -1 1e+2 1e-2
+                break;
+            case '*':
+                state.Operator = IsMultiplyOperator( state, start )
+                    ? Operator.Multiply
+                    : Operator.Token; // .* [* ,*
+                break;
+            case '/':
+                state.Operator = Operator.Divide;
                 break;
             case ' ' or '\t' or '\r' or '\n':
                 state.Operator = Operator.Whitespace;
@@ -270,6 +295,48 @@ public class FilterParser<TNode> : FilterParser
                 return false;
 
             state.Pos++;
+            return true;
+        }
+
+        static bool IsInOperator( in ParserState state )
+        {
+            // ` in ` must be surrounded by whitespace
+
+            var span = state.Buffer[(state.Pos - 3)..(state.Pos + 1)];
+            return span.Length == 4 && char.IsWhiteSpace( span[0] ) && char.IsWhiteSpace( span[^1] );
+        }
+
+        static bool IsAddSubtractOperator( in ParserState state, int start )
+        {
+            // exclude +1 -1 1e+2 1e-2 .1
+
+            var span = state.Buffer[start..(state.Pos + 1)];
+
+            if ( span.IsEmpty || span[0] == '+' || span[0] == '-' || span[0] == '.' || char.IsDigit( span[0] ) )
+                return false;
+
+            // Use NumberStyles to include all number styles including exponent and signs
+            return !double.TryParse( span, NumberStyles.Float | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out _ );
+        }
+
+        static bool IsMultiplyOperator( in ParserState state, int start )
+        {
+            // exclude `.*` and `,*` and `[*`
+
+            var span = state.Buffer[start..(state.Pos + 1)];
+
+            for ( var i = span.Length - 1; i >= 0; i-- )
+            {
+                var c = span[i];
+                if ( char.IsWhiteSpace( c ) )
+                    continue;
+
+                if ( c == '[' || c == '.' || c == ',' )
+                    return false;
+
+                break;
+            }
+
             return true;
         }
     }
@@ -318,11 +385,16 @@ public class FilterParser<TNode> : FilterParser
                 Operator.Or => 2,
                 Operator.And => 3,
                 Operator.Equals or
+                    Operator.In or
                     Operator.NotEquals or
                     Operator.GreaterThan or
                     Operator.GreaterThanOrEqual or
                     Operator.LessThan or
                     Operator.LessThanOrEqual => 4,
+                Operator.Add or
+                    Operator.Subtract => 5,
+                Operator.Multiply or
+                    Operator.Divide => 6,
                 _ => 0,
             };
         }
@@ -333,7 +405,9 @@ public class FilterParser<TNode> : FilterParser
         left.Expression = ConvertExpression<IValueType>( left.Expression );
         right.Expression = ConvertExpression<IValueType>( right.Expression );
 
-        var comparer = Expression.Constant( Descriptor.Comparer, typeof( IValueTypeComparer ) );
+        var comparer = left.Operator.IsComparison() || left.Operator.IsLogical() 
+            ? Expression.Constant( Descriptor.Comparer, typeof(IValueTypeComparer) ) 
+            : null;
 
         left.Expression = left.Operator switch
         {
@@ -343,24 +417,23 @@ public class FilterParser<TNode> : FilterParser
             Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression, comparer ),
             Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression, comparer ),
             Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression, comparer ),
+            
             Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression, comparer ),
             Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression, comparer ),
             Operator.Not => CompareExpression<TNode>.Not( right.Expression, comparer ),
+
+            Operator.Add => MathExpression<TNode>.Add( left.Expression, right.Expression ),
+            Operator.Subtract => MathExpression<TNode>.Subtract( left.Expression, right.Expression ),
+            Operator.Multiply => MathExpression<TNode>.Multiply( left.Expression, right.Expression ),
+            Operator.Divide => MathExpression<TNode>.Divide( left.Expression, right.Expression ),
+
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };
-
-        left.Expression = ConvertBoolToValueTypeExpression( left.Expression );
 
         left.Operator = right.Operator;
         left.ExpressionInfo.Kind = ExpressionKind.Merged;
 
         return;
-
-        static Expression ConvertBoolToValueTypeExpression( Expression leftExpression )
-        {
-            // Convert bool to ScalarValue<bool> implicit operator and then return as an IValueType
-            return ConvertExpression<IValueType>( ConvertExpression<ScalarValue<bool>>( leftExpression ) );
-        }
 
         static Expression ConvertExpression<TType>( Expression expression )
         {

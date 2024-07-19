@@ -11,9 +11,13 @@ public static class TruthyExpression
 
     public static Expression IsTruthyExpression( Expression expression )
     {
-        return expression.Type == typeof( bool )
-            ? expression
-            : Expression.Call( IsTruthyMethod, expression );
+        if ( expression.Type == typeof( bool ) )
+            return expression;
+
+        if ( expression.Type == typeof( ScalarValue<bool> ) )
+            expression = Expression.Convert( expression, typeof( IValueType ) );
+
+        return Expression.Call( IsTruthyMethod, expression );
     }
 
     private static bool IsTruthy( IValueType value )

@@ -405,8 +405,8 @@ public class FilterParser<TNode> : FilterParser
         left.Expression = ConvertExpression<IValueType>( left.Expression );
         right.Expression = ConvertExpression<IValueType>( right.Expression );
 
-        var comparer = left.Operator.IsComparison() || left.Operator.IsLogical() 
-            ? Expression.Constant( Descriptor.Comparer, typeof(IValueTypeComparer) ) 
+        var comparer = left.Operator.IsComparison() || left.Operator.IsLogical()
+            ? Expression.Constant( Descriptor.Comparer, typeof( IValueTypeComparer ) )
             : null;
 
         left.Expression = left.Operator switch
@@ -417,7 +417,7 @@ public class FilterParser<TNode> : FilterParser
             Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression, comparer ),
             Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression, comparer ),
             Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression, comparer ),
-            
+
             Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression, comparer ),
             Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression, comparer ),
             Operator.Not => CompareExpression<TNode>.Not( right.Expression, comparer ),

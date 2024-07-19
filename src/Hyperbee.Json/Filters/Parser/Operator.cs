@@ -13,8 +13,8 @@ public enum Operator
     Grouping = 0x10,
 
     // Grouping Operators
-    OpenParen = 0x100 | Grouping,  
-    ClosedParen = 0x200 | Grouping, 
+    OpenParen = 0x100 | Grouping,
+    ClosedParen = 0x200 | Grouping,
 
     // Logical Operators
     Not = 0x300 | Logical,

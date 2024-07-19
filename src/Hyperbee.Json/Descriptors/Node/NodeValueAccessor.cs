@@ -140,6 +140,13 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         }
     }
 
+    public bool TryGetFromPointer( in JsonNode node, JsonPathSegment segment, out JsonNode childValue )
+    {
+        return node.TryGetFromJsonPathPointer( segment, out childValue );
+    }
+
+    // Filter methods
+
     public bool DeepEquals( JsonNode left, JsonNode right )
     {
         return JsonNode.DeepEquals( left, right );
@@ -203,10 +210,5 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         }
 
         return true;
-    }
-
-    public bool TryGetFromPointer( in JsonNode node, JsonPathSegment segment, out JsonNode childValue )
-    {
-        return node.TryGetFromJsonPathPointer( segment, out childValue );
     }
 }

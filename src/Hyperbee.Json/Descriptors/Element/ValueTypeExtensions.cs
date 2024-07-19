@@ -37,6 +37,16 @@ public static class ValueTypeExtensions
         return false;
     }
 
+    public static bool TryGetNumber( this IValueType input, out IConvertible value )
+    {
+        if ( TryGetValue( input, out value ) && value is int || value is float )
+            return true;
+
+        value = default;
+        return false;
+    }
+
+
     private static bool TryConvertTo<T>( this JsonElement element, out T value ) where T : IConvertible
     {
         value = default;

@@ -136,6 +136,13 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         }
     }
 
+    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
+    {
+        return element.TryGetFromJsonPathPointer( segment, out childValue );
+    }
+
+    // Filter Methods
+
     public bool DeepEquals( JsonElement left, JsonElement right )
     {
         return left.DeepEquals( right );
@@ -201,10 +208,5 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         }
 
         return true;
-    }
-
-    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
-    {
-        return element.TryGetFromJsonPathPointer( segment, out childValue );
     }
 }

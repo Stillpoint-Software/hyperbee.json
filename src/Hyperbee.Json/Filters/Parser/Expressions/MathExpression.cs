@@ -21,10 +21,10 @@ public static class MathExpression<TNode>
 
     private const BindingFlags BindingAttr = BindingFlags.Static | BindingFlags.NonPublic;
 
-    private static readonly MethodInfo AddMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Add ), BindingAttr );
-    private static readonly MethodInfo SubtractMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Subtract ), BindingAttr );
-    private static readonly MethodInfo MultiplyMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Multiply ), BindingAttr );
-    private static readonly MethodInfo DivideMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Divide ), BindingAttr );
+    private static readonly MethodInfo AddMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Add ), BindingAttr );
+    private static readonly MethodInfo SubtractMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Subtract ), BindingAttr );
+    private static readonly MethodInfo MultiplyMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Multiply ), BindingAttr );
+    private static readonly MethodInfo DivideMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Divide ), BindingAttr );
 
     // Methods
 
@@ -63,8 +63,8 @@ public static class MathExpression<TNode>
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
             return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
 
-        return leftValue is int leftInt && rightValue is int rightInt 
-            ? Scalar.Value( leftInt / rightInt ) 
+        return leftValue is int leftInt && rightValue is int rightInt
+            ? Scalar.Value( leftInt / rightInt )
             : Scalar.Value( (float) leftValue / (float) rightValue );
     }
 
@@ -87,7 +87,7 @@ public static class MathExpression<TNode>
         if ( valueType is NodeList<TNode> nodes )
         {
             var node = nodes.OneOrDefault();
-            
+
             if ( node != null && Descriptor.Accessor.TryGetValueFromNode( node, out var nodeValue ) )
             {
                 if ( nodeValue is float || nodeValue is int )

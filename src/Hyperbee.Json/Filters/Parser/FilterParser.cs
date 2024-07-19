@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -412,7 +412,7 @@ public class FilterParser<TNode> : FilterParser
             Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
             Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression ),
             Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
-            
+
             Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression ),
             Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
             Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
@@ -432,8 +432,8 @@ public class FilterParser<TNode> : FilterParser
 
         static Expression ConvertExpression<TType>( Expression expression )
         {
-            return expression != null && expression.Type != typeof(TType) 
-                ? Expression.Convert( expression, typeof(TType) ) 
+            return expression != null && expression.Type != typeof( TType )
+                ? Expression.Convert( expression, typeof( TType ) )
                 : expression;
         }
     }

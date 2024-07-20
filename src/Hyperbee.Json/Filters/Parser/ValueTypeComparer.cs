@@ -136,7 +136,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         {
             if ( !TryGetValueType( accessor, leftItem, out var leftItemValue ) )
                 continue;
- 
+
             if ( Find( rightList, leftItemValue ) )
                 return true;
         }

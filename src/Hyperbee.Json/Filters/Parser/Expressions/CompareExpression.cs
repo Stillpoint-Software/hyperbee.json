@@ -31,7 +31,7 @@ internal static class CompareExpression<TNode>
     private static readonly MethodInfo IsLessThanOrEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsLessThanOrEqual ), BindingAttr );
     private static readonly MethodInfo IsGreaterThanMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsGreaterThan ), BindingAttr );
     private static readonly MethodInfo IsGreaterThanOrEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsGreaterThanOrEqual ), BindingAttr );
-    private static readonly MethodInfo InMethod = typeof(CompareExpression<TNode>).GetMethod( nameof( In ), BindingAttr );
+    private static readonly MethodInfo InMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( In ), BindingAttr );
     private static readonly MethodInfo AndAlsoMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( AndAlso ), BindingAttr );
     private static readonly MethodInfo OrElseMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( OrElse ), BindingAttr );
     private static readonly MethodInfo NotMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( NotBoolean ), BindingAttr );

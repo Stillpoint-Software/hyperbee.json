@@ -4,7 +4,7 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
-public static class CompareExpression<TNode>
+internal static class CompareExpression<TNode>
 {
     private static readonly IValueTypeComparer Comparer = JsonTypeDescriptorRegistry.GetDescriptor<TNode>().Comparer;
 

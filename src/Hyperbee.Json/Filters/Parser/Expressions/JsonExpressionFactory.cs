@@ -38,22 +38,20 @@ internal class JsonExpressionFactory : IExpressionFactory
 
         node = default;
         return false;
+    }
 
-        // Helper to replace single quotes with double quotes
-
-        static void ConvertToDoubleQuotes( ref Span<byte> buffer, int length )
+    private static void ConvertToDoubleQuotes( ref Span<byte> buffer, int length )
+    {
+        var insideString = false;
+        for ( var i = 0; i < length; i++ )
         {
-            var insideString = false;
-            for ( var i = 0; i < length; i++ )
+            if ( buffer[i] == (byte) '\"' )
             {
-                if ( buffer[i] == (byte) '\"' )
-                {
-                    insideString = !insideString;
-                }
-                else if ( !insideString && buffer[i] == (byte) '\'' && (i == 0 || buffer[i - 1] != '\\') )
-                {
-                    buffer[i] = (byte) '\"';
-                }
+                insideString = !insideString;
+            }
+            else if ( !insideString && buffer[i] == (byte) '\'' && (i == 0 || buffer[i - 1] != '\\') )
+            {
+                buffer[i] = (byte) '\"';
             }
         }
     }

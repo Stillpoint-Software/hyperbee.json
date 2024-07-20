@@ -74,7 +74,6 @@ public class FilterParser<TNode> : FilterParser
         return Merge( in state, baseItem, items );
     }
 
-
     private static ExprItem GetExprItem( ref ParserState state )
     {
         var expressionInfo = new ExpressionInfo();
@@ -133,14 +132,8 @@ public class FilterParser<TNode> : FilterParser
 
             NextCharacter( ref state, itemStart, out var nextChar, ref quote ); // will advance state.Pos
 
-            if ( IsFinished( in state, nextChar ) )
+            if ( IsFinished( in state, nextChar, ref itemEnd ) )
             {
-                break;
-            }
-
-            if ( state.EndOfBuffer )
-            {
-                itemEnd = state.Pos; // include the final character
                 break;
             }
         }
@@ -149,18 +142,23 @@ public class FilterParser<TNode> : FilterParser
 
         return;
 
-        // Helper method to determine if item collection is finished
-        static bool IsFinished( in ParserState state, char ch )
+        static bool IsFinished( in ParserState state, char ch, ref int itemEnd )
         {
             // order of operations matters
+            bool result = state switch
+            {
+                _ when state.BracketDepth != 0 => false,
+                _ when !state.Operator.IsNonOperator() => true,
+                _ when ch == state.TerminalCharacter => true, // [ '\0' or ',' or ')' ]
+                _ => false
+            };
 
-            if ( state.BracketDepth != 0 )
-                return false;
+            if ( result || !state.EndOfBuffer )
+                return result;
 
-            if ( state.Operator.IsNonOperator() == false )
-                return true;
-
-            return ch == state.TerminalCharacter; // [ '\0' or ',' or ')' ]
+            // not finished, but end-of-buffer
+            itemEnd = state.Pos;
+            return true;
         }
     }
 
@@ -404,8 +402,8 @@ public class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right )
     {
-        left.Expression = ConvertExpression<IValueType>( left.Expression );
-        right.Expression = ConvertExpression<IValueType>( right.Expression );
+        left.Expression = ConvertOrDefault( left.Expression, typeof( IValueType ) );
+        right.Expression = ConvertOrDefault( right.Expression, typeof(IValueType) );
 
         left.Expression = left.Operator switch
         {
@@ -428,7 +426,7 @@ public class FilterParser<TNode> : FilterParser
             Operator.Divide => MathExpression<TNode>.Divide( left.Expression, right.Expression ),
             Operator.Modulus => MathExpression<TNode>.Modulus( left.Expression, right.Expression ),
 
-            _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
+            _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}." )
         };
 
         left.Operator = right.Operator;
@@ -436,12 +434,8 @@ public class FilterParser<TNode> : FilterParser
 
         return;
 
-        static Expression ConvertExpression<TType>( Expression expression )
-        {
-            return expression != null && expression.Type != typeof( TType )
-                ? Expression.Convert( expression, typeof( TType ) )
-                : expression;
-        }
+        static Expression ConvertOrDefault( Expression expression, Type type ) => 
+            expression == null ? null : Expression.Convert( expression, type );
     }
 
     // Throw helpers

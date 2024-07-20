@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Extensions;
@@ -14,6 +14,7 @@ public static class MathExpression<TNode>
 
     public static Expression Add( Expression left, Expression right ) => Expression.Call( AddMethod, left, right );
     public static Expression Subtract( Expression left, Expression right ) => Expression.Call( SubtractMethod, left, right );
+    public static Expression Modulus( Expression left, Expression right ) => Expression.Call( ModulusMethod, left, right );
     public static Expression Multiply( Expression left, Expression right ) => Expression.Call( MultiplyMethod, left, right );
     public static Expression Divide( Expression left, Expression right ) => Expression.Call( DivideMethod, left, right );
 
@@ -21,10 +22,11 @@ public static class MathExpression<TNode>
 
     private const BindingFlags BindingAttr = BindingFlags.Static | BindingFlags.NonPublic;
 
-    private static readonly MethodInfo AddMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Add ), BindingAttr );
-    private static readonly MethodInfo SubtractMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Subtract ), BindingAttr );
-    private static readonly MethodInfo MultiplyMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Multiply ), BindingAttr );
-    private static readonly MethodInfo DivideMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Divide ), BindingAttr );
+    private static readonly MethodInfo AddMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Add ), BindingAttr );
+    private static readonly MethodInfo SubtractMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Subtract ), BindingAttr );
+    private static readonly MethodInfo ModulusMethod = typeof(MathExpression<TNode>).GetMethod( nameof(Modulus), BindingAttr );
+    private static readonly MethodInfo MultiplyMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Multiply ), BindingAttr );
+    private static readonly MethodInfo DivideMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Divide ), BindingAttr );
 
     // Methods
 
@@ -48,6 +50,16 @@ public static class MathExpression<TNode>
             : Scalar.Value( (float) leftValue - (float) rightValue );
     }
 
+    private static IValueType Modulus( IValueType left, IValueType right )
+    {
+        if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
+            return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
+
+        return leftValue is int leftInt && rightValue is int rightInt
+            ? Scalar.Value( leftInt % rightInt )
+            : Scalar.Value( (float) leftValue % (float) rightValue );
+    }
+
     private static IValueType Multiply( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
@@ -63,9 +75,34 @@ public static class MathExpression<TNode>
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
             return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
 
-        return leftValue is int leftInt && rightValue is int rightInt
-            ? Scalar.Value( leftInt / rightInt )
-            : Scalar.Value( (float) leftValue / (float) rightValue );
+        // dividing two int values may produce a fractional result
+        var floatValue = Convert.ToSingle( leftValue ) / Convert.ToSingle( rightValue );
+
+        // back to int if possible
+        if ( leftValue is int && rightValue is int && TryConvertToInt( floatValue, out var intValue ) )
+            return Scalar.Value( intValue );
+
+        return Scalar.Value( floatValue );
+
+        // Helper to convert float to int if the fractional part is within a tolerance
+
+        static bool TryConvertToInt( float value, out int result, float tolerance = 1e-6f )
+        {
+            // Calculate the difference between the float and the nearest integer
+            float fractionalPart = Math.Abs( value - (float) Math.Round( value ) );
+
+            // Check if the fractional part is within the tolerance
+            if ( fractionalPart < tolerance )
+            {
+                // If within the tolerance, assign the rounded value to result and return true
+                result = (int) Math.Round( value );
+                return true;
+            }
+
+            // If not within the tolerance, assign default value to result and return false
+            result = default;
+            return false;
+        }
     }
 
     // Helpers

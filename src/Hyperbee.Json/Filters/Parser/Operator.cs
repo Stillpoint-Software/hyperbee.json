@@ -6,41 +6,42 @@ public enum Operator
     None = 0x0,
 
     // Flags
-    NonOperator = 0x1,
-    Comparison = 0x2,
-    Logical = 0x4,
-    Math = 0x8,
-    Grouping = 0x10,
+    NonOperator = 0x0001,
+    Comparison = 0x0002,
+    Logical = 0x0004,
+    Math = 0x0008,
+    Grouping = 0x0010,
 
     // Grouping Operators
-    OpenParen = 0x100 | Grouping,
-    ClosedParen = 0x200 | Grouping,
+    OpenParen = 0x0100 | Grouping,
+    ClosedParen = 0x0200 | Grouping,
 
     // Logical Operators
-    Not = 0x300 | Logical,
-    Or = 0x400 | Logical,
-    And = 0x500 | Logical,
-    In = 0x600 | Logical,
+    Not = 0x0300 | Logical,
+    Or = 0x0400 | Logical,
+    And = 0x0500 | Logical,
+    In = 0x0600 | Logical,
 
     // Comparison Operators
-    Equals = 0x700 | Comparison,
-    NotEquals = 0x800 | Comparison,
-    LessThan = 0x900 | Comparison,
-    LessThanOrEqual = 0xA00 | Comparison,
-    GreaterThan = 0xB00 | Comparison,
-    GreaterThanOrEqual = 0xC00 | Comparison,
+    Equals = 0x0700 | Comparison,
+    NotEquals = 0x0800 | Comparison,
+    LessThan = 0x0900 | Comparison,
+    LessThanOrEqual = 0x0A00 | Comparison,
+    GreaterThan = 0x0B00 | Comparison,
+    GreaterThanOrEqual = 0x0C00 | Comparison,
 
     // Math Operators
-    Add = 0xD00 | Math,
-    Subtract = 0xE00 | Math,
-    Multiply = 0xF00 | Math,
+    Add = 0x0D00 | Math,
+    Subtract = 0x0E00 | Math,
+    Multiply = 0x0F00 | Math,
     Divide = 0x1000 | Math,
+    Modulus = 0x1100 | Math,
 
     // Specific non-operators
-    Whitespace = 0x1100 | NonOperator,
-    Quotes = 0x1200 | NonOperator,
-    Token = 0x1300 | NonOperator,
-    Bracket = 0x1400 | NonOperator,
+    Whitespace = 0x2000 | NonOperator,
+    Quotes = 0x2100 | NonOperator,
+    Token = 0x2200 | NonOperator,
+    Bracket = 0x2300 | NonOperator,
 }
 
 internal static class OperatorExtensions

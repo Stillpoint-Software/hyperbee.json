@@ -10,7 +10,6 @@
 #endregion
 
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq.Expressions;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Parser.Expressions;
@@ -263,6 +262,9 @@ public class FilterParser<TNode> : FilterParser
                     ? Operator.Multiply
                     : Operator.Token; // .* [* ,*
                 break;
+            case '%':
+                state.Operator = Operator.Modulus;
+                break;
             case '/':
                 state.Operator = Operator.Divide;
                 break;
@@ -393,7 +395,8 @@ public class FilterParser<TNode> : FilterParser
                 Operator.Add or
                     Operator.Subtract => 5,
                 Operator.Multiply or
-                    Operator.Divide => 6,
+                    Operator.Divide or
+                    Operator.Modulus => 6,
                 _ => 0,
             };
         }
@@ -421,6 +424,7 @@ public class FilterParser<TNode> : FilterParser
             Operator.Subtract => MathExpression<TNode>.Subtract( left.Expression, right.Expression ),
             Operator.Multiply => MathExpression<TNode>.Multiply( left.Expression, right.Expression ),
             Operator.Divide => MathExpression<TNode>.Divide( left.Expression, right.Expression ),
+            Operator.Modulus => MathExpression<TNode>.Modulus( left.Expression, right.Expression ),
 
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
         };

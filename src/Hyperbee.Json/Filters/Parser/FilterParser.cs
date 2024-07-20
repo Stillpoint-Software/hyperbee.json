@@ -250,17 +250,17 @@ public class FilterParser<TNode> : FilterParser
             case '+':
                 state.Operator = IsAddSubtractOperator( state, start )
                     ? Operator.Add
-                    : Operator.Token; // +1 -1 1e+2 1e-2
+                    : Operator.Token; // ignore +1 -1 1e+2 1e-2
                 break;
             case '-':
                 state.Operator = IsAddSubtractOperator( state, start )
                     ? Operator.Subtract
-                    : Operator.Token; // +1 -1 1e+2 1e-2
+                    : Operator.Token; // ignore +1 -1 1e+2 1e-2
                 break;
             case '*':
                 state.Operator = IsMultiplyOperator( state, start )
                     ? Operator.Multiply
-                    : Operator.Token; // .* [* ,*
+                    : Operator.Token; // ignore .* [* ,*
                 break;
             case '%':
                 state.Operator = Operator.Modulus;
@@ -419,6 +419,8 @@ public class FilterParser<TNode> : FilterParser
             Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression ),
             Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
             Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
+
+            Operator.In => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
 
             Operator.Add => MathExpression<TNode>.Add( left.Expression, right.Expression ),
             Operator.Subtract => MathExpression<TNode>.Subtract( left.Expression, right.Expression ),

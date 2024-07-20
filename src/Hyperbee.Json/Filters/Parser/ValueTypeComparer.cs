@@ -8,6 +8,8 @@ public interface IValueTypeComparer
     public int Compare( IValueType left, IValueType right, Operator operation );
 
     public bool Exists( IValueType node );
+
+    public bool In( IValueType left, IValueType right );
 }
 
 public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValueTypeComparer
@@ -114,6 +116,47 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         {
             if ( nodeType is NodeList<TNode> { IsNormalized: false } )
                 throw new NotSupportedException( "Unsupported non-single query." );
+        }
+    }
+
+    public bool In( IValueType left, IValueType right )
+    {
+        if ( right is not NodeList<TNode> rightList )
+            throw new NotSupportedException( "The right side of an `in` must be a node list." );
+
+        // Check if the left value is in rightList
+        if ( left is not NodeList<TNode> leftList )
+        {
+            // Check if the left value is in rightList
+            return Find( rightList, left );
+        }
+
+        // Check if any element in leftList is in rightList
+        foreach ( var leftItem in leftList )
+        {
+            if ( !TryGetValueType( accessor, leftItem, out var leftItemValue ) )
+                continue;
+ 
+            if ( Find( rightList, leftItemValue ) )
+                return true;
+        }
+
+        return false;
+
+        // Helper method to find a value in a NodeList
+
+        bool Find( NodeList<TNode> nodeList, IValueType leftItemValue )
+        {
+            foreach ( var rightItem in nodeList )
+            {
+                if ( TryGetValueType( accessor, rightItem, out var rightItemValue ) &&
+                     CompareValues( leftItemValue, rightItemValue, out _ ) == 0 )
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

@@ -16,6 +16,7 @@ internal static class CompareExpression<TNode>
     public static Expression LessThanOrEqual( Expression left, Expression right ) => Expression.Call( IsLessThanOrEqualMethod, left, right );
     public static Expression GreaterThan( Expression left, Expression right ) => Expression.Call( IsGreaterThanMethod, left, right );
     public static Expression GreaterThanOrEqual( Expression left, Expression right ) => Expression.Call( IsGreaterThanOrEqualMethod, left, right );
+    public static Expression In( Expression left, Expression right ) => Expression.Call( InMethod, left, right );
     public static Expression And( Expression left, Expression right ) => Expression.Call( AndAlsoMethod, left, right );
     public static Expression Or( Expression left, Expression right ) => Expression.Call( OrElseMethod, left, right );
     public static Expression Not( Expression expression ) => Expression.Call( NotMethod, expression );
@@ -30,6 +31,7 @@ internal static class CompareExpression<TNode>
     private static readonly MethodInfo IsLessThanOrEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsLessThanOrEqual ), BindingAttr );
     private static readonly MethodInfo IsGreaterThanMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsGreaterThan ), BindingAttr );
     private static readonly MethodInfo IsGreaterThanOrEqualMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( IsGreaterThanOrEqual ), BindingAttr );
+    private static readonly MethodInfo InMethod = typeof(CompareExpression<TNode>).GetMethod( nameof( In ), BindingAttr );
     private static readonly MethodInfo AndAlsoMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( AndAlso ), BindingAttr );
     private static readonly MethodInfo OrElseMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( OrElse ), BindingAttr );
     private static readonly MethodInfo NotMethod = typeof( CompareExpression<TNode> ).GetMethod( nameof( NotBoolean ), BindingAttr );
@@ -80,6 +82,11 @@ internal static class CompareExpression<TNode>
             return leftBoolValue.Value || rightBoolValue.Value;
 
         return Comparer.Exists( left ) || Comparer.Exists( right );
+    }
+
+    private static ScalarValue<bool> In( IValueType left, IValueType right )
+    {
+        return Comparer.In( left, right );
     }
 
     private static ScalarValue<bool> NotBoolean( IValueType value )

@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Extensions;
@@ -22,11 +22,11 @@ public static class MathExpression<TNode>
 
     private const BindingFlags BindingAttr = BindingFlags.Static | BindingFlags.NonPublic;
 
-    private static readonly MethodInfo AddMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Add ), BindingAttr );
-    private static readonly MethodInfo SubtractMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Subtract ), BindingAttr );
-    private static readonly MethodInfo ModulusMethod = typeof(MathExpression<TNode>).GetMethod( nameof(Modulus), BindingAttr );
-    private static readonly MethodInfo MultiplyMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Multiply ), BindingAttr );
-    private static readonly MethodInfo DivideMethod = typeof(MathExpression<TNode> ).GetMethod( nameof( Divide ), BindingAttr );
+    private static readonly MethodInfo AddMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Add ), BindingAttr );
+    private static readonly MethodInfo SubtractMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Subtract ), BindingAttr );
+    private static readonly MethodInfo ModulusMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Modulus ), BindingAttr );
+    private static readonly MethodInfo MultiplyMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Multiply ), BindingAttr );
+    private static readonly MethodInfo DivideMethod = typeof( MathExpression<TNode> ).GetMethod( nameof( Divide ), BindingAttr );
 
     // Methods
 

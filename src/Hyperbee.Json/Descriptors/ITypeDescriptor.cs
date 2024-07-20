@@ -13,14 +13,14 @@ public interface ITypeDescriptor
 public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
     public IValueAccessor<TNode> Accessor { get; }
-    public IFilterEvaluator<TNode> FilterEvaluator { get; }
+    public IFilterRuntime<TNode> FilterRuntime { get; }
 
     public IValueTypeComparer Comparer { get; }
     bool CanUsePointer { get; }
 
-    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out IFilterEvaluator<TNode> filterEvaluator )
+    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out IFilterRuntime<TNode> filterRuntime )
     {
         valueAccessor = Accessor;
-        filterEvaluator = FilterEvaluator;
+        filterRuntime = FilterRuntime;
     }
 }

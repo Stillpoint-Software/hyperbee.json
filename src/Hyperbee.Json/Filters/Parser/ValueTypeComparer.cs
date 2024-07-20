@@ -134,7 +134,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         // Check if any element in leftList is in rightList
         foreach ( var leftItem in leftList )
         {
-            if ( !TryGetValueType( accessor, leftItem, out var leftItemValue ) )
+            if ( !TryGetValue( accessor, leftItem, out var leftItemValue ) )
                 continue;
 
             if ( Find( rightList, leftItemValue ) )
@@ -149,7 +149,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         {
             foreach ( var rightItem in nodeList )
             {
-                if ( TryGetValueType( accessor, rightItem, out var rightItemValue ) &&
+                if ( TryGetValue( accessor, rightItem, out var rightItemValue ) &&
                      CompareValues( leftItemValue, rightItemValue, out _ ) == 0 )
                 {
                     return true;
@@ -184,8 +184,8 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
                 return 1; // Left has more elements, so it is greater
 
             // if the values can be extracted, compare the values directly
-            if ( TryGetValueType( accessor, leftEnumerator.Current, out var leftItemValue ) &&
-                 TryGetValueType( accessor, rightEnumerator.Current, out var rightItemValue ) )
+            if ( TryGetValue( accessor, leftEnumerator.Current, out var leftItemValue ) &&
+                 TryGetValue( accessor, rightEnumerator.Current, out var rightItemValue ) )
                 return CompareValues( leftItemValue, rightItemValue, out _ );
 
             if ( !accessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
@@ -208,7 +208,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         {
             nodeCount++;
 
-            if ( !TryGetValueType( accessor, item, out var itemValue ) )
+            if ( !TryGetValue( accessor, item, out var itemValue ) )
                 continue; // Skip if value cannot be extracted
 
             lastCompare = CompareValues( itemValue, value, out typeMismatch );
@@ -275,7 +275,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
             left is ScalarValue<int> && right is ScalarValue<float> || left is ScalarValue<float> && right is ScalarValue<int>;
     }
 
-    private static bool TryGetValueType( IValueAccessor<TNode> accessor, TNode node, out IValueType nodeType )
+    private static bool TryGetValue( IValueAccessor<TNode> accessor, TNode node, out IValueType nodeType )
     {
         if ( accessor.TryGetValueFromNode( node, out var itemValue ) )
         {

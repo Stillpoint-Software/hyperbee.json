@@ -96,7 +96,7 @@ public static class JsonPath<TNode>
     {
         var stack = new NodeArgsStack();
 
-        var (accessor, filterEvaluator) = Descriptor;
+        var (accessor, filterRuntime) = Descriptor;
 
         do
         {
@@ -205,7 +205,7 @@ public static class JsonPath<TNode>
                         {
                             foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                             {
-                                if ( !filterEvaluator.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
+                                if ( !filterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
                                     continue;
 
                                 // optimization: quicker return for tail values

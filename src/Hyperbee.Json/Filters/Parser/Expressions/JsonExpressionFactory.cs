@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
 
@@ -23,17 +21,17 @@ internal class JsonExpressionFactory : IExpressionFactory
         return true;
     }
 
-    public static bool TryParseNode<TNode>( IValueAccessor<TNode> accessor, ReadOnlySpan<char> item, out TNode node )
+    private static bool TryParseNode<TNode>( IValueAccessor<TNode> accessor, ReadOnlySpan<char> item, out TNode node )
     {
         var maxLength = Encoding.UTF8.GetMaxByteCount( item.Length );
-        Span<byte> utf8Bytes = maxLength <= 256 ? stackalloc byte[maxLength] : new byte[maxLength];
+        Span<byte> bytes = maxLength <= 256 ? stackalloc byte[maxLength] : new byte[maxLength];
 
-        var length = Encoding.UTF8.GetBytes( item, utf8Bytes );
+        var length = Encoding.UTF8.GetBytes( item, bytes );
 
         // the jsonpath rfc supports single quotes, but the json parser does not
-        ReplaceSingleQuotes( ref utf8Bytes, length );
+        ConvertToDoubleQuotes( ref bytes, length );
 
-        var reader = new Utf8JsonReader( utf8Bytes[..length] );
+        var reader = new Utf8JsonReader( bytes[..length] );
 
         if ( accessor.TryParseNode( ref reader, out node ) )
             return true;
@@ -43,7 +41,7 @@ internal class JsonExpressionFactory : IExpressionFactory
 
         // Helper to replace single quotes with double quotes
 
-        static void ReplaceSingleQuotes( ref Span<byte> buffer, int length )
+        static void ConvertToDoubleQuotes( ref Span<byte> buffer, int length )
         {
             var insideString = false;
             for ( var i = 0; i < length; i++ )

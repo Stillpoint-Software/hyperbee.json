@@ -36,7 +36,9 @@ public static class TruthyExpression
 
         return truthy;
 
-        static bool Any( IEnumerable enumerable ) // Avoid cast to object: enumerable.Cast<object>().Any()
+        // Helper method to avoid casting IEnumerable to IEnumerable<object>
+
+        static bool Any( IEnumerable enumerable )
         {
             var enumerator = enumerable.GetEnumerator();
             using var disposable = enumerator as IDisposable;

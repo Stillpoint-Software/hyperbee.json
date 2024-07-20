@@ -46,7 +46,7 @@ public class FilterParser<TNode> : FilterParser
 
         var expression = Parse( ref state );
 
-        return TruthyExpression.IsTruthyExpression( expression );
+        return TruthyExpression.IsTruthyExpression( expression ); 
     }
 
     internal static Expression Parse( ref ParserState state ) // recursion entrypoint
@@ -60,7 +60,7 @@ public class FilterParser<TNode> : FilterParser
         do
         {
             MoveNext( ref state );
-            items.Enqueue( GetExprItem( ref state ) ); // will recurse for nested expressions
+            items.Enqueue( GetExprItem( ref state ) ); // may cause recursion
 
         } while ( state.IsParsing );
 
@@ -82,13 +82,13 @@ public class FilterParser<TNode> : FilterParser
         if ( NotExpressionFactory.TryGetExpression<TNode>( ref state, out var expression, ref expressionInfo ) )
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( ParenExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) ) // will recurse.
+        if ( ParenExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) ) // will recurse
             return ExprItem( ref state, expression, expressionInfo );
 
         if ( SelectExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
             return ExprItem( ref state, expression, expressionInfo );
 
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) ) // may recurse for each function argument.
+        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) ) // may recurse for each function argument
             return ExprItem( ref state, expression, expressionInfo );
 
         if ( LiteralExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
@@ -129,7 +129,7 @@ public class FilterParser<TNode> : FilterParser
 
         while ( true )
         {
-            itemEnd = state.Pos; // store before calling NextCharacter 
+            itemEnd = state.Pos; // save Pos before calling NextCharacter 
 
             NextCharacter( ref state, itemStart, out var nextChar, ref quote ); // will advance state.Pos
 
@@ -149,7 +149,7 @@ public class FilterParser<TNode> : FilterParser
 
         return;
 
-        // Helper method to determine if item parsing is finished
+        // Helper method to determine if item collection is finished
         static bool IsFinished( in ParserState state, char ch )
         {
             // order of operations matters

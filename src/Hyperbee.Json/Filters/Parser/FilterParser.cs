@@ -403,7 +403,7 @@ public class FilterParser<TNode> : FilterParser
     private static void MergeItems( ExprItem left, ExprItem right )
     {
         left.Expression = ConvertOrDefault( left.Expression, typeof( IValueType ) );
-        right.Expression = ConvertOrDefault( right.Expression, typeof(IValueType) );
+        right.Expression = ConvertOrDefault( right.Expression, typeof( IValueType ) );
 
         left.Expression = left.Operator switch
         {
@@ -434,7 +434,7 @@ public class FilterParser<TNode> : FilterParser
 
         return;
 
-        static Expression ConvertOrDefault( Expression expression, Type type ) => 
+        static Expression ConvertOrDefault( Expression expression, Type type ) =>
             expression == null ? null : Expression.Convert( expression, type );
     }
 

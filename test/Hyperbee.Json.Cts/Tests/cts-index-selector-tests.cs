@@ -21,14 +21,14 @@ public class CtsIndexSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "first"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -46,14 +46,14 @@ public class CtsIndexSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "second"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -71,12 +71,12 @@ public class CtsIndexSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -116,14 +116,14 @@ public class CtsIndexSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "second"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -141,14 +141,14 @@ public class CtsIndexSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "first"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -166,12 +166,12 @@ public class CtsIndexSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -188,12 +188,12 @@ public class CtsIndexSelectorTest
                 {
                   "foo": 1
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );

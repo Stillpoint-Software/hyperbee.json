@@ -29,7 +29,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -37,7 +37,7 @@ public class CtsSliceSelectorTest
                   1,
                   2
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -63,7 +63,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -72,7 +72,7 @@ public class CtsSliceSelectorTest
                   3,
                   5
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -92,7 +92,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -102,7 +102,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -122,7 +122,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -132,7 +132,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -158,7 +158,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -166,7 +166,7 @@ public class CtsSliceSelectorTest
                   0,
                   1
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -192,7 +192,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -203,7 +203,7 @@ public class CtsSliceSelectorTest
                   6,
                   8
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -223,7 +223,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -233,7 +233,7 @@ public class CtsSliceSelectorTest
                   1,
                   0
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -253,7 +253,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -262,7 +262,7 @@ public class CtsSliceSelectorTest
                   2,
                   1
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -282,7 +282,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -291,7 +291,7 @@ public class CtsSliceSelectorTest
                   1,
                   0
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -311,7 +311,7 @@ public class CtsSliceSelectorTest
                   2,
                   3
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -319,7 +319,7 @@ public class CtsSliceSelectorTest
                   3,
                   1
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -345,12 +345,12 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -376,7 +376,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -384,7 +384,7 @@ public class CtsSliceSelectorTest
                   9,
                   8
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -410,7 +410,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -419,7 +419,7 @@ public class CtsSliceSelectorTest
                   7,
                   5
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -445,7 +445,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -454,7 +454,7 @@ public class CtsSliceSelectorTest
                   7,
                   5
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -480,7 +480,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -488,7 +488,7 @@ public class CtsSliceSelectorTest
                   5,
                   6
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -514,7 +514,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -522,7 +522,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -548,7 +548,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -562,7 +562,7 @@ public class CtsSliceSelectorTest
                   7,
                   8
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -588,7 +588,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -602,7 +602,7 @@ public class CtsSliceSelectorTest
                   3,
                   2
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -628,7 +628,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -636,7 +636,7 @@ public class CtsSliceSelectorTest
                   7,
                   6
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -684,12 +684,12 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -715,12 +715,12 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -735,12 +735,12 @@ public class CtsSliceSelectorTest
         var document = TestHelper.Parse( documentType,
             """
                 []
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -755,12 +755,12 @@ public class CtsSliceSelectorTest
         var document = TestHelper.Parse( documentType,
             """
                 []
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -786,7 +786,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -802,7 +802,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -828,7 +828,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -843,7 +843,7 @@ public class CtsSliceSelectorTest
                   2,
                   1
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -869,7 +869,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -883,7 +883,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -909,14 +909,14 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   0
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -942,7 +942,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -957,7 +957,7 @@ public class CtsSliceSelectorTest
                   2,
                   1
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -983,7 +983,7 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -993,7 +993,7 @@ public class CtsSliceSelectorTest
                   1,
                   0
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1019,14 +1019,14 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   1
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1052,14 +1052,14 @@ public class CtsSliceSelectorTest
                   8,
                   9
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   9
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );

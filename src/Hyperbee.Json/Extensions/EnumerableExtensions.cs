@@ -1,4 +1,5 @@
-﻿namespace Hyperbee.Json.Extensions;
+﻿
+namespace Hyperbee.Json.Extensions;
 
 public static class EnumerableExtensions
 {

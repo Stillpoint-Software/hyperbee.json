@@ -21,14 +21,14 @@ public class CtsNameSelectorTest
                   "a": "A",
                   "b": "B"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -46,12 +46,12 @@ public class CtsNameSelectorTest
                   "a": "A",
                   "b": "B"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -69,12 +69,12 @@ public class CtsNameSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -443,14 +443,14 @@ public class CtsNameSelectorTest
                 {
                   " ": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -467,14 +467,14 @@ public class CtsNameSelectorTest
                 {
                   "\"": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -491,14 +491,14 @@ public class CtsNameSelectorTest
                 {
                   "\\": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -515,14 +515,14 @@ public class CtsNameSelectorTest
                 {
                   "/": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -539,14 +539,14 @@ public class CtsNameSelectorTest
                 {
                   "\b": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -563,14 +563,14 @@ public class CtsNameSelectorTest
                 {
                   "\f": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -587,14 +587,14 @@ public class CtsNameSelectorTest
                 {
                   "\n": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -611,14 +611,14 @@ public class CtsNameSelectorTest
                 {
                   "\r": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -635,14 +635,14 @@ public class CtsNameSelectorTest
                 {
                   "\t": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -659,14 +659,14 @@ public class CtsNameSelectorTest
                 {
                   "☺": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -683,14 +683,14 @@ public class CtsNameSelectorTest
                 {
                   "☺": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -707,14 +707,14 @@ public class CtsNameSelectorTest
                 {
                   "𝄞": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -731,14 +731,14 @@ public class CtsNameSelectorTest
                 {
                   "😀": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -789,14 +789,14 @@ public class CtsNameSelectorTest
                   "a": "A",
                   "b": "B"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -814,12 +814,12 @@ public class CtsNameSelectorTest
                   "a": "A",
                   "b": "B"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -837,12 +837,12 @@ public class CtsNameSelectorTest
                   "first",
                   "second"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1211,14 +1211,14 @@ public class CtsNameSelectorTest
                 {
                   " ": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1235,14 +1235,14 @@ public class CtsNameSelectorTest
                 {
                   "'": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1259,14 +1259,14 @@ public class CtsNameSelectorTest
                 {
                   "\\": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1283,14 +1283,14 @@ public class CtsNameSelectorTest
                 {
                   "/": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1307,14 +1307,14 @@ public class CtsNameSelectorTest
                 {
                   "\b": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1331,14 +1331,14 @@ public class CtsNameSelectorTest
                 {
                   "\f": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1355,14 +1355,14 @@ public class CtsNameSelectorTest
                 {
                   "\n": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1379,14 +1379,14 @@ public class CtsNameSelectorTest
                 {
                   "\r": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1403,14 +1403,14 @@ public class CtsNameSelectorTest
                 {
                   "\t": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1427,14 +1427,14 @@ public class CtsNameSelectorTest
                 {
                   "☺": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1451,14 +1451,14 @@ public class CtsNameSelectorTest
                 {
                   "☺": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1475,14 +1475,14 @@ public class CtsNameSelectorTest
                 {
                   "𝄞": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1499,14 +1499,14 @@ public class CtsNameSelectorTest
                 {
                   "😀": "A"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "A"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1558,14 +1558,14 @@ public class CtsNameSelectorTest
                   "b": "B",
                   "": "C"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "C"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1584,14 +1584,14 @@ public class CtsNameSelectorTest
                   "b": "B",
                   "": "C"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "C"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );

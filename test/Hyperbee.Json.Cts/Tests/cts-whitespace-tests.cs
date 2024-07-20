@@ -27,7 +27,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -37,7 +37,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -61,7 +61,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -71,7 +71,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -95,7 +95,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -105,7 +105,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -129,7 +129,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -139,7 +139,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -163,7 +163,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -173,7 +173,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -197,7 +197,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -207,7 +207,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -231,7 +231,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -241,7 +241,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -265,7 +265,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -275,7 +275,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -299,7 +299,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -309,7 +309,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -333,7 +333,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -343,7 +343,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -367,7 +367,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -377,7 +377,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -401,7 +401,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -411,7 +411,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -435,7 +435,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -445,7 +445,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -469,7 +469,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -479,7 +479,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -503,7 +503,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -513,7 +513,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -537,7 +537,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -547,7 +547,7 @@ public class CtsWhitespaceTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -617,7 +617,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -629,7 +629,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -655,7 +655,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -667,7 +667,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -693,7 +693,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -705,7 +705,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -731,7 +731,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -743,7 +743,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -761,14 +761,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -786,14 +786,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -811,14 +811,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -836,14 +836,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -861,14 +861,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -886,14 +886,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -911,14 +911,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -936,14 +936,14 @@ public class CtsWhitespaceTest
                   "foo",
                   "123"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -969,7 +969,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -981,7 +981,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1007,7 +1007,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1019,7 +1019,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1045,7 +1045,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1057,7 +1057,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1083,7 +1083,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1095,7 +1095,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1117,7 +1117,7 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1128,7 +1128,7 @@ public class CtsWhitespaceTest
                     }
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1150,7 +1150,7 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1161,7 +1161,7 @@ public class CtsWhitespaceTest
                     }
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1183,7 +1183,7 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1194,7 +1194,7 @@ public class CtsWhitespaceTest
                     }
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1216,7 +1216,7 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1227,7 +1227,7 @@ public class CtsWhitespaceTest
                     }
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1247,14 +1247,14 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1274,14 +1274,14 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1301,14 +1301,14 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1328,14 +1328,14 @@ public class CtsWhitespaceTest
                   },
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "foo"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1360,7 +1360,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1372,7 +1372,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1397,7 +1397,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1409,7 +1409,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1434,7 +1434,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1446,7 +1446,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1471,7 +1471,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1483,7 +1483,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1508,7 +1508,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1520,7 +1520,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1545,7 +1545,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1557,7 +1557,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1582,7 +1582,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1594,7 +1594,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1619,7 +1619,7 @@ public class CtsWhitespaceTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1631,7 +1631,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1657,7 +1657,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1667,7 +1667,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1693,7 +1693,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1703,7 +1703,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1729,7 +1729,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1739,7 +1739,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1765,7 +1765,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1775,7 +1775,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1801,7 +1801,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1811,7 +1811,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1837,7 +1837,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1847,7 +1847,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1873,7 +1873,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1883,7 +1883,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1909,7 +1909,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1919,7 +1919,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1943,7 +1943,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1953,7 +1953,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1977,7 +1977,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1987,7 +1987,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2011,7 +2011,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2021,7 +2021,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2045,7 +2045,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2055,7 +2055,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2079,7 +2079,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2089,7 +2089,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2113,7 +2113,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2123,7 +2123,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2147,7 +2147,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2157,7 +2157,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2181,7 +2181,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2191,7 +2191,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2215,7 +2215,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2225,7 +2225,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2249,7 +2249,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2259,7 +2259,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2283,7 +2283,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2293,7 +2293,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2317,7 +2317,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2327,7 +2327,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2351,7 +2351,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2361,7 +2361,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2385,7 +2385,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2395,7 +2395,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2419,7 +2419,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2429,7 +2429,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2453,7 +2453,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2463,7 +2463,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2487,7 +2487,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2497,7 +2497,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2521,7 +2521,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2531,7 +2531,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2555,7 +2555,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2565,7 +2565,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2589,7 +2589,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2599,7 +2599,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2623,7 +2623,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2633,7 +2633,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2657,7 +2657,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2667,7 +2667,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2691,7 +2691,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2701,7 +2701,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2725,7 +2725,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2735,7 +2735,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2759,7 +2759,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2769,7 +2769,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2793,7 +2793,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2803,7 +2803,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2827,7 +2827,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2837,7 +2837,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2861,7 +2861,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2871,7 +2871,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2895,7 +2895,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2905,7 +2905,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2929,7 +2929,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2939,7 +2939,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2963,7 +2963,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2973,7 +2973,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2997,7 +2997,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3007,7 +3007,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3035,7 +3035,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3049,7 +3049,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3077,7 +3077,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3091,7 +3091,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3119,7 +3119,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3133,7 +3133,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3161,7 +3161,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3175,7 +3175,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3203,7 +3203,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3217,7 +3217,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3245,7 +3245,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3259,7 +3259,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3287,7 +3287,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3301,7 +3301,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3329,7 +3329,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3343,7 +3343,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3371,7 +3371,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3385,7 +3385,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3413,7 +3413,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3427,7 +3427,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3455,7 +3455,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3469,7 +3469,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3497,7 +3497,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3511,7 +3511,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3539,7 +3539,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3553,7 +3553,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3581,7 +3581,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3595,7 +3595,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3623,7 +3623,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3637,7 +3637,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3665,7 +3665,7 @@ public class CtsWhitespaceTest
                     "b": 1
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3679,7 +3679,7 @@ public class CtsWhitespaceTest
                     "b": 2
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3706,7 +3706,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3715,7 +3715,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3742,7 +3742,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3751,7 +3751,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3778,7 +3778,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3787,7 +3787,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3814,7 +3814,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3823,7 +3823,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3851,7 +3851,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3865,7 +3865,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3893,7 +3893,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3907,7 +3907,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3935,7 +3935,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3949,7 +3949,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3977,7 +3977,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3991,7 +3991,7 @@ public class CtsWhitespaceTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4008,14 +4008,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4032,14 +4032,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4056,14 +4056,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4080,14 +4080,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4106,14 +4106,14 @@ public class CtsWhitespaceTest
                     "b": "ab"
                   }
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4132,14 +4132,14 @@ public class CtsWhitespaceTest
                     "b": "ab"
                   }
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4158,14 +4158,14 @@ public class CtsWhitespaceTest
                     "b": "ab"
                   }
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4184,14 +4184,14 @@ public class CtsWhitespaceTest
                     "b": "ab"
                   }
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4208,14 +4208,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4232,14 +4232,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4256,14 +4256,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4280,14 +4280,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4392,14 +4392,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4416,14 +4416,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4440,14 +4440,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4464,14 +4464,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4488,14 +4488,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4512,14 +4512,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4536,14 +4536,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4560,14 +4560,14 @@ public class CtsWhitespaceTest
                 {
                   "a": "ab"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4585,7 +4585,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4593,7 +4593,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4611,7 +4611,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4619,7 +4619,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4637,7 +4637,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4645,7 +4645,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4663,7 +4663,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4671,7 +4671,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4689,7 +4689,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4697,7 +4697,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4715,7 +4715,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4723,7 +4723,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4741,7 +4741,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4749,7 +4749,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4767,7 +4767,7 @@ public class CtsWhitespaceTest
                   "a": "ab",
                   "b": "bc"
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4775,7 +4775,7 @@ public class CtsWhitespaceTest
                   "ab",
                   "bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4797,7 +4797,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4805,7 +4805,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4827,7 +4827,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4835,7 +4835,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4857,7 +4857,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4865,7 +4865,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4887,7 +4887,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4895,7 +4895,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4917,7 +4917,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4925,7 +4925,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4947,7 +4947,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4955,7 +4955,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4977,7 +4977,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -4985,7 +4985,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5007,7 +5007,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5015,7 +5015,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5037,7 +5037,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5045,7 +5045,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5067,7 +5067,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5075,7 +5075,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5097,7 +5097,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5105,7 +5105,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5127,7 +5127,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5135,7 +5135,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5157,7 +5157,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5165,7 +5165,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5187,7 +5187,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5195,7 +5195,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5217,7 +5217,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5225,7 +5225,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -5247,7 +5247,7 @@ public class CtsWhitespaceTest
                   5,
                   6
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -5255,7 +5255,7 @@ public class CtsWhitespaceTest
                   2,
                   4
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );

@@ -36,7 +36,7 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -55,7 +55,7 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -88,12 +88,12 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -126,7 +126,7 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -142,7 +142,7 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -252,7 +252,7 @@ public class CtsFunctionsTest
                     "a": "d"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -261,7 +261,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -286,7 +286,7 @@ public class CtsFunctionsTest
                   "阿美",
                   "形声字"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -295,7 +295,7 @@ public class CtsFunctionsTest
                   "жж",
                   "阿美"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -323,7 +323,7 @@ public class CtsFunctionsTest
                     ]
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -336,7 +336,7 @@ public class CtsFunctionsTest
                     ]
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -355,12 +355,12 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -379,12 +379,12 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -403,12 +403,12 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -427,12 +427,12 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -451,12 +451,12 @@ public class CtsFunctionsTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -525,7 +525,7 @@ public class CtsFunctionsTest
                     }
                   ]
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -534,7 +534,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -559,7 +559,7 @@ public class CtsFunctionsTest
                     "a": null
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -568,7 +568,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -587,7 +587,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -596,7 +596,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -615,7 +615,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -624,7 +624,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -652,14 +652,14 @@ public class CtsFunctionsTest
                     {}
                   ]
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "bab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -678,12 +678,12 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -702,12 +702,12 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -726,7 +726,7 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -735,7 +735,7 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -754,12 +754,12 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -778,12 +778,12 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -806,14 +806,14 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "Ж"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -835,7 +835,7 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -843,7 +843,7 @@ public class CtsFunctionsTest
                   "ж",
                   "1"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -865,14 +865,14 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "a𐄁b"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -894,14 +894,14 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "\u2028"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -923,14 +923,14 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "\u2029"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -988,7 +988,7 @@ public class CtsFunctionsTest
                     }
                   ]
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -997,7 +997,7 @@ public class CtsFunctionsTest
                     "a": "ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1016,7 +1016,7 @@ public class CtsFunctionsTest
                   "a.c",
                   "axc"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1024,7 +1024,7 @@ public class CtsFunctionsTest
                   "abc",
                   "a.c"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1043,14 +1043,14 @@ public class CtsFunctionsTest
                   "a.c",
                   "axc"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "a.c"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1070,14 +1070,14 @@ public class CtsFunctionsTest
                   "axc",
                   "a\\\u2028c"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "a\\\u2028c"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1096,14 +1096,14 @@ public class CtsFunctionsTest
                   "a.c",
                   "a[\u2028c"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "a[\u2028c"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1123,7 +1123,7 @@ public class CtsFunctionsTest
                   "a\u2028c",
                   "a]c"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1131,7 +1131,7 @@ public class CtsFunctionsTest
                   "a.c",
                   "a]c"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1151,7 +1151,7 @@ public class CtsFunctionsTest
                   "ab",
                   "xab"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1159,7 +1159,7 @@ public class CtsFunctionsTest
                   "abc",
                   "ab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1179,14 +1179,14 @@ public class CtsFunctionsTest
                   "ab",
                   "abcx"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "abc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1205,7 +1205,7 @@ public class CtsFunctionsTest
                     "a": "the end is ab"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1214,7 +1214,7 @@ public class CtsFunctionsTest
                     "a": "the end is ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1233,7 +1233,7 @@ public class CtsFunctionsTest
                     "a": "the end is ab"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1242,7 +1242,7 @@ public class CtsFunctionsTest
                     "a": "the end is ab"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1261,7 +1261,7 @@ public class CtsFunctionsTest
                     "a": "ab is at the start"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1270,7 +1270,7 @@ public class CtsFunctionsTest
                     "a": "ab is at the start"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1289,7 +1289,7 @@ public class CtsFunctionsTest
                     "a": "contains two matches"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1298,7 +1298,7 @@ public class CtsFunctionsTest
                     "a": "contains two matches"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1326,7 +1326,7 @@ public class CtsFunctionsTest
                     {}
                   ]
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1335,7 +1335,7 @@ public class CtsFunctionsTest
                   "bba",
                   "bbab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1354,12 +1354,12 @@ public class CtsFunctionsTest
                     "a": "contains two matches"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1378,12 +1378,12 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1402,7 +1402,7 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1411,7 +1411,7 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1430,12 +1430,12 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1454,12 +1454,12 @@ public class CtsFunctionsTest
                     "a": "bc"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1482,7 +1482,7 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1490,7 +1490,7 @@ public class CtsFunctionsTest
                   "Ж",
                   "жЖ"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1512,7 +1512,7 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1520,7 +1520,7 @@ public class CtsFunctionsTest
                   "ж",
                   "1"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1542,14 +1542,14 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "a𐄁bc"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1572,7 +1572,7 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1580,7 +1580,7 @@ public class CtsFunctionsTest
                   "\u2028",
                   "\r\u2028\n"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1603,7 +1603,7 @@ public class CtsFunctionsTest
                   [],
                   {}
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1611,7 +1611,7 @@ public class CtsFunctionsTest
                   "\u2029",
                   "\r\u2029\n"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1672,7 +1672,7 @@ public class CtsFunctionsTest
                     {}
                   ]
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1681,7 +1681,7 @@ public class CtsFunctionsTest
                   "bba",
                   "bbab"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1700,7 +1700,7 @@ public class CtsFunctionsTest
                   "x a.c y",
                   "x axc y"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1708,7 +1708,7 @@ public class CtsFunctionsTest
                   "x abc y",
                   "x a.c y"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1727,14 +1727,14 @@ public class CtsFunctionsTest
                   "x a.c y",
                   "x axc y"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "x a.c y"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1754,14 +1754,14 @@ public class CtsFunctionsTest
                   "x axc y",
                   "x a\\\u2028c y"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "x a\\\u2028c y"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1780,14 +1780,14 @@ public class CtsFunctionsTest
                   "x a.c y",
                   "x a[\u2028c y"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "x a[\u2028c y"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1807,7 +1807,7 @@ public class CtsFunctionsTest
                   "x a\u2028c y",
                   "x a]c y"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1815,7 +1815,7 @@ public class CtsFunctionsTest
                   "x a.c y",
                   "x a]c y"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1844,7 +1844,7 @@ public class CtsFunctionsTest
                   },
                   4
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1856,7 +1856,7 @@ public class CtsFunctionsTest
                     "foo": 4
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1880,12 +1880,12 @@ public class CtsFunctionsTest
                     "bar": 4
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );

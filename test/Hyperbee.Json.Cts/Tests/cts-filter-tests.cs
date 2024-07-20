@@ -21,7 +21,7 @@ public class CtsFilterTest
                   "a": 1,
                   "b": null
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expectOneOf = TestHelper.Parse( documentType,
             """
@@ -35,7 +35,7 @@ public class CtsFilterTest
                     1
                   ]
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchAny( documentType, results, expectOneOf );
         Assert.IsTrue( match );
@@ -59,7 +59,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -69,7 +69,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -93,7 +93,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -103,7 +103,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -127,7 +127,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -137,7 +137,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -161,7 +161,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -171,7 +171,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -195,7 +195,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -205,7 +205,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -229,7 +229,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -239,7 +239,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -271,7 +271,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -281,7 +281,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -305,7 +305,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -315,7 +315,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -338,12 +338,12 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -367,7 +367,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -377,7 +377,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -401,7 +401,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -411,7 +411,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -436,7 +436,7 @@ public class CtsFilterTest
                     false
                   ]
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -451,7 +451,7 @@ public class CtsFilterTest
                     false
                   ]
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -526,7 +526,7 @@ public class CtsFilterTest
                     ]
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -550,7 +550,7 @@ public class CtsFilterTest
                     ]
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -628,7 +628,7 @@ public class CtsFilterTest
                     }
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -662,7 +662,7 @@ public class CtsFilterTest
                     }
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -686,7 +686,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -696,7 +696,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -720,7 +720,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -730,7 +730,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -754,7 +754,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -764,7 +764,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -788,7 +788,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -798,7 +798,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -822,7 +822,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -832,7 +832,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -856,7 +856,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -866,7 +866,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -894,7 +894,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -908,7 +908,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -932,7 +932,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -942,7 +942,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -966,7 +966,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -976,7 +976,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -999,7 +999,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1012,7 +1012,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1036,7 +1036,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1046,7 +1046,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1070,7 +1070,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1080,7 +1080,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1104,7 +1104,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1114,7 +1114,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1138,7 +1138,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1148,7 +1148,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1180,7 +1180,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1190,7 +1190,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1214,12 +1214,12 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1243,12 +1243,12 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1272,12 +1272,12 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1301,7 +1301,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1315,7 +1315,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1339,7 +1339,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1353,7 +1353,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1385,7 +1385,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1399,7 +1399,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1423,7 +1423,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1433,7 +1433,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1457,7 +1457,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1467,7 +1467,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1491,7 +1491,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1501,7 +1501,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1529,7 +1529,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1539,7 +1539,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1567,7 +1567,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1577,7 +1577,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1609,7 +1609,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1619,7 +1619,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1643,12 +1643,12 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1672,12 +1672,12 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1701,12 +1701,12 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1734,7 +1734,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1748,7 +1748,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1776,7 +1776,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1790,7 +1790,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1822,7 +1822,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1836,7 +1836,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1860,7 +1860,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1870,7 +1870,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1894,7 +1894,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1904,7 +1904,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1928,7 +1928,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1938,7 +1938,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1961,7 +1961,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -1971,7 +1971,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -1997,7 +1997,7 @@ public class CtsFilterTest
                     "c": false
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2007,7 +2007,7 @@ public class CtsFilterTest
                     "b": false
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2033,7 +2033,7 @@ public class CtsFilterTest
                     "c": false
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2046,7 +2046,7 @@ public class CtsFilterTest
                     "b": false
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2074,7 +2074,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2084,7 +2084,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2116,7 +2116,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2130,7 +2130,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2158,7 +2158,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2172,7 +2172,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2199,7 +2199,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2208,7 +2208,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2235,7 +2235,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2244,7 +2244,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2269,7 +2269,7 @@ public class CtsFilterTest
                     "a": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2281,7 +2281,7 @@ public class CtsFilterTest
                     "a": 3
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2316,7 +2316,7 @@ public class CtsFilterTest
                     "b": 4
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2336,7 +2336,7 @@ public class CtsFilterTest
                     "b": 4
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2366,7 +2366,7 @@ public class CtsFilterTest
                     "a": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2380,7 +2380,7 @@ public class CtsFilterTest
                     4
                   ]
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2405,7 +2405,7 @@ public class CtsFilterTest
                     "a": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2414,7 +2414,7 @@ public class CtsFilterTest
                   [],
                   {}
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2489,7 +2489,7 @@ public class CtsFilterTest
                     42
                   ]
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2503,7 +2503,7 @@ public class CtsFilterTest
                     42
                   ]
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2520,12 +2520,12 @@ public class CtsFilterTest
                 {
                   "a": 1
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2545,12 +2545,12 @@ public class CtsFilterTest
                     6
                   ]
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2569,12 +2569,12 @@ public class CtsFilterTest
                     "0": 5
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 []
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2928,7 +2928,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2942,7 +2942,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -2966,7 +2966,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -2976,7 +2976,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3000,7 +3000,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3018,7 +3018,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3042,7 +3042,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3056,7 +3056,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3080,7 +3080,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3098,7 +3098,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3125,7 +3125,7 @@ public class CtsFilterTest
                     "g": "h"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3142,7 +3142,7 @@ public class CtsFilterTest
                     "g": "h"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3166,7 +3166,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3184,7 +3184,7 @@ public class CtsFilterTest
                     "d": "f"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3212,7 +3212,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3222,7 +3222,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3250,7 +3250,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3260,7 +3260,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3288,7 +3288,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3298,7 +3298,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3326,7 +3326,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3336,7 +3336,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3364,7 +3364,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3374,7 +3374,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3402,7 +3402,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3412,7 +3412,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3451,7 +3451,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3461,7 +3461,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3489,7 +3489,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3499,7 +3499,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3527,7 +3527,7 @@ public class CtsFilterTest
                     "d": "g"
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3537,7 +3537,7 @@ public class CtsFilterTest
                     "d": "e"
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3565,7 +3565,7 @@ public class CtsFilterTest
                     }
                   ]
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3577,7 +3577,7 @@ public class CtsFilterTest
                     "a": null
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3602,7 +3602,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3611,7 +3611,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3636,7 +3636,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3648,7 +3648,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3667,7 +3667,7 @@ public class CtsFilterTest
                   "b": 2,
                   "c": 3
                 }
-                """ );
+            """ );
         var results = document.Select( selector );
         var expectOneOf = TestHelper.Parse( documentType,
             """
@@ -3681,7 +3681,7 @@ public class CtsFilterTest
                     1
                   ]
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchAny( documentType, results, expectOneOf );
         Assert.IsTrue( match );
@@ -3715,7 +3715,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3733,7 +3733,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3775,7 +3775,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3801,7 +3801,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3843,7 +3843,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3862,7 +3862,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3900,7 +3900,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
@@ -3919,7 +3919,7 @@ public class CtsFilterTest
                     "c": 3
                   }
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3938,14 +3938,14 @@ public class CtsFilterTest
                   "a",
                   "quoted\\' literal"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "quoted' literal"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3965,14 +3965,14 @@ public class CtsFilterTest
                   "quoted\\\" literal",
                   "'quoted\" literal'"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "quoted\" literal"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -3992,14 +3992,14 @@ public class CtsFilterTest
                   "quoted\\' literal",
                   "'quoted\" literal'"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "quoted' literal"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );
@@ -4019,14 +4019,14 @@ public class CtsFilterTest
                   "quoted\\\" literal",
                   "'quoted\" literal'"
                 ]
-                """ );
+            """ );
         var results = document.Select( selector );
         var expect = TestHelper.Parse( documentType,
             """
                 [
                   "quoted\" literal"
                 ]
-                """ ).Root;
+            """ ).Root;
 
         var match = TestHelper.MatchOne( documentType, results, expect );
         Assert.IsTrue( match );

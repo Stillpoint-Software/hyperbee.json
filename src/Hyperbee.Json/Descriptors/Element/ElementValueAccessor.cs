@@ -166,7 +166,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         element = default;
         return false;
     }
-    
+
     public bool TryGetValueFromNode( JsonElement element, out IConvertible value )
     {
         switch ( element.ValueKind )

@@ -148,17 +148,8 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         return left.DeepEquals( right );
     }
 
-    public bool TryParseNode( ReadOnlySpan<char> item, out JsonElement element )
+    public bool TryParseNode( ref Utf8JsonReader reader, out JsonElement element )
     {
-        var maxLength = Encoding.UTF8.GetMaxByteCount( item.Length );
-        Span<byte> utf8Bytes = maxLength <= 256 ? stackalloc byte[maxLength] : new byte[maxLength];
-
-        var length = Encoding.UTF8.GetBytes( item, utf8Bytes );
-
-        ReplaceSingleQuotes( ref utf8Bytes, length );
-
-        var reader = new Utf8JsonReader( utf8Bytes[..length] );
-
         try
         {
             if ( JsonDocument.TryParseValue( ref reader, out var document ) )
@@ -174,24 +165,8 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
         element = default;
         return false;
-
-        static void ReplaceSingleQuotes( ref Span<byte> utf8Bytes, int length )
-        {
-            var insideString = false;
-            for ( var i = 0; i < length; i++ )
-            {
-                if ( utf8Bytes[i] == (byte) '\"' )
-                {
-                    insideString = !insideString;
-                }
-                else if ( !insideString && utf8Bytes[i] == (byte) '\'' && (i == 0 || utf8Bytes[i - 1] != '\\') )
-                {
-                    utf8Bytes[i] = (byte) '\"';
-                }
-            }
-        }
     }
-
+    
     public bool TryGetValueFromNode( JsonElement element, out IConvertible value )
     {
         switch ( element.ValueKind )

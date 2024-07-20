@@ -46,7 +46,7 @@ public class FilterParser<TNode> : FilterParser
 
         var expression = Parse( ref state );
 
-        return TruthyExpression.IsTruthyExpression( expression ); 
+        return TruthyExpression.IsTruthyExpression( expression );
     }
 
     internal static Expression Parse( ref ParserState state ) // recursion entrypoint

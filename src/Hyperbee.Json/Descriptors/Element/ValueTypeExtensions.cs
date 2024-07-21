@@ -43,27 +43,27 @@ public static class ValueTypeExtensions
 
         try
         {
-            var type = typeof(T);
+            var type = typeof( T );
 
             switch ( element.ValueKind )
             {
-                case JsonValueKind.String when type == typeof(string):
+                case JsonValueKind.String when type == typeof( string ):
                     value = (T) (IConvertible) element.GetString();
                     return true;
 
-                case JsonValueKind.Number when type == typeof(int) && element.TryGetInt32( out var intValue ):
+                case JsonValueKind.Number when type == typeof( int ) && element.TryGetInt32( out var intValue ):
                     value = (T) (IConvertible) intValue;
                     return true;
 
-                case JsonValueKind.Number when type == typeof(float) && element.TryGetSingle( out var floatValue ):
+                case JsonValueKind.Number when type == typeof( float ) && element.TryGetSingle( out var floatValue ):
                     value = (T) (IConvertible) floatValue;
                     return true;
 
-                case JsonValueKind.True when type == typeof(bool):
+                case JsonValueKind.True when type == typeof( bool ):
                     value = (T) (IConvertible) true;
                     return true;
 
-                case JsonValueKind.False when type == typeof(bool):
+                case JsonValueKind.False when type == typeof( bool ):
                     value = (T) (IConvertible) false;
                     return true;
             }

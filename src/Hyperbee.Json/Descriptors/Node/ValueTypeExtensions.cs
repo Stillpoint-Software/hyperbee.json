@@ -42,31 +42,31 @@ public static class ValueTypeExtensions
         value = default;
         try
         {
-            var type = typeof(T);
+            var type = typeof( T );
 
             switch ( node )
             {
-                case JsonValue jsonValue when type == typeof(string) && jsonValue.TryGetValue( out string stringValue ):
+                case JsonValue jsonValue when type == typeof( string ) && jsonValue.TryGetValue( out string stringValue ):
                     value = (T) (IConvertible) stringValue;
                     return true;
 
-                case JsonValue jsonInt when type == typeof(int) && jsonInt.TryGetValue( out int intValue ):
+                case JsonValue jsonInt when type == typeof( int ) && jsonInt.TryGetValue( out int intValue ):
                     value = (T) (IConvertible) intValue;
                     return true;
 
-                case JsonValue jsonFloat when type == typeof(float) && jsonFloat.TryGetValue( out float floatValue ):
+                case JsonValue jsonFloat when type == typeof( float ) && jsonFloat.TryGetValue( out float floatValue ):
                     value = (T) (IConvertible) floatValue;
                     return true;
 
-                case JsonArray jsonArray when type == typeof(float):
+                case JsonArray jsonArray when type == typeof( float ):
                     value = (T) (IConvertible) jsonArray.Count;
                     return true;
 
-                case JsonObject jsonObject when type == typeof(float):
+                case JsonObject jsonObject when type == typeof( float ):
                     value = (T) (IConvertible) jsonObject.Count;
                     return true;
 
-                case JsonValue jsonBool when type == typeof(bool) && jsonBool.TryGetValue( out bool boolValue ):
+                case JsonValue jsonBool when type == typeof( bool ) && jsonBool.TryGetValue( out bool boolValue ):
                     value = (T) (IConvertible) boolValue;
                     return true;
             }

@@ -26,12 +26,12 @@ public abstract class FilterParser
 
 public class FilterParser<TNode> : FilterParser
 {
-    internal static readonly ITypeDescriptor<TNode> Descriptor = 
+    internal static readonly ITypeDescriptor<TNode> Descriptor =
         JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
-    
-    internal static readonly ParameterExpression RuntimeContextExpression = 
+
+    internal static readonly ParameterExpression RuntimeContextExpression =
         Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" ); // must use a common instance
-    
+
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter )
     {
         var expression = Parse( filter );

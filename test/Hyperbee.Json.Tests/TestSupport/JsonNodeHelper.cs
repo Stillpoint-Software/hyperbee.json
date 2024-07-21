@@ -5,7 +5,7 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Tests.TestSupport;
 
-public class JsonPathNode( string source ) : IJsonDocument
+public class JsonNodeDocument( string source ) : IJsonDocument
 {
     private JsonNode Document { get; } = JsonNode.Parse( source );
     public IEnumerable<dynamic> Select( string query ) => Document.Select( query );

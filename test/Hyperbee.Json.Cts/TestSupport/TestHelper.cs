@@ -8,10 +8,10 @@ internal static class TestHelper
     public static IJsonDocument Parse( Type target, string source )
     {
         if ( target == typeof( JsonElement ) )
-            return new JsonPathDocument( source );
+            return new JsonElementDocument( source );
 
         if ( target == typeof( JsonNode ) )
-            return new JsonPathNode( source );
+            return new JsonNodeDocument( source );
 
         throw new NotSupportedException();
     }

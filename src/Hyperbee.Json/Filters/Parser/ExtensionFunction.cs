@@ -43,10 +43,11 @@ public abstract class ExtensionFunction
         }
 
         // Call the method and cast the result to support covariant returns
-        var callExpression = Expression.Call( _methodInfo, arguments );
-        var castExpression = Expression.Convert( callExpression, typeof( IValueType ) );
-
-        return castExpression;
+        
+        return Expression.Convert( 
+            Expression.Call( _methodInfo, arguments ), 
+            typeof(IValueType) 
+        );
     }
 
     private Expression ArgumentExpression<TNode>( bool expectNormalized, Expression argument )

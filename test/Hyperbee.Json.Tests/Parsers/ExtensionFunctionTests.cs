@@ -14,7 +14,7 @@ namespace Hyperbee.Json.Tests.Parsers;
 public class ExtensionFunctionTests : JsonTestBase
 {
     [TestMethod]
-    public void Should_CallCustomFunction()
+    public void CallCustomFunction()
     {
         // arrange 
         var source = GetDocument<JsonNode>();

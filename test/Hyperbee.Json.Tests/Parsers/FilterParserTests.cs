@@ -29,7 +29,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "!(1 == 2)", true, typeof( JsonNode ) )]
     [DataRow( "(\"world\" == 'world') || 1 == 1", true, typeof( JsonNode ) )]
     [DataRow( "!('World' != 'World') && !(1 == 2 || 1 == 3)", true, typeof( JsonNode ) )]
-    public void Should_MatchExpectedResult_WhenUsingConstants( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenUsingConstants( string filter, bool expected, Type sourceType )
     {
         // arrange 
         var (expression, param) = GetExpression( filter, sourceType );
@@ -46,7 +46,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "false", typeof( JsonElement ) )]
     [DataRow( "true", typeof( JsonNode ) )]
     [DataRow( "false", typeof( JsonNode ) )]
-    public void Should_Fail_WhenNotComparingLiterals( string filter, Type sourceType )
+    public void Fail_WhenNotComparingLiterals( string filter, Type sourceType )
     {
         // arrange 
 
@@ -89,7 +89,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "@.store.nothing", false, typeof( JsonNode ) )]
     [DataRow( "@.store.bicycle.price", true, typeof( JsonNode ) )]
     [DataRow( "@.store.book[0].category", true, typeof( JsonNode ) )]
-    public void Should_MatchExpectedResult_WhenUsingJsonPath( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenUsingJsonPath( string filter, bool expected, Type sourceType )
     {
         // arrange & act
         var result = CompileAndExecuteFilter( filter, sourceType );
@@ -109,7 +109,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "$.store.book[?(@.price < 9.00 && @.category == 'reference')].price", 8.95F, typeof( JsonNode ) )]
     [DataRow( "$.store.book[?(match(@.title, \"Sayings.*\" ))].price", 8.95F, typeof( JsonNode ) )]
     [DataRow( "$.store.book[?(@.category == $.store.book[0].category)].price", 8.95F, typeof( JsonNode ) )]
-    public void Should_ReturnExpectedResult_WhenUsingExpressionEvaluator( string filter, float expected, Type sourceType )
+    public void ReturnExpectedResult_WhenUsingExpressionEvaluator( string filter, float expected, Type sourceType )
     {
         // arrange & act
         var result = Select( filter, sourceType );
@@ -133,7 +133,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "match(@.store.book[0].title, \"Sayings.*\" )", true, typeof( JsonNode ) )]
     [DataRow( "search(@.store.book[0].author, \"[Nn]igel Rees\" )", true, typeof( JsonNode ) )]
     [DataRow( "value(@.store.book[0].author) == \"Nigel Rees\"", true, typeof( JsonNode ) )]
-    public void Should_MatchExpectedResult_WhenUsingFunctions( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenUsingFunctions( string filter, bool expected, Type sourceType )
     {
         // arrange & act
         var result = CompileAndExecuteFilter( filter, sourceType );
@@ -151,7 +151,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
-    public void Should_MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
     {
         // arrange & act
         var result = CompileAndExecuteFilter( filter, sourceType );
@@ -163,7 +163,7 @@ public class FilterParserTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "4 == length ( @.store.book )", typeof( JsonElement ) )]
     [DataRow( "length (@.store.book) == 4", typeof( JsonElement ) )]
-    public void Should_Fail_WhenHasInvalidWhitespace( string filter, Type sourceType )
+    public void Fail_WhenHasInvalidWhitespace( string filter, Type sourceType )
     {
         Assert.ThrowsException<NotSupportedException>( () => CompileAndExecuteFilter( filter, sourceType ) );
     }
@@ -178,7 +178,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "(1 == ", typeof( JsonElement ) )]
     [DataRow( "== 1", typeof( JsonElement ) )]
     [DataRow( "badMethod(1)", typeof( JsonElement ) )]
-    public void Should_FailToParse_WhenUsingInvalidFilters( string filter, Type sourceType )
+    public void FailToParse_WhenUsingInvalidFilters( string filter, Type sourceType )
     {
         try
         {

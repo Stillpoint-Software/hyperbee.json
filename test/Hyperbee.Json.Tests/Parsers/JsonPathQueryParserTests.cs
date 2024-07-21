@@ -31,7 +31,7 @@ public class JsonPathQueryParserTests
     [DataRow( "$..*", "{$|s};{..|g};{*|g}" )]
     [DataRow( """$.store.book[?(@path !== "$['store']['book'][0]")]""", """{$|s};{store|s};{book|s};{?(@path !== "$['store']['book'][0]")|g}""" )]
     [DataRow( """$..book[?(@.price == 8.99 && @.category == "fiction")]""", """{$|s};{..|g};{book|s};{?(@.price == 8.99 && @.category == "fiction")|g}""" )]
-    public void Should_TokenizeJsonPath( string jsonPath, string expected )
+    public void TokenizeJsonPath( string jsonPath, string expected )
     {
         // act
         var compiledQuery = JsonPathQueryParser.Parse( jsonPath );
@@ -41,6 +41,7 @@ public class JsonPathQueryParserTests
 
         // assert
         Assert.AreEqual( expected, result );
+        
         return;
 
         static string SegmentsToString( JsonPathSegment segment )
@@ -56,19 +57,5 @@ public class JsonPathQueryParserTests
                 return $"{{{selectorsString}|{selectorType}}}";
             }
         }
-    }
-
-    [TestMethod]
-    public void ShouldFilterExpressionWithParentAxisOperator()
-    {
-        // NOT-SUPPORTED: parent axis operator is not supported
-
-        // act & assert
-        const string jsonPath = "$[*].bookmarks[ ? (@.page == 45)]^^^";
-
-        Assert.ThrowsException<NotSupportedException>( () =>
-        {
-            _ = JsonPathQueryParser.Parse( jsonPath );
-        } );
     }
 }

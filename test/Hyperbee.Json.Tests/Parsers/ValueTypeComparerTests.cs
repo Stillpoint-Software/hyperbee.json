@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Values;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Query;
+namespace Hyperbee.Json.Tests.Parsers;
 
 [TestClass]
 public class NodeTypeComparerTests : JsonTestBase
@@ -23,7 +23,7 @@ public class NodeTypeComparerTests : JsonTestBase
     [DataRow( "hello", 11F, false )]
     [DataRow( false, 11F, false )]
     [DataRow( true, 11F, false )]
-    public void NodeTypeComparer_ShouldCompare_WithEqualResults( object left, object right, bool areEqual )
+    public void Compare_WithEqualResults( object left, object right, bool areEqual )
     {
         // Arrange
         var comparer = GetComparer();
@@ -46,7 +46,7 @@ public class NodeTypeComparerTests : JsonTestBase
     [DataRow( 10F, 10F, true )]
     [DataRow( 14F, 10F, true )]
     [DataRow( 1F, 14F, false )]
-    public void NodeTypeComparer_ShouldCompare_WithGreaterResults( object left, object right, bool areEqual )
+    public void Compare_WithGreaterResults( object left, object right, bool areEqual )
     {
         // Arrange
         var comparer = GetComparer();
@@ -66,7 +66,7 @@ public class NodeTypeComparerTests : JsonTestBase
     [DataRow( """{ "value": "hello" }""", "world", false )]
     [DataRow( """{ "value": "hello" }""", "hello", true )]
     [DataRow( """{ "value": { "child": 5 } }""", "hello", false )]
-    public void NodeTypeComparer_ShouldCompare_WithJsonObjectResults( string left, object right, bool areEqual )
+    public void Compare_WithJsonObjectResults( string left, object right, bool areEqual )
     {
         // Arrange
         var comparer = GetComparer();
@@ -85,7 +85,7 @@ public class NodeTypeComparerTests : JsonTestBase
     [DataRow( """["hello","hi","world" ]""", "hi", true )]
     [DataRow( """[1,2,3]""", 99F, false )]
     [DataRow( """["hello","world" ]""", "hi", false )]
-    public void NodeTypeComparer_ShouldCompare_WithLeftJsonArray( string left, object right, bool areEqual )
+    public void Compare_WithLeftJsonArray( string left, object right, bool areEqual )
     {
         // Arrange
         var comparer = GetComparer();
@@ -104,7 +104,7 @@ public class NodeTypeComparerTests : JsonTestBase
     [DataRow( "hi", """["hello","hi","world" ]""", true )]
     [DataRow( 99F, """[1,2,3]""", false )]
     [DataRow( "hi", """["hello","world" ]""", false )]
-    public void NodeTypeComparer_ShouldCompare_WithRightJsonArray( object left, string right, bool areEqual )
+    public void Compare_WithRightJsonArray( object left, string right, bool areEqual )
     {
         // Arrange
         var comparer = GetComparer();
@@ -119,7 +119,7 @@ public class NodeTypeComparerTests : JsonTestBase
     }
 
     [TestMethod]
-    public void NodeTypeComparer_ShouldCompare_WithEmpty()
+    public void Compare_WithEmpty()
     {
         var comparer = GetComparer();
         var a = new NodeList<JsonNode>( [], true );

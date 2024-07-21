@@ -7,27 +7,37 @@ namespace Hyperbee.Json;
 
 public class JsonPathBuilder
 {
-    private readonly JsonElement _rootElement;
     private readonly JsonElementPositionComparer _comparer = new();
     private readonly Dictionary<int, (int parentId, string segment)> _parentMap = [];
+    private JsonElement _rootElement;
+
+    public JsonPathBuilder()
+    {
+    }
 
     public JsonPathBuilder( JsonDocument rootDocument )
-        : this( rootDocument.RootElement )
     {
+        SetRootElement( rootDocument.RootElement );
     }
 
     public JsonPathBuilder( JsonElement rootElement )
     {
-        _rootElement = rootElement;
-
-        // avoid allocating full paths for every node by building
-        // a dictionary of (parentId, segment) pairs.
-
-        _parentMap[GetUniqueId( _rootElement )] = (-1, "$"); // seed parent map with root
+        SetRootElement( rootElement );
     }
 
+    private void SetRootElement( in JsonElement rootElement )
+    {
+        _rootElement = rootElement;
+        _parentMap[GetUniqueId( _rootElement )] = (-1, "$"); // seed parent map with root
+    }
+    
     public string GetPath( in JsonElement targetElement )
     {
+        // make sure the root element is set
+
+        if ( _rootElement.ValueKind == JsonValueKind.Undefined )
+            SetRootElement( GetDocument( targetElement ).RootElement );
+
         // quick out
 
         var targetId = GetUniqueId( targetElement );
@@ -106,6 +116,12 @@ public class JsonPathBuilder
     private static int GetUniqueId( in JsonElement element )
     {
         return JsonElementAccessor.GetIdx( element );
+    }
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    private static JsonDocument GetDocument( in JsonElement element )
+    {
+        return JsonElementAccessor.GetParent( element );
     }
 
     private static string BuildPath( in int currentId, Dictionary<int, (int parentId, string segment)> parentMap )

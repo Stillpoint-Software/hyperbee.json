@@ -54,7 +54,6 @@ public class DynamicJsonNode : DynamicObject
                 result = new DynamicJsonNode( ref resultValue );
                 return true;
             case JsonArray jArray:
-                //bf not sure if this gets called
                 var arrayValue = jArray[binder.Name];
                 result = new DynamicJsonNode( ref arrayValue );
                 return true;

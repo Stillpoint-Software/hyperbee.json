@@ -42,7 +42,7 @@ public static class AssertExtensions
 
     private static void ThrowsAnyInternal( Action action, params Type[] expectedExceptionTypes )
     {
-        Exception? caughtException = null;
+        Exception caughtException = null;
 
         try
         {

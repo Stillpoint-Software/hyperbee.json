@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Hyperbee.Json.Dynamic;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Tests.TestSupport;
@@ -27,6 +28,8 @@ public class JsonDynamicTests : JsonTestBase
         var author = book.author;
         var price = book.price;
 
+        var path = book.Path();
+
         Assert.IsTrue( price == 8.95 );
         Assert.IsTrue( author == "Nigel Rees" );
     }
@@ -44,6 +47,41 @@ public class JsonDynamicTests : JsonTestBase
         Assert.IsTrue( jobject.store.thing == Thing.ThatThing );
         Assert.IsNotNull( output );
         Assert.IsTrue( output.Contains( "ThatThing" ) );
+    }
+
+    [TestMethod]
+    public void DynamicModifyExistingProperty()
+    {
+        var jobject = JsonSerializer.Deserialize<dynamic>( ReadJsonString(), SerializerOptions );
+
+        jobject.store.book[0].price = 9.99;
+
+        var modifiedPrice = jobject.store.book[0].price;
+
+        Assert.AreEqual( 9.99, modifiedPrice );
+    }
+
+    [TestMethod]
+    public void DynamicAddNewProperty()
+    {
+        var jobject = JsonSerializer.Deserialize<dynamic>( ReadJsonString(), SerializerOptions );
+
+        jobject.store.newProperty = "NewValue";
+
+        var newValue = jobject.store.newProperty;
+
+        Assert.AreEqual( "NewValue", newValue );
+    }
+
+    [TestMethod]
+    public void DynamicArrayAccessOutOfBounds()
+    {
+        var jobject = JsonSerializer.Deserialize<dynamic>( ReadJsonString(), SerializerOptions );
+
+        Assert.ThrowsException<ArgumentOutOfRangeException>( () =>
+        {
+            var outOfBounds = jobject.store.book[10];
+        } );
     }
 }
 

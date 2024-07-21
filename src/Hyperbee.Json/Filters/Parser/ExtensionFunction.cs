@@ -43,10 +43,10 @@ public abstract class ExtensionFunction
         }
 
         // Call the method and cast the result to support covariant returns
-        
-        return Expression.Convert( 
-            Expression.Call( _methodInfo, arguments ), 
-            typeof(IValueType) 
+
+        return Expression.Convert(
+            Expression.Call( _methodInfo, arguments ),
+            typeof( IValueType )
         );
     }
 

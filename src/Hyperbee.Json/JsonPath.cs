@@ -299,18 +299,16 @@ public static class JsonPath<TNode>
         var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
         if ( step < 0 )
-        {
             (lower, upper) = (upper, lower);
-        }
 
         return (upper, lower, step);
     }
 
     [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, {Segment}" )]
-    private record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
+    private readonly record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
 
     [DebuggerDisplay( "{_stack}" )]
-    private sealed class NodeArgsStack( int capacity = 16 )
+    private sealed class NodeArgsStack( int capacity = 8 )
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         private readonly Stack<NodeArgs> _stack = new( capacity );
@@ -327,4 +325,5 @@ public static class JsonPath<TNode>
             return _stack.TryPop( out args );
         }
     }
+  
 }

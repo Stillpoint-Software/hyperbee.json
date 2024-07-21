@@ -41,7 +41,7 @@ public class JsonPathQueryParserTests
 
         // assert
         Assert.AreEqual( expected, result );
-        
+
         return;
 
         static string SegmentsToString( JsonPathSegment segment )

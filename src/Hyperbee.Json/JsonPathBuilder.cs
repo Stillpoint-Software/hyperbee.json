@@ -30,7 +30,7 @@ public class JsonPathBuilder
         _rootElement = rootElement;
         _parentMap[GetUniqueId( _rootElement )] = (-1, "$"); // seed parent map with root
     }
-    
+
     public string GetPath( in JsonElement targetElement )
     {
         // make sure the root element is set

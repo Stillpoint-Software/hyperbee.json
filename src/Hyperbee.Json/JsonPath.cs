@@ -325,5 +325,5 @@ public static class JsonPath<TNode>
             return _stack.TryPop( out args );
         }
     }
-  
+
 }

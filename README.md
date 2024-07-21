@@ -178,7 +178,7 @@ JsonPath expressions support basic method calls.
 | Method     | Description                                            | Example                                                
 |------------|--------------------------------------------------------|------------------------------------------------
 | `length()` | Returns the length of an array or string.              | `$.store.book[?(length(@.title) > 5)]`                
-| `count()`  | Returns the count of matching elements.                | `$.store.book[?(count(@.authors.) > 1)]`               
+| `count()`  | Returns the count of matching elements.                | `$.store.book[?(count(@.authors) > 1)]`               
 | `match()`  | Returns true if a string matches a regular expression. | `$.store.book[?(match(@.title,'.*Century.*'))]`   
 | `search()` | Searches for a string within another string.           | `$.store.book[?(search(@.title,'Sword'))]`             
 | `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(value(@.price) < 10)]`                
@@ -189,7 +189,7 @@ The library extends the JSONPath expression syntax to support additional feature
 
 | Operators           | Description                                   | Example                                                
 |---------------------|-----------------------------------------------|------------------------------------------------
-| `+` `-` `*` `\` `%` | Basic math operators.                         | `$.store.book[?length(@.title) + 2 > 10]`                
+| `+` `-` `*` `\` `%` | Basic math operators.                         | `$[?(@.a + @.b == 3)]`                
 | `in`                | Tests is a value is in a set.                 | `$[?@.value in ['a', 'b', 'c'] ]`               
 
 
@@ -232,7 +232,8 @@ var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
 - High Performance.
 - Supports both `JsonElement`, and `JsonNode`.
 - Deferred execution queries with `IEnumerable`.
-- Extendable to support additional JSON document types and functions.
+- Enhanced JsonPath syntax.
+- Extendable to support additional JSON document types.
 - RFC conforming JSONPath implementation.
 
 ## Comparison with Other Libraries
@@ -244,6 +245,7 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
 - **Pros:**
   - Comprehensive feature set.
   - Deferred execution queries with `IEnumerable`.
+  - Enhanced JsonPath syntax.
   - Strong community support.
   
 - **Cons:**

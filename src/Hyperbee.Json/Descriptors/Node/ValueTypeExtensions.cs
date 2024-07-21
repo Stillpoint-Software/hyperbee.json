@@ -42,40 +42,33 @@ public static class ValueTypeExtensions
         value = default;
         try
         {
-            if ( typeof( T ) == typeof( string ) && node is JsonValue jsonValue && jsonValue.TryGetValue( out string stringValue ) )
-            {
-                value = (T) (IConvertible) stringValue;
-                return true;
-            }
+            var type = typeof(T);
 
-            if ( typeof( T ) == typeof( int ) && node is JsonValue jsonInt && jsonInt.TryGetValue( out int intValue ) )
+            switch ( node )
             {
-                value = (T) (IConvertible) intValue;
-                return true;
-            }
+                case JsonValue jsonValue when type == typeof(string) && jsonValue.TryGetValue( out string stringValue ):
+                    value = (T) (IConvertible) stringValue;
+                    return true;
 
-            if ( typeof( T ) == typeof( float ) && node is JsonValue jsonFloat && jsonFloat.TryGetValue( out float floatValue ) )
-            {
-                value = (T) (IConvertible) floatValue;
-                return true;
-            }
+                case JsonValue jsonInt when type == typeof(int) && jsonInt.TryGetValue( out int intValue ):
+                    value = (T) (IConvertible) intValue;
+                    return true;
 
-            if ( typeof( T ) == typeof( float ) && node is JsonArray jsonArray )
-            {
-                value = (T) (IConvertible) jsonArray.Count;
-                return true;
-            }
+                case JsonValue jsonFloat when type == typeof(float) && jsonFloat.TryGetValue( out float floatValue ):
+                    value = (T) (IConvertible) floatValue;
+                    return true;
 
-            if ( typeof( T ) == typeof( float ) && node is JsonObject jsonObject )
-            {
-                value = (T) (IConvertible) jsonObject.Count;
-                return true;
-            }
+                case JsonArray jsonArray when type == typeof(float):
+                    value = (T) (IConvertible) jsonArray.Count;
+                    return true;
 
-            if ( typeof( T ) == typeof( bool ) && node is JsonValue jsonBool && jsonBool.TryGetValue( out bool boolValue ) )
-            {
-                value = (T) (IConvertible) boolValue;
-                return true;
+                case JsonObject jsonObject when type == typeof(float):
+                    value = (T) (IConvertible) jsonObject.Count;
+                    return true;
+
+                case JsonValue jsonBool when type == typeof(bool) && jsonBool.TryGetValue( out bool boolValue ):
+                    value = (T) (IConvertible) boolValue;
+                    return true;
             }
         }
         catch

@@ -6,8 +6,6 @@ namespace Hyperbee.Json.Extensions;
 
 public static class JsonDynamicHelper
 {
-    // conversion
-
     public static dynamic ConvertToDynamic( JsonNode value ) => new DynamicJsonNode( ref value );
     public static dynamic ConvertToDynamic( JsonElement value, string path = null ) => new DynamicJsonElement( ref value, path );
     public static dynamic ConvertToDynamic( JsonDocument value ) => ConvertToDynamic( value.RootElement, "$" );

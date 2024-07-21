@@ -33,7 +33,7 @@ internal static class MathExpression<TNode>
     private static IValueType Add( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
+            return Scalar.Nothing; //BF: should we be throwing?
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt + rightInt )
@@ -43,7 +43,7 @@ internal static class MathExpression<TNode>
     private static IValueType Subtract( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
+            return Scalar.Nothing; //BF: should we be throwing?
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt - rightInt )
@@ -53,7 +53,7 @@ internal static class MathExpression<TNode>
     private static IValueType Modulus( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
+            return Scalar.Nothing; //BF: should we be throwing?
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt % rightInt )
@@ -63,7 +63,7 @@ internal static class MathExpression<TNode>
     private static IValueType Multiply( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
+            return Scalar.Nothing; //BF: should we be throwing?
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt * rightInt )
@@ -73,7 +73,7 @@ internal static class MathExpression<TNode>
     private static IValueType Divide( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing NotSupportedException?
+            return Scalar.Nothing; //BF: should we be throwing?
 
         // dividing two int values may produce a fractional result
         var floatValue = Convert.ToSingle( leftValue ) / Convert.ToSingle( rightValue );
@@ -91,15 +91,14 @@ internal static class MathExpression<TNode>
             // Calculate the difference between the float and the nearest integer
             float fractionalPart = Math.Abs( value - (float) Math.Round( value ) );
 
-            // Check if the fractional part is within the tolerance
+            // If within the tolerance, return the rounded value
             if ( fractionalPart < tolerance )
             {
-                // If within the tolerance, assign the rounded value to result and return true
                 result = (int) Math.Round( value );
                 return true;
             }
 
-            // If not within the tolerance, assign default value to result and return false
+            // If not within the tolerance, return false
             result = default;
             return false;
         }

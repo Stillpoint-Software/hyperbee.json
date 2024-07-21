@@ -26,13 +26,15 @@ public abstract class FilterParser
 
 public class FilterParser<TNode> : FilterParser
 {
-    internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" ); // must use a common instance
-    internal static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
-
+    internal static readonly ITypeDescriptor<TNode> Descriptor = 
+        JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    
+    internal static readonly ParameterExpression RuntimeContextExpression = 
+        Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" ); // must use a common instance
+    
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter )
     {
         var expression = Parse( filter );
-
         return Expression.Lambda<Func<FilterRuntimeContext<TNode>, bool>>( expression, RuntimeContextExpression ).Compile();
     }
 
@@ -156,7 +158,7 @@ public class FilterParser<TNode> : FilterParser
             if ( result || !state.EndOfBuffer )
                 return result;
 
-            // not finished, but end-of-buffer
+            // not finished, but at end-of-buffer
             itemEnd = state.Pos;
             return true;
         }

@@ -184,55 +184,55 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "badMethod(1)", typeof( JsonElement ) )]
     public void FailToParse_WhenUsingInvalidFilters( string filter, Type sourceType )
     {
-        AssertExtensions.ThrowsAny<NotSupportedException,ArgumentException>( () => GetExpression( filter, sourceType ) );
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => GetExpression( filter, sourceType ) );
     }
 
     // Helper methods
 
-    public static T InvokeGenericMethod<T>(string methodName, Type sourceType, params object[] args)
+    public static T InvokeGenericMethod<T>( string methodName, Type sourceType, params object[] args )
     {
         try
         {
-            var method = typeof(FilterParserTests)
+            var method = typeof( FilterParserTests )
                 .GetMethods( BindingFlags.NonPublic | BindingFlags.Static )
                 .First( x => x.Name == methodName && x.IsGenericMethodDefinition )
                 .MakeGenericMethod( sourceType );
 
             return (T) method.Invoke( null, args )!;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             throw ex.InnerException!;
         }
     }
 
-    public static (Expression, ParameterExpression) GetExpression(string filter, Type sourceType) => 
-        InvokeGenericMethod<(Expression, ParameterExpression)>(nameof(GetExpression), sourceType, filter);
+    public static (Expression, ParameterExpression) GetExpression( string filter, Type sourceType ) =>
+        InvokeGenericMethod<(Expression, ParameterExpression)>( nameof( GetExpression ), sourceType, filter );
 
     public static bool CompileAndExecuteFilter( string filter, Type sourceType ) =>
-        InvokeGenericMethod<bool>( nameof(CompileAndExecuteFilter), sourceType, filter );
+        InvokeGenericMethod<bool>( nameof( CompileAndExecuteFilter ), sourceType, filter );
 
     public static bool ExecuteExpression( Expression expression, ParameterExpression param, Type sourceType ) =>
-        InvokeGenericMethod<bool>( nameof(ExecuteExpression), sourceType, expression, param );
+        InvokeGenericMethod<bool>( nameof( ExecuteExpression ), sourceType, expression, param );
 
-    private static (Expression, ParameterExpression) GetExpression<T>(string filter)
+    private static (Expression, ParameterExpression) GetExpression<T>( string filter )
     {
-        var runtimeContext = Expression.Parameter(typeof(FilterRuntimeContext<T>), "runtimeContext");
-        return (FilterParser<T>.Parse(filter), runtimeContext);
+        var runtimeContext = Expression.Parameter( typeof( FilterRuntimeContext<T> ), "runtimeContext" );
+        return (FilterParser<T>.Parse( filter ), runtimeContext);
     }
 
-    private static bool ExecuteExpression<T>(Expression expression, ParameterExpression param)
+    private static bool ExecuteExpression<T>( Expression expression, ParameterExpression param )
     {
-        var filterFunc = Expression.Lambda<Func<FilterRuntimeContext<T>, bool>>(expression, param).Compile();
-        var runtimeContext = new FilterRuntimeContext<T>(default, default); // Initialize with default values
-        return filterFunc(runtimeContext);
+        var filterFunc = Expression.Lambda<Func<FilterRuntimeContext<T>, bool>>( expression, param ).Compile();
+        var runtimeContext = new FilterRuntimeContext<T>( default, default ); // Initialize with default values
+        return filterFunc( runtimeContext );
     }
 
-    private static bool CompileAndExecuteFilter<T>(string filter)
+    private static bool CompileAndExecuteFilter<T>( string filter )
     {
         var source = GetDocument<T>();
-        var filterFunc = FilterParser<T>.Compile(filter);
-        var runtimeContext = new FilterRuntimeContext<T>(source, source);
-        return filterFunc(runtimeContext);
+        var filterFunc = FilterParser<T>.Compile( filter );
+        var runtimeContext = new FilterRuntimeContext<T>( source, source );
+        return filterFunc( runtimeContext );
     }
 }

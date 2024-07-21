@@ -160,7 +160,7 @@ or bracket-notation:
 - JSONPath allows the wildcard symbol `*` for member names and array indices. 
 - It borrows the descendant operator `..` from [E4X][e4x]
 - It uses the `@` symbol to refer to the current object.
-- It uses the `?()` syntax for filtering.
+- It uses `?` syntax for filtering.
 - It uses the array slice syntax proposal `[start:end:step]` from ECMASCRIPT 4.
 
 Expressions can be used as an alternative to explicit names or indices, as in:
@@ -173,7 +173,7 @@ Filter expressions are supported via the syntax `?(<boolean expr>)`, as in:
 
 ### JSONPath Functions
 
-JsonPath expressions support basic methods calls.
+JsonPath expressions support basic method calls.
 
 | Method     | Description                                            | Example                                                
 |------------|--------------------------------------------------------|------------------------------------------------
@@ -183,10 +183,19 @@ JsonPath expressions support basic methods calls.
 | `search()` | Searches for a string within another string.           | `$.store.book[?(search(@.title,'Sword'))]`             
 | `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(value(@.price) < 10)]`                
 
+### Extended Syntax
+
+The library extends the JSONPath expression syntax to support additional features.
+
+| Operators           | Description                                   | Example                                                
+|---------------------|-----------------------------------------------|------------------------------------------------
+| `+` `-` `*` `\` `%` | Basic math operators.                         | `$.store.book[?length(@.title) + 2 > 10]`                
+| `in`                | Tests is a value is in a set.                 | `$[?@.value in ['a', 'b', 'c'] ]`               
+
 
 ### JSONPath Custom Functions
 
-You can also extend the supported function set by registering your own functions.
+You can extend the supported function set by registering your own functions.
 
 **Example:** Implement a `JsonNode` Path Function:
 

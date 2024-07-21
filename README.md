@@ -183,7 +183,7 @@ JsonPath expressions support basic method calls.
 | `search()` | Searches for a string within another string.           | `$.store.book[?(search(@.title,'Sword'))]`             
 | `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(value(@.price) < 10)]`                
 
-### Extended Syntax
+### JSONPath Extended Syntax
 
 The library extends the JSONPath expression syntax to support additional features.
 

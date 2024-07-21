@@ -19,6 +19,8 @@ internal static partial class TestHelper
 
     public static int GetInt32( JsonNode value ) => value.AsValue().GetValue<int>();
 
+    public static float GetSingle( JsonNode value ) => value.AsValue().GetValue<float>();
+
     public static string GetString( JsonNode value, bool minify = false )
     {
         if ( value is not JsonObject && value is not JsonArray )

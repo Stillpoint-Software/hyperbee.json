@@ -20,6 +20,8 @@ internal static partial class TestHelper
 
     public static int GetInt32( JsonElement value ) => value.GetInt32();
 
+    public static float GetSingle( JsonElement value ) => value.GetSingle();
+
     public static string GetString( JsonElement value, bool minify = false )
     {
         if ( value.ValueKind != JsonValueKind.Object && value.ValueKind != JsonValueKind.Array )

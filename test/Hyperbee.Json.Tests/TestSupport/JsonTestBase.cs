@@ -52,7 +52,7 @@ public class JsonTestBase
 
     public static IJsonDocument GetDocumentAdapter( Type target, string source )
     {
-        if ( target == typeof( JsonDocument ) )
+        if ( target == typeof( JsonDocument ) || target == typeof( JsonElement ) )
             return new JsonPathDocument( source );
 
         if ( target == typeof( JsonNode ) )

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Filters.Parser;
@@ -30,4 +30,5 @@ public class LengthNodeFunction() : ExtensionFunction( LengthMethod, CompareCons
 
         return Scalar.Nothing;
     }
+
 }

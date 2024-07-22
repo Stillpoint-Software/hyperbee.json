@@ -1,4 +1,4 @@
-﻿namespace Hyperbee.Json.Filters;
+namespace Hyperbee.Json.Filters;
 
 public static class IRegexp
 {

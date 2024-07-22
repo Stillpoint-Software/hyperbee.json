@@ -1,7 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Filters.Values;
 
@@ -18,6 +17,11 @@ public class ValueNodeFunction() : ExtensionFunction( ValueMethod, CompareConstr
             throw new NotSupportedException( $"Function `{Name}` does not support kind {argument.ValueKind}" );
 
         var node = nodes.OneOrDefault();
+
+        if ( nodeArray.Length != 1 )
+            return Constants.Nothing;
+
+        var node = nodeArray.FirstOrDefault();
 
         return node?.GetValueKind() switch
         {

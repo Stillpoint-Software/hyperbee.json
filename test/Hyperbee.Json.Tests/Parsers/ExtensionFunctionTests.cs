@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Element;

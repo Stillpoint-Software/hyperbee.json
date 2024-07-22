@@ -199,6 +199,8 @@ You can extend the supported function set by registering your own functions.
 
 **Example:** Implement a `JsonNode` Path Function:
 
+**Example:** Implement a `JsonNode` Path Function:
+
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
 ```csharp
@@ -351,7 +353,7 @@ Here is a performance comparison of various queries on the standard book store d
  JsonPath_Newtonsoft_JObject      | $.store.book[0]                  |  9.178 us |  9.5618 us | 0.5241 us |  14.56 KB
 ```
 
-## Additional Documentation
+## Additioal Documentation
 
 Additional documentation can be found in the project's `/docs` folder.
 

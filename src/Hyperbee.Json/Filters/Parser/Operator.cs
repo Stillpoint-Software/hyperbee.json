@@ -1,4 +1,4 @@
-﻿namespace Hyperbee.Json.Filters.Parser;
+namespace Hyperbee.Json.Filters.Parser;
 
 [Flags]
 public enum Operator

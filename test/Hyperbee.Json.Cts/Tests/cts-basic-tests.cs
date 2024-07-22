@@ -1,4 +1,4 @@
-﻿// This file was auto generated.
+// This file was auto generated.
 
 using System.Text.Json;
 using System.Text.Json.Nodes;

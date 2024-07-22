@@ -1,4 +1,4 @@
-﻿namespace Hyperbee.Json.Internal;
+namespace Hyperbee.Json.Internal;
 
 internal enum SpanUnescapeOptions
 {

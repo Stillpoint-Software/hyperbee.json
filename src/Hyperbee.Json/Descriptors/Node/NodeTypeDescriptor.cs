@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Nodes;
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node.Functions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;

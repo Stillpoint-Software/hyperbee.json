@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
@@ -205,5 +205,10 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         }
 
         return true;
+    }
+
+    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
+    {
+        return element.TryGetFromJsonPathPointer( segment, out childValue );
     }
 }

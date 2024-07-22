@@ -206,9 +206,4 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
         return true;
     }
-
-    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
-    {
-        return element.TryGetFromJsonPathPointer( segment, out childValue );
-    }
 }

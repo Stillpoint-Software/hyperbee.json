@@ -27,7 +27,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "(1 == 1)", true, typeof( JsonNode ) )]
     [DataRow( "(1 != 2)", true, typeof( JsonNode ) )]
     [DataRow( "!(1 == 2)", true, typeof( JsonNode ) )]
-    [DataRow( "(\"world\" == 'world') || 1 == 1", true, typeof( JsonNode ) )] 
+    [DataRow( "(\"world\" == 'world') || 1 == 1", true, typeof( JsonNode ) )]
     [DataRow( "!('World' != 'World') && !(1 == 2 || 1 == 3)", true, typeof( JsonNode ) )]
     public void MatchExpectedResult_WhenUsingConstants( string filter, bool expected, Type sourceType )
     {
@@ -123,8 +123,8 @@ public class FilterParserTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "count(@.store.book) == 1", true, typeof( JsonElement ) )] 
-    [DataRow( "count(@.store.book.*) == 4", true, typeof( JsonElement ) )] 
+    [DataRow( "count(@.store.book) == 1", true, typeof( JsonElement ) )]
+    [DataRow( "count(@.store.book.*) == 4", true, typeof( JsonElement ) )]
     [DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]
     [DataRow( "length(@.store.book[0].category) == 9", true, typeof( JsonElement ) )]
     [DataRow( "match(@.store.book[0].title, \"Sayings.*\" )", true, typeof( JsonElement ) )]

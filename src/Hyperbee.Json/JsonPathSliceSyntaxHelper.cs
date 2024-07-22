@@ -75,7 +75,7 @@ internal static class JsonPathSliceSyntaxHelper
     }
 
     // helper to get bounded values 
-    // per https://datatracker.ietf.org/doc/rfc9535/ 2.3.4.2.2.
+    // https://www.rfc-editor.org/rfc/rfc9535.html#section-2.3.4.2.2
 
     private static (int Lower, int Upper, int Step) GetBoundedValues( int start, int end, int step, int length, bool reverse )
     {
@@ -96,14 +96,14 @@ internal static class JsonPathSliceSyntaxHelper
             upper = Math.Min( Math.Max( normalizedStart, -1 ), length - 1 );
         }
 
-        return reverse ? ReverseBoundedValues( lower, upper, step ) : (lower, upper, step);
+        return reverse ? ReverseValues( lower, upper, step ) : (lower, upper, step);
 
         static int Normalize( int value, int length ) => value >= 0 ? value : length + value;
     }
 
     // rewrite the slice to execute in reverse order
 
-    private static (int Lower, int Upper, int Step) ReverseBoundedValues( int lower, int upper, int step )
+    private static (int Lower, int Upper, int Step) ReverseValues( int lower, int upper, int step )
     {
         step = -step;
 

@@ -8,52 +8,52 @@ namespace Hyperbee.Json.Tests.Parsers;
 public class JsonPathQueryParserTests
 {
     [DataTestMethod]
-    [DataRow( "$", "{$|s}" )]
-    [DataRow( "$.two.some", "{$|s};{two|s};{some|s}" )]
-    [DataRow( "$.thing[1:2:3]", "{$|s};{thing|s};{1:2:3|g}" )]
-    [DataRow( "$..thing[?(@.x == 1)]", "{$|s};{..|g};{thing|s};{?(@.x == 1)|g}" )]
-    [DataRow( "$['two.some']", "{$|s};{two.some|s}" )]
-    [DataRow( "$.two.some.thing['this.or.that']", "{$|s};{two|s};{some|s};{thing|s};{this.or.that|s}" )]
-    [DataRow( "$.store.book[*].author", "{$|s};{store|s};{book|s};{*|g};{author|s}" )]
-    [DataRow( "@..author", "{@|s};{..|g};{author|s}" )]
-    [DataRow( "$.store.*", "{$|s};{store|s};{*|g}" )]
-    [DataRow( "$.store..price", "{$|s};{store|s};{..|g};{price|s}" )]
-    [DataRow( "$..book[2]", "{$|s};{..|g};{book|s};{2|s}" )]
-    [DataRow( "$..book[-1:]", "{$|s};{..|g};{book|s};{-1:|g}" )]
-    [DataRow( "$..book[:2]", "{$|s};{..|g};{book|s};{:2|g}" )]
-    [DataRow( "$..book[0,1]", "{$|s};{..|g};{book|s};{1,0|g}" )]
-    [DataRow( "$.store.book[0,1]", "{$|s};{store|s};{book|s};{1,0|g}" )]
-    [DataRow( "$..book['category','author']", "{$|s};{..|g};{book|s};{author,category|g}" )]
-    [DataRow( "$..book[?(@.isbn)]", "{$|s};{..|g};{book|s};{?(@.isbn)|g}" )]
-    [DataRow( "$..book[?@.isbn]", "{$|s};{..|g};{book|s};{?@.isbn|g}" )]
-    [DataRow( "$..book[?(@.price<10)]", "{$|s};{..|g};{book|s};{?(@.price<10)|g}" )]
-    [DataRow( "$..book[?@.price<10]", "{$|s};{..|g};{book|s};{?@.price<10|g}" )]
-    [DataRow( "$..*", "{$|s};{..|g};{*|g}" )]
-    [DataRow( """$.store.book[?(@path !== "$['store']['book'][0]")]""", """{$|s};{store|s};{book|s};{?(@path !== "$['store']['book'][0]")|g}""" )]
-    [DataRow( """$..book[?(@.price == 8.99 && @.category == "fiction")]""", """{$|s};{..|g};{book|s};{?(@.price == 8.99 && @.category == "fiction")|g}""" )]
-    public void Should_TokenizeJsonPath( string jsonPath, string expected )
+    [DataRow( "$", "[$ => 1]" )]
+    [DataRow( "$.two.some", "[$ => 1][two => 1][some => 1]" )]
+    [DataRow( "$.thing[1:2:3]", "[$ => 1][thing => 1][1:2:3 => #]" )]
+    [DataRow( "$..thing[?(@.x == 1)]", "[$ => 1][.. => #][thing => 1][?(@.x == 1) => #]" )]
+    [DataRow( "$['two.some']", "[$ => 1][two.some => 1]" )]
+    [DataRow( "$.two.some.thing['this.or.that']", "[$ => 1][two => 1][some => 1][thing => 1][this.or.that => 1]" )]
+    [DataRow( "$.store.book[*].author", "[$ => 1][store => 1][book => 1][* => #][author => 1]" )]
+    [DataRow( "@..author", "[@ => 1][.. => #][author => 1]" )]
+    [DataRow( "$.store.*", "[$ => 1][store => 1][* => #]" )]
+    [DataRow( "$.store..price", "[$ => 1][store => 1][.. => #][price => 1]" )]
+    [DataRow( "$..book[2]", "[$ => 1][.. => #][book => 1][2 => 1]" )]
+    [DataRow( "$..book[-1:]", "[$ => 1][.. => #][book => 1][-1: => #]" )]
+    [DataRow( "$..book[:2]", "[$ => 1][.. => #][book => 1][:2 => #]" )]
+    [DataRow( "$..book[0,1]", "[$ => 1][.. => #][book => 1][0,1 => #]" )]
+    [DataRow( "$.store.book[0,1]", "[$ => 1][store => 1][book => 1][0,1 => #]" )]
+    [DataRow( "$..book['category','author']", "[$ => 1][.. => #][book => 1][category,author => #]" )]
+    [DataRow( "$..book[?(@.isbn)]", "[$ => 1][.. => #][book => 1][?(@.isbn) => #]" )]
+    [DataRow( "$..book[?@.isbn]", "[$ => 1][.. => #][book => 1][?@.isbn => #]" )]
+    [DataRow( "$..book[?(@.price<10)]", "[$ => 1][.. => #][book => 1][?(@.price<10) => #]" )]
+    [DataRow( "$..book[?@.price<10]", "[$ => 1][.. => #][book => 1][?@.price<10 => #]" )]
+    [DataRow( "$..*", "[$ => 1][.. => #][* => #]" )]
+    [DataRow( "$..book[?(@.price == 8.99 && @.category == \"fiction\")]", "[$ => 1][.. => #][book => 1][?(@.price == 8.99 && @.category == \"fiction\") => #]" )]
+    public void TokenizeJsonPath( string jsonPath, string expected )
     {
         // act
         var compiledQuery = JsonPathQueryParser.Parse( jsonPath );
 
         // arrange
-        var result = SegmentsToString( compiledQuery.Segments );
+        var result = GetResultString( compiledQuery.Segments );
 
         // assert
         Assert.AreEqual( expected, result );
+
         return;
 
-        static string SegmentsToString( JsonPathSegment segment )
+        static string GetResultString( JsonPathSegment segment )
         {
-            return string.Join( ';', segment.AsEnumerable().Select( SegmentToString ) );
+            return string.Join( "", segment.AsEnumerable().Select( ConvertToString ) );
 
-            static string SegmentToString( JsonPathSegment segment )
+            static string ConvertToString( JsonPathSegment segment )
             {
                 var (singular, selectors) = segment;
-                var selectorType = singular ? "s" : "g"; // s:singular, g:group
-                var selectorsString = string.Join( ',', selectors.Select( x => x.Value ) );
+                var selectorType = singular ? "1" : "#"; // 1:singular, #:group
+                var selectorsString = string.Join( ',', selectors.Select( x => x.Value ).Reverse() );
 
-                return $"{{{selectorsString}|{selectorType}}}";
+                return $"[{selectorsString} => {selectorType}]";
             }
         }
     }

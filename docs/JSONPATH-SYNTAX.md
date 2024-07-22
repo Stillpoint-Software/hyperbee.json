@@ -372,7 +372,7 @@ Filters can be combined using logical operators `&&` (and) and `||` (or).
   // Output: { "price": 15 }
 ```
 
-## More Code Examples
+## More Examples
 
 ### JSON Sample Document 1
 ```json

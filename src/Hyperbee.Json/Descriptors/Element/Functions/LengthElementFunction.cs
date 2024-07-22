@@ -5,38 +5,28 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class LengthElementFunction() : FilterExtensionFunction( LengthMethodInfo, FilterExtensionInfo.MustCompare | FilterExtensionInfo.ExpectNormalized )
+public class LengthElementFunction() : ExtensionFunction( LengthMethod, CompareConstraint.MustCompare | CompareConstraint.ExpectNormalized )
 {
     public const string Name = "length";
-    private static readonly MethodInfo LengthMethodInfo = GetMethod<LengthElementFunction>( nameof( Length ) );
+    private static readonly MethodInfo LengthMethod = GetMethod<LengthElementFunction>( nameof( Length ) );
 
-    public static INodeType Length( INodeType input )
+    public static IValueType Length( IValueType argument )
     {
-        return input switch
+        switch ( argument.ValueKind )
         {
-            NodesType<JsonElement> nodes => LengthImpl( nodes.FirstOrDefault() ),
-            ValueType<string> valueString => new ValueType<float>( valueString.Value.Length ),
-            Null or Nothing => input,
-            _ => Constants.Nothing
-        };
-    }
+            case ValueKind.Scalar when argument.TryGetValue<string>( out var value ):
+                return Scalar.Value( value.Length );
 
-    public static INodeType LengthImpl( object value )
-    {
-        return value switch
-        {
-            string str => new ValueType<float>( str.Length ),
-            Array array => new ValueType<float>( array.Length ),
-            System.Collections.ICollection collection => new ValueType<float>( collection.Count ),
-            System.Collections.IEnumerable enumerable => new ValueType<float>( enumerable.Cast<object>().Count() ),
-            JsonElement node => node.ValueKind switch
-            {
-                JsonValueKind.String => new ValueType<float>( node.GetString()?.Length ?? 0 ),
-                JsonValueKind.Array => new ValueType<float>( node.EnumerateArray().Count() ),
-                JsonValueKind.Object => new ValueType<float>( node.EnumerateObject().Count() ),
-                _ => Constants.Null
-            },
-            _ => Constants.Null
-        };
+            case ValueKind.NodeList when argument.TryGetNode<JsonElement>( out var node ):
+                return node.ValueKind switch
+                {
+                    JsonValueKind.String => Scalar.Value( node.GetString()?.Length ?? 0 ),
+                    JsonValueKind.Array => Scalar.Value( node.GetArrayLength() ),
+                    JsonValueKind.Object => Scalar.Value( node.EnumerateObject().Count() ),
+                    _ => Scalar.Nothing
+                };
+        }
+
+        return Scalar.Nothing;
     }
 }

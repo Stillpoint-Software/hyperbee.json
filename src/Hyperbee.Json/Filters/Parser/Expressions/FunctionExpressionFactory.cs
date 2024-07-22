@@ -1,27 +1,33 @@
 ﻿using System.Linq.Expressions;
+using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class FunctionExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo expressionInfo, FilterParserContext<TNode> parserContext )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> descriptor )
     {
-        if ( parserContext.Descriptor.Functions.TryGetCreator( state.Item.ToString(), out var functionCreator ) )
+        compareConstraint = CompareConstraint.None;
+        expression = null;
+
+        if ( state.Item.IsEmpty || !char.IsLetter( state.Item[0] ) )
         {
-            if ( state.TrailingWhitespace )
-                throw new NotSupportedException( "Whitespace is not allowed after a function name." );
-
-            var function = functionCreator();
-
-            expression = function
-                .GetExpression( ref state, parserContext ); // will recurse for each function argument.
-
-            expressionInfo.Kind = ExpressionKind.Function;
-            expressionInfo.FunctionInfo = function.FunctionInfo;
-            return true;
+            return false;
         }
 
-        expression = null;
-        return false;
+        if ( !descriptor.Functions.TryGetActivator( state.Item.ToString(), out var functionActivator ) )
+        {
+            return false;
+        }
+
+        if ( state.TrailingWhitespace )
+            throw new NotSupportedException( "Whitespace is not allowed after a function name." );
+
+        var function = functionActivator();
+
+        expression = function.GetExpression<TNode>( ref state ); // will recurse for each function argument.
+        compareConstraint = CompareConstraint.Function | function.CompareConstraint;
+
+        return true;
     }
 }

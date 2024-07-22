@@ -1,26 +1,26 @@
 ﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Descriptors.Node.Functions;
 using Hyperbee.Json.Filters;
-using Hyperbee.Json.Filters.Values;
+using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
 public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
 {
-    private FilterEvaluator<JsonNode> _evaluator;
     private NodeValueAccessor _accessor;
-    private NodeTypeComparer<JsonNode> _comparer;
+    private FilterRuntime<JsonNode> _runtime;
+    private ValueTypeComparer<JsonNode> _comparer;
 
     public FunctionRegistry Functions { get; } = new();
 
     public IValueAccessor<JsonNode> Accessor =>
         _accessor ??= new NodeValueAccessor();
 
-    public IFilterEvaluator<JsonNode> FilterEvaluator =>
-        _evaluator ??= new FilterEvaluator<JsonNode>( this );
+    public IFilterRuntime<JsonNode> FilterRuntime =>
+        _runtime ??= new FilterRuntime<JsonNode>();
 
-    public INodeTypeComparer Comparer =>
-        _comparer ??= new NodeTypeComparer<JsonNode>( Accessor );
+    public IValueTypeComparer Comparer =>
+        _comparer ??= new ValueTypeComparer<JsonNode>( Accessor );
 
     public bool CanUsePointer => true;
 

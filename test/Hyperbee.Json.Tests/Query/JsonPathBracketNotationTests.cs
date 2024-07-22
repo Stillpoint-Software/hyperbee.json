@@ -22,7 +22,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "key": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -65,7 +65,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
           }
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -92,7 +92,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "key": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -112,7 +112,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "u\u0308": 42
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -140,11 +140,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "two.some": "42"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "42" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "42" );
     }
 
     [DataTestMethod]
@@ -159,11 +159,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "key": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
     [DataTestMethod]
@@ -180,7 +180,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "\"\"": 222
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
@@ -202,11 +202,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "\"\"": 222
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[0] ) == 42 );
+        Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
     [DataTestMethod]
@@ -223,11 +223,11 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "\"\"": 222
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[0] ) == 42 );
+        Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
     [DataTestMethod]
@@ -242,7 +242,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "one element"
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
@@ -265,12 +265,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "third" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "third" );
     }
 
     [DataTestMethod]
@@ -287,12 +287,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "third"
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "third" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "third" );
     }
 
     [DataTestMethod]
@@ -303,7 +303,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         // consensus: []
 
         const string json = "[]";
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -327,12 +327,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "fifth"
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "first" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "first" );
     }
 
     [DataTestMethod]
@@ -348,7 +348,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             [2, 3]
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -371,7 +371,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "0": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -391,7 +391,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "one element"
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -412,12 +412,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
     [DataTestMethod]
@@ -432,12 +432,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "]": 42
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[0] ) == 42 );
+        Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
     [DataTestMethod]
@@ -453,12 +453,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
     [DataTestMethod]
@@ -474,7 +474,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -499,7 +499,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "": 10
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -523,7 +523,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "\\": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -547,12 +547,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "'": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
     [DataTestMethod]
@@ -567,7 +567,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "0": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -591,7 +591,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -615,12 +615,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
             ":@.\"$,*'\\": 42
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
 
         Assert.IsTrue( matches.Count == 1 );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[0] ) == 42 );
+        Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
     [DataTestMethod]
@@ -635,7 +635,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "single'quote": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
@@ -656,7 +656,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -680,7 +680,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -703,7 +703,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -731,7 +731,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "\"a\"": 9
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -756,7 +756,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "mice": 100
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -787,7 +787,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "two'.'some": "43"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
@@ -814,7 +814,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "two.some": "42"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
@@ -836,7 +836,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             [0, 0]
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
@@ -848,10 +848,10 @@ public class JsonPathBracketNotationTests : JsonTestBase
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[0] ) == 1 );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[1] ) == 2 );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[2] ) == "a" );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[3] ) == "b" );
+        Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 1 );
+        Assert.IsTrue( TestHelper.GetInt32( matches[1] ) == 2 );
+        Assert.IsTrue( TestHelper.GetString( matches[2] ) == "a" );
+        Assert.IsTrue( TestHelper.GetString( matches[3] ) == "b" );
     }
 
     [DataTestMethod]
@@ -868,7 +868,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             }
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -896,7 +896,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             }
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
         var expected = new[]
@@ -910,12 +910,12 @@ public class JsonPathBracketNotationTests : JsonTestBase
         };
 
         Assert.IsTrue( expected.SequenceEqual( matches ) );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[0] ) == "value" );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[1], minify: true ) == JsonValueHelper.MinifyJson( """{"complex": "string", "primitives": [0,1]}""" ) );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[2] ) == "string" );
-        Assert.IsTrue( JsonValueHelper.GetString( matches[3], minify: true ) == "[0,1]" );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[4] ) == 0 );
-        Assert.IsTrue( JsonValueHelper.GetInt32( matches[5] ) == 1 );
+        Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
+        Assert.IsTrue( TestHelper.GetString( matches[1], minify: true ) == TestHelper.MinifyJson( """{"complex": "string", "primitives": [0,1]}""" ) );
+        Assert.IsTrue( TestHelper.GetString( matches[2] ) == "string" );
+        Assert.IsTrue( TestHelper.GetString( matches[3], minify: true ) == "[0,1]" );
+        Assert.IsTrue( TestHelper.GetInt32( matches[4] ) == 0 );
+        Assert.IsTrue( TestHelper.GetInt32( matches[5] ) == 1 );
     }
 
     [DataTestMethod]
@@ -935,7 +935,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             [0, 1]
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -957,7 +957,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         // consensus: []
 
         const string json = "[]";
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -973,7 +973,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         // consensus: []
 
         const string json = "{}";
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = Enumerable.Empty<object>();
@@ -995,7 +995,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             42
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -1026,7 +1026,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "array": [0, 1]
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -1052,7 +1052,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
             "key": "value"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {

@@ -6,9 +6,9 @@ namespace Hyperbee.Json.Internal;
 
 internal static class JsonElementAccessor
 {
-    // We need to identify an element's unique metadata location to establish instance identity.
+    // We need to identify an element's unique metadata location to establish positional identity.
     // Deeply nested elements can have the same value but different locations in the document.
-    // Deep compare is not sufficient to establish instance identity in such cases from either a
+    // Deep compare is not sufficient to establish positional identity in such cases from either a
     // correctness or performance perspective. We can use the private _idx field of JsonElement
     // to identify the element's unique location in the document.
     // 

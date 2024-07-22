@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
@@ -7,33 +6,20 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class SearchElementFunction() : FilterExtensionFunction( SearchMethodInfo, FilterExtensionInfo.MustNotCompare )
+public class SearchElementFunction() : ExtensionFunction( SearchMethod, CompareConstraint.MustNotCompare )
 {
     public const string Name = "search";
-    private static readonly MethodInfo SearchMethodInfo = GetMethod<SearchElementFunction>( nameof( Search ) );
+    private static readonly MethodInfo SearchMethod = GetMethod<SearchElementFunction>( nameof( Search ) );
 
-    public static INodeType Search( INodeType input, INodeType regex )
+    public static ScalarValue<bool> Search( IValueType argValue, IValueType argPattern )
     {
-        return input switch
-        {
-            NodesType<JsonElement> nodes when regex is ValueType<string> stringValue =>
-                SearchImpl( nodes, stringValue.Value ),
-            NodesType<JsonElement> nodes when regex is NodesType<JsonElement> stringValue =>
-                SearchImpl( nodes, stringValue.Value.FirstOrDefault().GetString() ),
-            _ => Constants.False
-        };
-    }
+        if ( !argValue.TryGetValue<string>( out var value ) || value == null )
+            return false;
 
-    public static INodeType SearchImpl( NodesType<JsonElement> nodes, string regex )
-    {
-        var value = nodes.FirstOrDefault();
+        if ( !argPattern.TryGetValue<string>( out var pattern ) || pattern == null )
+            return false;
 
-        if ( value.ValueKind != JsonValueKind.String )
-            return Constants.False;
-
-        var stringValue = value.GetString() ?? string.Empty;
-
-        var regexPattern = new Regex( IRegexp.ConvertToIRegexp( regex ) );
-        return new ValueType<bool>( regexPattern.IsMatch( stringValue ) );
+        var regex = new Regex( IRegexp.ConvertToIRegexp( pattern ) );
+        return regex.IsMatch( value );
     }
 }

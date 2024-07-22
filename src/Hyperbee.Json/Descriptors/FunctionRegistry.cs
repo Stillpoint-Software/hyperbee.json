@@ -4,16 +4,16 @@ namespace Hyperbee.Json.Descriptors;
 
 public sealed class FunctionRegistry
 {
-    private Dictionary<string, FunctionCreator> Functions { get; } = [];
+    private Dictionary<string, FunctionActivator> Functions { get; } = [];
 
     public void Register<TFunction>( string name, Func<TFunction> factory )
-        where TFunction : FilterExtensionFunction
+        where TFunction : ExtensionFunction
     {
         Functions[name] = () => factory();
     }
 
-    internal bool TryGetCreator( string name, out FunctionCreator functionCreator )
+    internal bool TryGetActivator( string name, out FunctionActivator functionActivator )
     {
-        return Functions.TryGetValue( name, out functionCreator );
+        return Functions.TryGetValue( name, out functionActivator );
     }
 }

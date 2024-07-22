@@ -49,11 +49,6 @@ internal static class JsonPathQueryParser
         return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );
     }
 
-    internal static JsonPathQuery ParseNoCache( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
-    {
-        return QueryFactory( query, allowDotWhitespace );
-    }
-
     private static JsonPathQuery QueryFactory( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
     {
         // RFC - query cannot start or end with whitespace
@@ -72,10 +67,10 @@ internal static class JsonPathQueryParser
         var bracketDepth = 0;
         var parenDepth = 0;
 
-        char[] whitespaceTerminators = [];
+        Span<char> whitespaceTerminators = ['\0', '\0']; // '\0' is used as a sentinel value
         var whiteSpaceReplay = true;
 
-        var tokens = new List<JsonPathSegment>();
+        var segments = new List<JsonPathSegment>();
         var selectors = new List<SelectorDescriptor>();
 
         var state = State.Start;
@@ -83,19 +78,11 @@ internal static class JsonPathQueryParser
 
         do
         {
-            // read next character
-            char c;
+            // Read next character
+            char c = i < n ? query[i++] : '\0';
 
-            if ( i < n )
-            {
-                c = query[i++];
-            }
-            else // end of input
-            {
-                if ( state != State.Whitespace ) // whitespace is a sub-state, allow it to exit
-                    state = State.Finish;
-                c = '\0'; // Set char to null terminator to signal end of input
-            }
+            if ( state != State.Whitespace && c == '\0' ) // whitespace is a sub-state, allow it to exit
+                state = State.Finish; // end of input
 
             // process character
             ReadOnlySpan<char> selectorSpan;
@@ -112,9 +99,10 @@ internal static class JsonPathQueryParser
                             if ( query[^1] == '.' && query[^2] == '.' )
                                 throw new NotSupportedException( "`..` cannot be the last segment." );
 
-                            InsertToken( tokens, new SelectorDescriptor { SelectorKind = SelectorKind.Root, Value = c.ToString() } );
+                            InsertSegment( segments, new SelectorDescriptor { SelectorKind = SelectorKind.Root, Value = c.ToString() } );
 
-                            whitespaceTerminators = ['.', '['];
+                            whitespaceTerminators[0] = '.';
+                            whitespaceTerminators[1] = '[';
                             state = State.Whitespace;
                             returnState = State.DotChild;
                             break;
@@ -135,10 +123,10 @@ internal static class JsonPathQueryParser
                             break;
                         default:
 
-                            if ( c != '\0' && whitespaceTerminators.Length > 0 && !whitespaceTerminators.Contains( c ) )
+                            if ( c != '\0' && whitespaceTerminators[0] != '\0' && !whitespaceTerminators.Contains( c ) )
                                 throw new NotSupportedException( $"Invalid character `{c}` at pos {i - 1}." );
 
-                            whitespaceTerminators = [];
+                            whitespaceTerminators[0] = '\0'; // reset
                             state = returnState; // transition back to the appropriate state
                             selectorStart = i; // start of the next selector
 
@@ -156,32 +144,9 @@ internal static class JsonPathQueryParser
                     switch ( c )
                     {
                         case '[': // end-of-child
-                            selectorSpan = GetSelectorSpan( state, query, selectorStart, i );
-                            selectorKind = selectorSpan switch
-                            {
-                                "$" => throw new NotSupportedException( $"Invalid use of root `$` at pos {i - 1}." ),
-                                "@" => throw new NotSupportedException( $"Invalid use of local root `$` at pos {i - 1}." ),
-                                "*" => SelectorKind.Wildcard,
-                                _ => SelectorKind.Name
-                            };
-
-                            if ( selectorKind == SelectorKind.Name && !selectorSpan.IsEmpty )
-                            {
-                                ThrowIfQuoted( selectorSpan );
-                                ThrowIfInvalidUnquotedName( selectorSpan );
-                            }
-
-                            InsertToken( tokens, GetSelectorDescriptor( selectorKind, selectorSpan ) );
-
-                            state = State.Whitespace;
-                            whiteSpaceReplay = false;
-                            returnState = State.UnionItem;
-                            bracketDepth = 1;
-                            i--; // replay character
-                            break;
-
                         case '.': // end-of-child
-                            if ( i == n )
+
+                            if ( i == n && c == '.' ) // dot( . ) is not allowed at the end of the query
                                 throw new NotSupportedException( $"Missing character after `.` at pos {i - 1}." );
 
                             selectorSpan = GetSelectorSpan( state, query, selectorStart, i );
@@ -199,15 +164,29 @@ internal static class JsonPathQueryParser
                                 ThrowIfInvalidUnquotedName( selectorSpan );
                             }
 
-                            InsertToken( tokens, GetSelectorDescriptor( selectorKind, selectorSpan ) );
+                            InsertSegment( segments, GetSelectorDescriptor( selectorKind, selectorSpan ) );
 
-                            if ( i < n && query[i] == '.' ) // peek next character
+                            // continue parsing next child
+                            switch ( c )
                             {
-                                InsertToken( tokens, GetSelectorDescriptor( SelectorKind.Descendant, ".." ) );
-                                i++; // advance past second `.`
+                                case '.': // continue dot child
+                                    if ( i < n && query[i] == '.' ) // peek next character for `..`
+                                    {
+                                        InsertSegment( segments, GetSelectorDescriptor( SelectorKind.Descendant, ".." ) );
+                                        i++; // advance past second `.`
+                                    }
+                                    selectorStart = i;
+                                    break;
+
+                                case '[': // transition to union
+                                    state = State.Whitespace;
+                                    whiteSpaceReplay = false;
+                                    returnState = State.UnionItem;
+                                    bracketDepth = 1;
+                                    i--; // replay character
+                                    break;
                             }
 
-                            selectorStart = i;
                             break;
 
                         case '\'':
@@ -275,7 +254,7 @@ internal static class JsonPathQueryParser
                                 throw new NotSupportedException( "Invalid bracket expression syntax. Bracket expression cannot be empty." );
 
                             // validate the selector and get its kind
-                            selectorKind = GetValidSelectorKind( selectorSpan );
+                            selectorKind = GetUnionSelectorKind( selectorSpan );
 
                             // create the selector descriptor
                             SelectorDescriptor descriptor;
@@ -287,19 +266,11 @@ internal static class JsonPathQueryParser
 
                                 case SelectorKind.Name:
                                     ThrowIfInvalidQuotedName( selectorSpan );
+
                                     if ( escaped )
                                     {
-                                        var builder = new SpanBuilder( selectorSpan.Length );
-                                        try
-                                        {
-                                            SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.SingleThenUnquote ); // unescape and then unquote
-                                            descriptor = GetSelectorDescriptor( selectorKind, builder, nullable: false );
-                                            escaped = false;
-                                        }
-                                        finally // ensure builder is disposed
-                                        {
-                                            builder.Dispose();
-                                        }
+                                        descriptor = GetUnescapedSelectorDescriptor( selectorKind, selectorSpan, nullable: false, SpanUnescapeOptions.SingleThenUnquote ); // unescape and then unquote
+                                        escaped = false;
                                     }
                                     else
                                     {
@@ -309,19 +280,11 @@ internal static class JsonPathQueryParser
                                     break;
 
                                 case SelectorKind.Filter:
+
                                     if ( escaped )
                                     {
-                                        var builder = new SpanBuilder( selectorSpan.Length );
-                                        try
-                                        {
-                                            SpanHelper.Unescape( selectorSpan, ref builder, SpanUnescapeOptions.Mixed ); // unescape one or more strings
-                                            descriptor = GetSelectorDescriptor( selectorKind, builder );
-                                            escaped = false;
-                                        }
-                                        finally // ensure builder is disposed
-                                        {
-                                            builder.Dispose();
-                                        }
+                                        descriptor = GetUnescapedSelectorDescriptor( selectorKind, selectorSpan, nullable: true, SpanUnescapeOptions.Multiple ); // unescape one or more strings
+                                        escaped = false;
                                     }
                                     else
                                     {
@@ -342,15 +305,15 @@ internal static class JsonPathQueryParser
                             switch ( c )
                             {
                                 case ',':
-                                    whitespaceTerminators = [];
                                     state = State.Whitespace;
                                     returnState = State.UnionNext;
                                     break;
                                 case ']':
-                                    InsertToken( tokens, [.. selectors] );
+                                    InsertSegment( segments, [.. selectors] );
                                     selectors.Clear();
 
-                                    whitespaceTerminators = ['.', '['];
+                                    whitespaceTerminators[0] = '.';
+                                    whitespaceTerminators[1] = '[';
                                     state = State.Whitespace;
                                     returnState = State.DotChild;
                                     break;
@@ -414,7 +377,7 @@ internal static class JsonPathQueryParser
                             ThrowIfInvalidUnquotedName( selectorSpan );
                         }
 
-                        InsertToken( tokens, GetSelectorDescriptor( finalKind, selectorSpan ) );
+                        InsertSegment( segments, GetSelectorDescriptor( finalKind, selectorSpan ) );
                     }
 
                     state = State.Final;
@@ -425,7 +388,7 @@ internal static class JsonPathQueryParser
             }
         } while ( state != State.Final );
 
-        return BuildJsonPathQuery( query, tokens );
+        return BuildJsonPathQuery( query, segments );
     }
 
     private static JsonPathQuery BuildJsonPathQuery( ReadOnlySpan<char> query, IList<JsonPathSegment> segments )
@@ -450,6 +413,9 @@ internal static class JsonPathQueryParser
         return new JsonPathQuery( query.ToString(), rootSegment, normalized );
     }
 
+    internal static void ClearCache() => JsonPathQueries.Clear();
+
+
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static SelectorDescriptor GetSelectorDescriptor( SelectorKind selectorKind, ReadOnlySpan<char> selectorSpan, bool nullable = true )
     {
@@ -464,6 +430,23 @@ internal static class JsonPathQueryParser
         return new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue };
     }
 
+    private static SelectorDescriptor GetUnescapedSelectorDescriptor( SelectorKind selectorKind, ReadOnlySpan<char> selectorSpan, bool nullable, SpanUnescapeOptions unescapeOptions )
+    {
+        // SpanBuilder must be disposed, but it is a ref struct, so we can't use `using`
+
+        var builder = new SpanBuilder( selectorSpan.Length );
+
+        try
+        {
+            SpanHelper.Unescape( selectorSpan, ref builder, unescapeOptions ); // unescape and then unquote
+            return GetSelectorDescriptor( selectorKind, builder, nullable );
+        }
+        finally // ensure builder is disposed
+        {
+            builder.Dispose();
+        }
+    }
+
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static ReadOnlySpan<char> GetSelectorSpan( State state, ReadOnlySpan<char> buffer, int start, int stop )
     {
@@ -472,7 +455,7 @@ internal static class JsonPathQueryParser
         return length <= 0 ? [] : buffer.Slice( start, length ).Trim();
     }
 
-    private static SelectorKind GetValidSelectorKind( ReadOnlySpan<char> selector )
+    private static SelectorKind GetUnionSelectorKind( ReadOnlySpan<char> selector )
     {
         // selector order matters
 
@@ -510,21 +493,12 @@ internal static class JsonPathQueryParser
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor selector )
+    private static void InsertSegment( List<JsonPathSegment> segments, params SelectorDescriptor[] selectors )
     {
-        if ( selector?.Value == null ) // ignore null selectors
-            return;
+        if ( selectors == null || selectors.Length == 0 || (selectors.Length == 1 && selectors[0]?.Value == null) )
+            return; // ignore null and empty selectors. this is valid in some cases like `].` and `..`
 
-        InsertToken( tokens, [selector] );
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void InsertToken( ICollection<JsonPathSegment> tokens, SelectorDescriptor[] selectors )
-    {
-        if ( selectors == null || selectors.Length == 0 ) // ignore empty selectors
-            return;
-
-        tokens.Add( new JsonPathSegment( selectors ) );
+        segments.Add( new JsonPathSegment( selectors ) );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -776,7 +750,7 @@ internal static class JsonPathQueryParser
             if ( span.Length != 6 || span[1] != 'u' )
                 return false;
 
-            for ( int i = 2; i < 6; i++ )
+            for ( var i = 2; i < 6; i++ )
             {
                 if ( !char.IsAsciiHexDigit( span[i] ) )
                     return false;

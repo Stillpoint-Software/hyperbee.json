@@ -96,7 +96,7 @@ public static class JsonPath<TNode>
     {
         var stack = new NodeArgsStack();
 
-        var (accessor, filterEvaluator) = Descriptor;
+        var (accessor, filterRuntime) = Descriptor;
 
         do
         {
@@ -111,7 +111,8 @@ public static class JsonPath<TNode>
             if ( key != null )
                 processor?.Invoke( parent, value, key, segmentNext );
 
-            // yield matches
+            // yield match
+
             if ( segmentNext.IsFinal )
             {
                 yield return value;
@@ -141,7 +142,7 @@ public static class JsonPath<TNode>
                     continue; // don't allow indexing in to objects
 
                 // try to access object or array using name or index
-                if ( accessor.TryGetChildValue( value, selector, selectorKind, out var childValue ) )
+                if ( accessor.TryGetChild( value, selector, selectorKind, out var childValue ) )
                     stack.Push( value, childValue, selector, segmentNext );
 
                 continue;
@@ -204,7 +205,7 @@ public static class JsonPath<TNode>
                         {
                             foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                             {
-                                if ( !filterEvaluator.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
+                                if ( !filterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
                                     continue;
 
                                 // optimization: quicker return for tail values
@@ -237,7 +238,9 @@ public static class JsonPath<TNode>
                             if ( nodeKind != NodeKind.Array )
                                 continue;
 
-                            foreach ( var index in EnumerateSlice( value, selector, accessor ) )
+                            var (upper, lower, step) = GetSliceRange( value, selector, accessor );
+
+                            for ( var index = lower; step > 0 ? index < upper : index > upper; index += step )
                             {
                                 if ( accessor.TryGetElementAt( value, index, out var childValue ) )
                                     stack.Push( value, childValue, index.ToString(), segmentNext );
@@ -269,7 +272,7 @@ public static class JsonPath<TNode>
                     // Object: [name1,name2,...] Names over object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
                         {
-                            if ( accessor.TryGetChildValue( value, selector, selectorKind, out var childValue ) )
+                            if ( accessor.TryGetChild( value, selector, selectorKind, out var childValue ) )
                                 stack.Push( value, childValue, selector, segmentNext );
 
                             continue;
@@ -286,37 +289,26 @@ public static class JsonPath<TNode>
         } while ( stack.TryPop( out args ) );
     }
 
-    private static IEnumerable<int> EnumerateSlice( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
+    private static (int Upper, int Lower, int Step) GetSliceRange( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
     {
         var length = accessor.GetArrayLength( value );
 
         if ( length == 0 )
-            yield break;
+            return (0, 0, 0);
 
         var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
-        switch ( step )
-        {
-            case > 0:
-                {
-                    for ( var index = lower; index < upper; index += step )
-                        yield return index;
-                    break;
-                }
-            case < 0:
-                {
-                    for ( var index = upper; index > lower; index += step )
-                        yield return index;
-                    break;
-                }
-        }
+        if ( step < 0 )
+            (lower, upper) = (upper, lower);
+
+        return (upper, lower, step);
     }
 
     [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, {Segment}" )]
-    private record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
+    private readonly record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
 
     [DebuggerDisplay( "{_stack}" )]
-    private sealed class NodeArgsStack( int capacity = 16 )
+    private sealed class NodeArgsStack( int capacity = 8 )
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         private readonly Stack<NodeArgs> _stack = new( capacity );
@@ -333,4 +325,5 @@ public static class JsonPath<TNode>
             return _stack.TryPop( out args );
         }
     }
+
 }

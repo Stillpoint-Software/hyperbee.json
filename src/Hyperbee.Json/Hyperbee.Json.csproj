@@ -6,14 +6,14 @@
 
 	<Authors>Stillpoint Software, Inc.</Authors>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<PackageTags>JsonPath;NET;Json</PackageTags>
+	<PackageTags>json-path;jsonpath;query;path;json;rfc9535</PackageTags>
 	<PackageIcon>icon.png</PackageIcon>
 	<PackageProjectUrl>https://github.com/Stillpoint-Software/Hyperbee.Json/</PackageProjectUrl>
 	<TargetFrameworks>net8.0</TargetFrameworks>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<Copyright>Stillpoint Software, Inc.</Copyright>
 	<Title>Hyperbee Json</Title>
-	<Description>A C# implementation of JSONPath for .NET `System.Text.Json` `JsonElement`, and `JsonNode`. </Description>
+	<Description>JSON Path (RFC 9535) implementation for System.Text.Json JsonElement, and JsonNode.</Description>
 	<RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
 	<PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>

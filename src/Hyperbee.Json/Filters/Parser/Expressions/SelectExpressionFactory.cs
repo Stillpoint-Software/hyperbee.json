@@ -1,49 +1,53 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo itemContext, FilterParserContext<TNode> parserContext )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> _ = null )
     {
-        expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument, parserContext );
+        compareConstraint = CompareConstraint.None;
+        var item = state.Item;
 
-        if ( expression == null )
+        if ( item.IsEmpty || item[0] != '$' && item[0] != '@' )
+        {
+            expression = null;
             return false;
+        }
 
-        itemContext.Kind = ExpressionKind.Select;
+        expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument );
         return true;
     }
 
-    static class ExpressionHelper<TNode>
+    private static class ExpressionHelper<TNode>
     {
-        private static readonly Expression SelectExpression = Expression.Constant( (Func<string, bool, FilterRuntimeContext<TNode>, INodeType>) Select );
+        private static readonly MethodInfo SelectMethod =
+            typeof( ExpressionHelper<TNode> )
+                .GetMethod( nameof( Select ), BindingFlags.NonPublic | BindingFlags.Static );
 
-        public static Expression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace, FilterParserContext<TNode> parserContext )
+        public static MethodCallExpression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace )
         {
-            if ( item.IsEmpty )
-                return null;
-
-            if ( item[0] != '$' && item[0] != '@' )
-                return null;
-
-            return Expression.Invoke(
-                SelectExpression,
+            return Expression.Call(
+                SelectMethod,
                 Expression.Constant( item.ToString() ),
                 Expression.Constant( allowDotWhitespace ),
-                parserContext.RuntimeContext );
+                FilterParser<TNode>.RuntimeContextExpression );
         }
 
-        private static INodeType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
+        private static IValueType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
         {
-            var compileQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
+            var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
 
-            // Current becomes root
-            return query[0] == '$'
-                ? new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Root, runtimeContext.Root, compileQuery ), compileQuery.Normalized )
-                : new NodesType<TNode>( JsonPath<TNode>.SelectInternal( runtimeContext.Current, runtimeContext.Root, compileQuery ), compileQuery.Normalized );
+            var value = query[0] == '$'
+                ? runtimeContext.Root
+                : runtimeContext.Current; // @
+
+            var nodes = JsonPath<TNode>.SelectInternal( value, runtimeContext.Root, compiledQuery );
+
+            return new NodeList<TNode>( nodes, compiledQuery.Normalized );
         }
-
     }
 }

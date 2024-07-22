@@ -3,9 +3,9 @@ using System.Text.Json.Nodes;
 
 namespace Hyperbee.Json.Extensions;
 
-// DISTINCT from JsonPath these extensions are intended to facilitate 'diving' for Json Properties using
-// normalized paths. a normalized path is an absolute path that references a single element.
-// similar to JsonPointer but using JsonPath notation.
+// DISTINCT from JsonPath these extensions are intended to facilitate 'diving' for Json Properties
+// using normalized paths. a normalized path is an absolute path that references a single element.
+// Similar to JsonPointer but using JsonPath notation.
 //
 // syntax supports absolute paths; dotted notation, quoted names, and simple bracketed array accessors only.
 //

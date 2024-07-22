@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using System.Numerics;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
 
@@ -8,11 +9,11 @@ public class DynamicJsonNode : DynamicObject
 {
     private readonly JsonNode Node;
 
+    public static implicit operator short( DynamicJsonNode proxy ) => GetNumber<short>( proxy.Node );
+    public static implicit operator int( DynamicJsonNode proxy ) => GetNumber<int>( proxy.Node );
+    public static implicit operator long( DynamicJsonNode proxy ) => GetNumber<long>( proxy.Node );
     public static implicit operator double( DynamicJsonNode proxy ) => proxy.Node.GetValue<double>();
     public static implicit operator decimal( DynamicJsonNode proxy ) => proxy.Node.GetValue<decimal>();
-    public static implicit operator short( DynamicJsonNode proxy ) => proxy.Node.GetNumber<short>();
-    public static implicit operator int( DynamicJsonNode proxy ) => proxy.Node.GetNumber<int>();
-    public static implicit operator long( DynamicJsonNode proxy ) => proxy.Node.GetNumber<long>();
     public static implicit operator bool( DynamicJsonNode proxy ) => proxy.Node.GetValue<bool>();
     public static implicit operator byte( DynamicJsonNode proxy ) => proxy.Node.GetValue<byte>();
     public static implicit operator sbyte( DynamicJsonNode proxy ) => proxy.Node.GetValue<sbyte>();
@@ -53,7 +54,6 @@ public class DynamicJsonNode : DynamicObject
                 result = new DynamicJsonNode( ref resultValue );
                 return true;
             case JsonArray jArray:
-                //bf not sure if this gets called
                 var arrayValue = jArray[binder.Name];
                 result = new DynamicJsonNode( ref arrayValue );
                 return true;
@@ -89,5 +89,28 @@ public class DynamicJsonNode : DynamicObject
 
         result = null;
         return false;
+    }
+
+    private static T GetNumber<T>( JsonNode value )
+        where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>, INumber<T>
+    {
+        var source = value.AsValue();
+
+        if ( typeof( T ) == typeof( int ) || typeof( T ) == typeof( long ) || typeof( T ) == typeof( short ) || typeof( T ) == typeof( byte ) )
+        {
+            if ( source.TryGetValue<T>( out var result ) )
+                return result;
+
+            // the value may contain a decimal. convert to integer without rounding.
+            // ChangeType rounds values. Cast to integer first to truncate.
+            var truncated = (long) source.GetValue<float>();
+            var converted = Convert.ChangeType( truncated, typeof( T ) );
+            return (T) converted;
+        }
+
+        if ( typeof( T ) == typeof( float ) )
+            return (T) (IConvertible) source.GetValue<float>();
+
+        throw new NotSupportedException();
     }
 }

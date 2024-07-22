@@ -43,7 +43,7 @@ function Get-JsonContent {
         $response = Invoke-WebRequestWithRetry -Url $Url
         $jsonContent = $response.Content
 
-        # Save the JSON content to a file in a pretty formatted way if SavePath is provided
+        # Save the JSON content to a file if path was provided
         if ($PSBoundParameters.ContainsKey('LocalPath')) {
             $prettyJson = $jsonContent | ConvertFrom-Json -AsHashtable | ConvertTo-Json -Depth 10
             Set-Content -Path $LocalPath -Value $prettyJson
@@ -106,10 +106,40 @@ function Convert-ToCSharpMethodName {
     return $name -replace '[^a-zA-Z0-9]', '_'
 }
 
+# function FormatJson {
+#     param (
+#         [string]$json,
+#         [int]$indent
+#     )
+
+#     # Ignore empty groups
+#     if ([string]::IsNullOrWhiteSpace($json)) {
+#         return $null
+#     }
+
+#     # Detect the line break format
+#     $lineBreak = if ($json -contains "`r`n") { "`r`n" } else { "`n" }
+
+#     # Split the JSON string into lines
+#     $lines = $json -split $lineBreak
+
+#     # Create the indentation string
+#     $indentation = " " * $indent
+
+#     # Add indentation to each line except the first
+#     $formattedLines = $lines | ForEach-Object { $indentation + $_ }
+
+#     # Join the lines back into a single string with the detected line break format
+#     $formattedJson = $lineBreak + ($formattedLines -join $lineBreak) + $lineBreak + $indentation
+
+#     return $formattedJson
+# }
+
 function FormatJson {
     param (
         [string]$json,
-        [int]$indent
+        [int]$indentCount,
+        [int]$indentSize = 2
     )
 
     # Ignore empty groups
@@ -123,17 +153,19 @@ function FormatJson {
     # Split the JSON string into lines
     $lines = $json -split $lineBreak
 
-    # Create the indentation string
-    $indentation = " " * $indent
+    # Create the indentation strings
+    $indentation = " " * ($indentCount * $indentSize)
+    $lastIndentation = " " * (($indentCount - 2) * $indentSize)
 
     # Add indentation to each line except the first
     $formattedLines = $lines | ForEach-Object { $indentation + $_ }
 
     # Join the lines back into a single string with the detected line break format
-    $formattedJson = $lineBreak + ($formattedLines -join $lineBreak) + $lineBreak + $indentation
+    $formattedJson = $lineBreak + ($formattedLines -join $lineBreak) + $lineBreak + $lastIndentation
 
     return $formattedJson
 }
+
 
 function Convert-ToPascalCase {
     param (
@@ -174,14 +206,15 @@ function Get-UnitTestContent {
     $unitTestContent = @"
 // This file was auto generated.
 
+using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Cts.TestSupport;
 
-namespace Hyperbee.Json.Cts.Tests
+namespace Hyperbee.Json.Cts.Tests;
+
+[TestClass]
+public class $className
 {
-    [TestClass]
-    public class $className
-    {`r`n
 "@
 
     $testNumber = 0
@@ -204,54 +237,56 @@ namespace Hyperbee.Json.Cts.Tests
 
         $invalidSelector = if ($test.invalid_selector) { $true } else { $false }
 
-        $document = FormatJson -json $test.document -indent 16
-        $result = FormatJson -json $test.result -indent 16
-        $results = FormatJson -json $test.results -indent 16
+        $document = FormatJson -json $test.document -indentCount 8
+        $result = FormatJson -json $test.result -indentCount 8
+        $results = FormatJson -json $test.results -indentCount 8
 
         # Replace placeholders in the template with actual test case data
         $unitTestContent += @"
         
-        [TestMethod( @`"$name ($testNumber)`" )]
-        public void Test`_$methodName`_$testNumber()
-        {
-            var selector = `"$selector`";`r`n
+    [DataTestMethod( @`"$name ($testNumber)`" )]
+    [DataRow( typeof(JsonNode) )]
+    [DataRow(typeof(JsonElement))]
+    public void Test`_$methodName`_$testNumber( Type documentType )
+    {
+        const string selector = `"$selector`";`r`n
 "@
         
         if ($invalidSelector) {
             $unitTestContent += @"
-            var document = JsonNode.Parse( `"[0]`" ); // Empty node
+        var document = TestHelper.Parse( documentType, `"[0]`" ); // Empty node
 
-            AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
-        }`r`n
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
+    }`r`n
 "@
         } else {
             $unitTestContent += @"
-            var document = JsonNode.Parse(
-                `"`"`"$document`"`"`");
-            var results = document.Select(selector);`r`n
+        var document = TestHelper.Parse( documentType,
+            `"`"`"$document`"`"`");
+        var results = document.Select(selector);`r`n
 "@
             if ($null -ne $result) {
                 $unitTestContent += @"
-            var expect = JsonNode.Parse(
-                `"`"`"$result`"`"`");
+        var expect = TestHelper.Parse( documentType,
+            `"`"`"$result`"`"`").Root;
 
-            var match = TestHelper.MatchOne(results, expect!);
-            Assert.IsTrue(match);
-        }`r`n
+        var match = TestHelper.MatchOne(documentType, results, expect);
+        Assert.IsTrue(match);
+    }`r`n
 "@
             } elseif ($null -ne $results) {
                 $unitTestContent += @"
-            var expectOneOf = JsonNode.Parse(
-                `"`"`"$results`"`"`");
+        var expectOneOf = TestHelper.Parse( documentType,
+            `"`"`"$results`"`"`").Root;
 
-            var match = TestHelper.MatchAny(results, expectOneOf!);
-            Assert.IsTrue(match);
-        }`r`n
+        var match = TestHelper.MatchAny(documentType, results, expectOneOf);
+        Assert.IsTrue(match);
+    }`r`n
 "@
             } else {
                 $unitTestContent += @"
-            Assert.Fail(`"missing results`");
-        }`r`n
+        Assert.Fail(`"missing results`");
+    }`r`n
 "@
             }
         }
@@ -259,8 +294,8 @@ namespace Hyperbee.Json.Cts.Tests
 
     # Close the class and namespace
     $unitTestContent += @"
-    }
-}`r`n
+}
+`r`n
 "@
 
     return $unitTestContent

@@ -22,7 +22,7 @@ public class JsonPathUnionTests : JsonTestBase
           "a"
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -46,7 +46,7 @@ public class JsonPathUnionTests : JsonTestBase
           "a": 1
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -79,7 +79,7 @@ public class JsonPathUnionTests : JsonTestBase
           { "key": 4 }
         ]
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -108,7 +108,7 @@ public class JsonPathUnionTests : JsonTestBase
           "another": "entry"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -134,7 +134,7 @@ public class JsonPathUnionTests : JsonTestBase
           "thing1": "thing2"
         }
         """;
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]
@@ -153,7 +153,7 @@ public class JsonPathUnionTests : JsonTestBase
     public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )
     {
         // consensus: ["cc1", "cc2", "cc3", "cc5", "dd1", "dd2", "dd4"]
-        //            any order
+        // any order
 
         const string json = """
         [
@@ -182,7 +182,7 @@ public class JsonPathUnionTests : JsonTestBase
         ]
         """;
 
-        var source = GetDocumentFromSource( sourceType, json );
+        var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query );
         var expected = new[]

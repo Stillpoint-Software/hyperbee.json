@@ -2,7 +2,7 @@
   <!-- Solution version numbers -->
   <PropertyGroup>
     <MajorVersion>1</MajorVersion>
-    <MinorVersion>3</MinorVersion>
+    <MinorVersion>4</MinorVersion>
     <PatchVersion>0</PatchVersion>
   </PropertyGroup>
   <!-- Disable automatic package publishing -->

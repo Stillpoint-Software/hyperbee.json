@@ -8,8 +8,10 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class JsonExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> descriptor )
     {
+        compareConstraint = CompareConstraint.None;
+
         if ( !TryParseNode( descriptor.Accessor, state.Item, out var node ) )
         {
             expression = null;
@@ -17,7 +19,6 @@ internal class JsonExpressionFactory : IExpressionFactory
         }
 
         expression = Expression.Constant( new NodeList<TNode>( [node], isNormalized: true ) );
-        exprInfo.Kind = ExpressionKind.Json;
         return true;
     }
 

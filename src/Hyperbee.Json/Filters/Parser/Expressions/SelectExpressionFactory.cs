@@ -7,8 +7,9 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class SelectExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> _ = null )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> _ = null )
     {
+        compareConstraint = CompareConstraint.None;
         var item = state.Item;
 
         if ( item.IsEmpty || item[0] != '$' && item[0] != '@' )
@@ -18,7 +19,6 @@ internal class SelectExpressionFactory : IExpressionFactory
         }
 
         expression = ExpressionHelper<TNode>.GetExpression( state.Item, state.IsArgument );
-        exprInfo.Kind = ExpressionKind.Select;
         return true;
     }
 

@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class SearchNodeFunction() : ExtensionFunction( SearchMethod, ExtensionInfo.MustNotCompare )
+public class SearchNodeFunction() : ExtensionFunction( SearchMethod, CompareConstraint.MustNotCompare )
 {
     public const string Name = "search";
     private static readonly MethodInfo SearchMethod = GetMethod<SearchNodeFunction>( nameof( Search ) );

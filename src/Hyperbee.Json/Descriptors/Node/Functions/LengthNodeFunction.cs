@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class LengthNodeFunction() : ExtensionFunction( LengthMethod, ExtensionInfo.MustCompare | ExtensionInfo.ExpectNormalized )
+public class LengthNodeFunction() : ExtensionFunction( LengthMethod, CompareConstraint.MustCompare | CompareConstraint.ExpectNormalized )
 {
     public const string Name = "length";
     private static readonly MethodInfo LengthMethod = GetMethod<LengthNodeFunction>( nameof( Length ) );

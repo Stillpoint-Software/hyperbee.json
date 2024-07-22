@@ -78,33 +78,18 @@ public class FilterParser<TNode> : FilterParser
 
     private static ExprItem GetExprItem( ref ParserState state )
     {
-        var expressionInfo = new ExpressionInfo();
-
-        if ( NotExpressionFactory.TryGetExpression<TNode>( ref state, out var expression, ref expressionInfo ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( ParenExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) ) // will recurse
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( SelectExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) ) // may recurse for each function argument
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( LiteralExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
-
-        // Helper method to create an expression item
-        static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionInfo expressionInfo )
+        switch ( true )
         {
-            MoveNextOperator( ref state ); // will set state.Operator
-            return new ExprItem( expression, state.Operator, expressionInfo );
+            case true when NotExpressionFactory.TryGetExpression<TNode>( ref state, out var expression, out var compareConstraint ):
+            case true when ParenExpressionFactory.TryGetExpression<TNode>( ref state, out expression, out compareConstraint ):
+            case true when SelectExpressionFactory.TryGetExpression<TNode>( ref state, out expression, out compareConstraint ):
+            case true when FunctionExpressionFactory.TryGetExpression( ref state, out expression, out compareConstraint, Descriptor ):
+            case true when LiteralExpressionFactory.TryGetExpression<TNode>( ref state, out expression, out compareConstraint ):
+            case true when JsonExpressionFactory.TryGetExpression( ref state, out expression, out compareConstraint, Descriptor ):
+                MoveNextOperator( ref state );
+                return new ExprItem( expression, state.Operator, compareConstraint );
+            default:
+                throw new NotSupportedException( $"Unsupported operator: {state.Operator}." );
         }
     }
 
@@ -432,7 +417,7 @@ public class FilterParser<TNode> : FilterParser
         };
 
         left.Operator = right.Operator;
-        left.ExpressionInfo.Kind = ExpressionKind.Merged;
+        left.CompareConstraint = CompareConstraint.None;
 
         return;
 
@@ -444,8 +429,20 @@ public class FilterParser<TNode> : FilterParser
 
     private static void ThrowIfInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
     {
-        ThrowIfConstantIsNotCompared( in state, left, right );
+        ThrowIfLiteralInvalidCompare( in state, left, right );
         ThrowIfFunctionInvalidCompare( in state, left );
+    }
+
+    private static void ThrowIfLiteralInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
+    {
+        if ( state.IsArgument || left.Operator.IsMath() )
+            return;
+
+        if ( left.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
+
+        if ( right != null && right.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
 
     private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
@@ -453,39 +450,19 @@ public class FilterParser<TNode> : FilterParser
         if ( state.IsArgument )
             return;
 
-        if ( item.ExpressionInfo.Kind != ExpressionKind.Function )
-            return;
-
-        var functionInfo = item.ExpressionInfo.FunctionInfo;
-
-        if ( functionInfo.HasFlag( ExtensionInfo.MustCompare ) && !item.Operator.IsComparison() )
+        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
 
-        if ( functionInfo.HasFlag( ExtensionInfo.MustNotCompare ) && item.Operator.IsComparison() )
+        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustNotCompare ) && item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
-    }
-
-    private static void ThrowIfConstantIsNotCompared( in ParserState state, ExprItem left, ExprItem right )
-    {
-        if ( state.IsArgument )
-            return;
-
-        if ( left.Operator.IsMath() )
-            return;
-
-        if ( left.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
-
-        if ( right != null && right.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
 
     // ExprItem
 
-    [DebuggerDisplay( "{ExpressionInfo.Kind}, Operator = {Operator}" )]
-    private sealed class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
+    [DebuggerDisplay( "{CompareConstraint}, Operator = {Operator}" )]
+    private sealed class ExprItem( Expression expression, Operator op, CompareConstraint compareConstraint )
     {
-        public ExpressionInfo ExpressionInfo { get; } = expressionInfo;
+        public CompareConstraint CompareConstraint { get; set; } = compareConstraint;
         public Expression Expression { get; set; } = expression;
         public Operator Operator { get; set; } = op;
     }

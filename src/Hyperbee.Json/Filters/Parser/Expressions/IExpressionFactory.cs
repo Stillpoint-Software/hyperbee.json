@@ -5,5 +5,5 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal interface IExpressionFactory
 {
-    static abstract bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor );
+    static abstract bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> descriptor );
 }

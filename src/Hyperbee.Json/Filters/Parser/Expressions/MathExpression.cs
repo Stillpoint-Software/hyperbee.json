@@ -33,7 +33,7 @@ internal static class MathExpression<TNode>
     private static IValueType Add( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing?
+            return Scalar.Nothing;
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt + rightInt )
@@ -43,7 +43,7 @@ internal static class MathExpression<TNode>
     private static IValueType Subtract( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing?
+            return Scalar.Nothing;
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt - rightInt )
@@ -53,7 +53,7 @@ internal static class MathExpression<TNode>
     private static IValueType Modulus( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing?
+            return Scalar.Nothing;
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt % rightInt )
@@ -63,7 +63,7 @@ internal static class MathExpression<TNode>
     private static IValueType Multiply( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing?
+            return Scalar.Nothing;
 
         return leftValue is int leftInt && rightValue is int rightInt
             ? Scalar.Value( leftInt * rightInt )
@@ -73,7 +73,7 @@ internal static class MathExpression<TNode>
     private static IValueType Divide( IValueType left, IValueType right )
     {
         if ( !TryGetNumber( left, out var leftValue ) || !TryGetNumber( right, out var rightValue ) )
-            return Scalar.Nothing; //BF: should we be throwing?
+            return Scalar.Nothing;
 
         // dividing two int values may produce a fractional result
         var floatValue = Convert.ToSingle( leftValue ) / Convert.ToSingle( rightValue );

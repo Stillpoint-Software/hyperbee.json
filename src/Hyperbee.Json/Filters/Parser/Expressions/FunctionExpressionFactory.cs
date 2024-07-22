@@ -5,17 +5,18 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class FunctionExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> descriptor )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> descriptor )
     {
+        compareConstraint = CompareConstraint.None;
+        expression = null;
+
         if ( state.Item.IsEmpty || !char.IsLetter( state.Item[0] ) )
         {
-            expression = null;
             return false;
         }
 
         if ( !descriptor.Functions.TryGetActivator( state.Item.ToString(), out var functionActivator ) )
         {
-            expression = null;
             return false;
         }
 
@@ -25,9 +26,8 @@ internal class FunctionExpressionFactory : IExpressionFactory
         var function = functionActivator();
 
         expression = function.GetExpression<TNode>( ref state ); // will recurse for each function argument.
+        compareConstraint = CompareConstraint.Function | function.CompareConstraint;
 
-        exprInfo.Kind = ExpressionKind.Function;
-        exprInfo.FunctionInfo = function.FunctionInfo;
         return true;
     }
 }

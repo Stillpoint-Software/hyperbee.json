@@ -5,14 +5,11 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal class NotExpressionFactory : IExpressionFactory
 {
-    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, ref ExpressionInfo exprInfo, ITypeDescriptor<TNode> _ = null )
+    public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> _ = null )
     {
+        compareConstraint = CompareConstraint.None;
         expression = null;
 
-        if ( state.Operator != Operator.Not )
-            return false;
-
-        exprInfo.Kind = ExpressionKind.Not;
-        return true;
+        return state.Operator == Operator.Not;
     }
 }

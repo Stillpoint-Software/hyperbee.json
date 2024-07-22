@@ -6,7 +6,7 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 
-public class ValueElementFunction() : ExtensionFunction( ValueMethod, ExtensionInfo.MustCompare )
+public class ValueElementFunction() : ExtensionFunction( ValueMethod, CompareConstraint.MustCompare )
 {
     public const string Name = "value";
     private static readonly MethodInfo ValueMethod = GetMethod<ValueElementFunction>( nameof( Value ) );

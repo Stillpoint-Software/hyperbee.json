@@ -202,7 +202,7 @@ You can extend the supported function set by registering your own functions.
 **Step 1:** Create a custom function that returns the path of a `JsonNode`.
 
 ```csharp
-public class PathNodeFunction() : ExtensionFunction( PathMethod, ExtensionInfo.MustCompare )
+public class PathNodeFunction() : ExtensionFunction( PathMethod, CompareConstraint.MustCompare )
 {
     public const string Name = "path";
     private static readonly MethodInfo PathMethod = GetMethod<PathNodeFunction>( nameof( Path ) );

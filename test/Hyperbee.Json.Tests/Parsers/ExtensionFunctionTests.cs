@@ -32,7 +32,7 @@ public class ExtensionFunctionTests : JsonTestBase
         Assert.AreEqual( "$.store.book[2].title", results[0].GetPath() );
     }
 
-    private class PathNodeFunction() : ExtensionFunction( PathMethod, ExtensionInfo.MustCompare )
+    private class PathNodeFunction() : ExtensionFunction( PathMethod, CompareConstraint.MustCompare )
     {
         public const string Name = "path";
         private static readonly MethodInfo PathMethod = GetMethod<PathNodeFunction>( nameof( Path ) );

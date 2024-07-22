@@ -1,4 +1,5 @@
 ﻿using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Filters.Parser;
@@ -122,41 +123,38 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
     public bool In( IValueType left, IValueType right )
     {
         if ( right is not NodeList<TNode> rightList )
-            throw new NotSupportedException( "The right side of an `in` must be a node list." );
+            throw new NotSupportedException( "The right side of `in` must be a node list." );
 
-        // Check if the left value is in rightList
-        if ( left is not NodeList<TNode> leftList )
+        var rightNode = rightList.OneOrDefault();
+
+        if ( rightNode == null || accessor.GetNodeKind( rightNode ) != NodeKind.Array )
+            return false;
+
+        return Contains( this, accessor, left, rightNode );
+
+        static bool Contains( IValueTypeComparer comparer, IValueAccessor<TNode> accessor, IValueType left, TNode rightNode )
         {
-            // Check if the left value is in rightList
-            return Find( rightList, left );
-        }
-
-        // Check if any element in leftList is in rightList
-        foreach ( var leftItem in leftList )
-        {
-            if ( !TryGetValue( accessor, leftItem, out var leftItemValue ) )
-                continue;
-
-            if ( Find( rightList, leftItemValue ) )
-                return true;
-        }
-
-        return false;
-
-        // Helper method to find a value in a NodeList
-
-        bool Find( NodeList<TNode> nodeList, IValueType leftItemValue )
-        {
-            foreach ( var rightItem in nodeList )
+            foreach ( var (rightChild, _, _) in accessor.EnumerateChildren( rightNode ) )
             {
-                if ( TryGetValue( accessor, rightItem, out var rightItemValue ) &&
-                     CompareValues( leftItemValue, rightItemValue, out _ ) == 0 )
-                {
+                var comparand = GetComparand( accessor, rightChild );
+                var result = comparer.Compare( left, comparand, Operator.Equals );
+
+                if ( result == 0 )
                     return true;
-                }
             }
 
             return false;
+        }
+
+        static IValueType GetComparand( IValueAccessor<TNode> accessor, TNode childValue )
+        {
+            return accessor.GetNodeKind( childValue ) switch
+            {
+                NodeKind.Value => TryGetValue( accessor, childValue, out var comparand ) ? comparand 
+                    : throw new NotSupportedException( "Unsupported value type." ),
+
+                _ => new NodeList<TNode>( [childValue], true )
+            };
         }
     }
 
@@ -226,7 +224,6 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         }
 
         return nodeCount != 1 ? -1 : lastCompare; // Return the last comparison if there is only one node
-
     }
 
     private static int CompareValues( IValueType left, IValueType right, out bool typeMismatch )

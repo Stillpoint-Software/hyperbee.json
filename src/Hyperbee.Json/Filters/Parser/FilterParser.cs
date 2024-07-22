@@ -420,7 +420,7 @@ public class FilterParser<TNode> : FilterParser
             Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
             Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
 
-            Operator.In => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
+            Operator.In => CompareExpression<TNode>.In( left.Expression, right.Expression ),
 
             Operator.Add => MathExpression<TNode>.Add( left.Expression, right.Expression ),
             Operator.Subtract => MathExpression<TNode>.Subtract( left.Expression, right.Expression ),

@@ -150,7 +150,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         {
             return accessor.GetNodeKind( childValue ) switch
             {
-                NodeKind.Value => TryGetValue( accessor, childValue, out var comparand ) ? comparand 
+                NodeKind.Value => TryGetValue( accessor, childValue, out var comparand ) ? comparand
                     : throw new NotSupportedException( "Unsupported value type." ),
 
                 _ => new NodeList<TNode>( [childValue], true )

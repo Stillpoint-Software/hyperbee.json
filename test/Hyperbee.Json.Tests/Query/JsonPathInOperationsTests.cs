@@ -58,16 +58,16 @@ public class JsonPathInOperationsTests : JsonTestBase
             ]
             """;
         var source = GetDocumentAdapter( sourceType, json );
- 
+
         var matches = source.Select( query ).ToList();
         Assert.AreEqual( 0, matches.Count );
     }
 
     [DataTestMethod]
-    [DataRow( "$[?(@.values in [1, [1,2,3], 3])]", "$[0]", typeof(JsonDocument) )]
-    [DataRow( "$[?(@.values in [1, [1,2,3], 3])]", "$[0]", typeof(JsonNode) )]
-    [DataRow( "$[?(@.values in ['x', ['x','y','z'], 'z'])]", "$[1]", typeof(JsonDocument) )]
-    [DataRow( "$[?(@.values in ['x', ['x','y','z'], 'z'])]", "$[1]", typeof(JsonNode) )]
+    [DataRow( "$[?(@.values in [1, [1,2,3], 3])]", "$[0]", typeof( JsonDocument ) )]
+    [DataRow( "$[?(@.values in [1, [1,2,3], 3])]", "$[0]", typeof( JsonNode ) )]
+    [DataRow( "$[?(@.values in ['x', ['x','y','z'], 'z'])]", "$[1]", typeof( JsonDocument ) )]
+    [DataRow( "$[?(@.values in ['x', ['x','y','z'], 'z'])]", "$[1]", typeof( JsonNode ) )]
     public void InOperation_ArrayValueIsAnArrayElement( string query, string expect, Type sourceType )
     {
         const string json =
@@ -142,8 +142,8 @@ public class JsonPathInOperationsTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$[?(@.array in [1, [1,2], 3])]", typeof(JsonDocument) )]
-    [DataRow( "$[?(@.array in [1, [1,2], 3])]", typeof(JsonNode) )]
+    [DataRow( "$[?(@.array in [1, [1,2], 3])]", typeof( JsonDocument ) )]
+    [DataRow( "$[?(@.array in [1, [1,2], 3])]", typeof( JsonNode ) )]
     public void InOperation_ArrayIsArrayElement( string query, Type sourceType )
     {
         const string json =

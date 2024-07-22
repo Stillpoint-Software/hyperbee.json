@@ -9,20 +9,20 @@ public abstract class ExtensionFunction
     private readonly int _argumentCount;
     private readonly MethodInfo _methodInfo;
 
-    public ExtensionInfo FunctionInfo { get; }
+    public CompareConstraint CompareConstraint { get; }
 
-    protected ExtensionFunction( MethodInfo methodInfo, ExtensionInfo info )
+    protected ExtensionFunction( MethodInfo methodInfo, CompareConstraint compareConstraint )
     {
         _argumentCount = methodInfo.GetParameters().Length;
         _methodInfo = methodInfo;
 
-        FunctionInfo = info;
+        CompareConstraint = compareConstraint;
     }
 
     internal Expression GetExpression<TNode>( ref ParserState state )
     {
         var arguments = new Expression[_argumentCount];
-        var expectNormalized = FunctionInfo.HasFlag( ExtensionInfo.ExpectNormalized );
+        var expectNormalized = CompareConstraint.HasFlag( CompareConstraint.ExpectNormalized );
 
         for ( var i = 0; i < _argumentCount; i++ )
         {
@@ -43,10 +43,11 @@ public abstract class ExtensionFunction
         }
 
         // Call the method and cast the result to support covariant returns
-        var callExpression = Expression.Call( _methodInfo, arguments );
-        var castExpression = Expression.Convert( callExpression, typeof( IValueType ) );
 
-        return castExpression;
+        return Expression.Convert(
+            Expression.Call( _methodInfo, arguments ),
+            typeof( IValueType )
+        );
     }
 
     private Expression ArgumentExpression<TNode>( bool expectNormalized, Expression argument )

@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Dynamic;
 public class DynamicJsonElement : DynamicObject
 {
     private readonly JsonElement Value;
-    private readonly string Path;
+    private readonly JsonPathBuilder PathBuilder = new();
 
     public static implicit operator double( DynamicJsonElement proxy ) => proxy.Value.GetDouble();
     public static implicit operator decimal( DynamicJsonElement proxy ) => proxy.Value.GetDecimal();
@@ -22,10 +22,9 @@ public class DynamicJsonElement : DynamicObject
     public static implicit operator DateTimeOffset( DynamicJsonElement proxy ) => proxy.Value.GetDateTimeOffset();
     public static implicit operator string( DynamicJsonElement proxy ) => proxy.Value.GetString();
 
-    public DynamicJsonElement( ref JsonElement value, string path )
+    public DynamicJsonElement( ref JsonElement value )
     {
         Value = value;
-        Path = path ?? string.Empty;
     }
 
     public override bool TryConvert( ConvertBinder binder, out object result )
@@ -39,7 +38,7 @@ public class DynamicJsonElement : DynamicObject
         if ( Value.ValueKind == JsonValueKind.Array )
         {
             var resultValue = Value[(int) indexes[0]];
-            result = new DynamicJsonElement( ref resultValue, Path + $"[{indexes[0]}]" );
+            result = new DynamicJsonElement( ref resultValue );
             return true;
         }
 
@@ -55,7 +54,7 @@ public class DynamicJsonElement : DynamicObject
         {
             if ( Value.TryGetProperty( binder.Name, out var resultValue ) )
             {
-                result = new DynamicJsonElement( ref resultValue, Path + $"['{binder.Name}']" );
+                result = new DynamicJsonElement( ref resultValue );
                 return true;
             }
         }
@@ -70,7 +69,7 @@ public class DynamicJsonElement : DynamicObject
 
         if ( binder.Name.Equals( "path", StringComparison.OrdinalIgnoreCase ) )
         {
-            result = Path;
+            result = PathBuilder.GetPath( Value );
             return true;
         }
 

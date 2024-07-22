@@ -26,13 +26,15 @@ public abstract class FilterParser
 
 public class FilterParser<TNode> : FilterParser
 {
-    internal static readonly ParameterExpression RuntimeContextExpression = Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" ); // must use a common instance
-    internal static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    internal static readonly ITypeDescriptor<TNode> Descriptor =
+        JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+
+    internal static readonly ParameterExpression RuntimeContextExpression =
+        Expression.Parameter( typeof( FilterRuntimeContext<TNode> ), "runtimeContext" ); // must use a common instance
 
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter )
     {
         var expression = Parse( filter );
-
         return Expression.Lambda<Func<FilterRuntimeContext<TNode>, bool>>( expression, RuntimeContextExpression ).Compile();
     }
 
@@ -74,36 +76,20 @@ public class FilterParser<TNode> : FilterParser
         return Merge( in state, baseItem, items );
     }
 
-
     private static ExprItem GetExprItem( ref ParserState state )
     {
-        var expressionInfo = new ExpressionInfo();
-
-        if ( NotExpressionFactory.TryGetExpression<TNode>( ref state, out var expression, ref expressionInfo ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( ParenExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) ) // will recurse
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( SelectExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( FunctionExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) ) // may recurse for each function argument
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( LiteralExpressionFactory.TryGetExpression<TNode>( ref state, out expression, ref expressionInfo ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        if ( JsonExpressionFactory.TryGetExpression( ref state, out expression, ref expressionInfo, Descriptor ) )
-            return ExprItem( ref state, expression, expressionInfo );
-
-        throw new NotSupportedException( $"Unsupported literal: {state.Buffer.ToString()}" );
-
-        // Helper method to create an expression item
-        static ExprItem ExprItem( ref ParserState state, Expression expression, ExpressionInfo expressionInfo )
+        switch ( true )
         {
-            MoveNextOperator( ref state ); // will set state.Operator
-            return new ExprItem( expression, state.Operator, expressionInfo );
+            case true when NotExpressionFactory.TryGetExpression<TNode>( ref state, out var expression, out var compareConstraint ):
+            case true when ParenExpressionFactory.TryGetExpression<TNode>( ref state, out expression, out compareConstraint ):
+            case true when SelectExpressionFactory.TryGetExpression<TNode>( ref state, out expression, out compareConstraint ):
+            case true when FunctionExpressionFactory.TryGetExpression( ref state, out expression, out compareConstraint, Descriptor ):
+            case true when LiteralExpressionFactory.TryGetExpression<TNode>( ref state, out expression, out compareConstraint ):
+            case true when JsonExpressionFactory.TryGetExpression( ref state, out expression, out compareConstraint, Descriptor ):
+                MoveNextOperator( ref state );
+                return new ExprItem( expression, state.Operator, compareConstraint );
+            default:
+                throw new NotSupportedException( $"Unsupported operator: {state.Operator}." );
         }
     }
 
@@ -133,14 +119,8 @@ public class FilterParser<TNode> : FilterParser
 
             NextCharacter( ref state, itemStart, out var nextChar, ref quote ); // will advance state.Pos
 
-            if ( IsFinished( in state, nextChar ) )
+            if ( IsFinished( in state, nextChar, ref itemEnd ) )
             {
-                break;
-            }
-
-            if ( state.EndOfBuffer )
-            {
-                itemEnd = state.Pos; // include the final character
                 break;
             }
         }
@@ -149,18 +129,23 @@ public class FilterParser<TNode> : FilterParser
 
         return;
 
-        // Helper method to determine if item collection is finished
-        static bool IsFinished( in ParserState state, char ch )
+        static bool IsFinished( in ParserState state, char ch, ref int itemEnd )
         {
             // order of operations matters
+            bool result = state switch
+            {
+                _ when state.BracketDepth != 0 => false,
+                _ when !state.Operator.IsNonOperator() => true,
+                _ when ch == state.TerminalCharacter => true, // [ '\0' or ',' or ')' ]
+                _ => false
+            };
 
-            if ( state.BracketDepth != 0 )
-                return false;
+            if ( result || !state.EndOfBuffer )
+                return result;
 
-            if ( state.Operator.IsNonOperator() == false )
-                return true;
-
-            return ch == state.TerminalCharacter; // [ '\0' or ',' or ')' ]
+            // not finished, but at end-of-buffer
+            itemEnd = state.Pos;
+            return true;
         }
     }
 
@@ -404,8 +389,8 @@ public class FilterParser<TNode> : FilterParser
 
     private static void MergeItems( ExprItem left, ExprItem right )
     {
-        left.Expression = ConvertExpression<IValueType>( left.Expression );
-        right.Expression = ConvertExpression<IValueType>( right.Expression );
+        left.Expression = ConvertOrDefault( left.Expression, typeof( IValueType ) );
+        right.Expression = ConvertOrDefault( right.Expression, typeof( IValueType ) );
 
         left.Expression = left.Operator switch
         {
@@ -420,7 +405,7 @@ public class FilterParser<TNode> : FilterParser
             Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
             Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
 
-            Operator.In => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
+            Operator.In => CompareExpression<TNode>.In( left.Expression, right.Expression ),
 
             Operator.Add => MathExpression<TNode>.Add( left.Expression, right.Expression ),
             Operator.Subtract => MathExpression<TNode>.Subtract( left.Expression, right.Expression ),
@@ -428,28 +413,36 @@ public class FilterParser<TNode> : FilterParser
             Operator.Divide => MathExpression<TNode>.Divide( left.Expression, right.Expression ),
             Operator.Modulus => MathExpression<TNode>.Modulus( left.Expression, right.Expression ),
 
-            _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}" )
+            _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}." )
         };
 
         left.Operator = right.Operator;
-        left.ExpressionInfo.Kind = ExpressionKind.Merged;
+        left.CompareConstraint = CompareConstraint.None;
 
         return;
 
-        static Expression ConvertExpression<TType>( Expression expression )
-        {
-            return expression != null && expression.Type != typeof( TType )
-                ? Expression.Convert( expression, typeof( TType ) )
-                : expression;
-        }
+        static Expression ConvertOrDefault( Expression expression, Type type ) =>
+            expression == null ? null : Expression.Convert( expression, type );
     }
 
     // Throw helpers
 
     private static void ThrowIfInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
     {
-        ThrowIfConstantIsNotCompared( in state, left, right );
+        ThrowIfLiteralInvalidCompare( in state, left, right );
         ThrowIfFunctionInvalidCompare( in state, left );
+    }
+
+    private static void ThrowIfLiteralInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
+    {
+        if ( state.IsArgument || left.Operator.IsMath() )
+            return;
+
+        if ( left.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
+
+        if ( right != null && right.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
 
     private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
@@ -457,39 +450,19 @@ public class FilterParser<TNode> : FilterParser
         if ( state.IsArgument )
             return;
 
-        if ( item.ExpressionInfo.Kind != ExpressionKind.Function )
-            return;
-
-        var functionInfo = item.ExpressionInfo.FunctionInfo;
-
-        if ( functionInfo.HasFlag( ExtensionInfo.MustCompare ) && !item.Operator.IsComparison() )
+        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
 
-        if ( functionInfo.HasFlag( ExtensionInfo.MustNotCompare ) && item.Operator.IsComparison() )
+        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustNotCompare ) && item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
-    }
-
-    private static void ThrowIfConstantIsNotCompared( in ParserState state, ExprItem left, ExprItem right )
-    {
-        if ( state.IsArgument )
-            return;
-
-        if ( left.Operator.IsMath() )
-            return;
-
-        if ( left.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
-
-        if ( right != null && right.ExpressionInfo.Kind == ExpressionKind.Literal && !left.Operator.IsComparison() )
-            throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
 
     // ExprItem
 
-    [DebuggerDisplay( "{ExpressionInfo.Kind}, Operator = {Operator}" )]
-    private sealed class ExprItem( Expression expression, Operator op, ExpressionInfo expressionInfo )
+    [DebuggerDisplay( "{CompareConstraint}, Operator = {Operator}" )]
+    private sealed class ExprItem( Expression expression, Operator op, CompareConstraint compareConstraint )
     {
-        public ExpressionInfo ExpressionInfo { get; } = expressionInfo;
+        public CompareConstraint CompareConstraint { get; set; } = compareConstraint;
         public Expression Expression { get; set; } = expression;
         public Operator Operator { get; set; } = op;
     }

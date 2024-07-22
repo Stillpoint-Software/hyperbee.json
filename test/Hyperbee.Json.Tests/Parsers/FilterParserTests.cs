@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
@@ -27,15 +27,15 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "(1 == 1)", true, typeof( JsonNode ) )]
     [DataRow( "(1 != 2)", true, typeof( JsonNode ) )]
     [DataRow( "!(1 == 2)", true, typeof( JsonNode ) )]
-    [DataRow( "(\"world\" == 'world') || 1 == 1", true, typeof( JsonNode ) )]
+    [DataRow( "(\"world\" == 'world') || 1 == 1", true, typeof( JsonNode ) )] 
     [DataRow( "!('World' != 'World') && !(1 == 2 || 1 == 3)", true, typeof( JsonNode ) )]
-    public void Should_MatchExpectedResult_WhenUsingConstants( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenUsingConstants( string filter, bool expected, Type sourceType )
     {
         // arrange 
         var (expression, param) = GetExpression( filter, sourceType );
 
         // act
-        var result = Execute( expression, param, sourceType );
+        var result = ExecuteExpression( expression, param, sourceType );
 
         // assert
         Assert.AreEqual( expected, result );
@@ -46,7 +46,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "false", typeof( JsonElement ) )]
     [DataRow( "true", typeof( JsonNode ) )]
     [DataRow( "false", typeof( JsonNode ) )]
-    public void Should_Fail_WhenNotComparingLiterals( string filter, Type sourceType )
+    public void Fail_WhenNotComparingLiterals( string filter, Type sourceType )
     {
         // arrange 
 
@@ -54,7 +54,7 @@ public class FilterParserTests : JsonTestBase
         Assert.ThrowsException<NotSupportedException>( () =>
         {
             var (expression, param) = GetExpression( filter, sourceType );
-            return Execute( expression, param, sourceType );
+            return ExecuteExpression( expression, param, sourceType );
         } );
     }
 
@@ -89,7 +89,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "@.store.nothing", false, typeof( JsonNode ) )]
     [DataRow( "@.store.bicycle.price", true, typeof( JsonNode ) )]
     [DataRow( "@.store.book[0].category", true, typeof( JsonNode ) )]
-    public void Should_MatchExpectedResult_WhenUsingJsonPath( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenUsingJsonPath( string filter, bool expected, Type sourceType )
     {
         // arrange & act
         var result = CompileAndExecuteFilter( filter, sourceType );
@@ -109,18 +109,22 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "$.store.book[?(@.price < 9.00 && @.category == 'reference')].price", 8.95F, typeof( JsonNode ) )]
     [DataRow( "$.store.book[?(match(@.title, \"Sayings.*\" ))].price", 8.95F, typeof( JsonNode ) )]
     [DataRow( "$.store.book[?(@.category == $.store.book[0].category)].price", 8.95F, typeof( JsonNode ) )]
-    public void Should_ReturnExpectedResult_WhenUsingExpressionEvaluator( string filter, float expected, Type sourceType )
+    public void ReturnExpectedResult_WhenUsingExpressionEvaluator( string filter, float expected, Type sourceType )
     {
         // arrange & act
-        var result = Select( filter, sourceType );
+        var document = GetDocumentAdapter( sourceType );
+
+        // act
+        var matches = document.Select( filter ).ToArray();
+        var result = TestHelper.GetSingle( matches[0] );
 
         // assert
         Assert.AreEqual( expected, result );
     }
 
     [DataTestMethod]
-    [DataRow( "count(@.store.book) == 1", true, typeof( JsonElement ) )] //
-    [DataRow( "count(@.store.book.*) == 4", true, typeof( JsonElement ) )] //
+    [DataRow( "count(@.store.book) == 1", true, typeof( JsonElement ) )] 
+    [DataRow( "count(@.store.book.*) == 4", true, typeof( JsonElement ) )] 
     [DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]
     [DataRow( "length(@.store.book[0].category) == 9", true, typeof( JsonElement ) )]
     [DataRow( "match(@.store.book[0].title, \"Sayings.*\" )", true, typeof( JsonElement ) )]
@@ -133,7 +137,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "match(@.store.book[0].title, \"Sayings.*\" )", true, typeof( JsonNode ) )]
     [DataRow( "search(@.store.book[0].author, \"[Nn]igel Rees\" )", true, typeof( JsonNode ) )]
     [DataRow( "value(@.store.book[0].author) == \"Nigel Rees\"", true, typeof( JsonNode ) )]
-    public void Should_MatchExpectedResult_WhenUsingFunctions( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenUsingFunctions( string filter, bool expected, Type sourceType )
     {
         // arrange & act
         var result = CompileAndExecuteFilter( filter, sourceType );
@@ -151,7 +155,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "  4 == length(@.store.book)", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length(@.store.book)  ", true, typeof( JsonElement ) )]
     [DataRow( "  4 == length( @.store.book )  ", true, typeof( JsonElement ) )]
-    public void Should_MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
+    public void MatchExpectedResult_WhenHasExtraSpaces( string filter, bool expected, Type sourceType )
     {
         // arrange & act
         var result = CompileAndExecuteFilter( filter, sourceType );
@@ -163,7 +167,7 @@ public class FilterParserTests : JsonTestBase
     [DataTestMethod]
     [DataRow( "4 == length ( @.store.book )", typeof( JsonElement ) )]
     [DataRow( "length (@.store.book) == 4", typeof( JsonElement ) )]
-    public void Should_Fail_WhenHasInvalidWhitespace( string filter, Type sourceType )
+    public void Fail_WhenHasInvalidWhitespace( string filter, Type sourceType )
     {
         Assert.ThrowsException<NotSupportedException>( () => CompileAndExecuteFilter( filter, sourceType ) );
     }
@@ -178,89 +182,57 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "(1 == ", typeof( JsonElement ) )]
     [DataRow( "== 1", typeof( JsonElement ) )]
     [DataRow( "badMethod(1)", typeof( JsonElement ) )]
-    public void Should_FailToParse_WhenUsingInvalidFilters( string filter, Type sourceType )
+    public void FailToParse_WhenUsingInvalidFilters( string filter, Type sourceType )
+    {
+        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => GetExpression( filter, sourceType ) );
+    }
+
+    // Helper methods
+
+    public static T InvokeGenericMethod<T>( string methodName, Type sourceType, params object[] args )
     {
         try
         {
-            GetExpression( filter, sourceType );
+            var method = typeof( FilterParserTests )
+                .GetMethods( BindingFlags.NonPublic | BindingFlags.Static )
+                .First( x => x.Name == methodName && x.IsGenericMethodDefinition )
+                .MakeGenericMethod( sourceType );
+
+            return (T) method.Invoke( null, args )!;
         }
-        catch
+        catch ( Exception ex )
         {
-            // Most are FormatExceptions, but some are ArgumentExceptions 
-            return;
-        }
-
-        Assert.Fail( "Did not throw an exception" );
-    }
-
-    private static (Expression, ParameterExpression) GetExpression( string filter, Type sourceType )
-    {
-        if ( sourceType == typeof( JsonElement ) )
-        {
-            var runtimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonElement> ), "runtimeContext" );
-            return (FilterParser<JsonElement>.Parse( filter ), runtimeContext);
-        }
-
-        if ( sourceType == typeof( JsonNode ) )
-        {
-            var runtimeContext = Expression.Parameter( typeof( FilterRuntimeContext<JsonNode> ), "runtimeContext" );
-            return (FilterParser<JsonNode>.Parse( filter ), runtimeContext);
-        }
-
-        throw new NotImplementedException();
-    }
-
-    private static bool Execute( Expression expression, ParameterExpression param, Type sourceType )
-    {
-        if ( sourceType == typeof( JsonElement ) )
-        {
-            var filterFunc = Expression
-                .Lambda<Func<FilterRuntimeContext<JsonElement>, bool>>( expression, param )
-                .Compile();
-
-            var runtimeContext = new FilterRuntimeContext<JsonElement>( new JsonElement(), new JsonElement() );
-
-            return filterFunc( runtimeContext );
-        }
-
-        if ( sourceType == typeof( JsonNode ) )
-        {
-            var filterFunc = Expression
-                .Lambda<Func<FilterRuntimeContext<JsonNode>, bool>>( expression, param )
-                .Compile();
-
-            var runtimeContext = new FilterRuntimeContext<JsonNode>( new JsonObject(), new JsonObject() );
-
-            return filterFunc( runtimeContext );
-        }
-
-        throw new NotImplementedException();
-    }
-
-    private static bool CompileAndExecuteFilter( string filter, Type sourceType )
-    {
-        if ( sourceType == typeof( JsonElement ) )
-        {
-            var source = GetDocument<JsonDocument>();
-            var filterFunc = FilterParser<JsonElement>.Compile( filter );
-            var runtimeContext = new FilterRuntimeContext<JsonElement>( source.RootElement, source.RootElement );
-
-            return filterFunc( runtimeContext );
-        }
-        else
-        {
-            var source = GetDocument<JsonNode>();
-            var filterFunc = FilterParser<JsonNode>.Compile( filter );
-            var runtimeContext = new FilterRuntimeContext<JsonNode>( source, source );
-
-            return filterFunc( runtimeContext );
+            throw ex.InnerException!;
         }
     }
 
-    private static float Select( string filter, Type sourceType )
+    public static (Expression, ParameterExpression) GetExpression( string filter, Type sourceType ) =>
+        InvokeGenericMethod<(Expression, ParameterExpression)>( nameof( GetExpression ), sourceType, filter );
+
+    public static bool CompileAndExecuteFilter( string filter, Type sourceType ) =>
+        InvokeGenericMethod<bool>( nameof( CompileAndExecuteFilter ), sourceType, filter );
+
+    public static bool ExecuteExpression( Expression expression, ParameterExpression param, Type sourceType ) =>
+        InvokeGenericMethod<bool>( nameof( ExecuteExpression ), sourceType, expression, param );
+
+    private static (Expression, ParameterExpression) GetExpression<T>( string filter )
     {
-        return sourceType == typeof( JsonElement )
-            ? GetDocument<JsonDocument>().Select( filter ).First().GetSingle()
-            : GetDocument<JsonNode>().Select( filter ).First().GetValue<float>();
+        var runtimeContext = Expression.Parameter( typeof( FilterRuntimeContext<T> ), "runtimeContext" );
+        return (FilterParser<T>.Parse( filter ), runtimeContext);
+    }
+
+    private static bool ExecuteExpression<T>( Expression expression, ParameterExpression param )
+    {
+        var filterFunc = Expression.Lambda<Func<FilterRuntimeContext<T>, bool>>( expression, param ).Compile();
+        var runtimeContext = new FilterRuntimeContext<T>( default, default ); // Initialize with default values
+        return filterFunc( runtimeContext );
+    }
+
+    private static bool CompileAndExecuteFilter<T>( string filter )
+    {
+        var source = GetDocument<T>();
+        var filterFunc = FilterParser<T>.Compile( filter );
+        var runtimeContext = new FilterRuntimeContext<T>( source, source );
+        return filterFunc( runtimeContext );
     }
 }

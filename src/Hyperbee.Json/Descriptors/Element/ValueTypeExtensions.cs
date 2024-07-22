@@ -37,51 +37,35 @@ public static class ValueTypeExtensions
         return false;
     }
 
-    public static bool TryGetNumber( this IValueType input, out IConvertible value )
-    {
-        if ( TryGetValue( input, out value ) && value is int || value is float )
-            return true;
-
-        value = default;
-        return false;
-    }
-
-
     private static bool TryConvertTo<T>( this JsonElement element, out T value ) where T : IConvertible
     {
         value = default;
+
         try
         {
-            if ( typeof( T ) == typeof( string ) && element.ValueKind == JsonValueKind.String )
-            {
-                value = (T) (IConvertible) element.GetString();
-                return true;
-            }
+            var type = typeof( T );
 
-            if ( typeof( T ) == typeof( int ) && element.ValueKind == JsonValueKind.Number && element.TryGetInt32( out var intValue ) )
+            switch ( element.ValueKind )
             {
-                value = (T) (IConvertible) intValue;
-                return true;
-            }
+                case JsonValueKind.String when type == typeof( string ):
+                    value = (T) (IConvertible) element.GetString();
+                    return true;
 
-            if ( typeof( T ) == typeof( float ) && element.ValueKind == JsonValueKind.Number && element.TryGetSingle( out var floatValue ) )
-            {
-                value = (T) (IConvertible) floatValue;
-                return true;
-            }
+                case JsonValueKind.Number when type == typeof( int ) && element.TryGetInt32( out var intValue ):
+                    value = (T) (IConvertible) intValue;
+                    return true;
 
-            if ( typeof( T ) == typeof( bool ) )
-            {
-                if ( element.ValueKind == JsonValueKind.True )
-                {
+                case JsonValueKind.Number when type == typeof( float ) && element.TryGetSingle( out var floatValue ):
+                    value = (T) (IConvertible) floatValue;
+                    return true;
+
+                case JsonValueKind.True when type == typeof( bool ):
                     value = (T) (IConvertible) true;
                     return true;
-                }
-                if ( element.ValueKind == JsonValueKind.False )
-                {
+
+                case JsonValueKind.False when type == typeof( bool ):
                     value = (T) (IConvertible) false;
                     return true;
-                }
             }
         }
         catch

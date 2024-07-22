@@ -153,39 +153,17 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         return JsonNode.DeepEquals( left, right );
     }
 
-    public bool TryParseNode( ReadOnlySpan<char> item, out JsonNode node )
+    public bool TryParseNode( ref Utf8JsonReader reader, out JsonNode node )
     {
-        var maxLength = Encoding.UTF8.GetMaxByteCount( item.Length );
-        Span<byte> utf8Bytes = maxLength <= 256 ? stackalloc byte[maxLength] : new byte[maxLength];
-        var length = Encoding.UTF8.GetBytes( item, utf8Bytes );
-
-        ReplaceSingleQuotes( ref utf8Bytes, length );
-
         try
         {
-            node = JsonNode.Parse( utf8Bytes[..length] );
+            node = JsonNode.Parse( ref reader );
             return true;
         }
         catch
         {
             node = null;
             return false;
-        }
-
-        static void ReplaceSingleQuotes( ref Span<byte> utf8Bytes, int length )
-        {
-            var insideString = false;
-            for ( var i = 0; i < length; i++ )
-            {
-                if ( utf8Bytes[i] == (byte) '\"' )
-                {
-                    insideString = !insideString;
-                }
-                else if ( !insideString && utf8Bytes[i] == (byte) '\'' && (i == 0 || utf8Bytes[i - 1] != '\\') )
-                {
-                    utf8Bytes[i] = (byte) '\"';
-                }
-            }
         }
     }
 

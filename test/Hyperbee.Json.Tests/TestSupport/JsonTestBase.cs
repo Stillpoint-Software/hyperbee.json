@@ -26,7 +26,7 @@ public class JsonTestBase
             .GetManifestResourceStream( $"Hyperbee.Json.Tests.TestDocuments.{resourceName}" );
     }
 
-    public static TType GetDocument<TType>( string resourceName = null )
+    protected static TType GetDocument<TType>( string resourceName = null )
     {
         var type = typeof( TType );
 
@@ -44,19 +44,19 @@ public class JsonTestBase
         throw new NotSupportedException();
     }
 
-    public static IJsonDocument GetDocumentAdapter( Type target )
+    protected static IJsonDocument GetDocumentAdapter( Type target )
     {
         var source = ReadJsonString();
         return GetDocumentAdapter( target, source );
     }
 
-    public static IJsonDocument GetDocumentAdapter( Type target, string source )
+    protected static IJsonDocument GetDocumentAdapter( Type target, string source )
     {
-        if ( target == typeof( JsonDocument ) )
-            return new JsonPathDocument( source );
+        if ( target == typeof( JsonDocument ) || target == typeof( JsonElement ) )
+            return new JsonElementDocument( source );
 
         if ( target == typeof( JsonNode ) )
-            return new JsonPathNode( source );
+            return new JsonNodeDocument( source );
 
         throw new NotSupportedException();
     }

@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Filters;
 
 public record FilterRuntimeContext<TNode>( TNode Current, TNode Root );
 
-public sealed class FilterEvaluator<TNode> : IFilterEvaluator<TNode>
+public sealed class FilterRuntime<TNode> : IFilterRuntime<TNode>
 {
     private static readonly ConcurrentDictionary<string, Func<FilterRuntimeContext<TNode>, bool>> Compiled = new();
 

@@ -8,7 +8,7 @@ namespace Hyperbee.Json.Descriptors.Element;
 public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 {
     private ElementValueAccessor _accessor;
-    private FilterEvaluator<JsonElement> _evaluator;
+    private FilterRuntime<JsonElement> _runtime;
     private ValueTypeComparer<JsonElement> _comparer;
 
     public FunctionRegistry Functions { get; } = new();
@@ -16,8 +16,8 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
     public IValueAccessor<JsonElement> Accessor =>
         _accessor ??= new ElementValueAccessor();
 
-    public IFilterEvaluator<JsonElement> FilterEvaluator =>
-        _evaluator ??= new FilterEvaluator<JsonElement>();
+    public IFilterRuntime<JsonElement> FilterRuntime =>
+        _runtime ??= new FilterRuntime<JsonElement>();
 
     public IValueTypeComparer Comparer =>
         _comparer ??= new ValueTypeComparer<JsonElement>( Accessor );

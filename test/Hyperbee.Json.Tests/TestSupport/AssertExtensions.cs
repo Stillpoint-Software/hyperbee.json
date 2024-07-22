@@ -1,4 +1,8 @@
-﻿namespace Hyperbee.Json.Cts;
+﻿using System;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Hyperbee.Json.Tests.TestSupport;
 
 public static class AssertExtensions
 {
@@ -38,13 +42,13 @@ public static class AssertExtensions
 
     private static void ThrowsAnyInternal( Action action, params Type[] expectedExceptionTypes )
     {
-        Exception? caughtException = null;
+        Exception caughtException = null;
 
         try
         {
             action();
         }
-        catch ( Exception? ex )
+        catch ( Exception ex )
         {
             caughtException = ex;
         }

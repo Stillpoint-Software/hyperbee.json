@@ -3,7 +3,7 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Cts.TestSupport;
 
-public class JsonPathNode( string source ) : IJsonDocument
+public class JsonNodeDocument( string source ) : IJsonDocument
 {
     private JsonNode? Document { get; } = JsonNode.Parse( source );
 

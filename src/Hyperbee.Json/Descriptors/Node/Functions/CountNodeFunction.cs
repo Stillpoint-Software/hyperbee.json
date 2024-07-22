@@ -5,7 +5,7 @@ using Hyperbee.Json.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node.Functions;
 
-public class CountNodeFunction() : ExtensionFunction( CountMethod, ExtensionInfo.MustCompare )
+public class CountNodeFunction() : ExtensionFunction( CountMethod, CompareConstraint.MustCompare )
 {
     public const string Name = "count";
     private static readonly MethodInfo CountMethod = GetMethod<CountNodeFunction>( nameof( Count ) );

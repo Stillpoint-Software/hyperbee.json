@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Hyperbee.Json.Descriptors.Element.Functions;
 using Hyperbee.Json.Filters;
 using Hyperbee.Json.Filters.Values;

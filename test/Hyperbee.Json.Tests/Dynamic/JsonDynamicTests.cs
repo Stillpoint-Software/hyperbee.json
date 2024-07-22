@@ -32,6 +32,7 @@ public class JsonDynamicTests : JsonTestBase
 
         Assert.IsTrue( price == 8.95 );
         Assert.IsTrue( author == "Nigel Rees" );
+        Assert.AreEqual( "$.store.book[0]", path );
     }
 
     [TestMethod]
@@ -80,7 +81,7 @@ public class JsonDynamicTests : JsonTestBase
 
         Assert.ThrowsException<ArgumentOutOfRangeException>( () =>
         {
-            var outOfBounds = jobject.store.book[10];
+            _ = jobject.store.book[10];
         } );
     }
 }

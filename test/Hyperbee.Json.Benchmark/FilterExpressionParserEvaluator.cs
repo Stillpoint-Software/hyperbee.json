@@ -11,13 +11,13 @@ public class FilterExpressionParserEvaluator
     public string Filter;
 
     [Benchmark]
-    public void JsonPathFilterParser_JsonElement()
+    public void FilterParser_JsonElement()
     {
         FilterParser<JsonElement>.Parse( Filter );
     }
 
     [Benchmark]
-    public void JsonPathFilterParser_JsonNode()
+    public void FilterParser_JsonNode()
     {
         FilterParser<JsonNode>.Parse( Filter );
     }

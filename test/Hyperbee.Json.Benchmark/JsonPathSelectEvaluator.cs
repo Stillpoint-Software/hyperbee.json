@@ -18,10 +18,10 @@ public class JsonPathSelectEvaluator
         "$.store.book[-1:]",
         "$.store.book[0,1]",
         "$.store.book['category','author']",
-        "$..book[?(@.isbn)]",
-        "$.store.book[?(@.price == 8.99)]",
+        "$..book[?@.isbn]",
+        "$.store.book[?@.price == 8.99]",
         "$..*",
-        "$..book[?(@.price == 8.99 && @.category == 'fiction')]"
+        "$..book[?@.price == 8.99 && @.category == 'fiction']"
     )]
     public string Filter;
 
@@ -80,19 +80,19 @@ public class JsonPathSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_Hyperbee_JsonElement()
+    public void Hyperbee_JsonElement()
     {
         var _ = _element.Select( Filter ).ToArray();
     }
 
     [Benchmark]
-    public void JsonPath_Hyperbee_JsonNode()
+    public void Hyperbee_JsonNode()
     {
         var _ = _node.Select( Filter ).ToArray();
     }
 
     [Benchmark]
-    public void JsonPath_Newtonsoft_JObject()
+    public void Newtonsoft_JObject()
     {
         var _ = _jObject.SelectTokens( Filter ).ToArray();
     }

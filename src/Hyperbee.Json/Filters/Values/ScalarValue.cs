@@ -1,20 +1,34 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Hyperbee.Json.Filters.Values;
 
 [DebuggerDisplay( "{ValueKind}, Value = {Value}" )]
-public readonly struct ScalarValue<TType>( TType value ) : IValueType where TType : IConvertible
+public readonly struct ScalarValue<TType> : IValueType where TType : IConvertible
 {
-    public ValueKind ValueKind => ValueKind.Scalar;
+    public ValueKind ValueKind { get; }
 
-    public TType Value { get; } = value;
+    public TType Value { get; }
+
+    public ScalarValue( TType value )
+    {
+        ValueKind = ValueKind.Scalar;
+        Value = value;
+    }
+
+    private ScalarValue( Nothing nothing )
+    {
+        ValueKind = ValueKind.Nothing;
+        Value = default;
+    }
 
     public static implicit operator ScalarValue<TType>( bool value ) => new( (TType) (IConvertible) value );
     public static implicit operator ScalarValue<TType>( string value ) => new( (TType) (IConvertible) value );
     public static implicit operator ScalarValue<TType>( int value ) => new( (TType) (IConvertible) value );
     public static implicit operator ScalarValue<TType>( float value ) => new( (TType) (IConvertible) value );
+
+    public static implicit operator ScalarValue<TType>( Nothing nothing ) => new( nothing );
 }
+
 
 public static class Scalar
 {

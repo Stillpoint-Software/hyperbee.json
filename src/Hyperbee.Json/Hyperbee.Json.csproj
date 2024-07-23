@@ -13,7 +13,7 @@
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<Copyright>Stillpoint Software, Inc.</Copyright>
 	<Title>Hyperbee Json</Title>
-	<Description>JSON Path (RFC 9535) implementation for System.Text.Json JsonElement, and JsonNode.</Description>
+	<Description>JSONPath (RFC-9535) for System.Text.Json JsonElement, and JsonNode.</Description>
 	<RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
 	<PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>

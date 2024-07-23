@@ -12,7 +12,7 @@ public class JsonPathParseAndSelectEvaluator
 {
     [Params(
         "$.store.book[0]",
-        "$.store.book[?(@.price == 8.99)]",
+        "$.store.book[?@.price == 8.99]",
         "$..price",
         "$..* `First()`",
         "$..*"
@@ -73,7 +73,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_Hyperbee_JsonElement()
+    public void Hyperbee_JsonElement()
     {
         var (filter, first) = GetFilter();
 
@@ -86,7 +86,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_Hyperbee_JsonNode()
+    public void Hyperbee_JsonNode()
     {
         var (filter, first) = GetFilter();
 
@@ -99,7 +99,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_Newtonsoft_JObject()
+    public void Newtonsoft_JObject()
     {
         var (filter, first) = GetFilter();
 
@@ -112,7 +112,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_JsonEverything_JsonNode()
+    public void JsonEverything_JsonNode()
     {
         var (filter, first) = GetFilter();
 
@@ -126,7 +126,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_JsonCons_JsonElement()
+    public void JsonCons_JsonElement()
     {
         var (filter, first) = GetFilter();
 

@@ -34,12 +34,12 @@ public readonly struct ScalarValue<TType> : IValueType where TType : IConvertibl
         Value = default;
     }
 
-    public static implicit operator ScalarValue<TType>( bool value ) => new((TType) (IConvertible) value);
-    public static implicit operator ScalarValue<TType>( string value ) => new((TType) (IConvertible) value);
-    public static implicit operator ScalarValue<TType>( int value ) => new((TType) (IConvertible) value);
-    public static implicit operator ScalarValue<TType>( float value ) => new((TType) (IConvertible) value);
+    public static implicit operator ScalarValue<TType>( bool value ) => new( (TType) (IConvertible) value );
+    public static implicit operator ScalarValue<TType>( string value ) => new( (TType) (IConvertible) value );
+    public static implicit operator ScalarValue<TType>( int value ) => new( (TType) (IConvertible) value );
+    public static implicit operator ScalarValue<TType>( float value ) => new( (TType) (IConvertible) value );
 
-    public static implicit operator ScalarValue<TType>( Nothing nothing ) => new(nothing);
+    public static implicit operator ScalarValue<TType>( Nothing nothing ) => new( nothing );
 }
 
 

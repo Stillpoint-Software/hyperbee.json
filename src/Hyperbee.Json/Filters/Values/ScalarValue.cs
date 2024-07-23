@@ -3,19 +3,6 @@
 namespace Hyperbee.Json.Filters.Values;
 
 [DebuggerDisplay( "{ValueKind}, Value = {Value}" )]
-public readonly struct ScalarValue1<TType>( TType value ) : IValueType where TType : IConvertible
-{
-    public ValueKind ValueKind => ValueKind.Scalar;
-
-    public TType Value { get; } = value;
-
-    public static implicit operator ScalarValue1<TType>( bool value ) => new( (TType) (IConvertible) value );
-    public static implicit operator ScalarValue1<TType>( string value ) => new( (TType) (IConvertible) value );
-    public static implicit operator ScalarValue1<TType>( int value ) => new( (TType) (IConvertible) value );
-    public static implicit operator ScalarValue1<TType>( float value ) => new( (TType) (IConvertible) value );
-}
-
-[DebuggerDisplay( "{ValueKind}, Value = {Value}" )]
 public readonly struct ScalarValue<TType> : IValueType where TType : IConvertible
 {
     public ValueKind ValueKind { get; }

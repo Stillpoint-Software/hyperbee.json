@@ -320,7 +320,7 @@ Here is a performance comparison of various queries on the standard book store d
 ```
 
 | Method                  | Mean      | Error      | StdDev    | Allocated
-|------------------------ |-----------|------------|-----------|----------
+|------------------------ |----------:|-----------:|----------:|---------:
 | `$..* First()`
 | Hyperbee_JsonElement    |  3.105 us |  1.6501 us | 0.0904 us |   3.52 KB
 | JsonEverything_JsonNode |  3.278 us |  3.3157 us | 0.1817 us |   3.53 KB

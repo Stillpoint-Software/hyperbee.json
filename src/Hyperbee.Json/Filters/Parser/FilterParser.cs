@@ -132,11 +132,12 @@ public class FilterParser<TNode> : FilterParser
         static bool IsFinished( in ParserState state, char ch, ref int itemEnd )
         {
             // order of operations matters
-            bool result = state switch
+
+            bool result = true switch
             {
-                _ when state.BracketDepth != 0 => false,
-                _ when !state.Operator.IsNonOperator() => true,
-                _ when ch == state.TerminalCharacter => true, // [ '\0' or ',' or ')' ]
+                true when state.BracketDepth != 0 => false,
+                true when !state.Operator.IsNonOperator() => true,
+                true when ch == state.TerminalCharacter => true, // [ '\0' or ',' or ')' ]
                 _ => false
             };
 
@@ -300,8 +301,10 @@ public class FilterParser<TNode> : FilterParser
             // exclude +1 -1 1e+2 1e-2 .1
 
             var span = state.Buffer[start..state.Pos];
-
-            return !span.IsEmpty && span[0] != '+' && span[0] != '-' && span[0] != '.' && span.Length >= 2 && span[^2] != 'e' && span[^2] != 'E';
+            
+            return !span.IsEmpty && 
+                   span[0] != '+' && span[0] != '-' && span[0] != '.' && 
+                   span.Length >= 2 && span[^2] != 'e' && span[^2] != 'E';
         }
 
         // Helper method to check if the operator is a valid multiply operator

@@ -23,4 +23,3 @@ public class MatchNodeFunction() : ExtensionFunction( MatchMethod, CompareConstr
         return regex.IsMatch( value );
     }
 }
-

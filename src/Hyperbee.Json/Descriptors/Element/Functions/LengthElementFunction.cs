@@ -10,23 +10,19 @@ public class LengthElementFunction() : ExtensionFunction( LengthMethod, CompareC
     public const string Name = "length";
     private static readonly MethodInfo LengthMethod = GetMethod<LengthElementFunction>( nameof( Length ) );
 
-    public static IValueType Length( IValueType argument )
+    public static ScalarValue<int> Length( IValueType argument )
     {
-        switch ( argument.ValueKind )
+        return argument.ValueKind switch
         {
-            case ValueKind.Scalar when argument.TryGetValue<string>( out var value ):
-                return Scalar.Value( value.Length );
-
-            case ValueKind.NodeList when argument.TryGetNode<JsonElement>( out var node ):
-                return node.ValueKind switch
-                {
-                    JsonValueKind.String => Scalar.Value( node.GetString()?.Length ?? 0 ),
-                    JsonValueKind.Array => Scalar.Value( node.GetArrayLength() ),
-                    JsonValueKind.Object => Scalar.Value( node.EnumerateObject().Count() ),
-                    _ => Scalar.Nothing
-                };
-        }
-
-        return Scalar.Nothing;
+            ValueKind.Scalar when argument.TryGetValue<string>( out var value ) => value.Length,
+            ValueKind.NodeList when argument.TryGetNode<JsonElement>( out var node ) => node.ValueKind switch
+            {
+                JsonValueKind.String => node.GetString()?.Length ?? 0,
+                JsonValueKind.Array => node.GetArrayLength(),
+                JsonValueKind.Object => node.EnumerateObject().Count(),
+                _ => Scalar.Nothing
+            },
+            _ => Scalar.Nothing
+        };
     }
 }

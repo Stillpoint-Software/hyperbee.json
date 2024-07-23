@@ -266,7 +266,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
 
         // Helpers
         static bool IsTypeMismatch( IValueType left, IValueType right ) => left?.GetType() != right?.GetType();
-        static bool IsNullOrNothing( IValueType value ) => value is Null or Nothing;
+        static bool IsNullOrNothing( IValueType value ) => value.ValueKind == ValueKind.Null || value.ValueKind == ValueKind.Nothing;
 
         static bool IsFloatToIntOperation( IValueType left, IValueType right ) =>
             left is ScalarValue<int> && right is ScalarValue<float> || left is ScalarValue<float> && right is ScalarValue<int>;

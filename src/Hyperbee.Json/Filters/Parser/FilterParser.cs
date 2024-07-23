@@ -301,9 +301,9 @@ public class FilterParser<TNode> : FilterParser
             // exclude +1 -1 1e+2 1e-2 .1
 
             var span = state.Buffer[start..state.Pos];
-            
-            return !span.IsEmpty && 
-                   span[0] != '+' && span[0] != '-' && span[0] != '.' && 
+
+            return !span.IsEmpty &&
+                   span[0] != '+' && span[0] != '-' && span[0] != '.' &&
                    span.Length >= 2 && span[^2] != 'e' && span[^2] != 'E';
         }
 

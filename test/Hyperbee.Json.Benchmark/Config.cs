@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
-using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Reports;
@@ -30,14 +29,18 @@ public class Config : ManualConfig
         // Add the custom exporter with specified visible columns
         AddExporter( new JsonPathMarkdownExporter
         {
-            VisibleColumns =
-            [
-                "Method",
-                "Mean",
-                "Error",
-                "StdDev",
-                "Allocated"
-            ]
+            ShowColumn = column =>
+            {
+                return column.OriginalColumn.ColumnName switch
+                {
+                    "Method" => true,
+                    "Mean" => true,
+                    "Error" => true,
+                    "StdDev" => true,
+                    "Allocated" => true,
+                    _ => false
+                };
+            }
         } );
 
         AddDiagnoser( MemoryDiagnoser.Default );

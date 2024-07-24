@@ -63,7 +63,7 @@ internal ref struct ValueStringBuilder // use in a try finally with an explicit 
         _chars = newArray;
     }
 
-    public override string ToString()
+    public override string ToString() // disposes
     {
         var value = AsString();
         Dispose();

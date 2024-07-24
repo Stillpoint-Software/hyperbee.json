@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Extensions;
 
@@ -145,6 +146,7 @@ public static class JsonPathPointerConverter
         }
 
         var i = 0;
+        var item = new SpanBuilder( stackalloc char[512] );
 
         while ( i < jsonPointer.Length )
         {
@@ -161,7 +163,8 @@ public static class JsonPathPointerConverter
                         }
 
                         var itemSpan = jsonPointer[start..i];
-                        var item = new StringBuilder();
+                        //var item = new SpanBuilder( stackalloc char[512] );
+                        item.Clear();
 
                         for ( var j = 0; j < itemSpan.Length; j++ )
                         {
@@ -187,7 +190,7 @@ public static class JsonPathPointerConverter
                             }
                         }
 
-                        var itemStr = item.ToString();
+                        var itemStr = item.AsSpan();
 
                         if ( int.TryParse( itemStr, out _ ) )
                         {

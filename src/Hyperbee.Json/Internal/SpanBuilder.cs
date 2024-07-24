@@ -48,6 +48,7 @@ internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
     public void Clear() => _pos = 0;
 
     public readonly ReadOnlySpan<char> AsSpan() => _chars[.._pos];
+    public string AsString() => _chars[.._pos].ToString();
 
     private void Grow( int additionalCapacity = 0 )
     {
@@ -64,7 +65,7 @@ internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
 
     public override string ToString()
     {
-        var value = _chars[.._pos].ToString();
+        var value = AsString();
         Dispose();
         return value;
     }

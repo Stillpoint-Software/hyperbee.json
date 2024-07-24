@@ -186,53 +186,73 @@ public static class JsonPathPointerConverter
                                     break;
                             }
                         }
-                    }
 
-                    var itemStr = item.ToString();
+                        var itemStr = item.ToString();
 
-                    // Helper method to determine if a property name is simple (no special characters)
-
-                    static bool HasSpecialCharacters( ReadOnlySpan<char> propertyName )
-                    {
-                        foreach ( var c in propertyName )
+                        if ( int.TryParse( itemStr, out _ ) )
                         {
-                            if ( !char.IsLetterOrDigit( c ) && c != '_' )
-                            {
-                                return true;
-                            }
+                            jsonPath.Append( '[' ).Append( itemStr ).Append( ']' );
+                        }
+                        else if ( !HasSpecialCharacters( itemStr ) )
+                        {
+                            jsonPath.Append( '.' ).Append( itemStr );
+                        }
+                        else
+                        {
+                            JsonPathAppendEscaped( jsonPath, itemStr );
                         }
 
-                        return false;
+                        break;
                     }
-            }
-
-            private static void JsonPathAppendEscaped( StringBuilder jsonPath, ReadOnlySpan<char> itemSpan )
-            {
-                jsonPath.Append( "['" );
-
-                int lastPos = 0;
-                for ( int j = 0; j < itemSpan.Length; j++ )
-                {
-                    if ( itemSpan[j] != '\'' )
-                    {
-                        continue;
-                    }
-
-                    if ( j > lastPos )
-                    {
-                        jsonPath.Append( itemSpan[lastPos..j] ); // Append the chunk before the escape character
-                    }
-
-                    jsonPath.Append( "\\'" );
-                    lastPos = j + 1; // Update the last position to after the escape character
-                }
-
-                // Append any remaining part of the string after the last escape character
-                if ( lastPos < itemSpan.Length )
-                {
-                    jsonPath.Append( itemSpan[lastPos..] );
-                }
-
-                jsonPath.Append( "']" );
             }
         }
+
+        return jsonPath.ToString();
+
+        // Helper method to determine if a property name is simple (no special characters)
+
+        static bool HasSpecialCharacters( ReadOnlySpan<char> propertyName )
+        {
+            foreach ( var c in propertyName )
+            {
+                if ( !char.IsLetterOrDigit( c ) && c != '_' )
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    private static void JsonPathAppendEscaped( StringBuilder jsonPath, ReadOnlySpan<char> itemSpan )
+    {
+        jsonPath.Append( "['" );
+
+        int lastPos = 0;
+        for ( int j = 0; j < itemSpan.Length; j++ )
+        {
+            if ( itemSpan[j] != '\'' )
+            {
+                continue;
+            }
+
+            if ( j > lastPos )
+            {
+                jsonPath.Append( itemSpan[lastPos..j] ); // Append the chunk before the escape character
+            }
+
+            jsonPath.Append( "\\'" );
+            lastPos = j + 1; // Update the last position to after the escape character
+        }
+
+        // Append any remaining part of the string after the last escape character
+        if ( lastPos < itemSpan.Length )
+        {
+            jsonPath.Append( itemSpan[lastPos..] );
+        }
+
+        jsonPath.Append( "']" );
+    }
+}
+

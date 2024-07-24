@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 
 namespace Hyperbee.Json.Extensions;
 
@@ -188,7 +188,7 @@ public static class JsonPathPointerConverter
                         }
                     }
 
-                        var itemStr = item.ToString();
+                    var itemStr = item.ToString();
 
                     // Helper method to determine if a property name is simple (no special characters)
 

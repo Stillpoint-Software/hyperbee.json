@@ -12,7 +12,7 @@ public class JsonPathParseAndSelectEvaluator
 {
     [Params(
         "$.store.book[0]",
-        "$.store.book[?@.price == 8.99]",
+        "$.store.book[?(@.price == 8.99)]",
         "$..price",
         "$..* `First()`",
         "$..*"
@@ -69,7 +69,9 @@ public class JsonPathParseAndSelectEvaluator
     {
         const string First = " `First()`";
 
-        return Filter.EndsWith( First ) ? (Filter[..^First.Length], true) : (Filter, false);
+        return Filter.EndsWith( First )
+            ? (Filter[..^First.Length], true)
+            : (Filter, false);
     }
 
     [Benchmark]

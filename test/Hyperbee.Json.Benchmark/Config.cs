@@ -41,7 +41,7 @@ public class Config : ManualConfig
         } );
 
         AddDiagnoser( MemoryDiagnoser.Default );
-     
+
         Orderer = new FastestToSlowestByParamOrderer();
 
         // Set the artifacts path to a specific directory in the project

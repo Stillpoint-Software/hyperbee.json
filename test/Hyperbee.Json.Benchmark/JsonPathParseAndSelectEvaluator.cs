@@ -69,8 +69,8 @@ public class JsonPathParseAndSelectEvaluator
     {
         const string First = " `First()`";
 
-        return Filter.EndsWith( First ) 
-            ? (Filter[..^First.Length], true) 
+        return Filter.EndsWith( First )
+            ? (Filter[..^First.Length], true)
             : (Filter, false);
     }
 

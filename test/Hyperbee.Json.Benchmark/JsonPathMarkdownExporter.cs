@@ -102,7 +102,7 @@ public class JsonPathMarkdownExporter : ExporterBase
 
                 if ( filterColumn != null )
                 {
-                    var filter = line[filterColumn.Index];
+                    var filter = line[filterColumn.Index].Replace( "`", "" );
                     logger.WriteLine( $"{TableHeaderSeparator}`{filter}`" );
                 }
             }

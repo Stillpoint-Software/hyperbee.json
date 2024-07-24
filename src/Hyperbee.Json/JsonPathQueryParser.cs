@@ -424,7 +424,7 @@ internal static class JsonPathQueryParser
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static SelectorDescriptor GetSelectorDescriptor( SelectorKind selectorKind, in SpanBuilder builder, bool nullable = true )
+    private static SelectorDescriptor GetSelectorDescriptor( SelectorKind selectorKind, in ValueStringBuilder builder, bool nullable = true )
     {
         var selectorValue = builder.IsEmpty && !nullable ? null : builder.ToString();
         return new SelectorDescriptor { SelectorKind = selectorKind, Value = selectorValue };
@@ -434,7 +434,7 @@ internal static class JsonPathQueryParser
     {
         // SpanBuilder must be disposed, but it is a ref struct, so we can't use `using`
 
-        var builder = new SpanBuilder( stackalloc char[512] );
+        var builder = new ValueStringBuilder( stackalloc char[512] );
 
         try
         {

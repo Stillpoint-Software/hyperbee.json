@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Extensions;
@@ -146,7 +146,7 @@ public static class JsonPathPointerConverter
         }
 
         var i = 0;
-        var item = new SpanBuilder( stackalloc char[512] );
+        var item = new ValueStringBuilder( stackalloc char[512] );
 
         while ( i < jsonPointer.Length )
         {

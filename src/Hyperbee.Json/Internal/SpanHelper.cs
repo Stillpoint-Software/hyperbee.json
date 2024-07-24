@@ -9,7 +9,7 @@ internal enum SpanUnescapeOptions
 
 internal static class SpanHelper
 {
-    internal static void Unescape( ReadOnlySpan<char> span, ref SpanBuilder builder, SpanUnescapeOptions options )
+    internal static void Unescape( ReadOnlySpan<char> span, ref ValueStringBuilder builder, SpanUnescapeOptions options )
     {
         if ( options == SpanUnescapeOptions.Single || options == SpanUnescapeOptions.SingleThenUnquote )
         {
@@ -49,7 +49,7 @@ internal static class SpanHelper
         }
     }
 
-    private static int UnescapeQuotedString( ReadOnlySpan<char> span, char quoteChar, ref SpanBuilder builder )
+    private static int UnescapeQuotedString( ReadOnlySpan<char> span, char quoteChar, ref ValueStringBuilder builder )
     {
         for ( var i = 0; i < span.Length; i++ )
         {

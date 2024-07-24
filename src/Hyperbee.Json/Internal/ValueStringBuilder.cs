@@ -6,20 +6,20 @@ namespace Hyperbee.Json.Internal;
 using System;
 using System.Buffers;
 
-internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
+internal ref struct ValueStringBuilder // use in a try finally with an explicit Dispose
 {
     private char[] _arrayPoolBuffer;
     private Span<char> _chars;
     private int _pos;
 
-    public SpanBuilder( int initialCapacity )
+    public ValueStringBuilder( int initialCapacity )
     {
         _arrayPoolBuffer = ArrayPool<char>.Shared.Rent( initialCapacity );
         _chars = _arrayPoolBuffer;
         _pos = 0;
     }
 
-    public SpanBuilder( Span<char> initialBuffer )
+    public ValueStringBuilder( Span<char> initialBuffer )
     {
         _arrayPoolBuffer = null;
         _chars = initialBuffer;
@@ -48,7 +48,7 @@ internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
     public void Clear() => _pos = 0;
 
     public readonly ReadOnlySpan<char> AsSpan() => _chars[.._pos];
-    public string AsString() => _chars[.._pos].ToString();
+    public readonly string AsString() => _chars[.._pos].ToString();
 
     private void Grow( int additionalCapacity = 0 )
     {

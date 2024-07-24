@@ -28,30 +28,30 @@ public static class JsonPathPointerConverter
                     {
                         case '\'':
                         case '"':
-                        {
-                            i++;
-                            var start = i;
-                            while ( i < jsonPath.Length && (jsonPath[i] != quote || (i > start && jsonPath[i - 1] == '\\')) )
                             {
                                 i++;
-                            }
+                                var start = i;
+                                while ( i < jsonPath.Length && (jsonPath[i] != quote || (i > start && jsonPath[i - 1] == '\\')) )
+                                {
+                                    i++;
+                                }
 
-                            JsonPointerAppendEscaped( jsonPointer, jsonPath[start..i], true );
-                            i += 2; // Skip the closing ']'
-                            break;
-                        }
+                                JsonPointerAppendEscaped( jsonPointer, jsonPath[start..i], true );
+                                i += 2; // Skip the closing ']'
+                                break;
+                            }
                         default:
-                        {
-                            var start = i;
-                            while ( i < jsonPath.Length && jsonPath[i] != ']' )
                             {
-                                i++;
-                            }
+                                var start = i;
+                                while ( i < jsonPath.Length && jsonPath[i] != ']' )
+                                {
+                                    i++;
+                                }
 
-                            jsonPointer.Append( jsonPath[start..i] ).Append( '/' );
-                            i++;
-                            break;
-                        }
+                                jsonPointer.Append( jsonPath[start..i] ).Append( '/' );
+                                i++;
+                                break;
+                            }
                     }
 
                     break;
@@ -154,59 +154,59 @@ public static class JsonPathPointerConverter
             switch ( jsonPointer[i] )
             {
                 case '/':
-                {
-                    i++;
-                    var start = i;
-
-                    while ( i < jsonPointer.Length && jsonPointer[i] != '/' )
                     {
                         i++;
-                    }
+                        var start = i;
 
-                    var itemSpan = jsonPointer[start..i];
-                    var builder = new StringBuilder();
-
-                    for ( var j = 0; j < itemSpan.Length; j++ )
-                    {
-                        if ( itemSpan[j] != '~' )
+                        while ( i < jsonPointer.Length && jsonPointer[i] != '/' )
                         {
-                            builder.Append( itemSpan[j] );
-                            continue;
+                            i++;
                         }
 
-                        switch ( itemSpan[j + 1] )
+                        var itemSpan = jsonPointer[start..i];
+                        var builder = new StringBuilder();
+
+                        for ( var j = 0; j < itemSpan.Length; j++ )
                         {
-                            case '1':
-                                builder.Append( '/' );
-                                j++;
-                                break;
-                            case '0':
-                                builder.Append( '~' );
-                                j++;
-                                break;
-                            default:
-                                builder.Append( '~' );
-                                break;
+                            if ( itemSpan[j] != '~' )
+                            {
+                                builder.Append( itemSpan[j] );
+                                continue;
+                            }
+
+                            switch ( itemSpan[j + 1] )
+                            {
+                                case '1':
+                                    builder.Append( '/' );
+                                    j++;
+                                    break;
+                                case '0':
+                                    builder.Append( '~' );
+                                    j++;
+                                    break;
+                                default:
+                                    builder.Append( '~' );
+                                    break;
+                            }
                         }
-                    }
 
-                    var itemStr = builder.ToString();
+                        var itemStr = builder.ToString();
 
-                    if ( int.TryParse( itemStr, out _ ) )
-                    {
-                        jsonPath.Append( '[' ).Append( itemStr ).Append( ']' );
-                    }
-                    else if ( !HasSpecialCharacters( itemStr ) )
-                    {
-                        jsonPath.Append( '.' ).Append( itemStr );
-                    }
-                    else
-                    {
-                        JsonPathAppendEscaped( jsonPath, itemStr );
-                    }
+                        if ( int.TryParse( itemStr, out _ ) )
+                        {
+                            jsonPath.Append( '[' ).Append( itemStr ).Append( ']' );
+                        }
+                        else if ( !HasSpecialCharacters( itemStr ) )
+                        {
+                            jsonPath.Append( '.' ).Append( itemStr );
+                        }
+                        else
+                        {
+                            JsonPathAppendEscaped( jsonPath, itemStr );
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
 

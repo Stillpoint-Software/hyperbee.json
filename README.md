@@ -2,7 +2,7 @@
 # Hyperbee.Json
 
 `Hyperbee.Json` is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`.  
-The library is designed to be quick and extensible, allowing support for other JSON document types and functions.
+The library is designed to be fast and extensible, allowing support for other JSON document types and functions.
 
 ## Features
 
@@ -16,7 +16,7 @@ The library is designed to be quick and extensible, allowing support for other J
 
 Hyperbee.Json conforms to the RFC, and aims to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
 when the RFC is unopinionated. When the RFC is unopinionated, and where the consensus is ambiguous or not aligned with our 
-performance and usability goals, we may deviate. Our goal is always to provide a robust and performant library while  
+performance and usability goals, we may deviate. Our goal is to provide a robust and performant library while  
 strengthening our alignment with the RFC and the community.
 
 ## Installation
@@ -29,9 +29,7 @@ dotnet add package Hyperbee.Json
 
 ## Usage
 
-### Basic Examples
-
-#### Selecting Elements
+### Selecting Elements
 
 ```csharp
 
@@ -55,60 +53,7 @@ foreach (var item in result)
 }
 ```
 
-#### Filtering
-
-```csharp
-
-var json = """
-{ 
-  "store": { 
-    "book": [
-      { 
-        "category": "fiction",
-        "price": 10  
-      }, 
-      { 
-        "category": "science",
-        "price": 15  
-      } 
-    ] 
-  } 
-}
-""";
-
-var root = JsonDocument.Parse(json);
-var result = JsonPath.Select(root, "$.store.book[?(@.price > 10)]");
-
-foreach (var item in result)
-{
-    Console.WriteLine(item); // Output: { "category": "science", "price": 15 }
-}
-```
-
-#### Working with (JsonElement, Path) pairs
-```csharp
-
-var json = """
-{ 
-  "store": { 
-    "book": [
-      { "category": "fiction" }, 
-      { "category": "science" } 
-    ] 
-  } 
-}
-""";
-
-var root = JsonDocument.Parse(json);
-var result = JsonPath.SelectPath(root, "$.store.book[0].category");
-
-var (node, path) = result.First();
-
-Console.WriteLine(node); // Output: "fiction"
-Console.WriteLine(path); // Output: "$.store.book[0].category
-```
-
-#### Working with JsonNode
+### Selecting Nodes
 
 ```csharp
 
@@ -129,14 +74,21 @@ var result = JsonPath.Select(root, "$.store.book[0].category");
 Console.WriteLine(result.First()); // Output: "fiction"
 ```
 
-## JSONPath Syntax Overview
+## JSONPath Overview
 
-Here's a quick overview of JSONPath syntax:
+JSONPath operates on JSON documents:
+
+* The special symbol `$` is used to reference the root JSON node. 
+* The special symbol `@` is used to reference the current JSON node. 
+* Queries can use dot-notation: `$.store.book[0].title`, or bracket-notation: `$['store']['book'][0]['title']` 
+* Filters may be used to conditionally include results: `$.store.book[?(@.price < 10)]`
+
+### JSONPath Syntax
 
 | JSONPath                                     | Description                                                
 |:---------------------------------------------|:-----------------------------------------------------------
-| `$`                                          | Root node                                    
-| `@`                                          | Current node                                 
+| `$`                                          | Root JSON node                                    
+| `@`                                          | Current JSON node                                 
 | `.<name>`, `.'<name>'`, or `."<name>"`       | Object member dot operator
 | `[<name>]`, or `['<name>']`, or `["<name>"]` | Object member subscript operator
 | `[<index]`                                   | Array access operator
@@ -146,30 +98,6 @@ Here's a quick overview of JSONPath syntax:
 | `..`                                         | Recursive descent  
 | `?<expr>`                                    | Filter selector
 
-JSONPath expressions refer to a JSON structure, and JSONPath assumes the name `$` is assigned 
-to the root JSON object.
-
-JSONPath expressions can use dot-notation:
-
-    $.store.book[0].title
-
-or bracket-notation:
-
-    $['store']['book'][0]['title']
-
-- JSONPath allows the wildcard symbol `*` for member names and array indices. 
-- It borrows the descendant operator `..` from [E4X][e4x]
-- It uses the `@` symbol to refer to the current object.
-- It uses `?` syntax for filtering.
-- It uses the array slice syntax proposal `[start:end:step]` from ECMASCRIPT 4.
-
-Expressions can be used as an alternative to explicit names or indices, as in:
-
-    $.store.book[(length(@)-1)].title
-
-Filter expressions are supported via the syntax `?(<boolean expr>)`, as in:
-
-    $.store.book[?(@.price < 10)].title
 
 ### JSONPath Functions
 
@@ -196,8 +124,6 @@ The library extends the JSONPath expression syntax to support additional feature
 ### JSONPath Custom Functions
 
 You can extend the supported function set by registering your own functions.
-
-**Example:** Implement a `JsonNode` Path Function:
 
 **Example:** Implement a `JsonNode` Path Function:
 
@@ -229,7 +155,9 @@ JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
 var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
 ```
 
-## Why Choose [Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json) ?
+## Why Choose Hyperbee.Json?
+
+Hyperbee is fast, lightweight, fully RFC conforming, that supports **both** `JsonElement` and `JsonNode`.
 
 - High Performance.
 - Supports both `JsonElement`, and `JsonNode`.
@@ -240,7 +168,7 @@ var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
 
 ## Comparison with Other Libraries
 
-There are excellent libraries available for RFC-9535 .NET JsonPath.
+There are other excellent libraries .NET JsonPath.
 
 ### [JsonPath.Net](https://docs.json-everything.net/path/basics/) Json-Everything
 
@@ -253,7 +181,7 @@ There are excellent libraries available for RFC-9535 .NET JsonPath.
 - **Cons:**
   - No support for `JsonElement`.
   - More memory intensive.
-  - Not quite as fast as other `System.Text.Json` implementations.
+  - Not quite as fast as other implementations.
    
 ### [JsonCons.NET](https://danielaparker.github.io/JsonCons.Net/articles/JsonPath/JsonConsJsonPath.html)
 

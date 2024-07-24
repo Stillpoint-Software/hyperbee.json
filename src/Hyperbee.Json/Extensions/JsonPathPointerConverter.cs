@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace Hyperbee.Json.Extensions;
 
@@ -85,12 +85,9 @@ public static class JsonPathPointerConverter
 
         foreach ( var c in itemSpan )
         {
-            switch ( isQuoted )
+            if ( (isQuoted && c == '/') || (c == '~' || c == '/') )
             {
-                case true when c == '/':
-                case false when (c == '~' || c == '/'):
-                    replacementCount++;
-                    break;
+                replacementCount++;
             }
         }
 
@@ -101,7 +98,7 @@ public static class JsonPathPointerConverter
         }
 
         var length = itemSpan.Length + replacementCount;
-        var buffer = length <= 512 ? stackalloc char[length] : new char[length];
+        var buffer = length <= 256 ? stackalloc char[length] : new char[length];
 
         var bufferIndex = 0;
         for ( var i = 0; i < itemSpan.Length; i++ )
@@ -158,6 +155,11 @@ public static class JsonPathPointerConverter
                         i++;
                         var start = i;
 
+                        while ( i < jsonPointer.Length && jsonPointer[i] != '/' )
+                        {
+                            i++;
+                        }
+
                         var itemSpan = jsonPointer[start..i];
                         var item = new StringBuilder();
 
@@ -169,12 +171,9 @@ public static class JsonPathPointerConverter
                                 continue;
                             }
 
-                            var itemSpan = jsonPointer[start..i];
-                            var builder = new StringBuilder();
-
-                            for ( var j = 0; j < itemSpan.Length; j++ )
+                            switch ( itemSpan[j + 1] )
                             {
-                            case '1':
+                                case '1':
                                     item.Append( '/' );
                                     j++;
                                     break;
@@ -185,29 +184,11 @@ public static class JsonPathPointerConverter
                                 default:
                                     item.Append( '~' );
                                     break;
-                                }
-
-                                var itemStr = item.ToString();
-
-                                if ( int.TryParse( itemStr, out _ ) )
-                                {
-                                    jsonPath.Append( '[' ).Append( itemStr ).Append( ']' );
-                                }
-                                else if ( !HasSpecialCharacters( itemStr ) )
-                                {
-                                    jsonPath.Append( '.' ).Append( itemStr );
-                                }
-                                else
-                                {
-                                    JsonPathAppendEscaped( jsonPath, itemStr );
-                                }
-
-                                break;
                             }
                         }
                     }
 
-                    return jsonPath.ToString();
+                        var itemStr = item.ToString();
 
                     // Helper method to determine if a property name is simple (no special characters)
 

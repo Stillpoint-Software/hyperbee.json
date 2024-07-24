@@ -434,7 +434,7 @@ internal static class JsonPathQueryParser
     {
         // SpanBuilder must be disposed, but it is a ref struct, so we can't use `using`
 
-        var builder = new SpanBuilder( selectorSpan.Length );
+        var builder = new SpanBuilder( stackalloc char [512] );
 
         try
         {

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace Hyperbee.Json.Extensions;
 
@@ -101,7 +101,7 @@ public static class JsonPathPointerConverter
         }
 
         var length = itemSpan.Length + replacementCount;
-        var buffer = length <= 256 ? stackalloc char[length] : new char[length];
+        var buffer = length <= 512 ? stackalloc char[length] : new char[length];
 
         var bufferIndex = 0;
         for ( var i = 0; i < itemSpan.Length; i++ )
@@ -158,9 +158,15 @@ public static class JsonPathPointerConverter
                         i++;
                         var start = i;
 
-                        while ( i < jsonPointer.Length && jsonPointer[i] != '/' )
+                    var itemSpan = jsonPointer[start..i];
+                    var item = new StringBuilder();
+
+                    for ( var j = 0; j < itemSpan.Length; j++ )
+                    {
+                        if ( itemSpan[j] != '~' )
                         {
-                            i++;
+                            item.Append( itemSpan[j] );
+                            continue;
                         }
 
                         var itemSpan = jsonPointer[start..i];
@@ -168,29 +174,20 @@ public static class JsonPathPointerConverter
 
                         for ( var j = 0; j < itemSpan.Length; j++ )
                         {
-                            if ( itemSpan[j] != '~' )
-                            {
-                                builder.Append( itemSpan[j] );
-                                continue;
-                            }
-
-                            switch ( itemSpan[j + 1] )
-                            {
-                                case '1':
-                                    builder.Append( '/' );
-                                    j++;
-                                    break;
-                                case '0':
-                                    builder.Append( '~' );
-                                    j++;
-                                    break;
-                                default:
-                                    builder.Append( '~' );
-                                    break;
-                            }
+                            case '1':
+                                item.Append( '/' );
+                                j++;
+                                break;
+                            case '0':
+                                item.Append( '~' );
+                                j++;
+                                break;
+                            default:
+                                item.Append( '~' );
+                                break;
                         }
 
-                        var itemStr = builder.ToString();
+                    var itemStr = item.ToString();
 
                         if ( int.TryParse( itemStr, out _ ) )
                         {

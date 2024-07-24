@@ -8,14 +8,21 @@ using System.Buffers;
 
 internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
 {
-    private char[] _buffer;
+    private char[] _arrayPoolBuffer;
     private Span<char> _chars;
     private int _pos;
 
     public SpanBuilder( int initialCapacity )
     {
-        _buffer = ArrayPool<char>.Shared.Rent( initialCapacity );
-        _chars = _buffer;
+        _arrayPoolBuffer = ArrayPool<char>.Shared.Rent( initialCapacity );
+        _chars = _arrayPoolBuffer;
+        _pos = 0;
+    }
+
+    public SpanBuilder( Span<char> initialBuffer )
+    {
+        _arrayPoolBuffer = null;
+        _chars = initialBuffer;
         _pos = 0;
     }
 
@@ -48,8 +55,10 @@ internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
         var newArray = ArrayPool<char>.Shared.Rent( newCapacity );
         _chars.CopyTo( newArray );
 
-        ArrayPool<char>.Shared.Return( _buffer );
-        _buffer = newArray;
+        if ( _arrayPoolBuffer != null )
+            ArrayPool<char>.Shared.Return( _arrayPoolBuffer );
+
+        _arrayPoolBuffer = newArray;
         _chars = newArray;
     }
 
@@ -63,13 +72,13 @@ internal ref struct SpanBuilder // use in a try finally with an explicit Dispose
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public void Dispose()
     {
-        var array = _buffer;
+        var array = _arrayPoolBuffer;
         this = default; // for safety, to avoid using pooled array if this instance is erroneously appended to again
 
         if ( array != null )
             ArrayPool<char>.Shared.Return( array );
 
-        _buffer = null;
+        _arrayPoolBuffer = null;
         _chars = default;
         _pos = 0;
     }

@@ -12,52 +12,53 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 {
     private readonly List<PatchOperation> _operations = [.. operations];
 
-    public void Apply( JsonNode node )
-    {
-        Apply( node, this );
-    }
+    public JsonNode Apply( JsonNode node ) => Apply( node, this );
 
-    public static void Apply( JsonNode node, IEnumerable<PatchOperation> patches )
+    public static JsonNode Apply( JsonNode node, IEnumerable<PatchOperation> patches )
     {
+        var clone = node.DeepClone();
+
         foreach ( var patch in patches )
         {
             switch ( patch.Operation )
             {
                 case PatchOperationType.Add:
-                    AddOperation( node, patch );
+                    AddOperation( clone, patch );
                     break;
 
                 case PatchOperationType.Copy:
-                    CopyOperation( node, patch );
+                    CopyOperation( clone, patch );
                     break;
 
                 case PatchOperationType.Move:
-                    MoveOperation( node, patch );
+                    MoveOperation( clone, patch );
                     break;
 
                 case PatchOperationType.Remove:
-                    RemoveOperation( node, patch );
+                    RemoveOperation( clone, patch );
                     break;
 
                 case PatchOperationType.Replace:
-                    ReplaceOperation( node, patch );
+                    ReplaceOperation( clone, patch );
                     break;
 
                 case PatchOperationType.Test:
-                    TestOperation( node, patch );
+                    TestOperation( clone, patch );
                     break;
 
                 default:
                     throw new JsonPatchException( $"'{patch.Operation}' is an invalid operation." );
             }
         }
+
+        return clone;
     }
 
     private static void AddOperation( JsonNode node, PatchOperation patch )
     {
         var segment = GetSegments( patch.Path );
 
-        var target = node.FromJsonPointer( segment, out var addName, out var parent );
+        var target = node.FromJsonPointer( segment, out var name, out var parent );
 
         ThrowLocationDoesNotExist( patch.Path, parent );
 
@@ -68,15 +69,15 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
                 break;
 
             case JsonObject jsonObject:
-                jsonObject.Add( addName, PatchValue( patch ) );
+                jsonObject.Add( name, PatchValue( patch ) );
                 break;
 
             case JsonArray jsonArray:
-                if ( addName == "-" ) // special segment name for end of array
+                if ( name == "-" ) // special segment name for end of array
                 {
                     jsonArray.Add( PatchValue( patch ) );
                 }
-                else if ( int.TryParse( addName, out var index ) )
+                else if ( int.TryParse( name, out var index ) )
                 {
                     if ( index < 0 || index > jsonArray.Count )
                         throw new JsonPatchException( $"The target location '{patch.Path}' was out of range." );
@@ -108,9 +109,9 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
         ThrowLocationDoesNotExist( patch.From, fromParent );
         ThrowLocationDoesNotExist( patch.From, from );
 
-        _ = node.FromJsonPointer( segment, out var copyName, out var parent );
+        _ = node.FromJsonPointer( segment, out var name, out var parent );
 
-        ThrowLocationDoesNotExist( patch.Path, copyName );
+        ThrowLocationDoesNotExist( patch.Path, name );
 
         switch ( fromParent )
         {
@@ -119,11 +120,11 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
                 switch ( parent )
                 {
                     case JsonObject jsonObject:
-                        jsonObject.Add( copyName, from.DeepClone() );
+                        jsonObject.Add( name, from.DeepClone() );
                         break;
 
                     case JsonArray jsonArray:
-                        if ( int.TryParse( copyName, out var targetIndex ) )
+                        if ( int.TryParse( name, out var targetIndex ) )
                         {
                             if ( targetIndex < 0 || targetIndex > jsonArray.Count )
                                 throw new JsonPatchException( $"The target location '{patch.Path}' was out of range." );
@@ -152,11 +153,11 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
                     {
                         case JsonObject jsonObject:
 
-                            jsonObject.Add( copyName, from.DeepClone() );
+                            jsonObject.Add( name, from.DeepClone() );
                             break;
 
                         case JsonArray jsonArray:
-                            if ( int.TryParse( copyName, out var targetIndex ) )
+                            if ( int.TryParse( name, out var targetIndex ) )
                             {
                                 if ( targetIndex < 0 || targetIndex > fromParentArray.Count )
                                     throw new JsonPatchException( $"The target location '{patch.Path}' was out of range." );
@@ -319,7 +320,14 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
     private static void TestOperation( JsonNode node, PatchOperation patch )
     {
         var segment = GetSegments( patch.Path );
-        throw new NotImplementedException();
+
+        var target = node.FromJsonPointer( segment, out _, out var parent );
+
+        ThrowLocationDoesNotExist( patch.Path, target );
+        ThrowLocationDoesNotExist( patch.Path, parent );
+
+        if ( !JsonNode.DeepEquals( target, PatchValue( patch ) ) )
+            throw new JsonPatchException( $"The target location's value '{patch.Value}' is not equal the value." );
     }
 
     private static JsonPathSegment GetSegments( string path )

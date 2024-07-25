@@ -34,7 +34,7 @@ public class JsonDiffTests : JsonTestBase
         var results = Diff( sourceType, source, target );
 
         Assert.IsTrue( results.Length == 1 );
-        Assert.AreEqual( JsonPatchOperationType.Add, results[0].Operation );
+        Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/last", results[0].Path );
         Assert.AreEqual( "Doe", Unwrap( results[0].Value ) );
     }
@@ -61,7 +61,7 @@ public class JsonDiffTests : JsonTestBase
         var results = Diff( sourceType, source, target );
 
         Assert.IsTrue( results.Length == 1 );
-        Assert.AreEqual( JsonPatchOperationType.Add, results[0].Operation );
+        Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.AreEqual( "B", Unwrap( results[0].Value ) );
     }
@@ -89,7 +89,7 @@ public class JsonDiffTests : JsonTestBase
         var results = Diff( sourceType, source, target );
 
         Assert.IsTrue( results.Length == 1 );
-        Assert.AreEqual( JsonPatchOperationType.Remove, results[0].Operation );
+        Assert.AreEqual( PatchOperationType.Remove, results[0].Operation );
         Assert.AreEqual( "/last", results[0].Path );
         Assert.IsNull( results[0].Value );
     }
@@ -116,7 +116,7 @@ public class JsonDiffTests : JsonTestBase
         var results = Diff( sourceType, source, target );
 
         Assert.IsTrue( results.Length == 1 );
-        Assert.AreEqual( JsonPatchOperationType.Remove, results[0].Operation );
+        Assert.AreEqual( PatchOperationType.Remove, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.IsNull( results[0].Value );
     }
@@ -143,7 +143,7 @@ public class JsonDiffTests : JsonTestBase
         var results = Diff( sourceType, source, target );
 
         Assert.IsTrue( results.Length == 1 );
-        Assert.AreEqual( JsonPatchOperationType.Replace, results[0].Operation );
+        Assert.AreEqual( PatchOperationType.Replace, results[0].Operation );
         Assert.AreEqual( "/first", results[0].Path );
         Assert.AreEqual( "Mark", Unwrap( results[0].Value ) );
     }
@@ -171,7 +171,7 @@ public class JsonDiffTests : JsonTestBase
         var results = Diff( sourceType, source, target );
 
         Assert.IsTrue( results.Length == 1 );
-        Assert.AreEqual( JsonPatchOperationType.Replace, results[0].Operation );
+        Assert.AreEqual( PatchOperationType.Replace, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.AreEqual( "C", Unwrap( results[0].Value ) );
     }
@@ -217,6 +217,50 @@ public class JsonDiffTests : JsonTestBase
         Assert.IsTrue( results.Length == 8 );
     }
 
+
+    [DataTestMethod]
+    [DataRow( typeof( JsonDocument ) )]
+    [DataRow( typeof( JsonNode ) )]
+    public void EscapePath_WhenJsonHasPropertyNames( Type sourceType )
+    {
+        var source =
+            """
+            {
+               "foo": ["bar", "baz"],
+               "": 0,
+               "a/b": 1,
+               "c%d": 2,
+               "e^f": 3,
+               "g|h": 4,
+               "i\\j": 5,
+               "k\"l": 6,
+               " ": 7,
+               "m~n": 8
+            }
+            """;
+
+        var target =
+            """
+                {
+                }
+            """;
+
+        var results = Diff( sourceType, source, target ).ToArray();
+
+        Assert.IsTrue( results.Length == 10 );
+        Assert.AreEqual( "/m~0n", results[0].Path );
+        Assert.AreEqual( "/ ", results[1].Path );
+        Assert.AreEqual( "/k\"l", results[2].Path );
+        Assert.AreEqual( "/i\\j", results[3].Path );
+        Assert.AreEqual( "/g|h", results[4].Path );
+        Assert.AreEqual( "/e^f", results[5].Path );
+        Assert.AreEqual( "/c%d", results[6].Path );
+        Assert.AreEqual( "/a~1b", results[7].Path );
+        Assert.AreEqual( "/", results[8].Path );
+        Assert.AreEqual( "/foo", results[9].Path );
+    }
+
+
     private static object Unwrap( object value )
     {
         return value switch
@@ -243,7 +287,7 @@ public class JsonDiffTests : JsonTestBase
         };
     }
 
-    private static JsonPatchOperation[] Diff( Type sourceType, string source, string target )
+    private static PatchOperation[] Diff( Type sourceType, string source, string target )
     {
         return sourceType switch
         {

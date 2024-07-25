@@ -17,17 +17,7 @@ public class JsonPathMarkdownExporter : ExporterBase
     protected string TableColumnSeparator = " | ";
     protected bool ColumnsStartWithSeparator = true;
 
-    // Property to specify which columns to display
-    public List<string> VisibleColumns { get; set; } =
-    [
-        "Method",
-        "Mean",
-        "Error",
-        "StdDev",
-        "Gen0",
-        "Gen1",
-        "Allocated"
-    ];
+    public Func<SummaryTable.SummaryTableColumn, bool> ShowColumn { get; set; } = x => true;
 
     public override void ExportToLog( Summary summary, ILogger logger )
     {
@@ -68,7 +58,8 @@ public class JsonPathMarkdownExporter : ExporterBase
     private void PrintTable( Summary summary, ILogger logger, SummaryStyle style )
     {
         var table = summary.Table;
-        var columns = table.Columns.Where( x => x.NeedToShow && x.OriginalColumn.ColumnName != "Filter" && VisibleColumns.Contains( x.OriginalColumn.ColumnName ) ).ToArray();
+        var columns = table.Columns.Where( x => x.NeedToShow && x.OriginalColumn.ColumnName != "Filter" && (ShowColumn == null || ShowColumn( x )) ).ToArray();
+
         var filterColumn = table.Columns.FirstOrDefault( x => x.Header == "Filter" );
 
         if ( table.FullContent.Length == 0 )

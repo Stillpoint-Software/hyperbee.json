@@ -1262,7 +1262,70 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    public void MultipleOperationsFail_PatchAtomic()
+    public void Rollback_Add()
+    {
+        var source = JsonNode.Parse(
+            """
+            {
+                "first": "John",
+                "address": {
+                    "city": "New York",
+                    "zip": "10001"
+                }
+            }
+            """ );
+
+        var patch = new JsonPatch(
+            new PatchOperation( PatchOperationType.Add, "/address/state", null, "NY" ),
+            // Forced failure
+            new PatchOperation( PatchOperationType.Test, "/invalid", null, "noop" )
+        );
+
+        try
+        {
+            _ = patch.Apply( source );
+            Assert.Fail( "Test should fail and rollback changes" );
+        }
+        catch ( JsonPatchException )
+        {
+            Assert.AreEqual( "New York", source!["address"]!["city"]!.GetValue<string>() );
+        }
+    }
+
+    [TestMethod]
+    public void Rollback_Copy()
+    {
+        var source = JsonNode.Parse(
+            """
+            {
+                "first": "John",
+                "address": {
+                    "city": "New York",
+                    "zip": "10001"
+                }
+            }
+            """ );
+
+        var patch = new JsonPatch(
+            new PatchOperation( PatchOperationType.Copy, "/location", "/address", null ),
+            // Forced failure
+            new PatchOperation( PatchOperationType.Test, "/invalid", null, "noop" )
+        );
+
+        try
+        {
+            _ = patch.Apply( source );
+            Assert.Fail( "Test should fail and rollback changes" );
+        }
+        catch ( JsonPatchException )
+        {
+            Assert.AreEqual( 2, ((JsonObject) source!).Count );
+            Assert.AreEqual( "New York", source!["address"]!["city"]!.GetValue<string>() );
+        }
+    }
+
+    [TestMethod]
+    public void Rollback_Move()
     {
         var source = JsonNode.Parse(
             """
@@ -1277,7 +1340,8 @@ public class JsonPatchTests
 
         var patch = new JsonPatch(
             new PatchOperation( PatchOperationType.Move, "/location", "/address", null ),
-            new PatchOperation( PatchOperationType.Test, "/location/city", null, "Los Angeles" )
+            // Forced failure
+            new PatchOperation( PatchOperationType.Test, "/invalid", null, "noop" )
         );
 
         try
@@ -1288,6 +1352,122 @@ public class JsonPatchTests
         catch ( JsonPatchException )
         {
             Assert.AreEqual( "New York", source!["address"]!["city"]!.GetValue<string>() );
+        }
+    }
+
+    [TestMethod]
+    public void Rollback_Remove()
+    {
+        var source = JsonNode.Parse(
+            """
+            {
+                "first": "John",
+                "address": {
+                    "city": "New York",
+                    "zip": "10001"
+                }
+            }
+            """ );
+
+        var patch = new JsonPatch(
+            new PatchOperation( PatchOperationType.Remove, "/address", null, null ),
+            // Forced failure
+            new PatchOperation( PatchOperationType.Test, "/invalid", null, "noop" )
+        );
+
+        try
+        {
+            _ = patch.Apply( source );
+            Assert.Fail( "Test should fail and rollback changes" );
+        }
+        catch ( JsonPatchException )
+        {
+            Assert.AreEqual( "New York", source!["address"]!["city"]!.GetValue<string>() );
+        }
+    }
+
+    [TestMethod]
+    public void Rollback_Replace()
+    {
+        var source = JsonNode.Parse(
+            """
+            {
+                "first": "John",
+                "address": {
+                    "city": "New York",
+                    "zip": 10001
+                }
+            }
+            """ );
+
+        var patch = new JsonPatch(
+            new PatchOperation( PatchOperationType.Replace, "/address", null, JsonNode.Parse( """
+                                                                                              {
+                                                                                                  "city": "Los Angeles",
+                                                                                                  "zip": 90001
+                                                                                              }
+                                                                                              """ ) ),
+            // Forced failure
+            new PatchOperation( PatchOperationType.Test, "/invalid", null, "noop" )
+        );
+
+        try
+        {
+            _ = patch.Apply( source );
+            Assert.Fail( "Test should fail and rollback changes" );
+        }
+        catch ( JsonPatchException )
+        {
+            Assert.AreEqual( "New York", source!["address"]!["city"]!.GetValue<string>() );
+            Assert.AreEqual( 10001, source!["address"]!["zip"]!.GetValue<int>() );
+        }
+    }
+
+    [TestMethod]
+    public void MultipleOperations_WhenRollbackTogether()
+    {
+        var source = JsonNode.Parse(
+            """
+            {
+                "first": "John",
+                "address": {
+                    "city": "New York",
+                    "zip": 10001
+                }
+            }
+            """ );
+
+        var patch = new JsonPatch(
+            new PatchOperation( PatchOperationType.Add, "/last", null, "Doe" ),
+            new PatchOperation( PatchOperationType.Add, "/job", null, JsonNode.Parse( "{}" ) ),
+            new PatchOperation( PatchOperationType.Add, "/job/title", null, "developer" ),
+            new PatchOperation( PatchOperationType.Add, "/job/company", null, "Acme" ),
+            new PatchOperation( PatchOperationType.Remove, "/first", null, null ),
+            new PatchOperation( PatchOperationType.Add, "/address/state", null, "NY" ),
+            new PatchOperation( PatchOperationType.Add, "/categories", null, JsonNode.Parse( "[]" ) ),
+            new PatchOperation( PatchOperationType.Add, "/categories/0", null, "a" ),
+            new PatchOperation( PatchOperationType.Add, "/categories/1", null, "b" ),
+            new PatchOperation( PatchOperationType.Add, "/categories/-", null, "c" ),
+            new PatchOperation( PatchOperationType.Move, "/location", "/address", null ),
+            new PatchOperation( PatchOperationType.Replace, "/location/state", null, "CA" ),
+            new PatchOperation( PatchOperationType.Replace, "/location/city", null, "Los Angeles" ),
+            // Forced failure
+            new PatchOperation( PatchOperationType.Test, "/invalid", null, "noop" )
+        );
+
+        try
+        {
+            _ = patch.Apply( source );
+            Assert.Fail( "Test should have failed and rollback changes" );
+        }
+        catch ( JsonPatchException ex )
+        {
+            // verify that it was the error the test caused
+            Assert.AreEqual( "The target location '/invalid' did not exist.", ex.Message, "Invalid error thrown" );
+
+            Assert.AreEqual( 2, ((JsonObject) source!).Count );
+            Assert.AreEqual( "New York", source!["address"]!["city"]!.GetValue<string>() );
+            Assert.AreEqual( 10001, source!["address"]!["zip"]!.GetValue<int>() );
         }
     }
 

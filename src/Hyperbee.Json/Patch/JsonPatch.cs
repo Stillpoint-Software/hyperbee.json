@@ -13,34 +13,59 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
     public static JsonNode Apply( JsonNode node, IEnumerable<PatchOperation> patches )
     {
-        var clone = node.DeepClone();
+        var undoOperations = new Stack<PatchOperation>();
 
+        try
+        {
+            ApplyInternal( node, undoOperations.Push, patches );
+        }
+        catch
+        {
+            try
+            {
+                ApplyInternal( node, Noop, undoOperations );
+            }
+            catch
+            {
+                throw new JsonPatchException( "Failed patch rollback." );
+            }
+
+            throw;
+        }
+
+        return node;
+
+        static void Noop( PatchOperation _ ) { }
+    }
+
+    public static JsonNode ApplyInternal( JsonNode node, Action<PatchOperation> undo, IEnumerable<PatchOperation> patches )
+    {
         foreach ( var patch in patches )
         {
             switch ( patch.Operation )
             {
                 case PatchOperationType.Add:
-                    AddOperation( clone, patch );
+                    undo( AddOperation( node, patch ) );
                     break;
 
                 case PatchOperationType.Copy:
-                    CopyOperation( clone, patch );
+                    undo( CopyOperation( node, patch ) );
                     break;
 
                 case PatchOperationType.Move:
-                    MoveOperation( clone, patch );
+                    undo( MoveOperation( node, patch ) );
                     break;
 
                 case PatchOperationType.Remove:
-                    RemoveOperation( clone, patch );
+                    undo( RemoveOperation( node, patch ) );
                     break;
 
                 case PatchOperationType.Replace:
-                    ReplaceOperation( clone, patch );
+                    undo( ReplaceOperation( node, patch ) );
                     break;
 
                 case PatchOperationType.Test:
-                    TestOperation( clone, patch );
+                    TestOperation( node, patch );
                     break;
 
                 default:
@@ -48,10 +73,10 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
             }
         }
 
-        return clone;
+        return node;
     }
 
-    private static void AddOperation( JsonNode node, PatchOperation patch )
+    private static PatchOperation AddOperation( JsonNode node, PatchOperation patch )
     {
         var segment = GetSegments( patch.Path );
 
@@ -59,19 +84,26 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
         ThrowLocationDoesNotExist( patch.Path, parent );
 
+        PatchOperation undo = default;
+
         switch ( parent )
         {
             case JsonObject _ when target != null:
+                undo = new PatchOperation( PatchOperationType.Replace, patch.Path, null, target );
                 target.ReplaceWith( PatchValue( patch ) );
                 break;
 
             case JsonObject jsonObject:
+                undo = new PatchOperation( PatchOperationType.Remove, patch.Path, null, null );
                 jsonObject.Add( name, PatchValue( patch ) );
                 break;
 
             case JsonArray jsonArray:
+
                 if ( name == "-" ) // special segment name for end of array
                 {
+                    var endPath = string.Concat( patch.Path[..^1], jsonArray.Count );
+                    undo = new PatchOperation( PatchOperationType.Remove, endPath, null, null );
                     jsonArray.Add( PatchValue( patch ) );
                 }
                 else if ( int.TryParse( name, out var index ) )
@@ -79,6 +111,7 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
                     if ( index < 0 || index > jsonArray.Count )
                         throw new JsonPatchException( $"The target location '{patch.Path}' was out of range." );
 
+                    undo = new PatchOperation( PatchOperationType.Remove, patch.Path, null, null );
                     jsonArray.Insert( index, PatchValue( patch ) );
                 }
                 else
@@ -88,9 +121,11 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
                 break;
         }
+
+        return undo;
     }
 
-    private static void CopyOperation( JsonNode node, PatchOperation patch )
+    private static PatchOperation CopyOperation( JsonNode node, PatchOperation patch )
     {
         if ( patch.From is null )
             throw new JsonPatchException( "The 'from' property was missing." );
@@ -110,22 +145,26 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
         ThrowLocationDoesNotExist( patch.Path, name );
 
+        PatchOperation undo = default;
+
         switch ( fromParent )
         {
             case JsonObject:
-
                 switch ( parent )
                 {
                     case JsonObject jsonObject:
+                        undo = new PatchOperation( PatchOperationType.Remove, patch.Path, null, null );
                         jsonObject.Add( name, from.DeepClone() );
                         break;
 
                     case JsonArray jsonArray:
+
                         if ( int.TryParse( name, out var targetIndex ) )
                         {
                             if ( targetIndex < 0 || targetIndex > jsonArray.Count )
                                 throw new JsonPatchException( $"The target location '{patch.Path}' was out of range." );
 
+                            undo = new PatchOperation( PatchOperationType.Remove, patch.Path, null, null );
                             if ( targetIndex == jsonArray.Count )
                                 jsonArray.Add( from.DeepClone() );
                             else
@@ -149,7 +188,7 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
                     switch ( parent )
                     {
                         case JsonObject jsonObject:
-
+                            undo = new PatchOperation( PatchOperationType.Remove, patch.Path, null, null );
                             jsonObject.Add( name, from.DeepClone() );
                             break;
 
@@ -158,6 +197,8 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
                             {
                                 if ( targetIndex < 0 || targetIndex > fromParentArray.Count )
                                     throw new JsonPatchException( $"The target location '{patch.Path}' was out of range." );
+
+                                undo = new PatchOperation( PatchOperationType.Remove, patch.Path, null, null );
 
                                 if ( targetIndex == jsonArray.Count )
                                     jsonArray.Add( from.DeepClone() );
@@ -178,9 +219,11 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
                 break;
         }
+
+        return undo;
     }
 
-    private static void MoveOperation( JsonNode node, PatchOperation patch )
+    private static PatchOperation MoveOperation( JsonNode node, PatchOperation patch )
     {
         if ( patch.From is null )
             throw new JsonPatchException( "The 'from' property was missing." );
@@ -270,9 +313,12 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
                 break;
         }
+
+        // invert direction
+        return new PatchOperation( PatchOperationType.Move, patch.From, patch.Path, null );
     }
 
-    private static void RemoveOperation( JsonNode node, PatchOperation patch )
+    private static PatchOperation RemoveOperation( JsonNode node, PatchOperation patch )
     {
         var segment = GetSegments( patch.Path );
 
@@ -280,9 +326,12 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
         ThrowLocationDoesNotExist( patch.Path, removeTarget );
 
+        PatchOperation undo = default;
+
         switch ( removeParent )
         {
             case JsonObject parentObject:
+                undo = new PatchOperation( PatchOperationType.Add, patch.Path, null, removeTarget );
                 parentObject.Remove( removeTarget.GetPropertyName() );
                 break;
 
@@ -292,6 +341,7 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
                     if ( index < 0 || index > parentArray.Count )
                         throw new JsonPatchException( $"The target location '{patch.Path}' was out of range." );
 
+                    undo = new PatchOperation( PatchOperationType.Add, patch.Path, null, removeTarget );
                     parentArray.RemoveAt( index );
                 }
                 else
@@ -301,9 +351,11 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
 
                 break;
         }
+
+        return undo;
     }
 
-    private static void ReplaceOperation( JsonNode node, PatchOperation patch )
+    private static PatchOperation ReplaceOperation( JsonNode node, PatchOperation patch )
     {
         var segment = GetSegments( patch.Path );
         var replaceTarget = node.FromJsonPointer( segment, out _, out var replaceParent );
@@ -311,7 +363,11 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
         ThrowLocationDoesNotExist( patch.Path, replaceParent );
         ThrowLocationDoesNotExist( patch.Path, replaceTarget );
 
+        PatchOperation undo = new PatchOperation( PatchOperationType.Replace, patch.Path, null, replaceTarget.DeepClone() );
+
         replaceTarget.ReplaceWith( PatchValue( patch ) );
+
+        return undo;
     }
 
     private static void TestOperation( JsonNode node, PatchOperation patch )
@@ -339,6 +395,8 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
     private static void ThrowCycleDetected( JsonPathSegment segment, JsonPathSegment fromSegment )
     {
         // TODO: compare segments, cannot move to child of self
+        if ( segment == fromSegment )
+            throw new JsonPatchException( "The 'from' property cannot be a child of the 'path' property." );
     }
 
     private static void ThrowLocationDoesNotExist( string path, JsonNode node )
@@ -364,6 +422,7 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
     {
         return GetEnumerator();
     }
+
 }
 
 public static class JsonPathExtensions

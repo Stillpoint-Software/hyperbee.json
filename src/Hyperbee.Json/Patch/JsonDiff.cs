@@ -1,4 +1,5 @@
 ﻿using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Patch;
 
@@ -137,32 +138,53 @@ public static class JsonDiff<TNode>
 
         static string Combine( ReadOnlySpan<char> initial, ReadOnlySpan<char> path )
         {
-            // Allocate enough space for worst case scenario
-            var index = initial.Length;
-            var escapedPath = new char[(index + 1 + path.Length * 2)];
+            ReadOnlySpan<char> specialChars = ['/', '~'];
 
-            initial.CopyTo( escapedPath );
-            escapedPath[index++] = '/';
+            var nextSpecialCharIndex = path.IndexOfAny( specialChars );
 
-            foreach ( var c in path )
+            if ( nextSpecialCharIndex == -1 )
+                return string.Concat( initial, "/", path ); // span concatenation
+
+            // we have escape characters, so we need to process the path
+
+            var maxCapacity = path.Length + (path.Length - nextSpecialCharIndex);
+
+            var builder = maxCapacity <= 512
+                ? new ValueStringBuilder( stackalloc char[maxCapacity] )
+                : new ValueStringBuilder( maxCapacity );
+
+            ReadOnlySpan<char> escapeSlash = ['~', '1'];
+            ReadOnlySpan<char> escapeTilde = ['~', '0'];
+
+            var start = 0;
+            while ( start < path.Length )
             {
-                switch ( c )
+                nextSpecialCharIndex = path[start..].IndexOfAny( specialChars );
+
+                if ( nextSpecialCharIndex == -1 )
+                {
+                    builder.Append( path[start..] );
+                    break;
+                }
+
+                builder.Append( path[start..nextSpecialCharIndex] );
+
+                switch ( path[start + nextSpecialCharIndex] )
                 {
                     case '/':
-                        escapedPath[index++] = '~';
-                        escapedPath[index++] = '1';
+                        builder.Append( escapeSlash );
                         break;
                     case '~':
-                        escapedPath[index++] = '~';
-                        escapedPath[index++] = '0';
-                        break;
-                    default:
-                        escapedPath[index++] = c;
+                        builder.Append( escapeTilde );
                         break;
                 }
+
+                start += nextSpecialCharIndex + 1;
             }
 
-            return escapedPath.AsSpan( 0, index ).ToString();
+            var result = string.Concat( initial, "/", builder.AsSpan() );
+            builder.Dispose();
+            return result;
         }
     }
 }

@@ -229,7 +229,7 @@ public static class JsonPath<TNode>
                             if ( nodeKind != NodeKind.Array )
                                 continue;
 
-                            if ( accessor.TryGetElementAt( value, int.Parse( selector ), out var childValue ) )
+                            if ( accessor.TryGetIndexAt( value, int.Parse( selector ), out var childValue ) )
                                 stack.Push( value, childValue, selector, segmentNext );
                             continue;
                         }
@@ -244,7 +244,7 @@ public static class JsonPath<TNode>
 
                             for ( var index = lower; step > 0 ? index < upper : index > upper; index += step )
                             {
-                                if ( accessor.TryGetElementAt( value, index, out var childValue ) )
+                                if ( accessor.TryGetIndexAt( value, index, out var childValue ) )
                                     stack.Push( value, childValue, index.ToString(), segmentNext );
                             }
 
@@ -259,7 +259,7 @@ public static class JsonPath<TNode>
 
                             for ( var index = length - 1; index >= 0; index-- )
                             {
-                                if ( !accessor.TryGetElementAt( value, index, out var childValue ) )
+                                if ( !accessor.TryGetIndexAt( value, index, out var childValue ) )
                                     continue;
 
                                 if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
@@ -296,7 +296,7 @@ public static class JsonPath<TNode>
         switch ( nodeKind )
         {
             case NodeKind.Object:
-                if ( accessor.TryGetChild( value, childSelector, out childValue ) )
+                if ( accessor.TryGetProperty( value, childSelector, out childValue ) )
                     return true;
 
                 break;
@@ -307,15 +307,8 @@ public static class JsonPath<TNode>
 
                 if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
-                    var arrayLength = accessor.GetArrayLength( value );
-                    if ( index < 0 ) // flip negative index to positive
-                        index = arrayLength + index;
-
-                    if ( index >= 0 && index < arrayLength )
-                    {
-                        if ( accessor.TryGetElementAt( value, index, out childValue ) )
-                            return true;
-                    }
+                    if ( accessor.TryGetIndexAt( value, index, out childValue ) )
+                        return true;
                 }
 
                 break;
@@ -367,7 +360,7 @@ public static class JsonPath<TNode>
                     var reverseIndex = length - 1;
                     for ( var index = 0; index < length; index++, reverseIndex-- )
                     {
-                        if ( !accessor.TryGetElementAt( value, index, out var child ) )
+                        if ( !accessor.TryGetIndexAt( value, index, out var child ) )
                             continue;
 
                         var childKind = accessor.GetNodeKind( child );

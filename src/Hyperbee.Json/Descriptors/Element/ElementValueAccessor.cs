@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Hyperbee.Json.Descriptors.Element;
@@ -42,7 +41,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool TryGetElementAt( in JsonElement value, int index, out JsonElement element )
+    public bool TryGetIndexAt( in JsonElement value, int index, out JsonElement element )
     {
         element = default;
 
@@ -56,52 +55,14 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         return true;
     }
 
-    public bool TryGetChild( in JsonElement value, string childSelector, out JsonElement childValue )
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public bool TryGetProperty( in JsonElement value, string childSelector, out JsonElement childValue )
     {
-        switch ( value.ValueKind )
-        {
-            case JsonValueKind.Object:
-                if ( value.TryGetProperty( childSelector, out childValue ) )
-                    return true;
-                break;
-
-            case JsonValueKind.Array:
-                if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
-                {
-                    var arrayLength = value.GetArrayLength();
-
-                    if ( index < 0 ) // flip negative index to positive
-                        index = arrayLength + index;
-
-                    if ( index >= 0 && index < arrayLength )
-                    {
-                        childValue = value[index];
-                        return true;
-                    }
-                }
-
-                break;
-
-            default:
-                if ( !IsPathOperator( childSelector ) )
-                    throw new ArgumentException( $"Invalid child type '{childSelector}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
-                break;
-        }
+        if ( value.ValueKind == JsonValueKind.Object && value.TryGetProperty( childSelector, out childValue ) )
+            return true;
 
         childValue = default;
         return false;
-
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        static bool IsPathOperator( ReadOnlySpan<char> x )
-        {
-            return x.Length switch
-            {
-                1 => x[0] == '*',
-                2 => x[0] == '.' && x[1] == '.',
-                3 => x[0] == '$',
-                _ => false
-            };
-        }
     }
 
     public bool TryGetValue( JsonElement element, out IConvertible value )

@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Filters.Parser.Expressions;
 
 internal static class CompareExpression<TNode>
 {
-    private static readonly IValueTypeComparer Comparer = JsonTypeDescriptorRegistry.GetDescriptor<TNode>().Comparer;
+    private static readonly ValueTypeComparer<TNode> Comparer = new (); 
 
     // Expressions
 

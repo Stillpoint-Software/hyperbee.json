@@ -137,7 +137,7 @@ public class NodeTypeComparerTests : JsonTestBase
 
     // Helper methods
 
-    private static ValueTypeComparer<JsonNode> GetComparer() => new( new NodeValueAccessor() );
+    private static ValueTypeComparer<JsonNode> GetComparer() => new();
 
     private static IValueType GetNodeValue( object item )
     {

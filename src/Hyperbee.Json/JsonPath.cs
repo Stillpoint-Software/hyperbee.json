@@ -35,6 +35,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Filters;
 
 // https://www.rfc-editor.org/rfc/rfc9535.html
 // https://www.rfc-editor.org/rfc/rfc9535.html#appendix-A
@@ -45,14 +46,15 @@ public delegate void NodeProcessorDelegate<TNode>( in TNode parent, in TNode val
 
 public static class JsonPath<TNode>
 {
+    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    private static readonly FilterRuntime<TNode> FilterRuntime = new ();
+
     [Flags]
     internal enum NodeFlags
     {
         Default = 0,
         AfterDescent = 1
     }
-
-    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
     public static IEnumerable<TNode> Select( in TNode value, string query, NodeProcessorDelegate<TNode> processor = null )
     {
@@ -95,8 +97,7 @@ public static class JsonPath<TNode>
     private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args, NodeProcessorDelegate<TNode> processor = null )
     {
         var stack = new NodeArgsStack();
-
-        var (accessor, filterRuntime) = Descriptor;
+        var accessor = Descriptor.Accessor;
 
         do
         {
@@ -205,7 +206,7 @@ public static class JsonPath<TNode>
                         {
                             foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
                             {
-                                if ( !filterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
+                                if ( !FilterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
                                     continue;
 
                                 // optimization: quicker return for tail values

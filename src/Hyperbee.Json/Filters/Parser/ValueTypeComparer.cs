@@ -13,9 +13,12 @@ public interface IValueTypeComparer
     public bool In( IValueType left, IValueType right );
 }
 
-public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValueTypeComparer
+public class ValueTypeComparer<TNode> : IValueTypeComparer
 {
     private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
+
+    private static readonly IValueAccessor<TNode> Accessor =
+        JsonTypeDescriptorRegistry.GetDescriptor<TNode>().Accessor;
 
     /*
      * Comparison Rules (according to JSONPath RFC 9535):
@@ -127,10 +130,10 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
 
         var rightNode = rightList.OneOrDefault();
 
-        if ( rightNode == null || accessor.GetNodeKind( rightNode ) != NodeKind.Array )
+        if ( rightNode == null || Accessor.GetNodeKind( rightNode ) != NodeKind.Array )
             return false;
 
-        return Contains( this, accessor, left, rightNode );
+        return Contains( this, Accessor, left, rightNode );
 
         static bool Contains( IValueTypeComparer comparer, IValueAccessor<TNode> accessor, IValueType left, TNode rightNode )
         {
@@ -182,11 +185,11 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
                 return 1; // Left has more elements, so it is greater
 
             // if the values can be extracted, compare the values directly
-            if ( TryGetValue( accessor, leftEnumerator.Current, out var leftItemValue ) &&
-                 TryGetValue( accessor, rightEnumerator.Current, out var rightItemValue ) )
+            if ( TryGetValue( Accessor, leftEnumerator.Current, out var leftItemValue ) &&
+                 TryGetValue( Accessor, rightEnumerator.Current, out var rightItemValue ) )
                 return CompareValues( leftItemValue, rightItemValue, out _ );
 
-            if ( !accessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
+            if ( !Accessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
                 return -1; // Elements are not deeply equal
         }
 
@@ -206,7 +209,7 @@ public class ValueTypeComparer<TNode>( IValueAccessor<TNode> accessor ) : IValue
         {
             nodeCount++;
 
-            if ( !TryGetValue( accessor, item, out var itemValue ) )
+            if ( !TryGetValue( Accessor, item, out var itemValue ) )
                 continue; // Skip if value cannot be extracted
 
             lastCompare = CompareValues( itemValue, value, out typeMismatch );

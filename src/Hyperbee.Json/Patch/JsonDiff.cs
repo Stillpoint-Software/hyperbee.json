@@ -1,4 +1,5 @@
 ﻿using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Patch;
 
@@ -22,12 +23,7 @@ public static class JsonDiff<TNode>
 
             if ( sourceKind != targetKind )
             {
-                yield return new PatchOperation
-                {
-                    Operation = PatchOperationType.Replace,
-                    Path = operation.Path,
-                    Value = operation.Target
-                };
+                yield return new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target };
             }
             else
             {
@@ -41,11 +37,7 @@ public static class JsonDiff<TNode>
                             // TODO: does the accessor really need selector kind?
                             if ( !Accessor.TryGetChild( operation.Target, name, SelectorKind.Undefined, out var targetValue ) )
                             {
-                                yield return new PatchOperation
-                                {
-                                    Operation = PatchOperationType.Remove,
-                                    Path = propertyPath
-                                };
+                                yield return new PatchOperation { Operation = PatchOperationType.Remove, Path = propertyPath };
                             }
                             else
                             {
@@ -59,12 +51,7 @@ public static class JsonDiff<TNode>
 
                             if ( !Accessor.TryGetChild( operation.Source, name, SelectorKind.Undefined, out var _ ) )
                             {
-                                yield return new PatchOperation
-                                {
-                                    Operation = PatchOperationType.Add,
-                                    Path = propertyPath,
-                                    Value = value
-                                };
+                                yield return new PatchOperation { Operation = PatchOperationType.Add, Path = propertyPath, Value = value };
                             }
                         }
 
@@ -107,7 +94,7 @@ public static class JsonDiff<TNode>
                             }
 
                             if ( Accessor.TryGetElementAt( operation.Source, i, out var sourceItemValue ) &&
-                                Accessor.TryGetElementAt( operation.Target, i, out var targetItemValue ) )
+                                 Accessor.TryGetElementAt( operation.Target, i, out var targetItemValue ) )
                             {
                                 stack.Push( new DiffOperation( sourceItemValue, targetItemValue, indexPath ) );
                             }
@@ -121,12 +108,7 @@ public static class JsonDiff<TNode>
 
                         if ( !Accessor.DeepEquals( operation.Source, operation.Target ) )
                         {
-                            yield return new PatchOperation
-                            {
-                                Operation = PatchOperationType.Replace,
-                                Path = operation.Path,
-                                Value = operation.Target
-                            };
+                            yield return new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target };
                         }
 
                         break;
@@ -136,34 +118,60 @@ public static class JsonDiff<TNode>
 
         yield break;
 
-        static string Combine( ReadOnlySpan<char> initial, ReadOnlySpan<char> path )
+        static string Combine( ReadOnlySpan<char> current, ReadOnlySpan<char> path )
         {
-            // Allocate enough space for worst case scenario
-            var index = initial.Length;
-            var escapedPath = new char[(index + 1 + path.Length * 2)];
+            // Count special characters
 
-            initial.CopyTo( escapedPath );
-            escapedPath[index++] = '/';
-
-            foreach ( var c in path )
+            var specialCharCount = 0;
+            for ( var i = 0; i < path.Length; i++ )
             {
-                switch ( c )
+                if ( path[i] == '/' || path[i] == '~' )
+                    specialCharCount++;
+            }
+
+            if ( specialCharCount == 0 )
+                return string.Concat( current, "/", path );
+
+            // Process special characters
+
+            var size = path.Length + specialCharCount;
+
+            var builder = size <= 512
+                ? new ValueStringBuilder( stackalloc char[size] )
+                : new ValueStringBuilder( size );
+
+            var escapeSlash = "~1".AsSpan();
+            var escapeTilde = "~0".AsSpan();
+
+            var start = 0;
+            for ( var i = 0; i < path.Length; i++ )
+            {
+                switch ( path[i] )
                 {
                     case '/':
-                        escapedPath[index++] = '~';
-                        escapedPath[index++] = '1';
+                        if ( i > start )
+                            builder.Append( path[start..i] );
+
+                        builder.Append( escapeSlash );
+                        start = i + 1;
                         break;
+
                     case '~':
-                        escapedPath[index++] = '~';
-                        escapedPath[index++] = '0';
-                        break;
-                    default:
-                        escapedPath[index++] = c;
+                        if ( i > start )
+                            builder.Append( path[start..i] );
+
+                        builder.Append( escapeTilde );
+                        start = i + 1;
                         break;
                 }
             }
 
-            return escapedPath.AsSpan( 0, index ).ToString();
+            if ( start < path.Length ) // Append remaining
+                builder.Append( path[start..] );
+
+            var result = string.Concat( current, "/", builder.AsSpan() );
+            builder.Dispose();
+            return result;
         }
     }
 }

@@ -8,19 +8,20 @@ public static class JsonDiff<TNode>
     private readonly record struct DiffOperation( TNode Source, TNode Target, string Path );
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
-    private static readonly IValueAccessor<TNode> Accessor = Descriptor.ValueAccessor;
 
     public static IEnumerable<PatchOperation> Diff( TNode source, TNode target )
     {
-        var stack = new Stack<DiffOperation>( 6 );
+        var stack = new Stack<DiffOperation>( 8 );
         stack.Push( new DiffOperation( source, target, string.Empty ) );
+
+        var accessor = Descriptor.ValueAccessor;
 
         while ( stack.Count > 0 )
         {
             var operation = stack.Pop();
 
-            var sourceKind = Accessor.GetNodeKind( operation.Source );
-            var targetKind = Accessor.GetNodeKind( operation.Target );
+            var sourceKind = accessor.GetNodeKind( operation.Source );
+            var targetKind = accessor.GetNodeKind( operation.Target );
 
             if ( sourceKind != targetKind )
             {
@@ -31,11 +32,11 @@ public static class JsonDiff<TNode>
                 switch ( sourceKind )
                 {
                     case NodeKind.Object:
-                        foreach ( var (value, name) in Accessor.EnumerateObject( operation.Source ) )
+                        foreach ( var (value, name) in accessor.EnumerateObject( operation.Source ) )
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !Accessor.TryGetChild( operation.Target, name, out var targetValue ) )
+                            if ( !accessor.TryGetChild( operation.Target, name, out var targetValue ) )
                             {
                                 yield return new PatchOperation { Operation = PatchOperationType.Remove, Path = propertyPath };
                             }
@@ -45,11 +46,11 @@ public static class JsonDiff<TNode>
                             }
                         }
 
-                        foreach ( var (value, name) in Accessor.EnumerateObject( operation.Target ) )
+                        foreach ( var (value, name) in accessor.EnumerateObject( operation.Target ) )
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !Accessor.TryGetChild( operation.Source, name, out _ ) )
+                            if ( !accessor.TryGetChild( operation.Source, name, out _ ) )
                             {
                                 yield return new PatchOperation { Operation = PatchOperationType.Add, Path = propertyPath, Value = value };
                             }
@@ -58,8 +59,8 @@ public static class JsonDiff<TNode>
                         break;
 
                     case NodeKind.Array:
-                        var sourceLength = Accessor.GetArrayLength( operation.Source );
-                        var targetLength = Accessor.GetArrayLength( operation.Target );
+                        var sourceLength = accessor.GetArrayLength( operation.Source );
+                        var targetLength = accessor.GetArrayLength( operation.Target );
                         int maxLength = Math.Max( sourceLength, targetLength );
 
                         for ( int i = 0; i < maxLength; i++ )
@@ -70,7 +71,7 @@ public static class JsonDiff<TNode>
                             {
                                 for ( int j = i; j < targetLength; j++ )
                                 {
-                                    if ( Accessor.TryGetElementAt( operation.Target, i, out var targetValue ) )
+                                    if ( accessor.TryGetElementAt( operation.Target, i, out var targetValue ) )
                                     {
                                         yield return new PatchOperation { Operation = PatchOperationType.Add, Path = indexPath, Value = targetValue };
                                     }
@@ -93,8 +94,8 @@ public static class JsonDiff<TNode>
                                 break;
                             }
 
-                            if ( Accessor.TryGetElementAt( operation.Source, i, out var sourceItemValue ) &&
-                                 Accessor.TryGetElementAt( operation.Target, i, out var targetItemValue ) )
+                            if ( accessor.TryGetElementAt( operation.Source, i, out var sourceItemValue ) &&
+                                 accessor.TryGetElementAt( operation.Target, i, out var targetItemValue ) )
                             {
                                 stack.Push( new DiffOperation( sourceItemValue, targetItemValue, indexPath ) );
                             }

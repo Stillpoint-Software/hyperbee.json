@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json;
@@ -47,6 +48,17 @@ internal static class JsonPathQueryParser
     internal static JsonPathQuery Parse( string query, bool allowDotWhitespace = false )
     {
         return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );
+    }
+
+    internal static JsonPathQuery ParseRfc6901( string query )
+    {
+        return JsonPathQueries.GetOrAdd( query, x =>
+        {
+            // https://www.rfc-editor.org/rfc/rfc6901.html
+
+            var jsonpath = JsonPathPointerConverter.ConvertJsonPointerToJsonPath( x );
+            return QueryFactory( jsonpath.AsSpan(), allowDotWhitespace: false );
+        } );
     }
 
     private static JsonPathQuery QueryFactory( ReadOnlySpan<char> query, bool allowDotWhitespace = false )

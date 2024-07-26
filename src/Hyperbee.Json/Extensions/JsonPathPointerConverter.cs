@@ -163,7 +163,6 @@ public static class JsonPathPointerConverter
                         }
 
                         var itemSpan = jsonPointer[start..i];
-                        //var item = new SpanBuilder( stackalloc char[512] );
                         item.Clear();
 
                         for ( var j = 0; j < itemSpan.Length; j++ )

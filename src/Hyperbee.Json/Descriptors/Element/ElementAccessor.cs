@@ -1,9 +1,12 @@
 ﻿using System.Text.Json;
+using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
-internal class ElementParserAccessor : IParserAccessor<JsonElement>
+internal class ElementAccessor : INodeAccessor<JsonElement>
 {
+    public bool CanUsePointer => true;
+
     public bool TryParse( ref Utf8JsonReader reader, out JsonElement element )
     {
         try
@@ -22,4 +25,10 @@ internal class ElementParserAccessor : IParserAccessor<JsonElement>
         element = default;
         return false;
     }
+
+    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue ) =>
+        element.TryGetFromJsonPathPointer( segment, out childValue );
+
+    public bool DeepEquals( JsonElement left, JsonElement right ) =>
+        left.DeepEquals( right );
 }

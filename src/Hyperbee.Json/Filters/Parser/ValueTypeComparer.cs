@@ -19,7 +19,6 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
 
     private static readonly ITypeDescriptor<TNode> Descriptor =
         JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
-    private static readonly IValueAccessor<TNode> Accessor = Descriptor.ValueAccessor;
 
     /*
      * Comparison Rules (according to JSONPath RFC 9535):
@@ -130,17 +129,18 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
             throw new NotSupportedException( "The right side of `in` must be a node list." );
 
         var rightNode = rightList.OneOrDefault();
+        var accessor = Descriptor.ValueAccessor;
 
-        if ( rightNode == null || Accessor.GetNodeKind( rightNode ) != NodeKind.Array )
+        if ( rightNode == null || accessor.GetNodeKind( rightNode ) != NodeKind.Array )
             return false;
 
-        return Contains( this, Accessor, left, rightNode );
+        return Contains( this, accessor, left, rightNode );
 
         static IEnumerable<TNode> EnumerateChildren( IValueAccessor<TNode> accessor, TNode node )
         {
             return accessor.GetNodeKind( node ) switch
             {
-                NodeKind.Array => accessor.EnumerateArray( node ).Select( x => x.Item1 ),
+                NodeKind.Array => accessor.EnumerateArray( node ),
                 NodeKind.Object => accessor.EnumerateObject( node ).Select( x => x.Item1 ),
                 _ => []
             };
@@ -184,17 +184,19 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
         using var leftEnumerator = left.GetEnumerator();
         using var rightEnumerator = right.GetEnumerator();
 
+        var (valueAccessor, nodeAccessor) = Descriptor;
+
         while ( leftEnumerator.MoveNext() )
         {
             if ( !rightEnumerator.MoveNext() )
                 return 1; // Left has more elements, so it is greater
 
             // if the values can be extracted, compare the values directly
-            if ( TryGetValue( Accessor, leftEnumerator.Current, out var leftItemValue ) &&
-                 TryGetValue( Accessor, rightEnumerator.Current, out var rightItemValue ) )
+            if ( TryGetValue( valueAccessor, leftEnumerator.Current, out var leftItemValue ) &&
+                 TryGetValue( valueAccessor, rightEnumerator.Current, out var rightItemValue ) )
                 return CompareValues( leftItemValue, rightItemValue, out _ );
 
-            if ( !Descriptor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
+            if ( !nodeAccessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
                 return -1; // Elements are not deeply equal
         }
 
@@ -210,11 +212,13 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
         typeMismatch = false;
         var lastCompare = -1;
 
+        var accessor = Descriptor.ValueAccessor;
+
         foreach ( var item in enumeration )
         {
             nodeCount++;
 
-            if ( !TryGetValue( Accessor, item, out var itemValue ) )
+            if ( !TryGetValue( accessor, item, out var itemValue ) )
                 continue; // Skip if value cannot be extracted
 
             lastCompare = CompareValues( itemValue, value, out typeMismatch );

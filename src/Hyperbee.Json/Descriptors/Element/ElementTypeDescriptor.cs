@@ -1,17 +1,14 @@
 ﻿using System.Text.Json;
 using Hyperbee.Json.Descriptors.Element.Functions;
-using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
 public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 {
     public IValueAccessor<JsonElement> ValueAccessor => new ElementValueAccessor();
-    public IParserAccessor<JsonElement> ParserAccessor => new ElementParserAccessor();
+    public INodeAccessor<JsonElement> NodeAccessor => new ElementAccessor();
 
     public FunctionRegistry Functions { get; } = new();
-
-    public bool CanUsePointer => true;
 
     public ElementTypeDescriptor()
     {
@@ -22,9 +19,4 @@ public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
         Functions.Register( ValueElementFunction.Name, () => new ValueElementFunction() );
     }
 
-    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue ) =>
-        element.TryGetFromJsonPathPointer( segment, out childValue );
-
-    public bool DeepEquals( JsonElement left, JsonElement right ) =>
-        left.DeepEquals( right );
 }

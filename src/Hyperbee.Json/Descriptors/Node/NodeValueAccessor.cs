@@ -28,11 +28,9 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public IEnumerable<(JsonNode, int)> EnumerateArray( JsonNode value )
+    public IEnumerable<JsonNode> EnumerateArray( JsonNode value )
     {
-        return value is JsonArray arrayValue
-            ? arrayValue.Select( ( x, i ) => (x, i) )
-            : [];
+        return value as JsonArray ?? [];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

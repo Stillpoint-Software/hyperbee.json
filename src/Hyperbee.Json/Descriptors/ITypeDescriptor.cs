@@ -1,4 +1,5 @@
-﻿using Hyperbee.Json.Filters.Parser;
+﻿using Hyperbee.Json.Descriptors.Node;
+using Hyperbee.Json.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 
@@ -13,11 +14,11 @@ public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
     public IValueAccessor<TNode> ValueAccessor { get; }
 
-    public IParserAccessor<TNode> ParserAccessor { get; }
+    public INodeAccessor<TNode> NodeAccessor { get; }
 
-    bool CanUsePointer { get; }
-
-    public bool TryGetFromPointer( in TNode element, JsonPathSegment segment, out TNode childValue );
-
-    public bool DeepEquals( TNode left, TNode right );
+    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out INodeAccessor<TNode> nodeAccessor )
+    {
+        valueAccessor = ValueAccessor;
+        nodeAccessor = NodeAccessor;
+    }
 }

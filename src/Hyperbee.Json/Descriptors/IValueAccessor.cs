@@ -5,7 +5,7 @@ public interface IValueAccessor<TNode>
     NodeKind GetNodeKind( in TNode value );
 
     IEnumerable<(TNode, string)> EnumerateObject( TNode value );
-    IEnumerable<(TNode, int)> EnumerateArray( TNode value );
+    IEnumerable<TNode> EnumerateArray( TNode value );
 
     int GetArrayLength( in TNode value );
     bool TryGetElementAt( in TNode value, int index, out TNode element );

@@ -12,7 +12,7 @@ internal class JsonExpressionFactory : IExpressionFactory
     {
         compareConstraint = CompareConstraint.None;
 
-        if ( !TryParseNode( descriptor.ParserAccessor, state.Item, out var node ) )
+        if ( !TryParseNode( descriptor.NodeAccessor, state.Item, out var node ) )
         {
             expression = null;
             return false;
@@ -22,7 +22,7 @@ internal class JsonExpressionFactory : IExpressionFactory
         return true;
     }
 
-    private static bool TryParseNode<TNode>( IParserAccessor<TNode> accessor, ReadOnlySpan<char> item, out TNode node )
+    private static bool TryParseNode<TNode>( INodeAccessor<TNode> accessor, ReadOnlySpan<char> item, out TNode node )
     {
         var maxLength = Encoding.UTF8.GetMaxByteCount( item.Length );
         Span<byte> bytes = maxLength <= 256 ? stackalloc byte[maxLength] : new byte[maxLength];

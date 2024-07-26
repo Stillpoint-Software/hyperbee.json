@@ -26,10 +26,10 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public IEnumerable<(JsonElement, int)> EnumerateArray( JsonElement value )
+    public IEnumerable<JsonElement> EnumerateArray( JsonElement value )
     {
         return value.ValueKind == JsonValueKind.Array
-            ? value.EnumerateArray().Select( ( x, i ) => (x, i) )
+            ? value.EnumerateArray()
             : [];
     }
 

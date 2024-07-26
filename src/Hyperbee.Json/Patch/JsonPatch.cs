@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Patch;
 
@@ -333,11 +332,8 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
         if ( path == null )
             throw new JsonPatchException( "The 'path' property was missing." );
 
-        var jsonPathPointer = JsonPathPointerConverter.ConvertJsonPointerToJsonPath( path );
-        var query = JsonPathQueryParser.Parse( jsonPathPointer );
-        var segment = query.Segments.Next; // skip the root segment
-
-        return segment;
+        var query = JsonPathQueryParser.ParseRfc6901( path );
+        return query.Segments.Next; // skip the root segment
     }
 
     private static void ThrowCycleDetected( JsonPathSegment segment, JsonPathSegment fromSegment )

@@ -84,9 +84,9 @@ public static class JsonPath<TNode>
 
         var segmentNext = compiledQuery.Segments.Next; // The first segment is always the root; skip it
 
-        if ( Descriptor.CanUsePointer && compiledQuery.Normalized ) // we can fast path this
+        if ( Descriptor.NodeAccessor.CanUsePointer && compiledQuery.Normalized ) // we can fast path this
         {
-            if ( Descriptor.TryGetFromPointer( in value, segmentNext, out var result ) )
+            if ( Descriptor.NodeAccessor.TryGetFromPointer( in value, segmentNext, out var result ) )
                 return [result];
 
             return [];
@@ -162,7 +162,7 @@ public static class JsonPath<TNode>
                     // descendant
                     case SelectorKind.Descendant:
                         {
-                            foreach ( var (childValue, childKey, _) in EnumerateChildren( accessor, value, includeValues: false ) ) // child arrays or objects only
+                            foreach ( var (childValue, childKey, _) in EnumerateChildren( accessor, value, nodeKind, includeValues: false ) ) // child arrays or objects only
                             {
                                 stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
                             }
@@ -179,7 +179,7 @@ public static class JsonPath<TNode>
                     // wildcard
                     case SelectorKind.Wildcard:
                         {
-                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value ) )
+                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value, nodeKind ) )
                             {
                                 // optimization: quicker return for final 
                                 //
@@ -205,7 +205,7 @@ public static class JsonPath<TNode>
                     // [?exp]
                     case SelectorKind.Filter:
                         {
-                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value ) )
+                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value, nodeKind ) )
                             {
                                 if ( !FilterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
                                     continue;
@@ -291,7 +291,7 @@ public static class JsonPath<TNode>
         } while ( stack.TryPop( out args ) );
     }
 
-    public static bool TryGetChild( IValueAccessor<TNode> accessor, in TNode value, NodeKind nodeKind, string childSelector, SelectorKind selectorKind, out TNode childValue )
+    private static bool TryGetChild( IValueAccessor<TNode> accessor, in TNode value, NodeKind nodeKind, string childSelector, SelectorKind selectorKind, out TNode childValue )
     {
         switch ( nodeKind )
         {
@@ -342,9 +342,9 @@ public static class JsonPath<TNode>
         }
     }
 
-    public static IEnumerable<(TNode, string, SelectorKind)> EnumerateChildren( IValueAccessor<TNode> accessor, TNode value, bool includeValues = true )
+    private static IEnumerable<(TNode, string, SelectorKind)> EnumerateChildren( IValueAccessor<TNode> accessor, TNode value, NodeKind nodeKind, bool includeValues = true )
     {
-        switch ( accessor.GetNodeKind( value ) )
+        switch ( nodeKind )
         {
             case NodeKind.Object:
                 {

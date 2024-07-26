@@ -15,9 +15,15 @@ public readonly struct ScalarValue<TType> : IValueType where TType : IConvertibl
         Value = value;
     }
 
-    private ScalarValue( Nothing nothing )
+    private ScalarValue( Nothing _ )
     {
         ValueKind = ValueKind.Nothing;
+        Value = default;
+    }
+
+    private ScalarValue( Null _ )
+    {
+        ValueKind = ValueKind.Null;
         Value = default;
     }
 
@@ -27,6 +33,7 @@ public readonly struct ScalarValue<TType> : IValueType where TType : IConvertibl
     public static implicit operator ScalarValue<TType>( float value ) => new( (TType) (IConvertible) value );
 
     public static implicit operator ScalarValue<TType>( Nothing nothing ) => new( nothing );
+    public static implicit operator ScalarValue<TType>( Null nul ) => new( nul );
 }
 
 

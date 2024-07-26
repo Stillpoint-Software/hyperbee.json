@@ -33,6 +33,7 @@
 #endregion
 
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters;
@@ -85,7 +86,7 @@ public static class JsonPath<TNode>
 
         if ( Descriptor.CanUsePointer && compiledQuery.Normalized ) // we can fast path this
         {
-            if ( Descriptor.Accessor.TryGetFromPointer( in value, segmentNext, out var result ) )
+            if ( Descriptor.ValueAccessor.TryGetFromPointer( in value, segmentNext, out var result ) )
                 return [result];
 
             return [];
@@ -97,7 +98,7 @@ public static class JsonPath<TNode>
     private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args, NodeProcessorDelegate<TNode> processor = null )
     {
         var stack = new NodeArgsStack();
-        var accessor = Descriptor.Accessor;
+        var accessor = Descriptor.ValueAccessor;
 
         do
         {
@@ -143,7 +144,7 @@ public static class JsonPath<TNode>
                     continue; // don't allow indexing in to objects
 
                 // try to access object or array using name or index
-                if ( accessor.TryGetChild( value, selector, selectorKind, out var childValue ) )
+                if ( TryGetChild( accessor, value, selector, selectorKind, out var childValue ) )
                     stack.Push( value, childValue, selector, segmentNext );
 
                 continue;
@@ -161,7 +162,7 @@ public static class JsonPath<TNode>
                     // descendant
                     case SelectorKind.Descendant:
                         {
-                            foreach ( var (childValue, childKey, _) in accessor.EnumerateChildren( value, includeValues: false ) ) // child arrays or objects only
+                            foreach ( var (childValue, childKey, _) in EnumerateChildren( accessor, value, includeValues: false ) ) // child arrays or objects only
                             {
                                 stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
                             }
@@ -178,7 +179,7 @@ public static class JsonPath<TNode>
                     // wildcard
                     case SelectorKind.Wildcard:
                         {
-                            foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
+                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value ) )
                             {
                                 // optimization: quicker return for final 
                                 //
@@ -204,7 +205,7 @@ public static class JsonPath<TNode>
                     // [?exp]
                     case SelectorKind.Filter:
                         {
-                            foreach ( var (childValue, childKey, childKind) in accessor.EnumerateChildren( value ) )
+                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value ) )
                             {
                                 if ( !FilterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
                                     continue;
@@ -239,7 +240,7 @@ public static class JsonPath<TNode>
                             if ( nodeKind != NodeKind.Array )
                                 continue;
 
-                            var (upper, lower, step) = GetSliceRange( value, selector, accessor );
+                            var (upper, lower, step) = GetSliceRange( accessor, value, selector );
 
                             for ( var index = lower; step > 0 ? index < upper : index > upper; index += step )
                             {
@@ -273,7 +274,7 @@ public static class JsonPath<TNode>
                     // Object: [name1,name2,...] Names over object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
                         {
-                            if ( accessor.TryGetChild( value, selector, selectorKind, out var childValue ) )
+                            if ( TryGetChild( accessor, value, selector, selectorKind, out var childValue ) )
                                 stack.Push( value, childValue, selector, segmentNext );
 
                             continue;
@@ -290,7 +291,98 @@ public static class JsonPath<TNode>
         } while ( stack.TryPop( out args ) );
     }
 
-    private static (int Upper, int Lower, int Step) GetSliceRange( TNode value, string sliceExpr, IValueAccessor<TNode> accessor )
+    public static bool TryGetChild( IValueAccessor<TNode> accessor, in TNode value, string childSelector, SelectorKind selectorKind, out TNode childValue )
+    {
+        switch ( accessor.GetNodeKind( value ) )
+        {
+            case NodeKind.Object:
+                if ( accessor.TryGetChild( value, childSelector, out childValue ) )
+                    return true;
+
+                break;
+
+            case NodeKind.Array:
+                if ( selectorKind == SelectorKind.Name )
+                    break;
+
+                if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
+                {
+                    var arrayLength = accessor.GetArrayLength( value );
+                    if ( index < 0 ) // flip negative index to positive
+                        index = arrayLength + index;
+
+                    if ( index >= 0 && index < arrayLength )
+                    {
+                        if ( accessor.TryGetElementAt( value, index, out childValue ) )
+                            return true;
+                    }
+                }
+
+                break;
+            default:
+                if ( !IsPathOperator( childSelector ) )
+                    throw new ArgumentException( $"Invalid child type '{childSelector}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
+
+                break;
+        }
+
+        childValue = default;
+        return false;
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        static bool IsPathOperator( ReadOnlySpan<char> x )
+        {
+            return x.Length switch
+            {
+                1 => x[0] == '*',
+                2 => x[0] == '.' && x[1] == '.',
+                3 => x[0] == '$',
+                _ => false
+            };
+        }
+    }
+
+    public static IEnumerable<(TNode, string, SelectorKind)> EnumerateChildren( IValueAccessor<TNode> accessor, TNode value, bool includeValues = true )
+    {
+        switch ( accessor.GetNodeKind( value ) )
+        {
+            case NodeKind.Object:
+                {
+                    var results = new Stack<(TNode, string, SelectorKind)>(); // stack will reverse the list
+                    foreach ( var (child, key) in accessor.EnumerateObject( value ) )
+                    {
+                        var childKind = accessor.GetNodeKind( child );
+                        if ( includeValues || childKind is NodeKind.Array or NodeKind.Object )
+                            results.Push( (child, key, SelectorKind.Name) );
+                    }
+
+                    return results;
+                }
+
+            case NodeKind.Array:
+                {
+                    var length = accessor.GetArrayLength( value );
+                    var results = new (TNode, string, SelectorKind)[length];
+
+                    var reverseIndex = length - 1;
+                    for ( var index = 0; index < length; index++, reverseIndex-- )
+                    {
+                        if ( !accessor.TryGetElementAt( value, index, out var child ) )
+                            continue;
+
+                        var childKind = accessor.GetNodeKind( child );
+                        if ( includeValues || childKind is NodeKind.Array or NodeKind.Object )
+                            results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
+                    }
+
+                    return results;
+                }
+            default:
+                return [];
+        }
+    }
+
+    private static (int Upper, int Lower, int Step) GetSliceRange( IValueAccessor<TNode> accessor, TNode value, string sliceExpr )
     {
         var length = accessor.GetArrayLength( value );
 

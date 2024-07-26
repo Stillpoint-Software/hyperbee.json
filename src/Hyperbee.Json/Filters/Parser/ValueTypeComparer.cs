@@ -18,7 +18,7 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
     private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
 
     private static readonly IValueAccessor<TNode> Accessor =
-        JsonTypeDescriptorRegistry.GetDescriptor<TNode>().Accessor;
+        JsonTypeDescriptorRegistry.GetDescriptor<TNode>().ValueAccessor;
 
     /*
      * Comparison Rules (according to JSONPath RFC 9535):
@@ -135,18 +135,22 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
 
         return Contains( this, Accessor, left, rightNode );
 
+        static IEnumerable<TNode> EnumerateChildren( IValueAccessor<TNode> accessor, TNode node )
+        {
+            return accessor.GetNodeKind( node ) switch
+            {
+                NodeKind.Array => accessor.EnumerateArray( node ).Select( x => x.Item1 ),
+                NodeKind.Object => accessor.EnumerateObject( node ).Select( x => x.Item1 ),
+                _ => []
+            };
+        }
+
         static bool Contains( IValueTypeComparer comparer, IValueAccessor<TNode> accessor, IValueType left, TNode rightNode )
         {
-            foreach ( var (rightChild, _, _) in accessor.EnumerateChildren( rightNode ) )
-            {
-                var comparand = GetComparand( accessor, rightChild );
-                var result = comparer.Compare( left, comparand, Operator.Equals );
-
-                if ( result == 0 )
-                    return true;
-            }
-
-            return false;
+            return EnumerateChildren( accessor, rightNode )
+                .Select( rightChild => GetComparand( accessor, rightChild ) )
+                .Select( comparand => comparer.Compare( left, comparand, Operator.Equals ) )
+                .Any( result => result == 0 );
         }
 
         static IValueType GetComparand( IValueAccessor<TNode> accessor, TNode childValue )
@@ -174,7 +178,7 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
         };
     }
 
-    private int CompareEnumerables( IEnumerable<TNode> left, IEnumerable<TNode> right )
+    private static int CompareEnumerables( IEnumerable<TNode> left, IEnumerable<TNode> right )
     {
         using var leftEnumerator = left.GetEnumerator();
         using var rightEnumerator = right.GetEnumerator();
@@ -199,7 +203,7 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
         return 0; // Sequences are equal
     }
 
-    private int CompareEnumerableToValue( IEnumerable<TNode> enumeration, IValueType value, out bool typeMismatch, out int nodeCount )
+    private static int CompareEnumerableToValue( IEnumerable<TNode> enumeration, IValueType value, out bool typeMismatch, out int nodeCount )
     {
         nodeCount = 0;
         typeMismatch = false;
@@ -277,7 +281,7 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
 
     private static bool TryGetValue( IValueAccessor<TNode> accessor, TNode node, out IValueType nodeType )
     {
-        if ( accessor.TryGetValueFromNode( node, out var itemValue ) )
+        if ( accessor.TryGetValue( node, out var itemValue ) )
         {
             nodeType = itemValue switch
             {

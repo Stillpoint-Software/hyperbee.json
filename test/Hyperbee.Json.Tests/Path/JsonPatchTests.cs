@@ -156,7 +156,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/0", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -175,7 +175,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/2", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -194,7 +194,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/NaN", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -212,7 +212,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/job/title", null, "developer" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -401,7 +401,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/ideas/1", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -424,7 +424,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/ideas/NaN", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -442,7 +442,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/title", "/job/title", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -653,7 +653,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/ideas/1", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -676,7 +676,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/ideas/NaN", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -694,7 +694,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/title", "/job/title", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -718,7 +718,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/job/sub", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -802,7 +802,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/categories/0", null, null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -821,7 +821,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/categories/2", null, null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -840,7 +840,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/categories/NaN", null, null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -858,7 +858,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/job/title", null, null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -968,7 +968,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/-", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -986,7 +986,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/0", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1005,7 +1005,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/2", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1024,7 +1024,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/NaN", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1042,7 +1042,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/job/title", null, "developer" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1138,7 +1138,7 @@ public class JsonPatchTests
                                                                                        """ ) )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1157,7 +1157,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/categories/0", null, "c" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1176,7 +1176,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/categories/1", null, "a" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1195,7 +1195,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/categories/NaN", null, "a" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]
@@ -1213,7 +1213,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/first", null, "Mark" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
     }
 
     [TestMethod]

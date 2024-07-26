@@ -6,7 +6,7 @@ public static class JsonDiff<TNode>
 {
     private readonly record struct DiffOperation( TNode Source, TNode Target, string Path );
 
-    private static readonly IValueAccessor<TNode> Accessor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>().Accessor;
+    private static readonly IValueAccessor<TNode> Accessor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>().ValueAccessor;
 
     public static IEnumerable<PatchOperation> Diff( TNode source, TNode target )
     {
@@ -34,12 +34,11 @@ public static class JsonDiff<TNode>
                 switch ( sourceKind )
                 {
                     case NodeKind.Object:
-                        foreach ( var (value, name, _) in Accessor.EnumerateChildren( operation.Source ) )
+                        foreach ( var (value, name) in Accessor.EnumerateObject( operation.Source ) )
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            // TODO: does the accessor really need selector kind?
-                            if ( !Accessor.TryGetChild( operation.Target, name, SelectorKind.Undefined, out var targetValue ) )
+                            if ( !Accessor.TryGetChild( operation.Target, name, out var targetValue ) )
                             {
                                 yield return new PatchOperation
                                 {
@@ -53,11 +52,11 @@ public static class JsonDiff<TNode>
                             }
                         }
 
-                        foreach ( var (value, name, _) in Accessor.EnumerateChildren( operation.Target ) )
+                        foreach ( var (value, name) in Accessor.EnumerateObject( operation.Target ) )
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !Accessor.TryGetChild( operation.Source, name, SelectorKind.Undefined, out var _ ) )
+                            if ( !Accessor.TryGetChild( operation.Source, name, out _ ) )
                             {
                                 yield return new PatchOperation
                                 {

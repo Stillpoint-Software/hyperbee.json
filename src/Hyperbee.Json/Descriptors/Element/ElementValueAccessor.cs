@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
 using Hyperbee.Json.Extensions;
 
@@ -8,49 +7,6 @@ namespace Hyperbee.Json.Descriptors.Element;
 
 internal class ElementValueAccessor : IValueAccessor<JsonElement>
 {
-    public IEnumerable<(JsonElement, string, SelectorKind)> EnumerateChildren( JsonElement value, bool includeValues = true )
-    {
-        // allocating is faster than using yield return and less memory intensive
-        // because we avoid calling reverse on the enumerable (which anyway allocates a new array)
-
-        switch ( value.ValueKind )
-        {
-            case JsonValueKind.Array:
-                {
-                    var length = value.GetArrayLength();
-                    var results = new (JsonElement, string, SelectorKind)[length];
-
-                    var reverseIndex = length - 1;
-                    for ( var index = 0; index < length; index++, reverseIndex-- )
-                    {
-                        var child = value[index];
-
-                        if ( includeValues || child.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
-                        {
-                            results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
-                        }
-                    }
-
-                    return results;
-                }
-            case JsonValueKind.Object:
-                {
-                    var results = new Stack<(JsonElement, string, SelectorKind)>(); // stack will reverse the list
-                    foreach ( var child in value.EnumerateObject() )
-                    {
-                        if ( includeValues || child.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
-                        {
-                            results.Push( (child.Value, child.Name, SelectorKind.Name) );
-                        }
-                    }
-
-                    return results;
-                }
-        }
-
-        return [];
-    }
-
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public bool TryGetElementAt( in JsonElement value, int index, out JsonElement element )
     {
@@ -77,6 +33,20 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         };
     }
 
+    public IEnumerable<(JsonElement, string)> EnumerateObject( JsonElement value )
+    {
+        return value.ValueKind == JsonValueKind.Object
+            ? value.EnumerateObject().Select( x => (x.Value, x.Name) )
+            : [];
+    }
+
+    public IEnumerable<(JsonElement, int)> EnumerateArray( JsonElement value )
+    {
+        return value.ValueKind == JsonValueKind.Array
+            ? value.EnumerateArray().Select( ( x, i ) => (x, i) )
+            : [];
+    }
+
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public int GetArrayLength( in JsonElement value )
     {
@@ -85,7 +55,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
             : 0;
     }
 
-    public bool TryGetChild( in JsonElement value, string childSelector, SelectorKind selectorKind, out JsonElement childValue )
+    public bool TryGetChild( in JsonElement value, string childSelector, out JsonElement childValue )
     {
         switch ( value.ValueKind )
         {
@@ -95,9 +65,6 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
                 break;
 
             case JsonValueKind.Array:
-                if ( selectorKind == SelectorKind.Name )
-                    break;
-
                 if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
                     var arrayLength = value.GetArrayLength();
@@ -136,38 +103,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         }
     }
 
-    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
-    {
-        return element.TryGetFromJsonPathPointer( segment, out childValue );
-    }
-
-    // Filter Methods
-
-    public bool DeepEquals( JsonElement left, JsonElement right )
-    {
-        return left.DeepEquals( right );
-    }
-
-    public bool TryParseNode( ref Utf8JsonReader reader, out JsonElement element )
-    {
-        try
-        {
-            if ( JsonDocument.TryParseValue( ref reader, out var document ) )
-            {
-                element = document.RootElement;
-                return true;
-            }
-        }
-        catch
-        {
-            // ignored: fall through
-        }
-
-        element = default;
-        return false;
-    }
-
-    public bool TryGetValueFromNode( JsonElement element, out IConvertible value )
+    public bool TryGetValue( JsonElement element, out IConvertible value )
     {
         switch ( element.ValueKind )
         {
@@ -206,4 +142,17 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
         return true;
     }
+
+    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
+    {
+        return element.TryGetFromJsonPathPointer( segment, out childValue );
+    }
+
+    // Filter Methods
+
+    public bool DeepEquals( JsonElement left, JsonElement right )
+    {
+        return left.DeepEquals( right );
+    }
+
 }

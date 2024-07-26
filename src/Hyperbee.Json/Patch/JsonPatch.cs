@@ -6,8 +6,6 @@ namespace Hyperbee.Json.Patch;
 
 // https://datatracker.ietf.org/doc/html/rfc6902/
 
-// TODO: Patch must be atomic
-
 public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<PatchOperation>
 {
     private readonly List<PatchOperation> _operations = [.. operations];

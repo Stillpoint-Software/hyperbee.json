@@ -86,7 +86,7 @@ public static class JsonPath<TNode>
 
         if ( Descriptor.CanUsePointer && compiledQuery.Normalized ) // we can fast path this
         {
-            if ( Descriptor.ValueAccessor.TryGetFromPointer( in value, segmentNext, out var result ) )
+            if ( Descriptor.TryGetFromPointer( in value, segmentNext, out var result ) )
                 return [result];
 
             return [];

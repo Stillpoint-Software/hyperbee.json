@@ -1,27 +1,11 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
 internal class ElementValueAccessor : IValueAccessor<JsonElement>
 {
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool TryGetElementAt( in JsonElement value, int index, out JsonElement element )
-    {
-        element = default;
-
-        if ( index < 0 ) // flip negative index to positive
-            index = value.GetArrayLength() + index;
-
-        if ( index < 0 || index >= value.GetArrayLength() ) // out of bounds
-            return false;
-
-        element = value[index];
-        return true;
-    }
-
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public NodeKind GetNodeKind( in JsonElement value )
     {
@@ -33,6 +17,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         };
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public IEnumerable<(JsonElement, string)> EnumerateObject( JsonElement value )
     {
         return value.ValueKind == JsonValueKind.Object
@@ -40,6 +25,7 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
             : [];
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public IEnumerable<(JsonElement, int)> EnumerateArray( JsonElement value )
     {
         return value.ValueKind == JsonValueKind.Array
@@ -53,6 +39,21 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
         return value.ValueKind == JsonValueKind.Array
             ? value.GetArrayLength()
             : 0;
+    }
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public bool TryGetElementAt( in JsonElement value, int index, out JsonElement element )
+    {
+        element = default;
+
+        if ( index < 0 ) // flip negative index to positive
+            index = value.GetArrayLength() + index;
+
+        if ( index < 0 || index >= value.GetArrayLength() ) // out of bounds
+            return false;
+
+        element = value[index];
+        return true;
     }
 
     public bool TryGetChild( in JsonElement value, string childSelector, out JsonElement childValue )
@@ -142,17 +143,4 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
 
         return true;
     }
-
-    public bool TryGetFromPointer( in JsonElement element, JsonPathSegment segment, out JsonElement childValue )
-    {
-        return element.TryGetFromJsonPathPointer( segment, out childValue );
-    }
-
-    // Filter Methods
-
-    public bool DeepEquals( JsonElement left, JsonElement right )
-    {
-        return left.DeepEquals( right );
-    }
-
 }

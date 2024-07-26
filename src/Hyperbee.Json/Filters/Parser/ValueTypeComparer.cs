@@ -17,8 +17,9 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
 {
     private const float Tolerance = 1e-6F; // Define a tolerance for float comparisons
 
-    private static readonly IValueAccessor<TNode> Accessor =
-        JsonTypeDescriptorRegistry.GetDescriptor<TNode>().ValueAccessor;
+    private static readonly ITypeDescriptor<TNode> Descriptor =
+        JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    private static readonly IValueAccessor<TNode> Accessor = Descriptor.ValueAccessor;
 
     /*
      * Comparison Rules (according to JSONPath RFC 9535):
@@ -193,7 +194,7 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
                  TryGetValue( Accessor, rightEnumerator.Current, out var rightItemValue ) )
                 return CompareValues( leftItemValue, rightItemValue, out _ );
 
-            if ( !Accessor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
+            if ( !Descriptor.DeepEquals( leftEnumerator.Current, rightEnumerator.Current ) )
                 return -1; // Elements are not deeply equal
         }
 

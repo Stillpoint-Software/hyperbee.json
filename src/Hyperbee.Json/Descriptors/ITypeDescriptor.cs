@@ -16,4 +16,8 @@ public interface ITypeDescriptor<TNode> : ITypeDescriptor
     public IParserAccessor<TNode> ParserAccessor { get; }
 
     bool CanUsePointer { get; }
+
+    public bool TryGetFromPointer( in TNode element, JsonPathSegment segment, out TNode childValue );
+
+    public bool DeepEquals( TNode left, TNode right );
 }

@@ -7,7 +7,8 @@ public static class JsonDiff<TNode>
 {
     private readonly record struct DiffOperation( TNode Source, TNode Target, string Path );
 
-    private static readonly IValueAccessor<TNode> Accessor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>().ValueAccessor;
+    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    private static readonly IValueAccessor<TNode> Accessor = Descriptor.ValueAccessor;
 
     public static IEnumerable<PatchOperation> Diff( TNode source, TNode target )
     {
@@ -119,7 +120,7 @@ public static class JsonDiff<TNode>
                     case NodeKind.Value:
                     default:
 
-                        if ( !Accessor.DeepEquals( operation.Source, operation.Target ) )
+                        if ( !Descriptor.DeepEquals( operation.Source, operation.Target ) )
                         {
                             yield return new PatchOperation
                             {

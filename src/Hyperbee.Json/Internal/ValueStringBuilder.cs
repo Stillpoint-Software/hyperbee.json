@@ -27,6 +27,7 @@ internal ref struct ValueStringBuilder // use in a try finally with an explicit 
     }
 
     public readonly bool IsEmpty => _pos == 0;
+    public readonly int Length => _pos;
 
     public void Append( char value )
     {
@@ -73,11 +74,11 @@ internal ref struct ValueStringBuilder // use in a try finally with an explicit 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public void Dispose()
     {
-        var array = _arrayPoolBuffer;
+        var arrayPoolBuffer = _arrayPoolBuffer;
         this = default; // for safety, to avoid using pooled array if this instance is erroneously appended to again
 
-        if ( array != null )
-            ArrayPool<char>.Shared.Return( array );
+        if ( arrayPoolBuffer != null )
+            ArrayPool<char>.Shared.Return( arrayPoolBuffer );
 
         _arrayPoolBuffer = null;
         _chars = default;

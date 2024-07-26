@@ -24,12 +24,7 @@ public static class JsonDiff<TNode>
 
             if ( sourceKind != targetKind )
             {
-                yield return new PatchOperation
-                {
-                    Operation = PatchOperationType.Replace,
-                    Path = operation.Path,
-                    Value = operation.Target
-                };
+                yield return new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target };
             }
             else
             {
@@ -42,11 +37,7 @@ public static class JsonDiff<TNode>
 
                             if ( !Accessor.TryGetChild( operation.Target, name, out var targetValue ) )
                             {
-                                yield return new PatchOperation
-                                {
-                                    Operation = PatchOperationType.Remove,
-                                    Path = propertyPath
-                                };
+                                yield return new PatchOperation { Operation = PatchOperationType.Remove, Path = propertyPath };
                             }
                             else
                             {
@@ -60,12 +51,7 @@ public static class JsonDiff<TNode>
 
                             if ( !Accessor.TryGetChild( operation.Source, name, out _ ) )
                             {
-                                yield return new PatchOperation
-                                {
-                                    Operation = PatchOperationType.Add,
-                                    Path = propertyPath,
-                                    Value = value
-                                };
+                                yield return new PatchOperation { Operation = PatchOperationType.Add, Path = propertyPath, Value = value };
                             }
                         }
 
@@ -108,7 +94,7 @@ public static class JsonDiff<TNode>
                             }
 
                             if ( Accessor.TryGetElementAt( operation.Source, i, out var sourceItemValue ) &&
-                                Accessor.TryGetElementAt( operation.Target, i, out var targetItemValue ) )
+                                 Accessor.TryGetElementAt( operation.Target, i, out var targetItemValue ) )
                             {
                                 stack.Push( new DiffOperation( sourceItemValue, targetItemValue, indexPath ) );
                             }
@@ -122,12 +108,7 @@ public static class JsonDiff<TNode>
 
                         if ( !Descriptor.NodeAccessor.DeepEquals( operation.Source, operation.Target ) )
                         {
-                            yield return new PatchOperation
-                            {
-                                Operation = PatchOperationType.Replace,
-                                Path = operation.Path,
-                                Value = operation.Target
-                            };
+                            yield return new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target };
                         }
 
                         break;
@@ -139,49 +120,54 @@ public static class JsonDiff<TNode>
 
         static string Combine( ReadOnlySpan<char> initial, ReadOnlySpan<char> path )
         {
-            ReadOnlySpan<char> specialChars = ['/', '~'];
+            // Count special characters
 
-            var nextSpecialCharIndex = path.IndexOfAny( specialChars );
+            var specialCharCount = 0;
+            for ( var i = 0; i < path.Length; i++ )
+            {
+                if ( path[i] == '/' || path[i] == '~' )
+                    specialCharCount++;
+            }
 
-            if ( nextSpecialCharIndex == -1 )
-                return string.Concat( initial, "/", path ); // span concatenation
+            if ( specialCharCount == 0 )
+                return string.Concat( initial, "/", path );
 
-            // we have escape characters, so we need to process the path
+            // Process special characters
 
-            var maxCapacity = path.Length + (path.Length - nextSpecialCharIndex);
+            var size = path.Length + specialCharCount;
 
-            var builder = maxCapacity <= 512
-                ? new ValueStringBuilder( stackalloc char[maxCapacity] )
-                : new ValueStringBuilder( maxCapacity );
+            var builder = size <= 512
+                ? new ValueStringBuilder( stackalloc char[size] )
+                : new ValueStringBuilder( size );
 
             ReadOnlySpan<char> escapeSlash = ['~', '1'];
             ReadOnlySpan<char> escapeTilde = ['~', '0'];
 
             var start = 0;
-            while ( start < path.Length )
+            for ( var i = 0; i < path.Length; i++ )
             {
-                nextSpecialCharIndex = path[start..].IndexOfAny( specialChars );
-
-                if ( nextSpecialCharIndex == -1 )
-                {
-                    builder.Append( path[start..] );
-                    break;
-                }
-
-                builder.Append( path[start..nextSpecialCharIndex] );
-
-                switch ( path[start + nextSpecialCharIndex] )
+                switch ( path[i] )
                 {
                     case '/':
+                        if ( i > start )
+                            builder.Append( path[start..i] );
+
                         builder.Append( escapeSlash );
+                        start = i + 1;
                         break;
+
                     case '~':
+                        if ( i > start )
+                            builder.Append( path[start..i] );
+
                         builder.Append( escapeTilde );
+                        start = i + 1;
                         break;
                 }
-
-                start += nextSpecialCharIndex + 1;
             }
+
+            if ( start < path.Length ) // Append remaining
+                builder.Append( path[start..] );
 
             var result = string.Concat( initial, "/", builder.AsSpan() );
             builder.Dispose();

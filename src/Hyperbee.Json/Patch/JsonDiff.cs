@@ -1,4 +1,4 @@
-using Hyperbee.Json.Descriptors;
+﻿using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Patch;
@@ -149,39 +149,39 @@ public static class JsonDiff<TNode>
                 switch ( path[i] )
                 {
                     builder.Append( path[start..] );
-                    break;
-                }
-
-                builder.Append( path[start..nextSpecialCharIndex] );
-
-                switch ( path[start + nextSpecialCharIndex] )
-                {
-                    case '/':
-                        if ( i > start )
-                            builder.Append( path[start..i] );
-
-                        builder.Append( escapeSlash );
-                        start = i + 1;
-                        break;
-
-                    case '~':
-                        if ( i > start )
-                            builder.Append( path[start..i] );
-
-                        builder.Append( escapeTilde );
-                        start = i + 1;
-                        break;
-                }
-
-                start += nextSpecialCharIndex + 1;
+                break;
             }
 
-            if ( start < path.Length ) // Append remaining
-                builder.Append( path[start..] );
+            builder.Append( path[start..nextSpecialCharIndex] );
 
-            var result = string.Concat( current, "/", builder.AsSpan() );
-            builder.Dispose();
-            return result;
+            switch ( path[start + nextSpecialCharIndex] )
+            {
+                case '/':
+                    if ( i > start )
+                        builder.Append( path[start..i] );
+
+                    builder.Append( escapeSlash );
+                    start = i + 1;
+                    break;
+
+                case '~':
+                    if ( i > start )
+                        builder.Append( path[start..i] );
+
+                    builder.Append( escapeTilde );
+                    start = i + 1;
+                    break;
+            }
+
+            start += nextSpecialCharIndex + 1;
         }
+
+        if ( start < path.Length ) // Append remaining
+            builder.Append( path[start..] );
+
+        var result = string.Concat( current, "/", builder.AsSpan() );
+        builder.Dispose();
+        return result;
     }
+}
 }

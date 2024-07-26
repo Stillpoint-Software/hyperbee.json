@@ -25,9 +25,9 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/job/title", null, "developer" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "developer", target!["job"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "developer", source!["job"]!["title"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -49,10 +49,10 @@ public class JsonPatchTests
                                                                                       """ ) )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "developer", target!["job"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["job"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( "developer", source!["job"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["job"]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -70,9 +70,9 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/0", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "b", target!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "b", source!["categories"]![0]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -90,11 +90,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/0", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "b", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "a", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "b", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "a", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -112,11 +112,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/-", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "b", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "b", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -134,11 +134,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/1", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "b", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "b", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -233,10 +233,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/title", "/job/title", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonObject) target!["job"]!).Count );
-        Assert.AreEqual( "developer", target!["title"]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonObject) source!["job"]!).Count );
+        Assert.AreEqual( "developer", source!["title"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -257,11 +257,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/position", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 3, ((JsonObject) target!).Count );
-        Assert.AreEqual( "developer", target!["position"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["position"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( 3, ((JsonObject) source!).Count );
+        Assert.AreEqual( "developer", source!["position"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["position"]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -280,12 +280,12 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/ideas/0", "/categories/0", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 1, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( 1, ((JsonArray) target!["ideas"]!).Count );
-        Assert.AreEqual( "a", target!["ideas"]![0]!.GetValue<string>() );
+        Assert.AreEqual( 1, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( 1, ((JsonArray) source!["ideas"]!).Count );
+        Assert.AreEqual( "a", source!["ideas"]![0]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -303,10 +303,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/ideas", "/categories/0", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 1, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["ideas"]!.GetValue<string>() );
+        Assert.AreEqual( 1, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["ideas"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -328,11 +328,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/ideas/0", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 3, ((JsonObject) target!).Count );
-        Assert.AreEqual( "developer", target!["ideas"]![0]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["ideas"]![0]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( 3, ((JsonObject) source!).Count );
+        Assert.AreEqual( "developer", source!["ideas"]![0]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["ideas"]![0]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -350,12 +350,12 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/categories/0", "/first", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "John", target!["first"]!.GetValue<string>() );
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "John", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "a", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( "John", source!["first"]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "John", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "a", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -373,12 +373,12 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/categories/1", "/first", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "John", target!["first"]!.GetValue<string>() );
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "John", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( "John", source!["first"]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "John", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -462,13 +462,13 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/job/sub", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "developer", target!["job"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["job"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( "developer", source!["job"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["job"]!["company"]!.GetValue<string>() );
 
-        Assert.AreEqual( "developer", target!["job"]!["sub"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["job"]!["sub"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( "developer", source!["job"]!["sub"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["job"]!["sub"]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -489,10 +489,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/title", "/job/title", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 1, ((JsonObject) target!["job"]!).Count );
-        Assert.AreEqual( "developer", target!["title"]!.GetValue<string>() );
+        Assert.AreEqual( 1, ((JsonObject) source!["job"]!).Count );
+        Assert.AreEqual( "developer", source!["title"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -513,10 +513,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/position", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "developer", target!["position"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["position"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( "developer", source!["position"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["position"]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -535,11 +535,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/ideas/0", "/categories/0", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 0, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( 1, ((JsonArray) target!["ideas"]!).Count );
-        Assert.AreEqual( "a", target!["ideas"]![0]!.GetValue<string>() );
+        Assert.AreEqual( 0, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( 1, ((JsonArray) source!["ideas"]!).Count );
+        Assert.AreEqual( "a", source!["ideas"]![0]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -557,10 +557,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/ideas", "/categories/0", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 0, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["ideas"]!.GetValue<string>() );
+        Assert.AreEqual( 0, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["ideas"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -582,11 +582,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/ideas/0", "/job", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonObject) target!).Count );
-        Assert.AreEqual( "developer", target!["ideas"]![0]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["ideas"]![0]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonObject) source!).Count );
+        Assert.AreEqual( "developer", source!["ideas"]![0]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["ideas"]![0]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -604,11 +604,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/categories/0", "/first", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "John", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "a", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "John", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "a", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -626,11 +626,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/categories/1", "/first", null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "John", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "John", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -739,9 +739,9 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/job/title", null, null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 1, target!["job"]!.AsObject().Count );
+        Assert.AreEqual( 1, source!["job"]!.AsObject().Count );
     }
 
     [TestMethod]
@@ -762,9 +762,9 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/job", null, null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 1, target!.AsObject().Count );
+        Assert.AreEqual( 1, source!.AsObject().Count );
     }
 
     [TestMethod]
@@ -782,9 +782,9 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/categories", null, null )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 1, target!.AsObject().Count );
+        Assert.AreEqual( 1, source!.AsObject().Count );
     }
 
     [TestMethod]
@@ -875,9 +875,9 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/first", null, "Mark" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "Mark", target!["first"]!.GetValue<string>() );
+        Assert.AreEqual( "Mark", source!["first"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -903,10 +903,10 @@ public class JsonPatchTests
                                                                                           """ ) )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "developer", target!["job"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["job"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( "developer", source!["job"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["job"]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -924,11 +924,11 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/0", null, "c" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "c", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "b", target!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "c", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "b", source!["categories"]![1]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -946,10 +946,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/0", null, "b" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 1, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "b", target!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( 1, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "b", source!["categories"]![0]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -1059,9 +1059,9 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/first", null, "John" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "John", target!["first"]!.GetValue<string>() );
+        Assert.AreEqual( "John", source!["first"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -1087,10 +1087,10 @@ public class JsonPatchTests
                                                                                        """ ) )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "Marketing", target!["job"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Microsoft", target!["job"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( "Marketing", source!["job"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Microsoft", source!["job"]!["company"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -1108,10 +1108,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/categories/0", null, "a" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( 2, ((JsonArray) target!["categories"]!).Count );
-        Assert.AreEqual( "a", target!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( 2, ((JsonArray) source!["categories"]!).Count );
+        Assert.AreEqual( "a", source!["categories"]![0]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -1246,19 +1246,19 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/location/city", null, "Los Angeles" )
         );
 
-        var target = patch.Apply( source );
+        patch.Apply( source );
 
-        Assert.AreEqual( "Doe", target!["last"]!.GetValue<string>() );
+        Assert.AreEqual( "Doe", source!["last"]!.GetValue<string>() );
 
-        Assert.AreEqual( "a", target!["categories"]![0]!.GetValue<string>() );
-        Assert.AreEqual( "b", target!["categories"]![1]!.GetValue<string>() );
-        Assert.AreEqual( "c", target!["categories"]![2]!.GetValue<string>() );
+        Assert.AreEqual( "a", source!["categories"]![0]!.GetValue<string>() );
+        Assert.AreEqual( "b", source!["categories"]![1]!.GetValue<string>() );
+        Assert.AreEqual( "c", source!["categories"]![2]!.GetValue<string>() );
 
-        Assert.AreEqual( "developer", target!["job"]!["title"]!.GetValue<string>() );
-        Assert.AreEqual( "Acme", target!["job"]!["company"]!.GetValue<string>() );
+        Assert.AreEqual( "developer", source!["job"]!["title"]!.GetValue<string>() );
+        Assert.AreEqual( "Acme", source!["job"]!["company"]!.GetValue<string>() );
 
-        Assert.AreEqual( "CA", target!["location"]!["state"]!.GetValue<string>() );
-        Assert.AreEqual( "Los Angeles", target!["location"]!["city"]!.GetValue<string>() );
+        Assert.AreEqual( "CA", source!["location"]!["state"]!.GetValue<string>() );
+        Assert.AreEqual( "Los Angeles", source!["location"]!["city"]!.GetValue<string>() );
     }
 
     [TestMethod]
@@ -1283,7 +1283,7 @@ public class JsonPatchTests
 
         try
         {
-            _ = patch.Apply( source );
+            patch.Apply( source );
             Assert.Fail( "Test should fail and rollback changes" );
         }
         catch ( JsonPatchException )
@@ -1314,7 +1314,7 @@ public class JsonPatchTests
 
         try
         {
-            _ = patch.Apply( source );
+            patch.Apply( source );
             Assert.Fail( "Test should fail and rollback changes" );
         }
         catch ( JsonPatchException )
@@ -1346,7 +1346,7 @@ public class JsonPatchTests
 
         try
         {
-            _ = patch.Apply( source );
+            patch.Apply( source );
             Assert.Fail( "Test should fail and rollback changes" );
         }
         catch ( JsonPatchException )
@@ -1377,7 +1377,7 @@ public class JsonPatchTests
 
         try
         {
-            _ = patch.Apply( source );
+            patch.Apply( source );
             Assert.Fail( "Test should fail and rollback changes" );
         }
         catch ( JsonPatchException )
@@ -1413,7 +1413,7 @@ public class JsonPatchTests
 
         try
         {
-            _ = patch.Apply( source );
+            patch.Apply( source );
             Assert.Fail( "Test should fail and rollback changes" );
         }
         catch ( JsonPatchException )
@@ -1447,6 +1447,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories", null, JsonNode.Parse( "[]" ) ),
             new PatchOperation( PatchOperationType.Add, "/categories/0", null, "a" ),
             new PatchOperation( PatchOperationType.Add, "/categories/1", null, "b" ),
+            new PatchOperation( PatchOperationType.Copy, "/categories/1", "/categories/0", null ),
             new PatchOperation( PatchOperationType.Add, "/categories/-", null, "c" ),
             new PatchOperation( PatchOperationType.Move, "/location", "/address", null ),
             new PatchOperation( PatchOperationType.Replace, "/location/state", null, "CA" ),
@@ -1457,7 +1458,7 @@ public class JsonPatchTests
 
         try
         {
-            _ = patch.Apply( source );
+            patch.Apply( source );
             Assert.Fail( "Test should have failed and rollback changes" );
         }
         catch ( JsonPatchException ex )

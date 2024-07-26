@@ -11,7 +11,13 @@ public interface ITypeDescriptor
 
 public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
-    public IValueAccessor<TNode> Accessor { get; }
+    public IValueAccessor<TNode> ValueAccessor { get; }
+
+    public IParserAccessor<TNode> ParserAccessor { get; }
 
     bool CanUsePointer { get; }
+
+    public bool TryGetFromPointer( in TNode element, JsonPathSegment segment, out TNode childValue );
+
+    public bool DeepEquals( TNode left, TNode right );
 }

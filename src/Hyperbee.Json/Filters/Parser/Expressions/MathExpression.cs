@@ -108,30 +108,29 @@ internal static class MathExpression<TNode>
 
     private static bool TryGetNumber( IValueType valueType, out IConvertible value )
     {
-        if ( valueType is ScalarValue<int> intValue )
+        switch ( valueType )
         {
-            value = intValue.Value;
-            return true;
-        }
-
-        if ( valueType is ScalarValue<float> floatValue )
-        {
-            value = floatValue.Value;
-            return true;
-        }
-
-        if ( valueType is NodeList<TNode> nodes )
-        {
-            var node = nodes.OneOrDefault();
-
-            if ( node != null && Descriptor.Accessor.TryGetValueFromNode( node, out var nodeValue ) )
-            {
-                if ( nodeValue is float || nodeValue is int )
+            case ScalarValue<int> intValue:
+                value = intValue.Value;
+                return true;
+            case ScalarValue<float> floatValue:
+                value = floatValue.Value;
+                return true;
+            case NodeList<TNode> nodes:
                 {
-                    value = nodeValue;
-                    return true;
+                    var node = nodes.OneOrDefault();
+
+                    if ( node != null && Descriptor.ValueAccessor.TryGetValue( node, out var nodeValue ) )
+                    {
+                        if ( nodeValue is float or int )
+                        {
+                            value = nodeValue;
+                            return true;
+                        }
+                    }
+
+                    break;
                 }
-            }
         }
 
         value = default;

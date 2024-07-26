@@ -248,18 +248,18 @@ public class JsonDiffTests : JsonTestBase
         var results = Diff( sourceType, source, target ).ToArray();
 
         Assert.IsTrue( results.Length == 10 );
-        Assert.AreEqual( "/m~0n", results[0].Path );
-        Assert.AreEqual( "/ ", results[1].Path );
-        Assert.AreEqual( "/k\"l", results[2].Path );
-        Assert.AreEqual( "/i\\j", results[3].Path );
-        Assert.AreEqual( "/g|h", results[4].Path );
-        Assert.AreEqual( "/e^f", results[5].Path );
-        Assert.AreEqual( "/c%d", results[6].Path );
-        Assert.AreEqual( "/a~1b", results[7].Path );
-        Assert.AreEqual( "/", results[8].Path );
-        Assert.AreEqual( "/foo", results[9].Path );
-    }
 
+        Assert.AreEqual( "/foo", results[0].Path );
+        Assert.AreEqual( "/", results[1].Path );
+        Assert.AreEqual( "/a~1b", results[2].Path );
+        Assert.AreEqual( "/c%d", results[3].Path );
+        Assert.AreEqual( "/e^f", results[4].Path );
+        Assert.AreEqual( "/g|h", results[5].Path );
+        Assert.AreEqual( "/i\\j", results[6].Path );
+        Assert.AreEqual( "/k\"l", results[7].Path );
+        Assert.AreEqual( "/ ", results[8].Path );
+        Assert.AreEqual( "/m~0n", results[9].Path );
+    }
 
     private static object Unwrap( object value )
     {

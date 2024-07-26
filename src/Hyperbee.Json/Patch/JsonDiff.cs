@@ -1,4 +1,4 @@
-﻿using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Patch;
@@ -7,7 +7,8 @@ public static class JsonDiff<TNode>
 {
     private readonly record struct DiffOperation( TNode Source, TNode Target, string Path );
 
-    private static readonly IValueAccessor<TNode> Accessor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>().Accessor;
+    private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
+    private static readonly IValueAccessor<TNode> Accessor = Descriptor.ValueAccessor;
 
     public static IEnumerable<PatchOperation> Diff( TNode source, TNode target )
     {
@@ -30,12 +31,11 @@ public static class JsonDiff<TNode>
                 switch ( sourceKind )
                 {
                     case NodeKind.Object:
-                        foreach ( var (value, name, _) in Accessor.EnumerateChildren( operation.Source ) )
+                        foreach ( var (value, name) in Accessor.EnumerateObject( operation.Source ) )
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            // TODO: does the accessor really need selector kind?
-                            if ( !Accessor.TryGetChild( operation.Target, name, SelectorKind.Undefined, out var targetValue ) )
+                            if ( !Accessor.TryGetChild( operation.Target, name, out var targetValue ) )
                             {
                                 yield return new PatchOperation { Operation = PatchOperationType.Remove, Path = propertyPath };
                             }
@@ -45,11 +45,11 @@ public static class JsonDiff<TNode>
                             }
                         }
 
-                        foreach ( var (value, name, _) in Accessor.EnumerateChildren( operation.Target ) )
+                        foreach ( var (value, name) in Accessor.EnumerateObject( operation.Target ) )
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !Accessor.TryGetChild( operation.Source, name, SelectorKind.Undefined, out var _ ) )
+                            if ( !Accessor.TryGetChild( operation.Source, name, out _ ) )
                             {
                                 yield return new PatchOperation { Operation = PatchOperationType.Add, Path = propertyPath, Value = value };
                             }
@@ -106,7 +106,7 @@ public static class JsonDiff<TNode>
                     case NodeKind.Value:
                     default:
 
-                        if ( !Accessor.DeepEquals( operation.Source, operation.Target ) )
+                        if ( !Descriptor.DeepEquals( operation.Source, operation.Target ) )
                         {
                             yield return new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target };
                         }
@@ -148,6 +148,14 @@ public static class JsonDiff<TNode>
             {
                 switch ( path[i] )
                 {
+                    builder.Append( path[start..] );
+                    break;
+                }
+
+                builder.Append( path[start..nextSpecialCharIndex] );
+
+                switch ( path[start + nextSpecialCharIndex] )
+                {
                     case '/':
                         if ( i > start )
                             builder.Append( path[start..i] );
@@ -164,6 +172,8 @@ public static class JsonDiff<TNode>
                         start = i + 1;
                         break;
                 }
+
+                start += nextSpecialCharIndex + 1;
             }
 
             if ( start < path.Length ) // Append remaining

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Descriptors.Node;
 using Hyperbee.Json.Filters.Parser;
 using Hyperbee.Json.Filters.Values;
 using Hyperbee.Json.Tests.TestSupport;

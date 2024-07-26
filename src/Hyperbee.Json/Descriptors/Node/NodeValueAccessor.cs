@@ -1,53 +1,47 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
 internal class NodeValueAccessor : IValueAccessor<JsonNode>
 {
-    public IEnumerable<(JsonNode, string, SelectorKind)> EnumerateChildren( JsonNode value, bool includeValues = true )
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public NodeKind GetNodeKind( in JsonNode value )
     {
-        // allocating is faster than using yield return and less memory intensive
-        // because we avoid calling reverse on the enumerable (which anyway allocates a new array)
-
-        switch ( value )
+        return value switch
         {
-            case JsonArray arrayValue:
-                {
-                    var length = arrayValue.Count;
-                    var results = new (JsonNode, string, SelectorKind)[length];
+            JsonArray => NodeKind.Array,
+            JsonObject => NodeKind.Object,
+            _ => NodeKind.Value
+        };
+    }
 
-                    var reverseIndex = length - 1;
-                    for ( var index = 0; index < length; index++, reverseIndex-- )
-                    {
-                        var child = arrayValue[index];
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public IEnumerable<(JsonNode, string)> EnumerateObject( JsonNode value )
+    {
+        return value is JsonObject objectValue
+            ? objectValue.Select( x => (x.Value, x.Key) )
+            : [];
+    }
 
-                        if ( includeValues || child is JsonObject or JsonArray )
-                        {
-                            results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
-                        }
-                    }
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public IEnumerable<(JsonNode, int)> EnumerateArray( JsonNode value )
+    {
+        return value is JsonArray arrayValue
+            ? arrayValue.Select( ( x, i ) => (x, i) )
+            : [];
+    }
 
-                    return results;
-                }
-            case JsonObject objectValue:
-                {
-                    var results = new Stack<(JsonNode, string, SelectorKind)>(); // stack will reverse the list
-                    foreach ( var child in objectValue )
-                    {
-                        if ( includeValues || child.Value is JsonObject or JsonArray )
-                            results.Push( (child.Value, child.Key, SelectorKind.Name) );
-                    }
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public int GetArrayLength( in JsonNode value )
+    {
+        if ( value is JsonArray jsonArray )
+            return jsonArray.Count;
 
-                    return results;
-                }
-        }
-
-        return [];
+        return 0;
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -66,108 +60,37 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         return true;
     }
 
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public NodeKind GetNodeKind( in JsonNode value )
-    {
-        return value switch
-        {
-            JsonArray => NodeKind.Array,
-            JsonObject => NodeKind.Object,
-            _ => NodeKind.Value
-        };
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public int GetArrayLength( in JsonNode value )
-    {
-        if ( value is JsonArray jsonArray )
-            return jsonArray.Count;
-
-        return 0;
-    }
-
-    public bool TryGetChild( in JsonNode value, string childSelector, SelectorKind selectorKind, out JsonNode childValue )
+    public bool TryGetChild( in JsonNode value, string childSelector, out JsonNode childValue )
     {
         switch ( value )
         {
             case JsonObject valueObject:
-                {
-                    if ( valueObject.TryGetPropertyValue( childSelector, out childValue ) )
-                        return true;
+                if ( valueObject.TryGetPropertyValue( childSelector, out childValue ) )
+                    return true;
 
-                    break;
-                }
+                break;
+
             case JsonArray valueArray:
+                if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
                 {
-                    if ( selectorKind == SelectorKind.Name )
-                        break;
+                    if ( index < 0 ) // flip negative index to positive
+                        index = valueArray.Count + index;
 
-                    if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
+                    if ( index >= 0 && index < valueArray.Count )
                     {
-                        if ( index < 0 ) // flip negative index to positive
-                            index = valueArray.Count + index;
-
-                        if ( index >= 0 && index < valueArray.Count )
-                        {
-                            childValue = value[index];
-                            return true;
-                        }
+                        childValue = value[index];
+                        return true;
                     }
-
-                    break;
                 }
-            default:
-                {
-                    if ( !IsPathOperator( childSelector ) )
-                        throw new ArgumentException( $"Invalid child type '{childSelector}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
 
-                    break;
-                }
+                break;
         }
 
         childValue = default;
         return false;
-
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        static bool IsPathOperator( ReadOnlySpan<char> x )
-        {
-            return x.Length switch
-            {
-                1 => x[0] == '*',
-                2 => x[0] == '.' && x[1] == '.',
-                3 => x[0] == '$',
-                _ => false
-            };
-        }
     }
 
-    public bool TryGetFromPointer( in JsonNode node, JsonPathSegment segment, out JsonNode childValue )
-    {
-        return node.TryGetFromJsonPathPointer( segment, out childValue );
-    }
-
-    // Filter methods
-
-    public bool DeepEquals( JsonNode left, JsonNode right )
-    {
-        return JsonNode.DeepEquals( left, right );
-    }
-
-    public bool TryParseNode( ref Utf8JsonReader reader, out JsonNode node )
-    {
-        try
-        {
-            node = JsonNode.Parse( ref reader );
-            return true;
-        }
-        catch
-        {
-            node = null;
-            return false;
-        }
-    }
-
-    public bool TryGetValueFromNode( JsonNode node, out IConvertible value )
+    public bool TryGetValue( JsonNode node, out IConvertible value )
     {
         switch ( node?.GetValueKind() )
         {

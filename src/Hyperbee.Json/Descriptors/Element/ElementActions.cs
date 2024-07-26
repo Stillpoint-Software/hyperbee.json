@@ -3,10 +3,8 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
-internal class ElementAccessor : INodeAccessor<JsonElement>
+internal class ElementActions : INodeActions<JsonElement>
 {
-    public bool CanUsePointer => true;
-
     public bool TryParse( ref Utf8JsonReader reader, out JsonElement element )
     {
         try

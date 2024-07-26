@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Descriptors.Element;
 public class ElementTypeDescriptor : ITypeDescriptor<JsonElement>
 {
     public IValueAccessor<JsonElement> ValueAccessor => new ElementValueAccessor();
-    public INodeAccessor<JsonElement> NodeAccessor => new ElementAccessor();
+    public INodeActions<JsonElement> NodeActions => new ElementActions();
 
     public FunctionRegistry Functions { get; } = new();
 

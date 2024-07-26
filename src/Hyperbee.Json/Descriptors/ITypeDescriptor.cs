@@ -14,11 +14,11 @@ public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
     public IValueAccessor<TNode> ValueAccessor { get; }
 
-    public INodeAccessor<TNode> NodeAccessor { get; }
+    public INodeActions<TNode> NodeActions { get; }
 
-    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out INodeAccessor<TNode> nodeAccessor )
+    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out INodeActions<TNode> nodeActions )
     {
         valueAccessor = ValueAccessor;
-        nodeAccessor = NodeAccessor;
+        nodeActions = NodeActions;
     }
 }

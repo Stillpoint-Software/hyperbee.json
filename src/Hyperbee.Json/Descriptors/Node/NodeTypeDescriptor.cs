@@ -6,7 +6,7 @@ namespace Hyperbee.Json.Descriptors.Node;
 public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
 {
     public IValueAccessor<JsonNode> ValueAccessor => new NodeValueAccessor();
-    public INodeAccessor<JsonNode> NodeAccessor => new NodeAccessor();
+    public INodeActions<JsonNode> NodeActions => new NodeActions();
     public FunctionRegistry Functions { get; } = new();
 
     public NodeTypeDescriptor()

@@ -84,9 +84,9 @@ public static class JsonPath<TNode>
 
         var segmentNext = compiledQuery.Segments.Next; // The first segment is always the root; skip it
 
-        if ( Descriptor.NodeAccessor.CanUsePointer && compiledQuery.Normalized ) // we can fast path this
+        if ( compiledQuery.Normalized ) // we can fast path this
         {
-            if ( Descriptor.NodeAccessor.TryGetFromPointer( in value, segmentNext, out var result ) )
+            if ( Descriptor.NodeActions.TryGetFromPointer( in value, segmentNext, out var result ) )
                 return [result];
 
             return [];

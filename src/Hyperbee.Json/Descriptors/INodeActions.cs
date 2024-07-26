@@ -2,11 +2,9 @@
 
 namespace Hyperbee.Json.Descriptors;
 
-public interface INodeAccessor<TNode>
+public interface INodeActions<TNode>
 {
     bool TryParse( ref Utf8JsonReader reader, out TNode value );
-
-    bool CanUsePointer { get; }
 
     public bool TryGetFromPointer( in TNode element, JsonPathSegment segment, out TNode childValue );
 

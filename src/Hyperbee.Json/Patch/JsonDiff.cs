@@ -106,7 +106,7 @@ public static class JsonDiff<TNode>
                     case NodeKind.Value:
                     default:
 
-                        if ( !Descriptor.NodeAccessor.DeepEquals( operation.Source, operation.Target ) )
+                        if ( !Descriptor.NodeActions.DeepEquals( operation.Source, operation.Target ) )
                         {
                             yield return new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target };
                         }

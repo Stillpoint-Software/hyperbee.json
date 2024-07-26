@@ -4,10 +4,8 @@ using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
-internal class NodeAccessor : INodeAccessor<JsonNode>
+internal class NodeActions : INodeActions<JsonNode>
 {
-    public bool CanUsePointer => true;
-
     public bool TryParse( ref Utf8JsonReader reader, out JsonNode node )
     {
         try

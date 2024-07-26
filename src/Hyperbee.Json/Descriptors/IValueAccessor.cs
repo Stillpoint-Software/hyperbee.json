@@ -8,7 +8,7 @@ public interface IValueAccessor<TNode>
     IEnumerable<TNode> EnumerateArray( TNode value );
 
     int GetArrayLength( in TNode value );
-    bool TryGetElementAt( in TNode value, int index, out TNode element );
-    bool TryGetChild( in TNode value, string name, out TNode childValue );
+    bool TryGetIndexAt( in TNode value, int index, out TNode element );
+    bool TryGetProperty( in TNode value, string name, out TNode childValue );
     bool TryGetValue( TNode item, out IConvertible value );
 }

@@ -36,7 +36,7 @@ public static class JsonDiff<TNode>
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !accessor.TryGetChild( operation.Target, name, out var targetValue ) )
+                            if ( !accessor.TryGetProperty( operation.Target, name, out var targetValue ) )
                             {
                                 yield return new PatchOperation { Operation = PatchOperationType.Remove, Path = propertyPath };
                             }
@@ -50,7 +50,7 @@ public static class JsonDiff<TNode>
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !accessor.TryGetChild( operation.Source, name, out _ ) )
+                            if ( !accessor.TryGetProperty( operation.Source, name, out _ ) )
                             {
                                 yield return new PatchOperation { Operation = PatchOperationType.Add, Path = propertyPath, Value = value };
                             }
@@ -71,7 +71,7 @@ public static class JsonDiff<TNode>
                             {
                                 for ( int j = i; j < targetLength; j++ )
                                 {
-                                    if ( accessor.TryGetElementAt( operation.Target, i, out var targetValue ) )
+                                    if ( accessor.TryGetIndexAt( operation.Target, i, out var targetValue ) )
                                     {
                                         yield return new PatchOperation { Operation = PatchOperationType.Add, Path = indexPath, Value = targetValue };
                                     }
@@ -94,8 +94,8 @@ public static class JsonDiff<TNode>
                                 break;
                             }
 
-                            if ( accessor.TryGetElementAt( operation.Source, i, out var sourceItemValue ) &&
-                                 accessor.TryGetElementAt( operation.Target, i, out var targetItemValue ) )
+                            if ( accessor.TryGetIndexAt( operation.Source, i, out var sourceItemValue ) &&
+                                 accessor.TryGetIndexAt( operation.Target, i, out var targetItemValue ) )
                             {
                                 stack.Push( new DiffOperation( sourceItemValue, targetItemValue, indexPath ) );
                             }

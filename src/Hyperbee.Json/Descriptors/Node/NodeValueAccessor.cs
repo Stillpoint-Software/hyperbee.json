@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -43,7 +42,7 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool TryGetElementAt( in JsonNode value, int index, out JsonNode element )
+    public bool TryGetIndexAt( in JsonNode value, int index, out JsonNode element )
     {
         var array = (JsonArray) value;
         element = null;
@@ -58,31 +57,11 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
         return true;
     }
 
-    public bool TryGetChild( in JsonNode value, string childSelector, out JsonNode childValue )
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public bool TryGetProperty( in JsonNode value, string childSelector, out JsonNode childValue )
     {
-        switch ( value )
-        {
-            case JsonObject valueObject:
-                if ( valueObject.TryGetPropertyValue( childSelector, out childValue ) )
-                    return true;
-
-                break;
-
-            case JsonArray valueArray:
-                if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
-                {
-                    if ( index < 0 ) // flip negative index to positive
-                        index = valueArray.Count + index;
-
-                    if ( index >= 0 && index < valueArray.Count )
-                    {
-                        childValue = value[index];
-                        return true;
-                    }
-                }
-
-                break;
-        }
+        if ( value is JsonObject valueObject && valueObject.TryGetPropertyValue( childSelector, out childValue ) )
+            return true;
 
         childValue = default;
         return false;

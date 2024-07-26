@@ -47,7 +47,7 @@ public delegate void NodeProcessorDelegate<TNode>( in TNode parent, in TNode val
 public static class JsonPath<TNode>
 {
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
-    private static readonly FilterRuntime<TNode> FilterRuntime = new ();
+    private static readonly FilterRuntime<TNode> FilterRuntime = new();
 
     [Flags]
     internal enum NodeFlags

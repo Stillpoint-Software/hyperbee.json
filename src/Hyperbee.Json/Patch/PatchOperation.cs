@@ -14,11 +14,11 @@ public enum PatchOperationType
     Test
 }
 
-[JsonConverter( typeof( JsonPatchConverter ) )]
+[JsonConverter( typeof( PatchOperationConverter ) )]
 [DebuggerDisplay( "{Operation}, Path = {Path}, Value = {Value}, From = {From}" )]
 public readonly record struct PatchOperation( PatchOperationType Operation, string Path, string From, object Value );
 
-public class JsonPatchConverter : JsonConverter<PatchOperation>
+public class PatchOperationConverter : JsonConverter<PatchOperation>
 {
     public override PatchOperation Read( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
     {

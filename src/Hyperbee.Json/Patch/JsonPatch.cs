@@ -1,15 +1,21 @@
 ﻿using System.Collections;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using Hyperbee.Json.Extensions;
 
 namespace Hyperbee.Json.Patch;
 
 // https://datatracker.ietf.org/doc/html/rfc6902/
 
+[JsonConverter( typeof( JsonPatchConverter ) )]
 public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<PatchOperation>
 {
     private readonly List<PatchOperation> _operations = [.. operations];
 
     public void Apply( JsonNode node ) => Apply( node, this );
+
+    public void Apply( JsonElement element ) => Apply( element.ConvertToNode(), this );
 
     public static void Apply( JsonNode node, IEnumerable<PatchOperation> patches )
     {
@@ -34,7 +40,7 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
         }
     }
 
-    public static void ApplyInternal( JsonNode node, IEnumerable<PatchOperation> patches, Action<PatchOperation> undo )
+    private static void ApplyInternal( JsonNode node, IEnumerable<PatchOperation> patches, Action<PatchOperation> undo )
     {
         foreach ( var patch in patches )
         {
@@ -478,5 +484,3 @@ public static class JsonPathExtensions
         return current;
     }
 }
-
-public class JsonPatchException( string message ) : Exception( message );

@@ -42,6 +42,7 @@ public class JsonPathPointerTests : JsonTestBase
 
         // act
         var target = document.RootElement.FromJsonPathPointer( pointer );
+
         object result = target.ValueKind switch
         {
             JsonValueKind.String => target.GetString(),

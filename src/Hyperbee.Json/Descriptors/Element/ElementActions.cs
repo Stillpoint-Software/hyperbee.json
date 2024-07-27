@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
@@ -25,7 +26,7 @@ internal class ElementActions : INodeActions<JsonElement>
     }
 
     public bool TryGetFromPointer( in JsonElement node, JsonPathSegment segment, out JsonElement childValue ) =>
-        node.TryGetFromJsonPathPointer( segment, out childValue );
+        JsonPathPointer<JsonElement>.TryGetFromPointer( node, segment, out childValue );
 
     public bool DeepEquals( JsonElement left, JsonElement right ) =>
         left.DeepEquals( right );

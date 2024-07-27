@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Tests.TestSupport;
 
@@ -10,7 +11,15 @@ public class JsonNodeDocument( string source ) : IJsonDocument
     private JsonNode Document { get; } = JsonNode.Parse( source );
     public IEnumerable<dynamic> Select( string query ) => Document.Select( query );
 
-    public dynamic FromJsonPathPointer( string pathLiteral ) => Document.FromJsonPathPointer( pathLiteral );
+    public dynamic FromJsonPathPointer( string pointer ) => JsonPathPointer<JsonNode>.FromPointer( Document, pointer );
+}
+
+public static class JsonNodeExtensions
+{
+    public static JsonNode FromJsonPathPointer( this JsonNode source, string pointer )
+    {
+        return JsonPathPointer<JsonNode>.FromPointer( source, pointer );
+    }
 }
 
 internal static partial class TestHelper

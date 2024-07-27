@@ -48,7 +48,7 @@ internal static class IndexHelper
     private static readonly string[] IndexLookup = Enumerable.Range( 0, LookupLength ).Select( i => i.ToString() ).ToArray();
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public static string GetIndexString( int index ) => (index <  64)? IndexLookup[index] : index.ToString();
+    public static string GetIndexString( int index ) => (index < 64) ? IndexLookup[index] : index.ToString();
 }
 
 public delegate void NodeProcessorDelegate<TNode>( in TNode parent, in TNode value, string key, in JsonPathSegment segment );
@@ -114,9 +114,9 @@ public static class JsonPath<TNode>
 
             var (parent, value, key, segmentNext, flags) = args;
 
-            // call node processor if it exists and the `key` is not null.
-            // the key is null when a descent has re-pushed the descent target.
-            // this should be safe to skip; we will see its values later.
+// call node processor if it exists and the `key` is not null.
+// the key is null when a descent has re-pushed the descent target.
+// this should be safe to skip; we will see its values later.
 
 ProcessArgs:
             if ( key != null )
@@ -202,7 +202,7 @@ ProcessArgs:
                             // this is safe because descendant only ever has one selector.
                             // replaces stack.Push( value, childValue, selector, segmentNext );
                             DeconstructValues( out parent, out value, out key, out segmentNext, out flags, // process the current value
-                                ( parent, value, null, segmentNext, NodeFlags.AfterDescent ) 
+                                (parent, value, null, segmentNext, NodeFlags.AfterDescent)
                             );
                             goto ProcessArgs;
                         }
@@ -382,7 +382,7 @@ ProcessArgs:
         {
             NodeKind.Object => SelectorKind.Name,
             NodeKind.Array => SelectorKind.Index,
-            _ => throw new ArgumentOutOfRangeException( nameof(nodeKind), nodeKind, $"{nameof(NodeKind)} must be an object or an array." )
+            _ => throw new ArgumentOutOfRangeException( nameof( nodeKind ), nodeKind, $"{nameof( NodeKind )} must be an object or an array." )
         };
     }
 

@@ -34,7 +34,7 @@ internal sealed class ElementValueAccessor : IValueAccessor<JsonElement>
     {
         if ( value.ValueKind != JsonValueKind.Array )
             return [];
-        
+
         return !excludeValues
             ? value.EnumerateArray()
             : value.EnumerateArray()
@@ -64,7 +64,7 @@ internal sealed class ElementValueAccessor : IValueAccessor<JsonElement>
         if ( index < 0 ) // flip negative index to positive
             index = value.GetArrayLength() + index;
 
-        if ( index < value.GetArrayLength() ) 
+        if ( index < value.GetArrayLength() )
         {
             item = value[index];
             return true;

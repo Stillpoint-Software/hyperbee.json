@@ -39,35 +39,35 @@ internal class ElementActions : INodeActions<JsonElement>
         switch ( value.ValueKind )
         {
             case JsonValueKind.Array:
-            {
-                var length = value.GetArrayLength();
-                var results = new Stack<(JsonElement, string)>( length ); // stack will reverse items
-
-                for ( var index = 0; index < length; index++ )
                 {
-                    var child = value[index];
+                    var length = value.GetArrayLength();
+                    var results = new Stack<(JsonElement, string)>( length ); // stack will reverse items
 
-                    if ( complexTypesOnly && child.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
-                        continue;
+                    for ( var index = 0; index < length; index++ )
+                    {
+                        var child = value[index];
 
-                    results.Push( (child, IndexHelper.GetIndexString( index )) );
+                        if ( complexTypesOnly && child.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
+                            continue;
+
+                        results.Push( (child, IndexHelper.GetIndexString( index )) );
+                    }
+
+                    return results;
                 }
-
-                return results;
-            }
             case JsonValueKind.Object:
-            {
-                var results = new Stack<(JsonElement, string)>(); // stack will reverse items
-                foreach ( var child in value.EnumerateObject() )
                 {
-                    if ( complexTypesOnly && child.Value.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
-                        continue;
+                    var results = new Stack<(JsonElement, string)>(); // stack will reverse items
+                    foreach ( var child in value.EnumerateObject() )
+                    {
+                        if ( complexTypesOnly && child.Value.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
+                            continue;
 
-                    results.Push( (child.Value, child.Name) );
+                        results.Push( (child.Value, child.Name) );
+                    }
+
+                    return results;
                 }
-
-                return results;
-            }
         }
 
         return [];

@@ -32,40 +32,40 @@ internal class NodeActions : INodeActions<JsonNode>
         // using stack results in fewer overall allocations than calling reverse,
         // which internally allocates, and then discards, a new array.
 
-        switch ( value)
+        switch ( value )
         {
             case JsonArray jsonArray:
-            {
-                var length = jsonArray.Count;
-                var results = new Stack<(JsonNode, string)>( length ); // stack will reverse items
-
-                for ( var index = 0; index < length; index++ )
                 {
-                    var child = value[index];
+                    var length = jsonArray.Count;
+                    var results = new Stack<(JsonNode, string)>( length ); // stack will reverse items
 
-                    if ( complexTypesOnly && child is not (JsonArray or JsonObject) )
-                        continue;
+                    for ( var index = 0; index < length; index++ )
+                    {
+                        var child = value[index];
 
-                    results.Push( (child, IndexHelper.GetIndexString( index )) );
+                        if ( complexTypesOnly && child is not (JsonArray or JsonObject) )
+                            continue;
+
+                        results.Push( (child, IndexHelper.GetIndexString( index )) );
+                    }
+
+                    return results;
                 }
-
-                return results;
-            }
             case JsonObject jsonObject:
-            {
-                var results = new Stack<(JsonNode, string)>(); // stack will reverse items
-                foreach ( var child in jsonObject )
                 {
-                    if ( complexTypesOnly && child.Value is not (JsonArray or JsonObject) )
-                        continue;
+                    var results = new Stack<(JsonNode, string)>(); // stack will reverse items
+                    foreach ( var child in jsonObject )
+                    {
+                        if ( complexTypesOnly && child.Value is not (JsonArray or JsonObject) )
+                            continue;
 
-                    results.Push( (child.Value, child.Key) );
+                        results.Push( (child.Value, child.Key) );
+                    }
+
+                    return results;
                 }
-
-                return results;
-            }
         }
 
         return [];
-    } 
+    }
 }

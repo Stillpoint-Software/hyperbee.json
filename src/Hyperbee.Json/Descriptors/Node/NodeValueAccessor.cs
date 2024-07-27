@@ -81,7 +81,7 @@ internal sealed class NodeValueAccessor : IValueAccessor<JsonNode>
         if ( index < 0 ) // flip negative index to positive
             index = array.Count + index;
 
-        if ( index < array.Count ) 
+        if ( index < array.Count )
         {
             item = value[index];
             return true;

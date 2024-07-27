@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 
 namespace Hyperbee.Json.Descriptors.Node;
 
-internal class NodeValueAccessor : IValueAccessor<JsonNode>
+internal sealed class NodeValueAccessor : IValueAccessor<JsonNode>
 {
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -19,17 +19,38 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public IEnumerable<(JsonNode, string)> EnumerateObject( JsonNode value )
+    public IEnumerable<(JsonNode, string)> EnumerateObject( in JsonNode value, bool excludeValues = false )
     {
-        return value is JsonObject objectValue
-            ? objectValue.Select( x => (x.Value, x.Key) )
-            : [];
+        if ( value is not JsonObject objectValue )
+            return [];
+
+        if ( !excludeValues )
+            return objectValue.Select( x => (x.Value, x.Key) );
+
+        return objectValue
+            .Where( x =>
+            {
+                var valueKind = x.Value!.GetValueKind();
+                return valueKind == JsonValueKind.Object || valueKind == JsonValueKind.Array;
+            } )
+            .Select( x => (x.Value, x.Key) );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public IEnumerable<JsonNode> EnumerateArray( JsonNode value )
+    public IEnumerable<JsonNode> EnumerateArray( in JsonNode value, bool excludeValues = false )
     {
-        return value as JsonArray ?? [];
+        if ( value is not JsonArray arrayValue )
+            return [];
+
+        if ( !excludeValues )
+            return arrayValue;
+
+        return arrayValue
+            .Where( x =>
+            {
+                var valueKind = x.GetValueKind();
+                return valueKind == JsonValueKind.Object || valueKind == JsonValueKind.Array;
+            } );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -42,28 +63,41 @@ internal class NodeValueAccessor : IValueAccessor<JsonNode>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool TryGetIndexAt( in JsonNode value, int index, out JsonNode element )
+    public JsonNode IndexAt( in JsonNode value, int index )
     {
         var array = (JsonArray) value;
-        element = null;
 
         if ( index < 0 ) // flip negative index to positive
             index = array.Count + index;
 
-        if ( index < 0 || index >= array.Count ) // out of bounds
-            return false;
-
-        element = value[index];
-        return true;
+        return value[index];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool TryGetProperty( in JsonNode value, string childSelector, out JsonNode childValue )
+    public bool TryGetIndexAt( in JsonNode value, int index, out JsonNode item )
     {
-        if ( value is JsonObject valueObject && valueObject.TryGetPropertyValue( childSelector, out childValue ) )
+        var array = (JsonArray) value;
+
+        if ( index < 0 ) // flip negative index to positive
+            index = array.Count + index;
+
+        if ( index < array.Count ) 
+        {
+            item = value[index];
+            return true;
+        }
+
+        item = null; // out of bounds
+        return false;
+    }
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public bool TryGetProperty( in JsonNode value, string propertyName, out JsonNode propertyValue )
+    {
+        if ( value is JsonObject valueObject && valueObject.TryGetPropertyValue( propertyName, out propertyValue ) )
             return true;
 
-        childValue = default;
+        propertyValue = default;
         return false;
     }
 

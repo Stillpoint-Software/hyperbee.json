@@ -31,7 +31,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     public void TheAuthorsOfAllBooksInTheStore( string query, Type sourceType )
     {
         var source = GetDocumentAdapter( sourceType );
-        var matches = source.Select( query );
+        var matches = source.Select( query ).ToList();
         var expected = new[]
         {
             source.FromJsonPathPointer( "$.store.book[0].author" ),

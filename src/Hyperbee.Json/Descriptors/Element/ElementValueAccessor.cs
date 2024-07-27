@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Hyperbee.Json.Descriptors.Element;
 
-internal class ElementValueAccessor : IValueAccessor<JsonElement>
+internal sealed class ElementValueAccessor : IValueAccessor<JsonElement>
 {
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public NodeKind GetNodeKind( in JsonElement value )
@@ -17,19 +17,28 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public IEnumerable<(JsonElement, string)> EnumerateObject( JsonElement value )
+    public IEnumerable<(JsonElement, string)> EnumerateObject( in JsonElement value, bool excludeValues = false )
     {
-        return value.ValueKind == JsonValueKind.Object
+        if ( value.ValueKind != JsonValueKind.Object )
+            return [];
+
+        return !excludeValues
             ? value.EnumerateObject().Select( x => (x.Value, x.Name) )
-            : [];
+            : value.EnumerateObject()
+                .Where( x => x.Value.ValueKind == JsonValueKind.Object || x.Value.ValueKind == JsonValueKind.Array )
+                .Select( x => (x.Value, x.Name) );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public IEnumerable<JsonElement> EnumerateArray( JsonElement value )
+    public IEnumerable<JsonElement> EnumerateArray( in JsonElement value, bool excludeValues = false )
     {
-        return value.ValueKind == JsonValueKind.Array
+        if ( value.ValueKind != JsonValueKind.Array )
+            return [];
+        
+        return !excludeValues
             ? value.EnumerateArray()
-            : [];
+            : value.EnumerateArray()
+                .Where( x => x.ValueKind == JsonValueKind.Object || x.ValueKind == JsonValueKind.Array );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -41,45 +50,55 @@ internal class ElementValueAccessor : IValueAccessor<JsonElement>
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool TryGetIndexAt( in JsonElement value, int index, out JsonElement element )
+    public JsonElement IndexAt( in JsonElement value, int index )
     {
-        element = default;
-
         if ( index < 0 ) // flip negative index to positive
             index = value.GetArrayLength() + index;
 
-        if ( index < 0 || index >= value.GetArrayLength() ) // out of bounds
-            return false;
-
-        element = value[index];
-        return true;
+        return value[index];
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    public bool TryGetProperty( in JsonElement value, string childSelector, out JsonElement childValue )
+    public bool TryGetIndexAt( in JsonElement value, int index, out JsonElement item )
     {
-        if ( value.ValueKind == JsonValueKind.Object && value.TryGetProperty( childSelector, out childValue ) )
-            return true;
+        if ( index < 0 ) // flip negative index to positive
+            index = value.GetArrayLength() + index;
 
-        childValue = default;
+        if ( index < value.GetArrayLength() ) 
+        {
+            item = value[index];
+            return true;
+        }
+
+        item = default; // out of bounds
         return false;
     }
 
-    public bool TryGetValue( JsonElement element, out IConvertible value )
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public bool TryGetProperty( in JsonElement value, string propertyName, out JsonElement propertyValue )
     {
-        switch ( element.ValueKind )
+        if ( value.ValueKind == JsonValueKind.Object && value.TryGetProperty( propertyName, out propertyValue ) )
+            return true;
+
+        propertyValue = default;
+        return false;
+    }
+
+    public bool TryGetValue( JsonElement node, out IConvertible value )
+    {
+        switch ( node.ValueKind )
         {
             case JsonValueKind.String:
-                value = element.GetString();
+                value = node.GetString();
                 break;
             case JsonValueKind.Number:
-                if ( element.TryGetInt32( out int intValue ) )
+                if ( node.TryGetInt32( out int intValue ) )
                 {
                     value = intValue;
                     break;
                 }
 
-                if ( element.TryGetSingle( out float floatValue ) )
+                if ( node.TryGetSingle( out float floatValue ) )
                 {
                     value = floatValue;
                     break;

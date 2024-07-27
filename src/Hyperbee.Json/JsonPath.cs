@@ -33,7 +33,6 @@
 #endregion
 
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Filters;
@@ -42,6 +41,15 @@ using Hyperbee.Json.Filters;
 // https://www.rfc-editor.org/rfc/rfc9535.html#appendix-A
 
 namespace Hyperbee.Json;
+
+internal static class IndexHelper
+{
+    private const int LookupLength = 64;
+    private static readonly string[] IndexLookup = Enumerable.Range( 0, LookupLength ).Select( i => i.ToString() ).ToArray();
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    public static string GetIndexString( int index ) => (index <  64)? IndexLookup[index] : index.ToString();
+}
 
 public delegate void NodeProcessorDelegate<TNode>( in TNode parent, in TNode value, string key, in JsonPathSegment segment );
 
@@ -110,6 +118,7 @@ public static class JsonPath<TNode>
             // the key is null when a descent has re-pushed the descent target.
             // this should be safe to skip; we will see its values later.
 
+ProcessArgs:
             if ( key != null )
                 processor?.Invoke( parent, value, key, segmentNext );
 
@@ -145,14 +154,32 @@ public static class JsonPath<TNode>
 
                 // try to access object or array using name or index
                 if ( TryGetChild( accessor, value, nodeKind, selector, selectorKind, out var childValue ) )
-                    stack.Push( value, childValue, selector, segmentNext );
+                {
+                    // optimization: quicker return for final
+                    if ( segmentNext.IsFinal )
+                    {
+                        processor?.Invoke( in value, childValue, selector, segmentNext );
+                        yield return childValue;
+                        continue;
+                    }
+
+                    // optimization: avoid immediate push pop
+                    //
+                    // replaces stack.Push( value, childValue, selector, segmentNext );
+                    DeconstructValues( out parent, out value, out key, out segmentNext, out flags,
+                        (value, childValue, selector, segmentNext, NodeFlags.Default)
+                    );
+                    goto ProcessArgs;
+                }
 
                 continue;
             }
 
             // group selector
 
-            for ( var i = 0; i < segmentCurrent.Selectors.Length; i++ ) // using 'for' for performance
+            var selectorCount = segmentCurrent.Selectors.Length;
+
+            for ( var i = 0; i < selectorCount; i++ ) // using 'for' for performance
             {
                 if ( i > 0 ) // we already have the first selector
                     (selector, selectorKind) = segmentCurrent.Selectors[i];
@@ -162,24 +189,30 @@ public static class JsonPath<TNode>
                     // descendant
                     case SelectorKind.Descendant:
                         {
-                            foreach ( var (childValue, childKey, _) in EnumerateChildren( accessor, value, nodeKind, includeValues: false ) ) // child arrays or objects only
-                            {
-                                stack.Push( value, childValue, childKey, segmentCurrent ); // Descendant
-                            }
+                            var children = Descriptor.NodeActions.GetChildren( value, complexTypesOnly: true );
+                            stack.PushMany( value, children, segmentCurrent, NodeFlags.AfterDescent );
 
                             // Union Processing After Descent: If a union operator immediately follows a
                             // descendant operator, the union should only process simple values. This is
                             // to prevent duplication of complex objects that would result from both the
                             // current node and the union processing the same items.
 
-                            stack.Push( parent, value, null, segmentNext, NodeFlags.AfterDescent ); // process the current value
-                            continue;
+                            // optimization: avoid immediate push pop
+                            //
+                            // this is safe because descendant only ever has one selector.
+                            // replaces stack.Push( value, childValue, selector, segmentNext );
+                            DeconstructValues( out parent, out value, out key, out segmentNext, out flags, // process the current value
+                                ( parent, value, null, segmentNext, NodeFlags.AfterDescent ) 
+                            );
+                            goto ProcessArgs;
                         }
 
                     // wildcard
                     case SelectorKind.Wildcard:
                         {
-                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value, nodeKind ) )
+                            var childKind = GetSelectorKind( nodeKind );
+
+                            foreach ( var (childValue, childKey) in Descriptor.NodeActions.GetChildren( value ) )
                             {
                                 // optimization: quicker return for final 
                                 //
@@ -191,7 +224,6 @@ public static class JsonPath<TNode>
                                     // the order of the results as per the RFC. so we push the current
                                     // value onto the stack without prepending the childKey or childKind
                                     // to set up for an immediate return on the next iteration.
-                                    //Push( stack, value, childValue, childKey, segmentNext );
                                     stack.Push( value, childValue, childKey, segmentNext );
                                     continue;
                                 }
@@ -205,7 +237,9 @@ public static class JsonPath<TNode>
                     // [?exp]
                     case SelectorKind.Filter:
                         {
-                            foreach ( var (childValue, childKey, childKind) in EnumerateChildren( accessor, value, nodeKind ) )
+                            var childKind = GetSelectorKind( nodeKind );
+
+                            foreach ( var (childValue, childKey) in Descriptor.NodeActions.GetChildren( value ) )
                             {
                                 if ( !FilterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
                                     continue;
@@ -213,6 +247,7 @@ public static class JsonPath<TNode>
                                 // optimization: quicker return for tail values
                                 if ( segmentNext.IsFinal )
                                 {
+                                    // yielding would not preserve the order of the results as per the RFC.
                                     stack.Push( value, childValue, childKey, segmentNext );
                                     continue;
                                 }
@@ -230,7 +265,10 @@ public static class JsonPath<TNode>
                                 continue;
 
                             if ( accessor.TryGetIndexAt( value, int.Parse( selector ), out var childValue ) )
+                            {
                                 stack.Push( value, childValue, selector, segmentNext );
+                            }
+
                             continue;
                         }
 
@@ -244,8 +282,8 @@ public static class JsonPath<TNode>
 
                             for ( var index = lower; step > 0 ? index < upper : index > upper; index += step )
                             {
-                                if ( accessor.TryGetIndexAt( value, index, out var childValue ) )
-                                    stack.Push( value, childValue, index.ToString(), segmentNext );
+                                var childValue = accessor.IndexAt( value, index );
+                                stack.Push( value, childValue, index, segmentNext );
                             }
 
                             continue;
@@ -259,13 +297,12 @@ public static class JsonPath<TNode>
 
                             for ( var index = length - 1; index >= 0; index-- )
                             {
-                                if ( !accessor.TryGetIndexAt( value, index, out var childValue ) )
-                                    continue;
+                                var childValue = accessor.IndexAt( value, index );
 
                                 if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
                                     continue;
 
-                                stack.Push( value, childValue, index.ToString(), indexSegment );
+                                stack.Push( value, childValue, index, indexSegment );
                             }
 
                             continue;
@@ -274,8 +311,10 @@ public static class JsonPath<TNode>
                     // Object: [name1,name2,...] Names over object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
                         {
-                            if ( TryGetChild( accessor, value, nodeKind, selector, selectorKind, out var childValue ) )
+                            if ( accessor.TryGetProperty( value, selector, out var childValue ) )
+                            {
                                 stack.Push( value, childValue, selector, segmentNext );
+                            }
 
                             continue;
                         }
@@ -291,6 +330,17 @@ public static class JsonPath<TNode>
         } while ( stack.TryPop( out args ) );
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    private static void DeconstructValues( out TNode parent, out TNode value, out string key, out JsonPathSegment segmentNext, out NodeFlags flags,
+        (TNode Parent, TNode Value, string Key, JsonPathSegment SegmentNext, NodeFlags Flags) values )
+    {
+        parent = values.Parent;
+        value = values.Value;
+        key = values.Key;
+        segmentNext = values.SegmentNext;
+        flags = values.Flags;
+    }
+
     private static bool TryGetChild( IValueAccessor<TNode> accessor, in TNode value, NodeKind nodeKind, string childSelector, SelectorKind selectorKind, out TNode childValue )
     {
         switch ( nodeKind )
@@ -298,84 +348,19 @@ public static class JsonPath<TNode>
             case NodeKind.Object:
                 if ( accessor.TryGetProperty( value, childSelector, out childValue ) )
                     return true;
-
                 break;
 
-            case NodeKind.Array:
-                if ( selectorKind == SelectorKind.Name )
-                    break;
-
-                if ( int.TryParse( childSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index ) )
-                {
-                    if ( accessor.TryGetIndexAt( value, index, out childValue ) )
-                        return true;
-                }
-
-                break;
-            default:
-                if ( !IsPathOperator( childSelector ) )
-                    throw new ArgumentException( $"Invalid child type '{childSelector}'. Expected child to be Object, Array or a path selector.", nameof( value ) );
-
+            case NodeKind.Array when selectorKind == SelectorKind.Index:
+                if ( int.TryParse( childSelector, out var index ) && accessor.TryGetIndexAt( value, index, out childValue ) )
+                    return true;
                 break;
         }
 
         childValue = default;
         return false;
-
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        static bool IsPathOperator( ReadOnlySpan<char> x )
-        {
-            return x.Length switch
-            {
-                1 => x[0] == '*',
-                2 => x[0] == '.' && x[1] == '.',
-                3 => x[0] == '$',
-                _ => false
-            };
-        }
     }
 
-    private static IEnumerable<(TNode, string, SelectorKind)> EnumerateChildren( IValueAccessor<TNode> accessor, TNode value, NodeKind nodeKind, bool includeValues = true )
-    {
-        switch ( nodeKind )
-        {
-            case NodeKind.Object:
-                {
-                    var results = new Stack<(TNode, string, SelectorKind)>(); // stack will reverse the list
-                    foreach ( var (child, key) in accessor.EnumerateObject( value ) )
-                    {
-                        var childKind = accessor.GetNodeKind( child );
-                        if ( includeValues || childKind is NodeKind.Array or NodeKind.Object )
-                            results.Push( (child, key, SelectorKind.Name) );
-                    }
-
-                    return results;
-                }
-
-            case NodeKind.Array:
-                {
-                    var length = accessor.GetArrayLength( value );
-                    var results = new (TNode, string, SelectorKind)[length];
-
-                    var reverseIndex = length - 1;
-                    for ( var index = 0; index < length; index++, reverseIndex-- )
-                    {
-                        if ( !accessor.TryGetIndexAt( value, index, out var child ) )
-                            continue;
-
-                        var childKind = accessor.GetNodeKind( child );
-                        if ( includeValues || childKind is NodeKind.Array or NodeKind.Object )
-                            results[reverseIndex] = (child, index.ToString(), SelectorKind.Index);
-                    }
-
-                    return results;
-                }
-            default:
-                return [];
-        }
-    }
-
-    private static (int Upper, int Lower, int Step) GetSliceRange( IValueAccessor<TNode> accessor, TNode value, string sliceExpr )
+    private static (int Upper, int Lower, int Step) GetSliceRange( IValueAccessor<TNode> accessor, in TNode value, string sliceExpr )
     {
         var length = accessor.GetArrayLength( value );
 
@@ -388,6 +373,17 @@ public static class JsonPath<TNode>
             (lower, upper) = (upper, lower);
 
         return (upper, lower, step);
+    }
+
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    private static SelectorKind GetSelectorKind( NodeKind nodeKind )
+    {
+        return nodeKind switch
+        {
+            NodeKind.Object => SelectorKind.Name,
+            NodeKind.Array => SelectorKind.Index,
+            _ => throw new ArgumentOutOfRangeException( nameof(nodeKind), nodeKind, $"{nameof(NodeKind)} must be an object or an array." )
+        };
     }
 
     [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, {Segment}" )]
@@ -406,10 +402,23 @@ public static class JsonPath<TNode>
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public void Push( in TNode parent, in TNode value, int index, in JsonPathSegment segment, NodeFlags flags = NodeFlags.Default )
+        {
+            _stack.Push( new NodeArgs( parent, value, IndexHelper.GetIndexString( index ), segment, flags ) );
+        }
+
+        public void PushMany( in TNode parent, in IEnumerable<(TNode Value, string Key)> items, in JsonPathSegment segment, NodeFlags flags = NodeFlags.Default )
+        {
+            foreach ( var (value, key) in items )
+            {
+                _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
+            }
+        }
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public bool TryPop( out NodeArgs args )
         {
             return _stack.TryPop( out args );
         }
     }
-
 }

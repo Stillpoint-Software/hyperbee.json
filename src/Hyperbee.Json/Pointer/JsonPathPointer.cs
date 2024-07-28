@@ -93,7 +93,7 @@ public static class JsonPathPointer<TNode>
                         var length = accessor.GetArrayLength( current );
 
                         var index = selectorValue == "-" // rfc6902 index append support
-                            ? length 
+                            ? length
                             : int.Parse( selectorValue );
 
                         if ( index < 0 )
@@ -119,10 +119,10 @@ public static class JsonPathPointer<TNode>
         return true;
 
 NotFound:
-        // return parent if final segment fails.
-        // this is required for patch.
+// return parent if final segment fails.
+// this is required for patch.
         if ( segment.Next.IsFinal && !typeMismatch )
-            parent = currentParent; 
+            parent = currentParent;
 
         value = default;
         return false;

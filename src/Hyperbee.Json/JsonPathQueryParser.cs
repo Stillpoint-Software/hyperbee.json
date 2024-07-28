@@ -50,7 +50,7 @@ internal static class JsonPathQueryParser
         return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );
     }
 
-    internal static JsonPathQuery ParseRfc6901( ReadOnlySpan<char> query, bool rfc6902 = false  )
+    internal static JsonPathQuery ParseRfc6901( ReadOnlySpan<char> query, bool rfc6902 = false )
     {
         return ParseRfc6901( query.ToString(), rfc6902 );
     }
@@ -61,8 +61,8 @@ internal static class JsonPathQueryParser
         {
             // https://www.rfc-editor.org/rfc/rfc6901.html
 
-            var options = rfc6902 
-                ? JsonPointerConvertOptions.Rfc6902 
+            var options = rfc6902
+                ? JsonPointerConvertOptions.Rfc6902
                 : JsonPointerConvertOptions.Default;
 
             var jsonpath = JsonPathPointerConverter.ConvertJsonPointerToJsonPath( x, options );

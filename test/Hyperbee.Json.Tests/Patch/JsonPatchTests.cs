@@ -41,18 +41,18 @@ public class JsonPatchTests
             """ );
 
         var patch = new JsonPatch(
-            new PatchOperation( 
-                PatchOperationType.Add, 
-                "/job", 
-                null, 
-                JsonNode.Parse( 
+            new PatchOperation(
+                PatchOperationType.Add,
+                "/job",
+                null,
+                JsonNode.Parse(
                     """
                     {
                         "title": "developer",
                         "company": "Acme"
                     }
-                    """ 
-                ) 
+                    """
+                )
             )
         );
 

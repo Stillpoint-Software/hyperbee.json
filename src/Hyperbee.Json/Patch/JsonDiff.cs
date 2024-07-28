@@ -9,7 +9,7 @@ public static class JsonDiff<TNode>
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
-    public static IEnumerable<PatchOperation> Diff( TNode source, TNode target, bool optimize = false )
+    public static IEnumerable<PatchOperation> Diff( TNode source, TNode target )
     {
         var operations = InternalDiff( source, target );
         return operations;
@@ -42,13 +42,13 @@ public static class JsonDiff<TNode>
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !accessor.TryGetProperty( operation.Target, name, out var targetValue ) )
+                            if ( accessor.TryGetProperty( operation.Target, name, out var targetValue ) )
                             {
-                                yield return new PatchOperation { Operation = PatchOperationType.Remove, Path = propertyPath };
+                                stack.Push( new DiffOperation( value, targetValue, propertyPath ) );
                             }
                             else
                             {
-                                stack.Push( new DiffOperation( value, targetValue, propertyPath ) );
+                                yield return new PatchOperation { Operation = PatchOperationType.Remove, Path = propertyPath };
                             }
                         }
 
@@ -56,10 +56,12 @@ public static class JsonDiff<TNode>
                         {
                             var propertyPath = Combine( operation.Path, name );
 
-                            if ( !accessor.TryGetProperty( operation.Source, name, out _ ) )
+                            if ( accessor.TryGetProperty( operation.Source, name, out _ ) )
                             {
-                                yield return new PatchOperation { Operation = PatchOperationType.Add, Path = propertyPath, Value = value };
+                                continue;
                             }
+
+                            yield return new PatchOperation { Operation = PatchOperationType.Add, Path = propertyPath, Value = value };
                         }
 
                         break;

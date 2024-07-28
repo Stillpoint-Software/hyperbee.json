@@ -53,31 +53,31 @@ public class PatchOptimizer<TNode> : IPatchOptimizer<TNode>
         {
             // Check for Add operation that adds a value which is already present
             case PatchOperationType.Add:
-            {
-                var existingValue = GetNodeByPath( source, operation.Path );
-            
-                if ( existingValue != null && Descriptor.NodeActions.DeepEquals( existingValue, (TNode) operation.Value ) )
-                    return true;
-                break;
-            }
+                {
+                    var existingValue = GetNodeByPath( source, operation.Path );
+
+                    if ( existingValue != null && Descriptor.NodeActions.DeepEquals( existingValue, (TNode) operation.Value ) )
+                        return true;
+                    break;
+                }
             // Check for Remove operation that removes a value which is not present
             case PatchOperationType.Remove:
-            {
-                var existingValue = GetNodeByPath( source, operation.Path );
-            
-                if ( existingValue == null )
-                    return true;
-                break;
-            }
+                {
+                    var existingValue = GetNodeByPath( source, operation.Path );
+
+                    if ( existingValue == null )
+                        return true;
+                    break;
+                }
             // Check for Replace operation that replaces a value with the same value
             case PatchOperationType.Replace:
-            {
-                var existingValue = GetNodeByPath( source, operation.Path );
-            
-                if ( existingValue != null && Descriptor.NodeActions.DeepEquals( existingValue, (TNode) operation.Value ) )
-                    return true;
-                break;
-            }
+                {
+                    var existingValue = GetNodeByPath( source, operation.Path );
+
+                    if ( existingValue != null && Descriptor.NodeActions.DeepEquals( existingValue, (TNode) operation.Value ) )
+                        return true;
+                    break;
+                }
         }
 
         return false;
@@ -97,23 +97,23 @@ public class PatchOptimizer<TNode> : IPatchOptimizer<TNode>
             switch ( nodeKind )
             {
                 case NodeKind.Object:
-                {
-                    if ( !accessor.TryGetProperty( currentNode, segment, out var nextNode ) )
-                        return default;
-                    
-                    currentNode = nextNode;
-                    break;
-                }
+                    {
+                        if ( !accessor.TryGetProperty( currentNode, segment, out var nextNode ) )
+                            return default;
+
+                        currentNode = nextNode;
+                        break;
+                    }
                 case NodeKind.Array:
-                {
-                    var length = accessor.GetArrayLength( currentNode );
+                    {
+                        var length = accessor.GetArrayLength( currentNode );
 
-                    if ( !int.TryParse( segment, out var index ) || index < 0 || index >= length )
-                        return default;
+                        if ( !int.TryParse( segment, out var index ) || index < 0 || index >= length )
+                            return default;
 
-                    currentNode = accessor.IndexAt( currentNode, index );
-                    break;
-                }
+                        currentNode = accessor.IndexAt( currentNode, index );
+                        break;
+                    }
                 default:
                     return default;
             }

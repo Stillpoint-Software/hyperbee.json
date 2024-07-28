@@ -42,7 +42,7 @@ public class DiffOptimizerTests
         var nonOptimizedSource = JsonNode.Parse( sourceJson );
         var optimizedSource = JsonNode.Parse( sourceJson );
 
-        var nonOptimizedPatch = new JsonPatch( diff ); 
+        var nonOptimizedPatch = new JsonPatch( diff );
         nonOptimizedPatch.Apply( nonOptimizedSource ); // BF this is erroring with: System.InvalidOperationException: The node already has a parent.
 
         var optimizedPatch = new JsonPatch( optimized );
@@ -154,7 +154,7 @@ public class DiffOptimizerTests
             """
         );
 
-        var diff = new List<PatchOperation> { new(PatchOperationType.Replace, "/first", null, "John") };
+        var diff = new List<PatchOperation> { new( PatchOperationType.Replace, "/first", null, "John" ) };
 
         var optimizer = new DiffOptimizer<JsonNode>();
         var optimized = optimizer.OptimizeDiff( source, target, diff );

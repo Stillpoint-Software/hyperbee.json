@@ -142,7 +142,7 @@ public class DiffOptimizer<TNode> : IDiffOptimizer<TNode>
             for ( var j = 1; j <= target.Count; j++ )
             {
                 var cost = Descriptor.NodeActions.DeepEquals( source[i - 1], target[j - 1] ) ? 0 : 1;
-                
+
                 distance[i, j] = Math.Min(
                     Math.Min( distance[i - 1, j] + 1, distance[i, j - 1] + 1 ),
                     distance[i - 1, j - 1] + cost );
@@ -210,7 +210,7 @@ public class DiffOptimizer<TNode> : IDiffOptimizer<TNode>
     // - Move to distance[1, 1] (value 0): No change, A == A
     // - Move to distance[0, 1] (value 1): Remove B
     //
-    
+
     //private static List<PatchOperation> GetLevenshteinOperations( int[,] distance, IList<TNode> source, IList<TNode> target, string path )
     //{
     //    var operations = new List<PatchOperation>();

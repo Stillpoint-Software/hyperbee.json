@@ -29,7 +29,7 @@ public class PatchOptimizerTests
         var target = JsonNode.Parse( targetJson );
 
         var diff = JsonDiff<JsonNode>.Diff( source, target ).ToList();
-        
+
         var optimizer = new PatchOptimizer<JsonNode>();
         var optimized = optimizer.OptimizePatch( source, diff );
 
@@ -71,7 +71,7 @@ public class PatchOptimizerTests
         var target = JsonNode.Parse( targetJson );
 
         var diff = JsonDiff<JsonNode>.Diff( source, target ).ToList();
-        
+
         var optimizer = new PatchOptimizer<JsonNode>();
         var optimized = optimizer.OptimizePatch( source, diff );
 
@@ -112,7 +112,7 @@ public class PatchOptimizerTests
         var target = JsonNode.Parse( targetJson );
 
         var diff = JsonDiff<JsonNode>.Diff( source, target ).ToList();
-        
+
         var optimizer = new PatchOptimizer<JsonNode>();
         var optimized = optimizer.OptimizePatch( source, diff );
 
@@ -154,7 +154,7 @@ public class PatchOptimizerTests
         var target = JsonNode.Parse( targetJson );
 
         var diff = JsonDiff<JsonNode>.Diff( source, target ).ToList();
-        
+
         var optimizer = new PatchOptimizer<JsonNode>();
         var optimized = optimizer.OptimizePatch( source, diff );
 
@@ -197,7 +197,7 @@ public class PatchOptimizerTests
         var target = JsonNode.Parse( targetJson );
 
         var diff = JsonDiff<JsonNode>.Diff( source, target ).ToList();
-        
+
         var optimizer = new PatchOptimizer<JsonNode>();
         var optimized = optimizer.OptimizePatch( source, diff );
 
@@ -229,7 +229,7 @@ public class PatchOptimizerTests
             """
         );
 
-        var diff = new List<PatchOperation> { new(PatchOperationType.Replace, "/first", null, "John") };
+        var diff = new List<PatchOperation> { new( PatchOperationType.Replace, "/first", null, "John" ) };
 
         var optimizer = new PatchOptimizer<JsonNode>();
         var optimized = optimizer.OptimizePatch( sourceJson, diff );

@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 using Hyperbee.Json.Patch;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Path;
+namespace Hyperbee.Json.Tests.Patch;
 
 [TestClass]
 public class JsonPatchTests
@@ -41,12 +41,19 @@ public class JsonPatchTests
             """ );
 
         var patch = new JsonPatch(
-            new PatchOperation( PatchOperationType.Add, "/job", null, JsonNode.Parse( """
-                                                                                      {
-                                                                                          "title": "developer",
-                                                                                          "company": "Acme"
-                                                                                      }
-                                                                                      """ ) )
+            new PatchOperation( 
+                PatchOperationType.Add, 
+                "/job", 
+                null, 
+                JsonNode.Parse( 
+                    """
+                    {
+                        "title": "developer",
+                        "company": "Acme"
+                    }
+                    """ 
+                ) 
+            )
         );
 
         patch.Apply( source );

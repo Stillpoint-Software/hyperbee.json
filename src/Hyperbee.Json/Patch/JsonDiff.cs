@@ -9,7 +9,13 @@ public static class JsonDiff<TNode>
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
-    public static IEnumerable<PatchOperation> Diff( TNode source, TNode target )
+    public static IEnumerable<PatchOperation> Diff( TNode source, TNode target, bool optimize = false )
+    {
+        var operations = InternalDiff( source, target );
+        return operations;
+    }
+
+    private static IEnumerable<PatchOperation> InternalDiff( TNode source, TNode target )
     {
         var stack = new Stack<DiffOperation>( 8 );
         stack.Push( new DiffOperation( source, target, string.Empty ) );

@@ -3,21 +3,27 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Patch;
 
 // https://datatracker.ietf.org/doc/html/rfc6902/
 
 [JsonConverter( typeof( JsonPatchConverter ) )]
-public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<PatchOperation>
+public class JsonPatch : IEnumerable<PatchOperation>
 {
-    private readonly List<PatchOperation> _operations = [.. operations];
+    private readonly List<PatchOperation> _operations = [];
 
-    public void Apply( JsonNode node ) => Apply( node, this );
+    public JsonPatch( params PatchOperation[] operations )
+    {
+        _operations.AddRange( operations );
+    }
 
-    public void Apply( JsonElement element ) => Apply( element.ConvertToNode(), this );
+    public void Apply( JsonNode node ) => Apply( node, _operations );
 
-    public static void Apply( JsonNode node, IEnumerable<PatchOperation> patches )
+    public void Apply( JsonElement element ) => Apply( element.ConvertToNode(), _operations );
+
+    public void Apply( JsonNode node, List<PatchOperation> patches )
     {
         var undoOperations = new Stack<PatchOperation>();
 
@@ -374,7 +380,7 @@ public class JsonPatch( params PatchOperation[] operations ) : IEnumerable<Patch
         if ( path == null )
             throw new JsonPatchException( "The 'path' property was missing." );
 
-        var query = JsonPathQueryParser.ParseRfc6901( path );
+        var query = JsonPathQueryParser.ParseRfc6901( path, rfc6902: true );
         return query.Segments.Next; // skip the root segment
     }
 
@@ -415,72 +421,7 @@ public static class JsonPathExtensions
 {
     public static JsonNode FromJsonPointer( this JsonNode jsonNode, JsonPathSegment segment, out string name, out JsonNode parent )
     {
-        if ( !segment.IsNormalized )
-            throw new NotSupportedException( "Unsupported JsonPath pointer query format." );
-
-        var current = jsonNode;
-
-        name = default;
-        parent = default;
-
-        while ( !segment.IsFinal )
-        {
-            var (selectorValue, selectorKind) = segment.Selectors[0];
-
-            name = selectorValue;
-            parent = current;
-
-            // Handle special segment name for end of array
-            var isEndIndex = selectorValue == "-";
-            selectorKind = isEndIndex
-                ? SelectorKind.Index
-                : selectorKind;
-
-            switch ( selectorKind )
-            {
-                case SelectorKind.Name:
-                    {
-                        if ( current is null )
-                            break;
-
-                        if ( current is not JsonObject jsonObject )
-                            throw new JsonPatchException( "The target location was not of the correct type." );
-
-                        jsonObject.TryGetPropertyValue( selectorValue, out var child );
-
-                        current = child;
-                        break;
-                    }
-                case SelectorKind.Index:
-                    {
-                        if ( current is null )
-                            break;
-
-                        if ( current is not JsonArray jsonArray )
-                            throw new JsonPatchException( "The target location was not of the correct type." );
-
-                        var length = jsonArray.Count;
-                        var index = isEndIndex ? length : int.Parse( selectorValue );
-
-                        if ( index < 0 || index >= length )
-                        {
-                            current = default;
-                            break;
-                        }
-
-                        current = jsonArray[index];
-                        break;
-                    }
-                default:
-                    throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
-            }
-
-            if ( !segment.Next.IsFinal )
-                parent = current;
-
-            segment = segment.Next;
-        }
-
-        return current;
+        name = segment.Last().Selectors[^1].Value;
+        return JsonPathPointer<JsonNode>.FromPointer( jsonNode, segment, out parent );
     }
 }

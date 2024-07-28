@@ -167,7 +167,7 @@ public class CtsIndexSelectorTest
                   "second"
                 ]
             """ );
-        var results = document.Select( selector );
+        var results = document.Select( selector ).ToArray();
         var expect = TestHelper.Parse( documentType,
             """
                 []

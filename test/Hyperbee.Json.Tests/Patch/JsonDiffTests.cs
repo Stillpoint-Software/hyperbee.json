@@ -6,7 +6,7 @@ using Hyperbee.Json.Patch;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Path;
+namespace Hyperbee.Json.Tests.Patch;
 
 [TestClass]
 public class JsonDiffTests : JsonTestBase
@@ -303,3 +303,4 @@ public class JsonDiffTests : JsonTestBase
         };
     }
 }
+

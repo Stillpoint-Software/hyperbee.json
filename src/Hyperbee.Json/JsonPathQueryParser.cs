@@ -50,23 +50,27 @@ internal static class JsonPathQueryParser
         return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );
     }
 
-    internal static JsonPathQuery ParseRfc6901( ReadOnlySpan<char> query )
+    internal static JsonPathQuery ParseRfc6901( ReadOnlySpan<char> query, bool rfc6902 = false  )
     {
-        return ParseRfc6901( query.ToString() );
+        return ParseRfc6901( query.ToString(), rfc6902 );
     }
 
-    internal static JsonPathQuery ParseRfc6901( string query )
+    internal static JsonPathQuery ParseRfc6901( string query, bool rfc6902 = false )
     {
         return JsonPathQueries.GetOrAdd( query, x =>
         {
             // https://www.rfc-editor.org/rfc/rfc6901.html
 
-            var jsonpath = JsonPathPointerConverter.ConvertJsonPointerToJsonPath( x );
-            return QueryFactory( jsonpath.AsSpan(), allowDotWhitespace: false );
+            var options = rfc6902 
+                ? JsonPointerConvertOptions.Rfc6902 
+                : JsonPointerConvertOptions.Default;
+
+            var jsonpath = JsonPathPointerConverter.ConvertJsonPointerToJsonPath( x, options );
+            return QueryFactory( jsonpath.AsSpan(), allowDotWhitespace: false, rfc6902 );
         } );
     }
 
-    private static JsonPathQuery QueryFactory( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
+    private static JsonPathQuery QueryFactory( ReadOnlySpan<char> query, bool allowDotWhitespace, bool rfc6902 = false )
     {
         // RFC - query cannot start or end with whitespace
         if ( !query.IsEmpty && (char.IsWhiteSpace( query[0] ) || char.IsWhiteSpace( query[^1] )) )
@@ -405,10 +409,10 @@ internal static class JsonPathQueryParser
             }
         } while ( state != State.Final );
 
-        return BuildJsonPathQuery( query, segments );
+        return BuildJsonPathQuery( query, segments, rfc6902 );
     }
 
-    private static JsonPathQuery BuildJsonPathQuery( ReadOnlySpan<char> query, IList<JsonPathSegment> segments )
+    private static JsonPathQuery BuildJsonPathQuery( ReadOnlySpan<char> query, IList<JsonPathSegment> segments, bool rfc6902 )
     {
         if ( segments == null || segments.Count == 0 )
             return new JsonPathQuery( query.ToString(), JsonPathSegment.Final, false );
@@ -419,7 +423,12 @@ internal static class JsonPathQueryParser
         {
             var segment = segments[index];
 
-            segment.Next = index != segments.Count - 1
+            var last = index == segments.Count - 1;
+
+            if ( last && rfc6902 )
+                Fixup6902AppendSegment( segment );
+
+            segment.Next = !last
                 ? segments[index + 1]
                 : JsonPathSegment.Final;
         }
@@ -428,9 +437,22 @@ internal static class JsonPathQueryParser
         var normalized = rootSegment.IsNormalized;
 
         return new JsonPathQuery( query.ToString(), rootSegment, normalized );
+
+        // Helper method to determine if the segment is a 6902 append segment
+
+        static void Fixup6902AppendSegment( JsonPathSegment segment )
+        {
+            if ( segment.Selectors.Length != 1 )
+                return;
+
+            var selector = segment.Selectors[0];
+
+            if ( selector.SelectorKind == SelectorKind.Name && selector.Value == "-" )
+                selector.SelectorKind = SelectorKind.Index; // 6902 `-` is an index append
+        }
     }
 
-    internal static void ClearCache() => JsonPathQueries.Clear();
+    internal static void Clear() => JsonPathQueries.Clear();
 
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

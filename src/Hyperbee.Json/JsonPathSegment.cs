@@ -7,7 +7,7 @@ public record JsonPathQuery( string Query, JsonPathSegment Segments, bool Normal
 [DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
 public record SelectorDescriptor
 {
-    public SelectorKind SelectorKind { get; init; }
+    public SelectorKind SelectorKind { get; internal set; }
     public string Value { get; init; }
 
     public void Deconstruct( out string value, out SelectorKind selectorKind )
@@ -91,6 +91,11 @@ public class JsonPathSegment
             return false;
 
         return (Selectors[0].SelectorKind & SelectorKind.Singular) == SelectorKind.Singular;
+    }
+
+    public JsonPathSegment Last()
+    {
+        return AsEnumerable().Last();
     }
 
     public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )

@@ -25,8 +25,8 @@ internal class ElementActions : INodeActions<JsonElement>
         return false;
     }
 
-    public bool TryGetFromPointer( in JsonElement node, JsonPathSegment segment, out JsonElement childValue ) =>
-        JsonPathPointer<JsonElement>.TryGetFromPointer( node, segment, out childValue );
+    public bool TryGetFromPointer( in JsonElement node, JsonPathSegment segment, out JsonElement value ) =>
+        JsonPathPointer<JsonElement>.TryGetFromPointer( node, segment, out _, out value );
 
     public bool DeepEquals( JsonElement left, JsonElement right ) =>
         left.DeepEquals( right );

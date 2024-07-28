@@ -36,7 +36,9 @@ public class JsonPathPointerConverterTests
     [DataRow( "$.store['complex/name']", "/store/complex~1name", false )]
     public void TestConvertJsonPathToJsonPointer( string jsonPath, string expected, bool asFragment )
     {
-        var jsonPointer = JsonPathPointerConverter.ConvertJsonPathToJsonPointer( jsonPath.AsSpan(), asFragment );
+        var options = asFragment ? JsonPointerConvertOptions.Fragment : JsonPointerConvertOptions.Default;
+        var jsonPointer = JsonPathPointerConverter.ConvertJsonPathToJsonPointer( jsonPath.AsSpan(), options );
+
         Assert.AreEqual( expected, jsonPointer );
     }
 

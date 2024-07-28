@@ -3,16 +3,26 @@ using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Extensions;
 
+[Flags]
+public enum JsonPointerConvertOptions
+{
+    Default = 0x00,
+    Rfc6902 = 0x02,
+    Fragment = 0x04,
+}
+
 public static class JsonPathPointerConverter
 {
-    public static string ConvertJsonPathToJsonPointer( ReadOnlySpan<char> jsonPath, bool asFragment = false )
+    public static string ConvertJsonPathToJsonPointer( ReadOnlySpan<char> jsonPath, JsonPointerConvertOptions options = JsonPointerConvertOptions.Default )
     {
+        bool fragment = options.HasFlag( JsonPointerConvertOptions.Fragment );
+
         if ( jsonPath.IsEmpty || jsonPath.SequenceEqual( "$".AsSpan() ) )
         {
-            return asFragment ? "#/" : "/";
+            return fragment ? "#/" : "/";
         }
 
-        var jsonPointer = new StringBuilder( asFragment ? "#/" : "/" );
+        var jsonPointer = new StringBuilder( fragment ? "#/" : "/" );
         var i = 0;
 
         while ( i < jsonPath.Length )
@@ -131,7 +141,7 @@ public static class JsonPathPointerConverter
         jsonPointer.Append( buffer[..bufferIndex] ).Append( '/' );
     }
 
-    public static string ConvertJsonPointerToJsonPath( ReadOnlySpan<char> jsonPointer )
+    public static string ConvertJsonPointerToJsonPath( ReadOnlySpan<char> jsonPointer, JsonPointerConvertOptions options = JsonPointerConvertOptions.Default )
     {
         if ( jsonPointer.IsEmpty || jsonPointer is "/" or "#/" )
         {
@@ -162,18 +172,18 @@ public static class JsonPathPointerConverter
                             i++;
                         }
 
-                        var itemSpan = jsonPointer[start..i];
+                        var pointerSpan = jsonPointer[start..i];
                         item.Clear();
 
-                        for ( var j = 0; j < itemSpan.Length; j++ )
+                        for ( var j = 0; j < pointerSpan.Length; j++ )
                         {
-                            if ( itemSpan[j] != '~' )
+                            if ( pointerSpan[j] != '~' )
                             {
-                                item.Append( itemSpan[j] );
+                                item.Append( pointerSpan[j] );
                                 continue;
                             }
 
-                            switch ( itemSpan[j + 1] )
+                            switch ( pointerSpan[j + 1] )
                             {
                                 case '1':
                                     item.Append( '/' );
@@ -189,19 +199,19 @@ public static class JsonPathPointerConverter
                             }
                         }
 
-                        var itemStr = item.AsSpan();
+                        var itemSpan = item.AsSpan();
 
-                        if ( int.TryParse( itemStr, out _ ) )
+                        if ( int.TryParse( itemSpan, out _ ) )
                         {
-                            jsonPath.Append( '[' ).Append( itemStr ).Append( ']' );
+                            jsonPath.Append( '[' ).Append( itemSpan ).Append( ']' );
                         }
-                        else if ( !HasSpecialCharacters( itemStr ) )
+                        else if ( !HasSpecialCharacters( itemSpan ) )
                         {
-                            jsonPath.Append( '.' ).Append( itemStr );
+                            jsonPath.Append( '.' ).Append( itemSpan );
                         }
                         else
                         {
-                            JsonPathAppendEscaped( jsonPath, itemStr );
+                            JsonPathAppendEscaped( jsonPath, itemSpan );
                         }
 
                         break;

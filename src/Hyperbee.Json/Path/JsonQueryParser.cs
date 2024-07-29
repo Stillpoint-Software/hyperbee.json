@@ -51,13 +51,13 @@ internal static class JsonQueryParser
                 case JsonQueryParserOptions.Rfc9535:
                 case JsonQueryParserOptions.Rfc9535AllowDotWhitespace:
                     return Rfc9535QueryFactory.Parse( x.AsSpan(), options );
-                    
+
                 case JsonQueryParserOptions.Rfc6901:
                 case JsonQueryParserOptions.Rfc6902:
                     return Rfc6901QueryFactory.Parse( x.AsSpan(), options );
 
                 default:
-                    throw new ArgumentOutOfRangeException( nameof(options) );
+                    throw new ArgumentOutOfRangeException( nameof( options ) );
             }
         } );
     }

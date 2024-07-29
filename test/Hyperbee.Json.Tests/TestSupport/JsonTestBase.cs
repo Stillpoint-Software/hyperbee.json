@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Tests.TestSupport;
 

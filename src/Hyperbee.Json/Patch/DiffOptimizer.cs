@@ -1,5 +1,4 @@
 ﻿using Hyperbee.Json.Descriptors;
-using Hyperbee.Json.Path;
 using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Patch;

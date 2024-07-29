@@ -130,9 +130,12 @@ public static class JsonDiff<TNode>
         var row = source.Length;
         var col = target.Length;
 
-        var matrix = Matrix<int>.StackSize( row, col ) <= 1024
-            ? new Matrix<int>( stackalloc int[(row + 1) * (col + 1)], row + 1, col + 1 )
-            : new Matrix<int>( row + 1, col + 1 );
+        var mrow = row + 1;
+        var mcol = col + 1;
+
+        var matrix = mrow + mcol <= 32
+            ? new Matrix( stackalloc byte[mrow * mcol], mrow, mcol )
+            : new Matrix( mrow, mcol );
 
         try
         {
@@ -197,7 +200,7 @@ public static class JsonDiff<TNode>
         operations.Add( new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target } );
     }
 
-    private static void CalculateLevenshteinMatrix( Matrix<int> matrix, TNode[] source, TNode[] target )
+    private static void CalculateLevenshteinMatrix( Matrix matrix, TNode[] source, TNode[] target )
     {
         var accessor = Descriptor.ValueAccessor;
 

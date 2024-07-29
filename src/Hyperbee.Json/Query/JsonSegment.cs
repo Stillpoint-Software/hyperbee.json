@@ -16,8 +16,8 @@ public record SelectorDescriptor
     }
 }
 
-[DebuggerTypeProxy(typeof(SegmentDebugView))]
-[DebuggerDisplay("First = ({Selectors?[0]}), IsSingular = {IsSingular}, Count = {Selectors?.Length}")]
+[DebuggerTypeProxy( typeof( SegmentDebugView ) )]
+[DebuggerDisplay( "First = ({Selectors?[0]}), IsSingular = {IsSingular}, Count = {Selectors?.Length}" )]
 public class JsonSegment : IEnumerable<JsonSegment>
 {
     internal static readonly JsonSegment Final = new(); // special end node
@@ -31,7 +31,7 @@ public class JsonSegment : IEnumerable<JsonSegment>
 
     private JsonSegment() { }
 
-    public JsonSegment(JsonSegment next, string selector, SelectorKind kind)
+    public JsonSegment( JsonSegment next, string selector, SelectorKind kind )
     {
         Next = next;
         Selectors =
@@ -41,15 +41,15 @@ public class JsonSegment : IEnumerable<JsonSegment>
         IsSingular = InitIsSingular();
     }
 
-    public JsonSegment(SelectorDescriptor[] selectors)
+    public JsonSegment( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
         IsSingular = InitIsSingular();
     }
 
-    public JsonSegment Prepend(string selector, SelectorKind kind)
+    public JsonSegment Prepend( string selector, SelectorKind kind )
     {
-        return new JsonSegment(this, selector, kind);
+        return new JsonSegment( this, selector, kind );
     }
 
     public bool IsNormalized
@@ -58,9 +58,9 @@ public class JsonSegment : IEnumerable<JsonSegment>
         {
             var current = this;
 
-            while (current != Final)
+            while ( current != Final )
             {
-                if (!current.IsSingular)
+                if ( !current.IsSingular )
                     return false;
 
                 current = current.Next;
@@ -74,26 +74,26 @@ public class JsonSegment : IEnumerable<JsonSegment>
     {
         // singular is one selector that is not a group
 
-        if (Selectors.Length != 1)
+        if ( Selectors.Length != 1 )
             return false;
 
         return (Selectors[0].SelectorKind & SelectorKind.Singular) == SelectorKind.Singular;
     }
 
-    public void Deconstruct(out bool singular, out SelectorDescriptor[] selectors)
+    public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )
     {
         singular = IsSingular;
         selectors = Selectors;
     }
 
-    internal static JsonQuery LinkSegments(ReadOnlySpan<char> query, IList<JsonSegment> segments)
+    internal static JsonQuery LinkSegments( ReadOnlySpan<char> query, IList<JsonSegment> segments )
     {
-        if (segments == null || segments.Count == 0)
-            return new JsonQuery(query.ToString(), Final, false);
+        if ( segments == null || segments.Count == 0 )
+            return new JsonQuery( query.ToString(), Final, false );
 
         // link the segments
 
-        for (var index = 0; index < segments.Count; index++)
+        for ( var index = 0; index < segments.Count; index++ )
         {
             var segment = segments[index];
 
@@ -105,14 +105,14 @@ public class JsonSegment : IEnumerable<JsonSegment>
         var rootSegment = segments.First(); // first segment is the root
         var normalized = rootSegment.IsNormalized;
 
-        return new JsonQuery(query.ToString(), rootSegment, normalized);
+        return new JsonQuery( query.ToString(), rootSegment, normalized );
     }
 
     public IEnumerator<JsonSegment> GetEnumerator()
     {
         var current = this;
 
-        while (current != Final)
+        while ( current != Final )
         {
             yield return current;
 
@@ -129,15 +129,15 @@ public class JsonSegment : IEnumerable<JsonSegment>
     {
         private readonly JsonSegment _instance;
 
-        public SegmentDebugView(JsonSegment instance)
+        public SegmentDebugView( JsonSegment instance )
         {
             _instance = instance;
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+        [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         public SelectorDescriptor[] Selectors => _instance.Selectors;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
+        [DebuggerBrowsable( DebuggerBrowsableState.Collapsed )]
         public JsonSegment Next => _instance.Next;
     }
 }

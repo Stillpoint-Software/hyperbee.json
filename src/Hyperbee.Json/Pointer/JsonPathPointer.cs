@@ -1,4 +1,4 @@
-using Hyperbee.Json.Descriptors;
+﻿using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Pointer;

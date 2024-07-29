@@ -7,22 +7,22 @@ public ref struct Matrix
     // ReSharper disable FieldCanBeMadeReadOnly.Local
 
     // dispose will reset values, so don't use readonly
-    private Span<byte> _stackAllocated; 
+    private Span<byte> _stackAllocated;
     private int[] _pooledArray;
     private int _rows;
     private int _cols;
-    
+
     // ReSharper restore FieldCanBeMadeReadOnly.Local
-    
-    public Matrix(Span<byte> arrayBuffer, int rows, int columns)
+
+    public Matrix( Span<byte> arrayBuffer, int rows, int columns )
     {
         var totalElements = rows * columns;
 
-        if (totalElements > 32)
-            throw new ArgumentException( $"{nameof(rows)}.Length + {nameof(columns)}.Length exceeds the stack allocation limit of 32.");
+        if ( totalElements > 32 )
+            throw new ArgumentException( $"{nameof( rows )}.Length + {nameof( columns )}.Length exceeds the stack allocation limit of 32." );
 
-        if (arrayBuffer.Length != totalElements)
-            throw new ArgumentException( $"Length of {nameof(columns)} does not match the {nameof(rows)}.Length + {nameof(columns)}.Length." );
+        if ( arrayBuffer.Length != totalElements )
+            throw new ArgumentException( $"Length of {nameof( columns )} does not match the {nameof( rows )}.Length + {nameof( columns )}.Length." );
 
         _stackAllocated = arrayBuffer;
         _pooledArray = null;
@@ -31,7 +31,7 @@ public ref struct Matrix
         _cols = columns;
     }
 
-    public Matrix(int rows, int columns)
+    public Matrix( int rows, int columns )
     {
         _rows = rows;
         _cols = columns;
@@ -46,8 +46,8 @@ public ref struct Matrix
         {
             ThrowIfArgumentOutOfBounds( row, column );
 
-            return _pooledArray != null 
-                ? _pooledArray[row * _cols + column] 
+            return _pooledArray != null
+                ? _pooledArray[row * _cols + column]
                 : _stackAllocated[row * _cols + column];
         }
         set
@@ -69,10 +69,10 @@ public ref struct Matrix
     private readonly void ThrowIfArgumentOutOfBounds( int row, int column )
     {
         if ( row < 0 || row >= _rows )
-            throw new ArgumentOutOfRangeException( nameof(row), $"Index {nameof(row)} is out of bounds." );
+            throw new ArgumentOutOfRangeException( nameof( row ), $"Index {nameof( row )} is out of bounds." );
 
         if ( column < 0 || column >= _cols )
-            throw new ArgumentOutOfRangeException( nameof(column), $"Index {nameof(column)} is out of bounds." );
+            throw new ArgumentOutOfRangeException( nameof( column ), $"Index {nameof( column )} is out of bounds." );
     }
 
     public void Dispose()

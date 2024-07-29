@@ -1,5 +1,6 @@
 ﻿using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Path;
+using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Pointer;
 
@@ -28,7 +29,7 @@ public static class JsonPathPointer<TNode>
         return TryGetFromPointer( root, segment, out parent, out var value ) ? value : default;
     }
 
-    internal static TNode FromPointer( TNode root, JsonPathSegment segment, out TNode parent )
+    internal static TNode FromPointer( TNode root, JsonSegment segment, out TNode parent )
     {
         return TryGetFromPointer( root, segment, out parent, out var value ) ? value : default;
     }
@@ -46,7 +47,7 @@ public static class JsonPathPointer<TNode>
         return TryGetFromPointer( root, segment, out parent, out value );
     }
 
-    internal static bool TryGetFromPointer( TNode root, JsonPathSegment segment, out TNode parent, out TNode value )
+    internal static bool TryGetFromPointer( TNode root, JsonSegment segment, out TNode parent, out TNode value )
     {
         if ( !segment.IsNormalized )
             throw new NotSupportedException( "Unsupported JsonPath pointer query format." );

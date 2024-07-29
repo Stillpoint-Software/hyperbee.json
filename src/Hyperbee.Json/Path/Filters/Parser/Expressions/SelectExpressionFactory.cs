@@ -2,6 +2,7 @@
 using System.Reflection;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Path.Filters.Values;
+using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Path.Filters.Parser.Expressions;
 

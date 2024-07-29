@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Hyperbee.Json.Path;
-
-public record JsonPathQuery( string Query, JsonPathSegment Segments, bool Normalized );
+namespace Hyperbee.Json.Query;
 
 [DebuggerDisplay( "{Value}, SelectorKind = {SelectorKind}" )]
 public record SelectorDescriptor
@@ -19,20 +17,20 @@ public record SelectorDescriptor
 
 [DebuggerTypeProxy( typeof( SegmentDebugView ) )]
 [DebuggerDisplay( "First = ({Selectors?[0]}), IsSingular = {IsSingular}, Count = {Selectors?.Length}" )]
-public class JsonPathSegment
+public class JsonSegment
 {
-    internal static readonly JsonPathSegment Final = new(); // special end node
+    internal static readonly JsonSegment Final = new(); // special end node
 
     public bool IsFinal => Next == null;
 
     public bool IsSingular { get; } // singular is true when the selector resolves to one and only one element
 
-    public JsonPathSegment Next { get; set; }
+    public JsonSegment Next { get; set; }
     public SelectorDescriptor[] Selectors { get; init; }
 
-    private JsonPathSegment() { }
+    private JsonSegment() { }
 
-    public JsonPathSegment( JsonPathSegment next, string selector, SelectorKind kind )
+    public JsonSegment( JsonSegment next, string selector, SelectorKind kind )
     {
         Next = next;
         Selectors =
@@ -42,18 +40,18 @@ public class JsonPathSegment
         IsSingular = InitIsSingular();
     }
 
-    public JsonPathSegment( SelectorDescriptor[] selectors )
+    public JsonSegment( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
         IsSingular = InitIsSingular();
     }
 
-    public JsonPathSegment Prepend( string selector, SelectorKind kind )
+    public JsonSegment Prepend( string selector, SelectorKind kind )
     {
-        return new JsonPathSegment( this, selector, kind );
+        return new JsonSegment( this, selector, kind );
     }
 
-    public IEnumerable<JsonPathSegment> AsEnumerable()
+    public IEnumerable<JsonSegment> AsEnumerable()
     {
         var current = this;
 
@@ -93,7 +91,7 @@ public class JsonPathSegment
         return (Selectors[0].SelectorKind & SelectorKind.Singular) == SelectorKind.Singular;
     }
 
-    public JsonPathSegment Last()
+    public JsonSegment Last()
     {
         return AsEnumerable().Last();
     }
@@ -104,12 +102,34 @@ public class JsonPathSegment
         selectors = Selectors;
     }
 
-    internal class SegmentDebugView( JsonPathSegment instance )
+    internal static JsonQuery LinkSegments( ReadOnlySpan<char> query, IList<JsonSegment> segments )
+    {
+        if ( segments == null || segments.Count == 0 )
+            return new JsonQuery( query.ToString(), Final, false );
+
+        // link the segments
+
+        for ( var index = 0; index < segments.Count; index++ )
+        {
+            var segment = segments[index];
+
+            segment.Next = index == segments.Count - 1
+                ? Final
+                : segments[index + 1];
+        }
+
+        var rootSegment = segments.First(); // first segment is the root
+        var normalized = rootSegment.IsNormalized;
+
+        return new JsonQuery( query.ToString(), rootSegment, normalized );
+    }
+
+    internal class SegmentDebugView( JsonSegment instance )
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
         public SelectorDescriptor[] Selectors => instance.Selectors;
 
         [DebuggerBrowsable( DebuggerBrowsableState.Collapsed )]
-        public JsonPathSegment Next => instance.Next;
+        public JsonSegment Next => instance.Next;
     }
 }

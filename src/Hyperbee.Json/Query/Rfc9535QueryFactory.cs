@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
 
-namespace Hyperbee.Json.Path;
+namespace Hyperbee.Json.Query;
 
 internal static class Rfc9535QueryFactory
 {
@@ -17,10 +17,9 @@ internal static class Rfc9535QueryFactory
         Final
     }
 
-    internal static JsonPathQuery Parse( ReadOnlySpan<char> query, JsonQueryParserOptions options )
+    internal static JsonQuery Parse( ReadOnlySpan<char> query, JsonQueryParserOptions options )
     {
         bool allowDotWhitespace = options == JsonQueryParserOptions.Rfc9535AllowDotWhitespace;
-        bool rfc6902 = options == JsonQueryParserOptions.Rfc6902;
 
         // RFC - query cannot start or end with whitespace
         if ( !query.IsEmpty && (char.IsWhiteSpace( query[0] ) || char.IsWhiteSpace( query[^1] )) )
@@ -41,7 +40,7 @@ internal static class Rfc9535QueryFactory
         Span<char> whitespaceTerminators = ['\0', '\0']; // '\0' is used as a sentinel value
         var whiteSpaceReplay = true;
 
-        var segments = new List<JsonPathSegment>();
+        var segments = new List<JsonSegment>();
         var selectors = new List<SelectorDescriptor>();
 
         var state = State.Start;
@@ -360,47 +359,7 @@ internal static class Rfc9535QueryFactory
             }
         } while ( state != State.Final );
 
-        return BuildJsonPathQuery( query, segments, rfc6902 );
-    }
-
-    private static JsonPathQuery BuildJsonPathQuery( ReadOnlySpan<char> query, IList<JsonPathSegment> segments, bool rfc6902 )
-    {
-        if ( segments == null || segments.Count == 0 )
-            return new JsonPathQuery( query.ToString(), JsonPathSegment.Final, false );
-
-        // link the segments
-
-        for ( var index = 0; index < segments.Count; index++ )
-        {
-            var segment = segments[index];
-
-            var last = index == segments.Count - 1;
-
-            if ( last && rfc6902 )
-                Fixup6902AppendSegment( segment );
-
-            segment.Next = !last
-                ? segments[index + 1]
-                : JsonPathSegment.Final;
-        }
-
-        var rootSegment = segments.First(); // first segment is the root
-        var normalized = rootSegment.IsNormalized;
-
-        return new JsonPathQuery( query.ToString(), rootSegment, normalized );
-
-        // Helper method to determine if the segment is a 6902 append segment
-
-        static void Fixup6902AppendSegment( JsonPathSegment segment )
-        {
-            if ( segment.Selectors.Length != 1 )
-                return;
-
-            var selector = segment.Selectors[0];
-
-            if ( selector.SelectorKind == SelectorKind.Name && selector.Value == "-" )
-                selector.SelectorKind = SelectorKind.Index; // 6902 `-` is an index append
-        }
+        return JsonSegment.LinkSegments( query, segments );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -480,12 +439,12 @@ internal static class Rfc9535QueryFactory
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void InsertSegment( List<JsonPathSegment> segments, params SelectorDescriptor[] selectors )
+    private static void InsertSegment( List<JsonSegment> segments, params SelectorDescriptor[] selectors )
     {
         if ( selectors == null || selectors.Length == 0 || selectors.Length == 1 && selectors[0]?.Value == null )
             return; // ignore null and empty selectors. this is valid in some cases like `].` and `..`
 
-        segments.Add( new JsonPathSegment( selectors ) );
+        segments.Add( new JsonSegment( selectors ) );
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]

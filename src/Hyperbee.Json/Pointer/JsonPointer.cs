@@ -1,5 +1,4 @@
-﻿using Hyperbee.Json.Path;
-using Hyperbee.Json.Query;
+﻿using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Pointer;
 
@@ -14,7 +13,7 @@ public static class JsonPointer<TNode>
         var query = JsonQueryParser.Parse( pointer, options );
         var segment = query.Segments.Next; // skip the root segment
 
-        return JsonPathPointer<TNode>.TryGetFromPointer( root, segment, out _, out var value ) ? value : default;
+        return SegmentPointer<TNode>.TryGetFromPointer( root, segment, out _, out var value ) ? value : default;
     }
 
     public static bool TryGetFromPointer( TNode root, ReadOnlySpan<char> pointer, out TNode value, bool rfc6902 = false )
@@ -25,6 +24,6 @@ public static class JsonPointer<TNode>
 
         var query = JsonQueryParser.Parse( pointer, options );
         var segment = query.Segments.Next; // skip the root segment
-        return JsonPathPointer<TNode>.TryGetFromPointer( root, segment, out _, out value );
+        return SegmentPointer<TNode>.TryGetFromPointer( root, segment, out _, out value );
     }
 }

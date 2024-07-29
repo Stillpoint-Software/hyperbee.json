@@ -416,7 +416,6 @@ public class JsonPatch : IEnumerable<PatchOperation>
     {
         return GetEnumerator();
     }
-
 }
 
 public static class JsonPathExtensions
@@ -424,6 +423,6 @@ public static class JsonPathExtensions
     public static JsonNode FromJsonPointer( this JsonNode jsonNode, JsonSegment segment, out string name, out JsonNode parent )
     {
         name = segment.Last().Selectors[^1].Value;
-        return JsonPathPointer<JsonNode>.FromPointer( jsonNode, segment, out parent );
+        return SegmentPointer<JsonNode>.FromPointer( jsonNode, segment, out parent );
     }
 }

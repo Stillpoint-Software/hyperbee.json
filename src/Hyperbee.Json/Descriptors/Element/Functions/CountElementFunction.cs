@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using Hyperbee.Json.Filters.Parser;
-using Hyperbee.Json.Filters.Values;
+using Hyperbee.Json.Path.Filters.Parser;
+using Hyperbee.Json.Path.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 

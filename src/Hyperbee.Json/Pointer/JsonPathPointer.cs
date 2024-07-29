@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Path;
 
 namespace Hyperbee.Json.Pointer;
 

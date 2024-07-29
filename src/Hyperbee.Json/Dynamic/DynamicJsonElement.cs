@@ -1,5 +1,6 @@
 ﻿using System.Dynamic;
 using System.Text.Json;
+using Hyperbee.Json.Core;
 
 namespace Hyperbee.Json.Dynamic;
 

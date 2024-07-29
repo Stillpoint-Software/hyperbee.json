@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Path;
 using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Patch;

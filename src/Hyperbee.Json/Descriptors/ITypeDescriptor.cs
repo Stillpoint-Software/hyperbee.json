@@ -1,5 +1,5 @@
 ﻿using Hyperbee.Json.Descriptors.Node;
-using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Path.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
 

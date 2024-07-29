@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Hyperbee.Json.Path;
 
 namespace Hyperbee.Json.Descriptors;
 

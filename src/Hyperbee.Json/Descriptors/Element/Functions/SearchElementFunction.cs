@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
-using Hyperbee.Json.Filters;
-using Hyperbee.Json.Filters.Parser;
-using Hyperbee.Json.Filters.Values;
+using Hyperbee.Json.Path.Filters;
+using Hyperbee.Json.Path.Filters.Parser;
+using Hyperbee.Json.Path.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Element.Functions;
 

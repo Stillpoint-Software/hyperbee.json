@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Path;
 using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Descriptors.Element;

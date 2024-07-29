@@ -51,7 +51,7 @@ public class Config : ManualConfig
 
         // Set the artifacts path to a specific directory in the project
         var projectFolder = FindParentFolder( "Hyperbee.Json.Benchmark" );
-        ArtifactsPath = Path.Combine( projectFolder, "benchmark" );
+        ArtifactsPath = System.IO.Path.Combine( projectFolder, "benchmark" );
     }
 
     private static string FindParentFolder( string target )

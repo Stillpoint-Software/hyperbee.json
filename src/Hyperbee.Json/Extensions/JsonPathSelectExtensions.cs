@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Core;
+using Hyperbee.Json.Path;
 
 namespace Hyperbee.Json.Extensions;
 

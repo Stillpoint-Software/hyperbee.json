@@ -1,5 +1,5 @@
-﻿using Hyperbee.Json.Descriptors;
-using Hyperbee.Json.Internal;
+﻿using Hyperbee.Json.Core;
+using Hyperbee.Json.Descriptors;
 
 namespace Hyperbee.Json.Patch;
 

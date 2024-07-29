@@ -1,4 +1,6 @@
-﻿namespace Hyperbee.Json.Pointer;
+﻿using Hyperbee.Json.Path;
+
+namespace Hyperbee.Json.Pointer;
 
 public static class JsonPointer<TNode>
 {

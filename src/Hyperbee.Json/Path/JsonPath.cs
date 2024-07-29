@@ -68,7 +68,7 @@ public static class JsonPath<TNode>
 
     public static IEnumerable<TNode> Select( in TNode value, string query, NodeProcessorDelegate<TNode> processor = null )
     {
-        var compiledQuery = JsonPathQueryParser.Parse( query );
+        var compiledQuery = JsonQueryParser.Parse( query );
         return EnumerateMatches( value, value, compiledQuery, processor );
     }
 

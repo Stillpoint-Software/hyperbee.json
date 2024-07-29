@@ -1,33 +1,10 @@
-﻿using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
-using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Path;
 
-[Flags]
-public enum SelectorKind
+internal static class Rfc9535QueryFactory
 {
-    Undefined = 0x0,
-
-    // subtype
-    Singular = 0x1,
-    Group = 0x2,
-
-    // selectors
-    Root = 0x8 | Singular,
-    Name = 0x10 | Singular,
-    Index = 0x20 | Singular,
-    Slice = 0x40 | Group,
-    Filter = 0x80 | Group,
-    Wildcard = 0x100 | Group,
-    Descendant = 0x200 | Group
-}
-
-internal static class JsonPathQueryParser
-{
-    private static readonly ConcurrentDictionary<string, JsonPathQuery> JsonPathQueries = new();
-
     private enum State
     {
         Undefined,
@@ -40,38 +17,11 @@ internal static class JsonPathQueryParser
         Final
     }
 
-    internal static JsonPathQuery Parse( ReadOnlySpan<char> query, bool allowDotWhitespace = false )
+    internal static JsonPathQuery Parse( ReadOnlySpan<char> query, JsonQueryParserOptions options )
     {
-        return Parse( query.ToString(), allowDotWhitespace );
-    }
+        bool allowDotWhitespace = options == JsonQueryParserOptions.Rfc9535AllowDotWhitespace;
+        bool rfc6902 = options == JsonQueryParserOptions.Rfc6902;
 
-    internal static JsonPathQuery Parse( string query, bool allowDotWhitespace = false )
-    {
-        return JsonPathQueries.GetOrAdd( query, x => QueryFactory( x.AsSpan(), allowDotWhitespace ) );
-    }
-
-    internal static JsonPathQuery ParseRfc6901( ReadOnlySpan<char> query, bool rfc6902 = false )
-    {
-        return ParseRfc6901( query.ToString(), rfc6902 );
-    }
-
-    internal static JsonPathQuery ParseRfc6901( string query, bool rfc6902 = false )
-    {
-        return JsonPathQueries.GetOrAdd( query, x =>
-        {
-            // https://www.rfc-editor.org/rfc/rfc6901.html
-
-            var options = rfc6902
-                ? JsonPointerConvertOptions.Rfc6902
-                : JsonPointerConvertOptions.Default;
-
-            var jsonpath = JsonPathPointerConverter.ConvertJsonPointerToJsonPath( x, options );
-            return QueryFactory( jsonpath.AsSpan(), allowDotWhitespace: false, rfc6902 );
-        } );
-    }
-
-    private static JsonPathQuery QueryFactory( ReadOnlySpan<char> query, bool allowDotWhitespace, bool rfc6902 = false )
-    {
         // RFC - query cannot start or end with whitespace
         if ( !query.IsEmpty && (char.IsWhiteSpace( query[0] ) || char.IsWhiteSpace( query[^1] )) )
             throw new NotSupportedException( "Query cannot start or end with whitespace." );
@@ -196,6 +146,7 @@ internal static class JsonPathQueryParser
                                         InsertSegment( segments, GetSelectorDescriptor( SelectorKind.Descendant, ".." ) );
                                         i++; // advance past second `.`
                                     }
+
                                     selectorStart = i;
                                     break;
 
@@ -451,9 +402,6 @@ internal static class JsonPathQueryParser
                 selector.SelectorKind = SelectorKind.Index; // 6902 `-` is an index append
         }
     }
-
-    internal static void Clear() => JsonPathQueries.Clear();
-
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private static SelectorDescriptor GetSelectorDescriptor( SelectorKind selectorKind, ReadOnlySpan<char> selectorSpan, bool nullable = true )
@@ -781,7 +729,7 @@ internal static class JsonPathQueryParser
                 escapeChar == 'f' || escapeChar == 'n' ||
                 escapeChar == 'r' || escapeChar == 't' ||
                 escapeChar == 'u'
-            ;
+                ;
         }
 
         static bool IsValidUnicodeEscapeSequence( ReadOnlySpan<char> span )

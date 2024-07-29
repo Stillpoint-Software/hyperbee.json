@@ -304,7 +304,7 @@ public class DiffOptimizer<TNode> : IDiffOptimizer<TNode>
         if ( path == null )
             throw new JsonPatchException( "The 'path' property was missing." );
 
-        var query = JsonPathQueryParser.ParseRfc6901( path, rfc6902: true );
+        var query = JsonQueryParser.Parse( path, JsonQueryParserOptions.Rfc6902 );
         return query.Segments.Next; // skip the root segment
     }
 

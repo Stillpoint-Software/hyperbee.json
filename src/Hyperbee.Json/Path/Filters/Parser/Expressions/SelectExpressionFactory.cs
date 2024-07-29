@@ -39,7 +39,11 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         private static IValueType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
         {
-            var compiledQuery = JsonPathQueryParser.Parse( query, allowDotWhitespace );
+            var options = allowDotWhitespace
+                ? JsonQueryParserOptions.Rfc9535AllowDotWhitespace
+                : JsonQueryParserOptions.Rfc9535;
+
+            var compiledQuery = JsonQueryParser.Parse( query, options );
 
             var value = query[0] == '$'
                 ? runtimeContext.Root

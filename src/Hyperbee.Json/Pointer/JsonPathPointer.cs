@@ -23,7 +23,7 @@ public static class JsonPathPointer<TNode>
 
     public static TNode FromPointer( TNode root, ReadOnlySpan<char> pointer, out TNode parent )
     {
-        var query = JsonPathQueryParser.Parse( pointer );
+        var query = JsonQueryParser.Parse( pointer );
         var segment = query.Segments.Next; // skip the root segment
 
         return TryGetFromPointer( root, segment, out parent, out var value ) ? value : default;
@@ -41,7 +41,7 @@ public static class JsonPathPointer<TNode>
 
     public static bool TryGetFromPointer( TNode root, ReadOnlySpan<char> pointer, out TNode parent, out TNode value )
     {
-        var query = JsonPathQueryParser.Parse( pointer );
+        var query = JsonQueryParser.Parse( pointer );
         var segment = query.Segments.Next; // skip the root segment
 
         return TryGetFromPointer( root, segment, out parent, out value );

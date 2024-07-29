@@ -34,7 +34,7 @@ public class JsonPathQueryParserTests
     public void TokenizeJsonPath( string jsonPath, string expected )
     {
         // act
-        var compiledQuery = JsonPathQueryParser.Parse( jsonPath );
+        var compiledQuery = JsonQueryParser.Parse( jsonPath );
 
         // arrange
         var result = GetResultString( compiledQuery.Segments );
@@ -69,7 +69,7 @@ public class JsonPathQueryParserTests
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            _ = JsonPathQueryParser.Parse( jsonPath );
+            _ = JsonQueryParser.Parse( jsonPath );
         } );
     }
 }

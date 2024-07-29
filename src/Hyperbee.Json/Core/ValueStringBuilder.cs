@@ -76,9 +76,5 @@ internal ref struct ValueStringBuilder // use in a try finally with an explicit 
 
         if ( arrayPoolBuffer != null )
             ArrayPool<char>.Shared.Return( arrayPoolBuffer );
-
-        _arrayPoolBuffer = null;
-        _chars = default;
-        _pos = 0;
     }
 }

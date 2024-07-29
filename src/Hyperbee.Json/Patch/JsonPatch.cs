@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Hyperbee.Json.Extensions;
-using Hyperbee.Json.Path;
 using Hyperbee.Json.Pointer;
 using Hyperbee.Json.Query;
 
@@ -88,7 +87,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
     {
         var segment = GetSegments( patch.Path );
 
-        var target = node.FromJsonPointer( segment, out var name, out var parent );
+        var target = FromJsonPointer( node, segment, out var name, out var parent );
 
         ThrowLocationDoesNotExist( patch.Path, parent );
 
@@ -140,12 +139,12 @@ public class JsonPatch : IEnumerable<PatchOperation>
 
         ThrowCycleDetected( segment, fromSegment );
 
-        var from = node.FromJsonPointer( fromSegment, out var fromName, out var fromParent );
+        var from = FromJsonPointer( node, fromSegment, out var fromName, out var fromParent );
 
         ThrowLocationDoesNotExist( patch.From, fromParent );
         ThrowLocationDoesNotExist( patch.From, from );
 
-        _ = node.FromJsonPointer( segment, out var name, out var parent );
+        _ = FromJsonPointer( node, segment, out var name, out var parent );
 
         ThrowLocationDoesNotExist( patch.Path, name );
 
@@ -233,12 +232,12 @@ public class JsonPatch : IEnumerable<PatchOperation>
 
         ThrowCycleDetected( segment, fromSegment );
 
-        var from = node.FromJsonPointer( fromSegment, out var fromName, out var fromParent );
+        var from = FromJsonPointer( node, fromSegment, out var fromName, out var fromParent );
 
         ThrowLocationDoesNotExist( patch.From, fromParent );
         ThrowLocationDoesNotExist( patch.From, from );
 
-        _ = node.FromJsonPointer( segment, out var moveName, out var parent );
+        _ = FromJsonPointer( node, segment, out var moveName, out var parent );
 
         ThrowLocationDoesNotExist( patch.Path, parent );
 
@@ -322,7 +321,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
     {
         var segment = GetSegments( patch.Path );
 
-        var removeTarget = node.FromJsonPointer( segment, out var removeName, out var removeParent );
+        var removeTarget = FromJsonPointer( node, segment, out var removeName, out var removeParent );
 
         ThrowLocationDoesNotExist( patch.Path, removeTarget );
 
@@ -354,7 +353,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
     private static void ReplaceOperation( JsonNode node, PatchOperation patch, Action<PatchOperation> undo )
     {
         var segment = GetSegments( patch.Path );
-        var replaceTarget = node.FromJsonPointer( segment, out _, out var replaceParent );
+        var replaceTarget = FromJsonPointer( node, segment, out _, out var replaceParent );
 
         ThrowLocationDoesNotExist( patch.Path, replaceParent );
         ThrowLocationDoesNotExist( patch.Path, replaceTarget );
@@ -368,7 +367,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
     {
         var segment = GetSegments( patch.Path );
 
-        var target = node.FromJsonPointer( segment, out _, out var parent );
+        var target = FromJsonPointer( node, segment, out _, out var parent );
 
         ThrowLocationDoesNotExist( patch.Path, target );
         ThrowLocationDoesNotExist( patch.Path, parent );
@@ -416,11 +415,8 @@ public class JsonPatch : IEnumerable<PatchOperation>
     {
         return GetEnumerator();
     }
-}
 
-public static class JsonPathExtensions
-{
-    public static JsonNode FromJsonPointer( this JsonNode jsonNode, JsonSegment segment, out string name, out JsonNode parent )
+    private static JsonNode FromJsonPointer( JsonNode jsonNode, JsonSegment segment, out string name, out JsonNode parent )
     {
         name = segment.Last().Selectors[^1].Value;
         return SegmentPointer<JsonNode>.FromPointer( jsonNode, segment, out parent );

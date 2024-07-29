@@ -17,6 +17,9 @@ public static class SegmentPointer<TNode>
         if ( !segment.IsNormalized )
             throw new NotSupportedException( "Unsupported pointer query format." );
 
+        if ( !segment.IsFinal && segment.Selectors[0].SelectorKind == SelectorKind.Root )
+            segment = segment.Next; // skip the root segment
+
         var accessor = Descriptor.ValueAccessor;
 
         value = default;

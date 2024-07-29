@@ -24,6 +24,7 @@ public static class JsonPointer<TNode>
 
         var query = JsonQueryParser.Parse( pointer, options );
         var segment = query.Segments.Next; // skip the root segment
+
         return SegmentPointer<TNode>.TryGetFromPointer( root, segment, out _, out value );
     }
 }

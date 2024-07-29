@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using Hyperbee.Json.Path;
 using Hyperbee.Json.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Path;
+namespace Hyperbee.Json.Tests.Query;
 
 [TestClass]
-public class JsonPathQueryParserTests
+public class JsonPathParserTests
 {
     [DataTestMethod]
     [DataRow( "$", "[$ => 1]" )]

@@ -24,7 +24,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
 
     public void Apply( JsonElement element ) => Apply( element.ConvertToNode(), _operations );
 
-    public void Apply( JsonNode node, List<PatchOperation> patches )
+    public static void Apply( JsonNode node, List<PatchOperation> patches )
     {
         var undoOperations = new Stack<PatchOperation>();
 

@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 using Hyperbee.Json.Core;
 using Hyperbee.Json.Descriptors;
 
@@ -10,16 +11,44 @@ public static class JsonDiff<TNode>
 
     private static readonly ITypeDescriptor<TNode> Descriptor = JsonTypeDescriptorRegistry.GetDescriptor<TNode>();
 
+    public static IEnumerable<PatchOperation> Diff( object source, object target )
+    {
+        switch ( source )
+        {
+            case TNode sourceNode when target is TNode targetNode:
+                return InternalDiff( sourceNode, targetNode );
+            default:
+                {
+                    if ( typeof( TNode ) == typeof( JsonElement ) )
+                    {
+                        var sourceElement = JsonSerializer.SerializeToElement( source );
+                        var targetElement = JsonSerializer.SerializeToElement( target );
+
+                        return JsonDiff<JsonElement>.InternalDiff( sourceElement, targetElement );
+                    }
+
+                    if ( typeof( TNode ) == typeof( JsonNode ) )
+                    {
+                        var sourceNode = JsonSerializer.SerializeToNode( source );
+                        var targetNode = JsonSerializer.SerializeToNode( target );
+
+                        return JsonDiff<JsonNode>.InternalDiff( sourceNode, targetNode );
+                    }
+
+                    throw new NotSupportedException( $"Type {typeof( TNode )} is not supported." );
+                }
+        }
+    }
+
     public static IEnumerable<PatchOperation> Diff( TNode source, TNode target )
     {
-        var operations = InternalDiff( source, target );
-        return operations;
+        return InternalDiff( source, target );
     }
 
     private static PatchOperation[] InternalDiff( TNode source, TNode target )
     {
         var stack = new Stack<DiffOperation>( 8 );
-        var operations = new List<PatchOperation>();
+        var operations = new List<PatchOperation>( 8 );
 
         stack.Push( new DiffOperation( source, target, string.Empty ) );
 
@@ -45,15 +74,12 @@ public static class JsonDiff<TNode>
                         break;
 
                     case NodeKind.Array:
-                        ProcessArrayDiff( operation, operations );
+                        ProcessArrayDiff( operation, stack, operations );
                         break;
 
                     case NodeKind.Value:
                     default:
-                        if ( !Descriptor.NodeActions.DeepEquals( operation.Source, operation.Target ) )
-                        {
-                            operations.Add( new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target } );
-                        }
+                        ProcessValueDiff( operation, operations );
 
                         break;
                 }
@@ -63,9 +89,9 @@ public static class JsonDiff<TNode>
         return [.. operations];
     }
 
-    private static void ProcessObjectDiff( DiffOperation operation, Stack<DiffOperation> stack, List<PatchOperation> operations )
+    private static void ProcessObjectDiff( DiffOperation operation, Stack<DiffOperation> stack, ICollection<PatchOperation> operations )
     {
-        var (accessor, _) = Descriptor;
+        var accessor = Descriptor.ValueAccessor;
 
         foreach ( var (value, name) in accessor.EnumerateObject( operation.Source ) )
         {
@@ -94,80 +120,111 @@ public static class JsonDiff<TNode>
         }
     }
 
-    private static void ProcessArrayDiff( DiffOperation operation, List<PatchOperation> operations )
+    private static void ProcessArrayDiff( DiffOperation operation, Stack<DiffOperation> stack, ICollection<PatchOperation> operations )
     {
-        var (accessor, _) = Descriptor;
+        var accessor = Descriptor.ValueAccessor;
 
         var source = accessor.EnumerateArray( operation.Source ).ToArray();
         var target = accessor.EnumerateArray( operation.Target ).ToArray();
 
-        var maxLength = (source.Length + 1) * (target.Length + 1);
+        var row = source.Length;
+        var col = target.Length;
 
-        Span<int> matrix = maxLength <= 512
-            ? stackalloc int[maxLength]
-            : ArrayPool<int>.Shared.Rent( maxLength );
+        var matrix = Matrix<int>.StackSize( row, col ) <= 1024
+            ? new Matrix<int>( stackalloc int[(row + 1) * (col + 1)], row + 1, col + 1 )
+            : new Matrix<int>( row + 1, col + 1 );
 
-        CalculateLevenshteinMatrix( matrix, source, target );
-
-        var i = source.Length;
-        var j = target.Length;
-
-        while ( i > 0 || j > 0 )
+        try
         {
-            var currentPos = i * (target.Length + 1) + j;
+            CalculateLevenshteinMatrix( matrix, source, target );
 
-            if ( i > 0 && matrix[currentPos] == matrix[(i - 1) * (target.Length + 1) + j] + 1 )
+            while ( row > 0 || col > 0 )
             {
-                var path = Combine( operation.Path, (i - 1).ToString() );
-                operations.Add( new PatchOperation( PatchOperationType.Remove, path, null, null ) );
-                i--;
-            }
-            else if ( j > 0 && matrix[currentPos] == matrix[i * (target.Length + 1) + (j - 1)] + 1 )
-            {
-                var path = Combine( operation.Path, (j - 1).ToString() );
-                operations.Add( new PatchOperation( PatchOperationType.Add, path, null, target[j - 1] ) );
-                j--;
-            }
-            else if ( i > 0 && j > 0 )
-            {
-                if ( matrix[currentPos] == matrix[(i - 1) * (target.Length + 1) + (j - 1)] )
+                if ( row > 0 && matrix[row, col] == matrix[row - 1, col] + 1 )
                 {
-                    i--;
-                    j--;
+                    var path = Combine( operation.Path, (row - 1).ToString() );
+                    operations.Add( new PatchOperation( PatchOperationType.Remove, path, null, null ) );
+                    row--;
                 }
-                else
+                else if ( col > 0 && matrix[row, col] == matrix[row, col - 1] + 1 )
                 {
-                    var path = Combine( operation.Path, (i - 1).ToString() );
-                    operations.Add( new PatchOperation( PatchOperationType.Replace, path, null, target[j - 1] ) );
-                    i--;
-                    j--;
+                    var path = Combine( operation.Path, (col - 1).ToString() );
+                    operations.Add( new PatchOperation( PatchOperationType.Add, path, null, target[col - 1] ) );
+                    col--;
+                }
+                else if ( row > 0 && col > 0 )
+                {
+                    if ( matrix[row, col] == matrix[row - 1, col - 1] )
+                    {
+                        row--;
+                        col--;
+                    }
+                    else
+                    {
+                        var sourceKind = accessor.GetNodeKind( source[row - 1] );
+                        var targetKind = accessor.GetNodeKind( target[col - 1] );
+                        var path = Combine( operation.Path, (row - 1).ToString() );
+
+                        if ( sourceKind != targetKind )
+                        {
+                            // If they don't match they are always a replacement.
+                            operations.Add( new PatchOperation( PatchOperationType.Replace, path, null, target[col - 1] ) );
+                        }
+                        else
+                        {
+                            // We already check if these were values when calculating the matrix,
+                            // so we know this are objects or arrays, and we need further processing.
+                            stack.Push( new DiffOperation( source[row - 1], target[col - 1], path ) );
+                        }
+
+                        row--;
+                        col--;
+                    }
                 }
             }
         }
-
-        operations.Reverse();
+        finally
+        {
+            matrix.Dispose();
+        }
     }
 
-    private static void CalculateLevenshteinMatrix( Span<int> matrix, TNode[] source, TNode[] target )
+    private static void ProcessValueDiff( DiffOperation operation, ICollection<PatchOperation> operations )
     {
-        for ( int row = 0; row <= source.Length; row++ )
-            matrix[row * (target.Length + 1)] = row;
-        for ( int col = 0; col <= target.Length; col++ )
-            matrix[col] = col;
+        if ( Descriptor.NodeActions.DeepEquals( operation.Source, operation.Target ) )
+            return;
 
-        for ( int row = 1; row <= source.Length; row++ )
+        operations.Add( new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target } );
+    }
+
+    private static void CalculateLevenshteinMatrix( Matrix<int> matrix, TNode[] source, TNode[] target )
+    {
+        var accessor = Descriptor.ValueAccessor;
+
+        for ( var row = 0; row <= source.Length; row++ )
+            matrix[row, 0] = row;
+
+        for ( var col = 0; col <= target.Length; col++ )
+            matrix[0, col] = col;
+
+        for ( var row = 1; row <= source.Length; row++ )
         {
             for ( int col = 1; col <= target.Length; col++ )
             {
-                var cost = Descriptor.NodeActions.DeepEquals( source[row - 1], target[col - 1] ) ? 0 : 1;
+                var cost = 1;
+                if ( accessor.TryGetValue( source[row - 1], out var sourceValue ) &&
+                   accessor.TryGetValue( target[col - 1], out var targetValue ) )
+                {
+                    if ( Equals( targetValue, sourceValue ) )
+                        cost = 0;
+                }
 
                 // Calculate the cost of deletion, insertion, and replacement
-                var delete = matrix[(row - 1) * (target.Length + 1) + col] + 1;
-                var insert = matrix[row * (target.Length + 1) + (col - 1)] + 1;
-                var replace = matrix[(row - 1) * (target.Length + 1) + (col - 1)] + cost;
+                var remove = matrix[row - 1, col] + 1;
+                var add = matrix[row, col - 1] + 1;
+                var replace = matrix[row - 1, col - 1] + cost;
 
-                matrix[row * (target.Length + 1) + col] = Math.Min(
-                    Math.Min( delete, insert ), replace );
+                matrix[row, col] = Math.Min( Math.Min( remove, add ), replace );
             }
         }
     }

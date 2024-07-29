@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace Hyperbee.Json.Descriptors;
+﻿namespace Hyperbee.Json.Descriptors;
 
 public interface IValueAccessor<TNode>
 {

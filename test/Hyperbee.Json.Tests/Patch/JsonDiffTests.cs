@@ -148,7 +148,6 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( "Mark", Unwrap( results[0].Value ) );
     }
 
-
     [DataTestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
@@ -174,6 +173,53 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( PatchOperationType.Replace, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.AreEqual( "C", Unwrap( results[0].Value ) );
+    }
+
+    [DataTestMethod]
+    [DataRow( typeof( JsonDocument ) )]
+    [DataRow( typeof( JsonNode ) )]
+    public void Replace_WhenComplexTargetArrayHasDifferentValues( Type sourceType )
+    {
+        var source =
+            """
+                {
+                    "categories": [ 
+                        "A",
+                        {
+                            "name": "B",
+                            "value": 1
+                        } 
+                    ]
+                }
+            """;
+
+        var target =
+            """
+                {
+                    "categories": [ 
+                        "A",
+                        {
+                            "name": "B",
+                            "value": 2
+                        },
+                        {
+                            "name": "C",
+                            "value": 3
+                        } 
+                    ]
+                }
+            """;
+
+        var results = Diff( sourceType, source, target );
+
+        Assert.IsTrue( results.Length == 2 );
+
+        Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
+        Assert.AreEqual( "/categories/2", results[0].Path );
+
+        Assert.AreEqual( PatchOperationType.Replace, results[1].Operation );
+        Assert.AreEqual( "/categories/1/value", results[1].Path );
+        Assert.AreEqual( 2, Unwrap( results[1].Value ) );
     }
 
     [DataTestMethod]
@@ -216,7 +262,6 @@ public class JsonDiffTests : JsonTestBase
 
         Assert.IsTrue( results.Length == 8 );
     }
-
 
     [DataTestMethod]
     [DataRow( typeof( JsonDocument ) )]
@@ -261,30 +306,72 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( "/m~0n", results[9].Path );
     }
 
+    [TestMethod]
+    public void MultipleOperations_WhenSourceAndTargetAreObjects()
+    {
+        var source = new
+        {
+            first = "John",
+            age = 30,
+            address = new { city = "New York", state = "NY" },
+            categories = new[] { "A", "B" }
+        };
+
+        var target = new
+        {
+            first = "John",
+            last = "Doe",
+            age = 45,
+            address = new { city = "New York", zip = "12345" },
+            categories = new[] { "B", "C", "D" },
+            job = new { title = "Developer", company = "Microsoft" }
+        };
+
+        var results = JsonDiff<JsonElement>.Diff( source, target ).ToArray();
+
+        Assert.IsTrue( results.Length == 8 );
+    }
+
+
     private static object Unwrap( object value )
     {
-        return value switch
+        switch ( value )
         {
-            JsonElement element => element.ValueKind switch
-            {
-                JsonValueKind.String => element.GetString(),
-                JsonValueKind.Number => element.GetInt32(),
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                JsonValueKind.Null => null,
-                _ => value
-            },
-            JsonNode node => node.GetValueKind() switch
-            {
-                JsonValueKind.String => node.GetValue<string>(),
-                JsonValueKind.Number => node.GetValue<int>(),
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                JsonValueKind.Null => null,
-                _ => value
-            },
-            _ => value
-        };
+            case JsonElement element:
+                switch ( element.ValueKind )
+                {
+                    case JsonValueKind.String:
+                        return element.GetString();
+                    case JsonValueKind.Number:
+                        return element.GetInt32();
+                    case JsonValueKind.True:
+                        return true;
+                    case JsonValueKind.False:
+                        return false;
+                    case JsonValueKind.Null:
+                        return null;
+                    default:
+                        return element;
+                }
+            case JsonNode node:
+                switch ( node.GetValueKind() )
+                {
+                    case JsonValueKind.String:
+                        return node.GetValue<string>();
+                    case JsonValueKind.Number:
+                        return node.GetValue<int>();
+                    case JsonValueKind.True:
+                        return true;
+                    case JsonValueKind.False:
+                        return false;
+                    case JsonValueKind.Null:
+                        return (JsonNode) null;
+                    default:
+                        return node;
+                }
+            default:
+                return value;
+        }
     }
 
     private static PatchOperation[] Diff( Type sourceType, string source, string target )

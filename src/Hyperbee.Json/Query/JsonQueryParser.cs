@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Hyperbee.Json.Path;
+namespace Hyperbee.Json.Query;
 
 [Flags]
 public enum SelectorKind
@@ -31,18 +31,20 @@ public enum JsonQueryParserOptions
     Rfc9535AllowDotWhitespace = Rfc9535 | 8
 }
 
+public record JsonQuery( string Query, JsonSegment Segments, bool Normalized );
+
 internal static class JsonQueryParser
 {
-    private static readonly ConcurrentDictionary<string, JsonPathQuery> JsonPathQueries = new();
+    private static readonly ConcurrentDictionary<string, JsonQuery> JsonPathQueries = new();
 
     internal static void Clear() => JsonPathQueries.Clear();
 
-    internal static JsonPathQuery Parse( ReadOnlySpan<char> query, JsonQueryParserOptions options = JsonQueryParserOptions.Rfc9535 )
+    internal static JsonQuery Parse( ReadOnlySpan<char> query, JsonQueryParserOptions options = JsonQueryParserOptions.Rfc9535 )
     {
         return Parse( query.ToString(), options );
     }
 
-    internal static JsonPathQuery Parse( string query, JsonQueryParserOptions options = JsonQueryParserOptions.Rfc9535 )
+    internal static JsonQuery Parse( string query, JsonQueryParserOptions options = JsonQueryParserOptions.Rfc9535 )
     {
         return JsonPathQueries.GetOrAdd( query, x =>
         {

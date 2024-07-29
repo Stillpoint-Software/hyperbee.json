@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Path;
 using Hyperbee.Json.Pointer;
+using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Patch;
 
@@ -376,7 +377,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
             throw new JsonPatchException( $"The target location's value '{patch.Value}' is not equal the value." );
     }
 
-    private static JsonPathSegment GetSegments( string path )
+    private static JsonSegment GetSegments( string path )
     {
         if ( path == null )
             throw new JsonPatchException( "The 'path' property was missing." );
@@ -385,7 +386,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
         return query.Segments.Next; // skip the root segment
     }
 
-    private static void ThrowCycleDetected( JsonPathSegment segment, JsonPathSegment fromSegment )
+    private static void ThrowCycleDetected( JsonSegment segment, JsonSegment fromSegment )
     {
         // TODO: compare segments, cannot move to child of self
         if ( segment == fromSegment )
@@ -420,7 +421,7 @@ public class JsonPatch : IEnumerable<PatchOperation>
 
 public static class JsonPathExtensions
 {
-    public static JsonNode FromJsonPointer( this JsonNode jsonNode, JsonPathSegment segment, out string name, out JsonNode parent )
+    public static JsonNode FromJsonPointer( this JsonNode jsonNode, JsonSegment segment, out string name, out JsonNode parent )
     {
         name = segment.Last().Selectors[^1].Value;
         return JsonPathPointer<JsonNode>.FromPointer( jsonNode, segment, out parent );

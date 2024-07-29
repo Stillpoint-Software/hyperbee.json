@@ -1,5 +1,6 @@
 ﻿using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Path;
+using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Patch;
 
@@ -299,7 +300,7 @@ public class DiffOptimizer<TNode> : IDiffOptimizer<TNode>
             : string.Join( '/', segments.Take( segments.Length - 1 ) );
     }
 
-    private static JsonPathSegment GetSegments( string path )
+    private static JsonSegment GetSegments( string path )
     {
         if ( path == null )
             throw new JsonPatchException( "The 'path' property was missing." );

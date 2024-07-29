@@ -37,6 +37,7 @@ using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Path.Filters;
+using Hyperbee.Json.Query;
 
 // https://www.rfc-editor.org/rfc/rfc9535.html
 // https://www.rfc-editor.org/rfc/rfc9535.html#appendix-A
@@ -52,7 +53,7 @@ internal static class IndexHelper
     public static string GetIndexString( int index ) => index < 64 ? IndexLookup[index] : index.ToString();
 }
 
-public delegate void NodeProcessorDelegate<TNode>( in TNode parent, in TNode value, string key, in JsonPathSegment segment );
+public delegate void NodeProcessorDelegate<TNode>( in TNode parent, in TNode value, string key, in JsonSegment segment );
 
 public static class JsonPath<TNode>
 {
@@ -72,7 +73,7 @@ public static class JsonPath<TNode>
         return EnumerateMatches( value, value, compiledQuery, processor );
     }
 
-    internal static IEnumerable<TNode> SelectInternal( in TNode value, in TNode root, JsonPathQuery compiledQuery, NodeProcessorDelegate<TNode> processor = null )
+    internal static IEnumerable<TNode> SelectInternal( in TNode value, in TNode root, JsonQuery compiledQuery, NodeProcessorDelegate<TNode> processor = null )
     {
         // entry point for filter recursive calls
 
@@ -83,7 +84,7 @@ public static class JsonPath<TNode>
         return EnumerateMatches( value, root, compiledQuery, processor );
     }
 
-    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, JsonPathQuery compiledQuery, NodeProcessorDelegate<TNode> processor = null )
+    private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, JsonQuery compiledQuery, NodeProcessorDelegate<TNode> processor = null )
     {
         if ( string.IsNullOrWhiteSpace( compiledQuery.Query ) ) // invalid per the RFC ABNF
             return []; // Consensus: return empty array for empty query
@@ -332,8 +333,8 @@ ProcessArgs:
     }
 
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void DeconstructValues( out TNode parent, out TNode value, out string key, out JsonPathSegment segmentNext, out NodeFlags flags,
-        (TNode Parent, TNode Value, string Key, JsonPathSegment SegmentNext, NodeFlags Flags) values )
+    private static void DeconstructValues( out TNode parent, out TNode value, out string key, out JsonSegment segmentNext, out NodeFlags flags,
+        (TNode Parent, TNode Value, string Key, JsonSegment SegmentNext, NodeFlags Flags) values )
     {
         parent = values.Parent;
         value = values.Value;
@@ -388,7 +389,7 @@ ProcessArgs:
     }
 
     [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, {Segment}" )]
-    private readonly record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonPathSegment Segment, NodeFlags Flags );
+    private readonly record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonSegment Segment, NodeFlags Flags );
 
     [DebuggerDisplay( "{_stack}" )]
     private sealed class NodeArgsStack( int capacity = 8 )
@@ -397,18 +398,18 @@ ProcessArgs:
         private readonly Stack<NodeArgs> _stack = new( capacity );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public void Push( in TNode parent, in TNode value, string key, in JsonPathSegment segment, NodeFlags flags = NodeFlags.Default )
+        public void Push( in TNode parent, in TNode value, string key, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
         {
             _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public void Push( in TNode parent, in TNode value, int index, in JsonPathSegment segment, NodeFlags flags = NodeFlags.Default )
+        public void Push( in TNode parent, in TNode value, int index, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
         {
             _stack.Push( new NodeArgs( parent, value, IndexHelper.GetIndexString( index ), segment, flags ) );
         }
 
-        public void PushMany( in TNode parent, in IEnumerable<(TNode Value, string Key)> items, in JsonPathSegment segment, NodeFlags flags = NodeFlags.Default )
+        public void PushMany( in TNode parent, in IEnumerable<(TNode Value, string Key)> items, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
         {
             foreach ( var (value, key) in items )
             {

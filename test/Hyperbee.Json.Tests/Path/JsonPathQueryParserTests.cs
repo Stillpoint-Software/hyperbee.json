@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Hyperbee.Json.Path;
+using Hyperbee.Json.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Tests.Path;
@@ -44,11 +45,11 @@ public class JsonPathQueryParserTests
 
         return;
 
-        static string GetResultString( JsonPathSegment segment )
+        static string GetResultString( JsonSegment segment )
         {
             return string.Join( "", segment.AsEnumerable().Select( ConvertToString ) );
 
-            static string ConvertToString( JsonPathSegment segment )
+            static string ConvertToString( JsonSegment segment )
             {
                 var (singular, selectors) = segment;
                 var selectorType = singular ? "1" : "#"; // 1:singular, #:group

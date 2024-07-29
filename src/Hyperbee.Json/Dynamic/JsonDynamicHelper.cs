@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Dynamic;
 
-namespace Hyperbee.Json.Extensions;
+namespace Hyperbee.Json.Dynamic;
 
 public static class JsonDynamicHelper
 {

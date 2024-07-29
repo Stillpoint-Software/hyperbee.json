@@ -1,5 +1,5 @@
 ﻿using System;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Pointer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hyperbee.Json.Tests.Pointer;

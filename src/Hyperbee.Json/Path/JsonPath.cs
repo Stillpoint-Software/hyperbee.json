@@ -34,6 +34,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Hyperbee.Json.Core;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Path.Filters;
 
@@ -367,7 +368,7 @@ ProcessArgs:
         if ( length == 0 )
             return (0, 0, 0);
 
-        var (lower, upper, step) = JsonPathSliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
+        var (lower, upper, step) = SliceSyntaxHelper.ParseExpression( sliceExpr, length, reverse: true );
 
         if ( step < 0 )
             (lower, upper) = (upper, lower);

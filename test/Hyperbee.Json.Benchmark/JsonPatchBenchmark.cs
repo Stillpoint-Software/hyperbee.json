@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Dynamic;
 using Hyperbee.Json.Patch;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json.Serialization;

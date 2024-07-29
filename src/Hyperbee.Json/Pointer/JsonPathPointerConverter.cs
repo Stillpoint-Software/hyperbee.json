@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Hyperbee.Json.Core;
 
-namespace Hyperbee.Json.Extensions;
+namespace Hyperbee.Json.Pointer;
 
 [Flags]
 public enum JsonPointerConvertOptions
@@ -15,7 +15,7 @@ public static class JsonPathPointerConverter
 {
     public static string ConvertJsonPathToJsonPointer( ReadOnlySpan<char> jsonPath, JsonPointerConvertOptions options = JsonPointerConvertOptions.Default )
     {
-        bool fragment = options.HasFlag( JsonPointerConvertOptions.Fragment );
+        var fragment = options.HasFlag( JsonPointerConvertOptions.Fragment );
 
         if ( jsonPath.IsEmpty || jsonPath.SequenceEqual( "$".AsSpan() ) )
         {
@@ -42,7 +42,7 @@ public static class JsonPathPointerConverter
                             {
                                 i++;
                                 var start = i;
-                                while ( i < jsonPath.Length && (jsonPath[i] != quote || (i > start && jsonPath[i - 1] == '\\')) )
+                                while ( i < jsonPath.Length && (jsonPath[i] != quote || i > start && jsonPath[i - 1] == '\\') )
                                 {
                                     i++;
                                 }
@@ -96,7 +96,7 @@ public static class JsonPathPointerConverter
 
         foreach ( var c in itemSpan )
         {
-            if ( (isQuoted && c == '/') || (c == '~' || c == '/') )
+            if ( isQuoted && c == '/' || c == '~' || c == '/' )
             {
                 replacementCount++;
             }
@@ -241,8 +241,8 @@ public static class JsonPathPointerConverter
     {
         jsonPath.Append( "['" );
 
-        int lastPos = 0;
-        for ( int j = 0; j < itemSpan.Length; j++ )
+        var lastPos = 0;
+        for ( var j = 0; j < itemSpan.Length; j++ )
         {
             if ( itemSpan[j] != '\'' )
             {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Pointer;
 
 namespace Hyperbee.Json.Path;
 

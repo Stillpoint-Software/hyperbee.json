@@ -16,8 +16,8 @@ public ref struct Matrix
     {
         var totalElements = rows * columns;
 
-        if ( totalElements > 32 )
-            throw new ArgumentException( $"{nameof( rows )}.Length + {nameof( columns )}.Length exceeds the stack allocation limit of 32." );
+        if ( totalElements > 64 )
+            throw new ArgumentException( $"{nameof( rows )}.Length + {nameof( columns )}.Length exceeds the stack allocation limit of 64." );
 
         if ( arrayBuffer.Length != totalElements )
             throw new ArgumentException( $"Length of {nameof( columns )} does not match the {nameof( rows )}.Length + {nameof( columns )}.Length." );

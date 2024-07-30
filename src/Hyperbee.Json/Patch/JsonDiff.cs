@@ -90,7 +90,7 @@ public static class JsonDiff<TNode>
         return [.. operations];
     }
 
-    private static void ProcessObjectDiff( DiffOperation operation, Stack<DiffOperation> stack, ICollection<PatchOperation> operations )
+    private static void ProcessObjectDiff( DiffOperation operation, Stack<DiffOperation> stack, List<PatchOperation> operations )
     {
         var accessor = Descriptor.ValueAccessor;
 
@@ -121,7 +121,7 @@ public static class JsonDiff<TNode>
         }
     }
 
-    private static void ProcessArrayDiff( DiffOperation operation, Stack<DiffOperation> stack, ICollection<PatchOperation> operations )
+    private static void ProcessArrayDiff( DiffOperation operation, Stack<DiffOperation> stack, List<PatchOperation> operations )
     {
         var accessor = Descriptor.ValueAccessor;
 
@@ -193,7 +193,7 @@ public static class JsonDiff<TNode>
         }
     }
 
-    private static void ProcessValueDiff( DiffOperation operation, ICollection<PatchOperation> operations )
+    private static void ProcessValueDiff( DiffOperation operation, List<PatchOperation> operations )
     {
         if ( Descriptor.NodeActions.DeepEquals( operation.Source, operation.Target ) )
             return;

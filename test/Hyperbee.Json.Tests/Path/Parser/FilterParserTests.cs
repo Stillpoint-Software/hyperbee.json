@@ -9,7 +9,7 @@ using Hyperbee.Json.Path.Filters.Parser;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Path;
+namespace Hyperbee.Json.Tests.Path.Parser;
 
 [TestClass]
 public class FilterParserTests : JsonTestBase

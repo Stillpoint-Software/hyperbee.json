@@ -5,7 +5,7 @@ using Hyperbee.Json.Path.Filters.Values;
 using Hyperbee.Json.Tests.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hyperbee.Json.Tests.Path;
+namespace Hyperbee.Json.Tests.Path.Parser;
 
 [TestClass]
 public class NodeTypeComparerTests : JsonTestBase

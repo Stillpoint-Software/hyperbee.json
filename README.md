@@ -14,7 +14,7 @@ The library is designed to be fast and extensible, allowing support for other JS
 
 ## JSONPath RFC
 
-Hyperbee.Json conforms to the RFC, and aims to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
+Hyperbee.Json conforms to the RFC-9535, and aims to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
 when the RFC is unopinionated. When the RFC is unopinionated, and where the consensus is ambiguous or not aligned with our 
 performance and usability goals, we may deviate. Our goal is to provide a robust and performant library while strengthening our alignment with the RFC and the community.
 
@@ -156,7 +156,7 @@ var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
 
 ## Why Choose Hyperbee.Json?
 
-Hyperbee is fast, lightweight, fully RFC conforming, that supports **both** `JsonElement` and `JsonNode`.
+Hyperbee is fast, lightweight, fully  RFC-9535 conforming, that supports **both** `JsonElement` and `JsonNode`.
 
 - High Performance, low allocating.
 - Supports **both** `JsonElement`, and `JsonNode`.

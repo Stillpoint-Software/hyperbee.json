@@ -49,14 +49,14 @@ public static class SliceSyntaxHelper
         static int ParseStep( ReadOnlySpan<char> part, int length )
         {
             // a little magic for overflow and underflow conditions cause by massive steps.
-            // just scope the step to length + 1 or -length - 1.
+            // just scope the step to length or -length.
 
             if ( !part.IsEmpty && long.TryParse( part, NumberStyles.Integer, CultureInfo.InvariantCulture, out var n ) )
             {
                 return n switch
                 {
-                    > 0 when n > length => length + 1,
-                    < 0 when -n > length => -(length + 1),
+                    > 0 when n > length => length,
+                    < 0 when -n > length => -length,
                     _ => (int) n
                 };
             }

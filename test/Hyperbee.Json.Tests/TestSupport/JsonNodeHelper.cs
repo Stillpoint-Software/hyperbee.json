@@ -20,6 +20,11 @@ public static class JsonNodeExtensions
     {
         return JsonPathPointer<JsonNode>.FromPointer( source, pointer );
     }
+
+    public static JsonNode FromJsonPointer( this JsonNode source, string pointer )
+    {
+        return JsonPointer<JsonNode>.FromPointer( source, pointer );
+    }
 }
 
 internal static partial class TestHelper

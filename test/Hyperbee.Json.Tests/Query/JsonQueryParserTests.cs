@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Hyperbee.Json.Tests.Query;
 
 [TestClass]
-public class JsonPathParserTests
+public class JsonQueryParserTests
 {
     [DataTestMethod]
     [DataRow( "$", "[$ => 1]" )]

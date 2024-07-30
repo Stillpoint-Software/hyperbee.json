@@ -19,6 +19,11 @@ public static class JsonElementExtensions
     {
         return JsonPathPointer<JsonElement>.FromPointer( source, pointer );
     }
+
+    public static JsonElement FromJsonPointer( this JsonElement source, string pointer )
+    {
+        return JsonPointer<JsonElement>.FromPointer( source, pointer );
+    }
 }
 
 internal static partial class TestHelper

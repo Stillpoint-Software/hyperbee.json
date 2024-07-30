@@ -23,7 +23,7 @@ public class JsonTestBase
 
         return Assembly
             .GetExecutingAssembly()
-            .GetManifestResourceStream( $"Hyperbee.Json.Tests.TestDocuments.{resourceName}" );
+            .GetManifestResourceStream( $"Hyperbee.Json.Tests.TestSupport.Json.{resourceName}" );
     }
 
     protected static TType GetDocument<TType>( string resourceName = null )

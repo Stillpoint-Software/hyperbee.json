@@ -134,7 +134,7 @@ public static class JsonDiff<TNode>
         var mrow = row + 1;
         var mcol = col + 1;
 
-        var matrix = mrow + mcol <= 32
+        var matrix = mrow + mcol <= 64
             ? new Matrix( stackalloc byte[mrow * mcol], mrow, mcol )
             : new Matrix( mrow, mcol );
 

@@ -22,9 +22,14 @@ internal static class Rfc6901QueryFactory
                 AppendSegment( segments, SelectorKind.Root, "#/" );
                 query = query[2..];
                 break;
+            default:
+                throw new ArgumentException( "Invalid JSON Pointer query.", nameof( query ) );
         }
 
         // Split the query by '/' 
+
+        if ( query.IsEmpty )
+            return JsonSegment.LinkSegments( query, segments );
 
         bool rfc6902 = options.HasFlag( JsonQueryParserOptions.Rfc6902 );
         var splitter = new SpanSplitter<char>( query, '/' );

@@ -705,11 +705,9 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    [ExpectedException( typeof( InvalidOperationException ) )]
+    [ExpectedException( typeof( JsonPatchException ) )]
     public void MoveFail_WhenFromPropertyIsChildOfSelf()
     {
-        // TODO: handle as a JsonPatchException vs InvalidOperationException thrown from System.Text.Json
-
         var source = JsonNode.Parse(
             """
             {

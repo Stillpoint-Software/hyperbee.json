@@ -135,8 +135,6 @@ public class JsonPatch : IEnumerable<PatchOperation>
         var segment = GetSegments( patch.Path );
         var fromSegment = GetSegments( patch.From );
 
-        ThrowCycleDetected( segment, fromSegment );
-
         var from = FromPointer( node, fromSegment, out var fromName, out var fromParent );
 
         ThrowLocationDoesNotExist( patch.From, fromParent );
@@ -383,11 +381,25 @@ public class JsonPatch : IEnumerable<PatchOperation>
         return query.Segments.Next; // skip the root segment
     }
 
-    private static void ThrowCycleDetected( JsonSegment segment, JsonSegment fromSegment )
+    private static void ThrowCycleDetected( JsonSegment toSegment, JsonSegment fromSegment )
     {
-        // TODO: compare segments, cannot move to child of self
-        if ( segment == fromSegment )
-            throw new JsonPatchException( "The 'from' property cannot be a child of the 'path' property." );
+        var from = fromSegment;
+        var to = toSegment;
+
+        while ( true )
+        {
+            if ( from == null || to == null )
+                return;
+
+            if ( from.IsFinal && !to.IsFinal )
+                throw new JsonPatchException( "Cannot patch a child to itself." );
+
+            if ( from.Selectors[0].Value != to.Selectors[0].Value )
+                return;
+
+            from = from.Next;
+            to = to.Next;
+        }
     }
 
     private static void ThrowLocationDoesNotExist( string path, JsonNode node )
@@ -401,7 +413,9 @@ public class JsonPatch : IEnumerable<PatchOperation>
         if ( patch.Value is null )
             throw new JsonPatchException( "The 'value' property was missing." );
 
-        return patch.Value as JsonNode ?? JsonValue.Create( patch.Value );
+        return (patch.Value is JsonNode node)
+            ? (node.Parent != null ? node.DeepClone() : node)
+            : JsonValue.Create( patch.Value );
     }
 
     public IEnumerator<PatchOperation> GetEnumerator()

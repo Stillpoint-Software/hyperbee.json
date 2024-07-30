@@ -332,6 +332,32 @@ public class JsonDiffTests : JsonTestBase
         Assert.IsTrue( results.Length == 8 );
     }
 
+    [TestMethod]
+    public void ApplyPatch_ToExistingSource()
+    {
+        const string sourceJson =
+            """
+            {
+            "categories": ["a", "b", "c"]
+            }
+            """;
+        const string targetJson =
+            """
+            {
+            "categories": ["a", "c", "d"]
+            }
+            """;
+
+        var source = JsonNode.Parse( sourceJson );
+        var target = JsonNode.Parse( targetJson );
+
+        var diff = JsonDiff<JsonNode>.Diff( source, target ).ToArray();
+
+        // NOTE: this is testing that the patch applies a copy of the source
+        // else JsonNode will fail with a parent already exists exception
+        var patch = new JsonPatch( diff );
+        patch.Apply( source );
+    }
 
     private static object Unwrap( object value )
     {
@@ -365,7 +391,7 @@ public class JsonDiffTests : JsonTestBase
                     case JsonValueKind.False:
                         return false;
                     case JsonValueKind.Null:
-                        return (JsonNode) null;
+                        return null;
                     default:
                         return node;
                 }

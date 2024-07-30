@@ -2,7 +2,7 @@
 
 namespace Hyperbee.Json.Core;
 
-internal static class SliceSyntaxHelper
+public static class SliceSyntaxHelper
 {
     // parse slice expression and return normalized bounds
     public static (int Lower, int Upper, int Step) ParseExpression( ReadOnlySpan<char> sliceExpr, int length, bool reverse = false )

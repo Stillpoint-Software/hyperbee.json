@@ -38,13 +38,13 @@ public class JsonSegment : IEnumerable<JsonSegment>
         [
             new SelectorDescriptor { SelectorKind = kind, Value = selector }
         ];
-        IsSingular = InitIsSingular();
+        IsSingular = SetIsSingular();
     }
 
     public JsonSegment( SelectorDescriptor[] selectors )
     {
         Selectors = selectors;
-        IsSingular = InitIsSingular();
+        IsSingular = SetIsSingular();
     }
 
     public JsonSegment Prepend( string selector, SelectorKind kind )
@@ -70,9 +70,10 @@ public class JsonSegment : IEnumerable<JsonSegment>
         }
     }
 
-    private bool InitIsSingular()
+    private bool SetIsSingular()
     {
-        // singular is one selector that is not a group
+        // the segment is singular, when there is only one selector
+        // and it is SelectorKind.Singular
 
         if ( Selectors.Length != 1 )
             return false;
@@ -125,19 +126,12 @@ public class JsonSegment : IEnumerable<JsonSegment>
         return GetEnumerator();
     }
 
-    internal class SegmentDebugView
+    internal class SegmentDebugView( JsonSegment instance )
     {
-        private readonly JsonSegment _instance;
-
-        public SegmentDebugView( JsonSegment instance )
-        {
-            _instance = instance;
-        }
-
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
-        public SelectorDescriptor[] Selectors => _instance.Selectors;
+        public SelectorDescriptor[] Selectors => instance.Selectors;
 
         [DebuggerBrowsable( DebuggerBrowsableState.Collapsed )]
-        public JsonSegment Next => _instance.Next;
+        public JsonSegment Next => instance.Next;
     }
 }

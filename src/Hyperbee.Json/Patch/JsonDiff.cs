@@ -17,6 +17,7 @@ public static class JsonDiff<TNode>
         {
             case TNode sourceNode when target is TNode targetNode:
                 return InternalDiff( sourceNode, targetNode );
+
             default:
                 {
                     if ( typeof( TNode ) == typeof( JsonElement ) )

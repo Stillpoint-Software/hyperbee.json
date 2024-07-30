@@ -17,5 +17,4 @@ public class NodeTypeDescriptor : ITypeDescriptor<JsonNode>
         Functions.Register( SearchNodeFunction.Name, () => new SearchNodeFunction() );
         Functions.Register( ValueNodeFunction.Name, () => new ValueNodeFunction() );
     }
-
 }

@@ -7,8 +7,7 @@ namespace Hyperbee.Json.Pointer;
 public enum JsonPointerConvertOptions
 {
     Default = 0x00,
-    Rfc6902 = 0x02,
-    Fragment = 0x04,
+    Fragment = 0x01,
 }
 
 public static class JsonPathPointerConverter

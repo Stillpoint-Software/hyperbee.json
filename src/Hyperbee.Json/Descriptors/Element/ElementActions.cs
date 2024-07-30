@@ -61,6 +61,7 @@ internal class ElementActions : INodeActions<JsonElement>
             case JsonValueKind.Object:
                 {
                     var results = new Stack<(JsonElement, string)>(); // stack will reverse items
+                    
                     foreach ( var child in value.EnumerateObject() )
                     {
                         if ( complexTypesOnly && child.Value.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )

@@ -69,7 +69,7 @@ public class JsonQueryParserTests
 
         Assert.ThrowsException<NotSupportedException>( () =>
         {
-            _ = JsonQueryParser.Parse( jsonPath );
+            JsonQueryParser.Parse( jsonPath );
         } );
     }
 }

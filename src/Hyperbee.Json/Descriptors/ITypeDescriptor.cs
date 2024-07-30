@@ -2,8 +2,6 @@
 
 namespace Hyperbee.Json.Descriptors;
 
-public delegate ExtensionFunction FunctionActivator();
-
 public interface ITypeDescriptor
 {
     public FunctionRegistry Functions { get; }

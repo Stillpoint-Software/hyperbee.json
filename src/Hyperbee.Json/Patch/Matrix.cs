@@ -1,18 +1,16 @@
-﻿using System.Buffers;
+﻿// ReSharper disable FieldCanBeMadeReadOnly.Local
+
+using System.Buffers;
 
 namespace Hyperbee.Json.Patch;
 
 public ref struct Matrix
 {
-    // ReSharper disable FieldCanBeMadeReadOnly.Local
-
     // dispose will reset values, so don't use readonly
     private Span<byte> _stackAllocated;
     private int[] _pooledArray;
     private int _rows;
     private int _cols;
-
-    // ReSharper restore FieldCanBeMadeReadOnly.Local
 
     public Matrix( Span<byte> arrayBuffer, int rows, int columns )
     {

@@ -2,6 +2,8 @@
 
 namespace Hyperbee.Json.Descriptors;
 
+public delegate ExtensionFunction FunctionActivator();
+
 public sealed class FunctionRegistry
 {
     private Dictionary<string, FunctionActivator> Functions { get; } = [];

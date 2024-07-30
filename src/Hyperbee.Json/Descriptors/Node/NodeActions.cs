@@ -56,6 +56,7 @@ internal class NodeActions : INodeActions<JsonNode>
             case JsonObject jsonObject:
                 {
                     var results = new Stack<(JsonNode, string)>(); // stack will reverse items
+                    
                     foreach ( var child in jsonObject )
                     {
                         if ( complexTypesOnly && child.Value is not (JsonArray or JsonObject) )

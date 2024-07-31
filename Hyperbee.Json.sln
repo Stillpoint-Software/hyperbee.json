@@ -23,6 +23,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4DBDB7F5-3F66-4572-80B5-3322449C77A4}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\create-release.yml = .github\workflows\create-release.yml
+		.github\workflows\deploy-gh-pages.yml = .github\workflows\deploy-gh-pages.yml
 		.github\workflows\format.yml = .github\workflows\format.yml
 		.github\workflows\issue-branch.yml = .github\workflows\issue-branch.yml
 		.github\workflows\publish.yml = .github\workflows\publish.yml

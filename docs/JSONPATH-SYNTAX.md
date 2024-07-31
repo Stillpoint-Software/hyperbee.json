@@ -1,3 +1,9 @@
+---
+layout: default
+title: JSONPath Syntax Reference
+nav_order: 2
+---
+
 # JSONPath Syntax Reference
 
 JSONPath is a query language for JSON that allows you to extract specific values from JSON documents. 

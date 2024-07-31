@@ -1,4 +1,4 @@
-﻿
+
 # Hyperbee.Json
 
 `Hyperbee.Json` is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`.  

@@ -1,5 +1,9 @@
-title: Hyperbee.Json
-description: Documentation for Hyperbee JSON.
-remote_theme: pages-themes/primer@v0.2.0
-plugins:
-- jekyll-remote-theme
+title: Hyperbee Json
+description: Documentation for Hyperbee Json.
+remote_theme: pmarsceill/just-the-docs
+
+# Optional configuration
+search_enabled: true
+aux_links:
+  "GitHub Repository":
+    - "//github.com/Stillpoint-Software/hyperbee.json"

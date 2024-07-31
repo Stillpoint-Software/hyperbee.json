@@ -34,7 +34,7 @@ namespace Hyperbee.Json.Tests.Query
         public void ParseJsonPath_Rfc9535( string jsonPath, string expected )
         {
             // act
-            var compiledQuery = JsonQueryParser.Parse( jsonPath, JsonQueryParserOptions.Rfc9535 );
+            var compiledQuery = JsonQueryParser.Parse( jsonPath );
 
             // arrange
             var result = GetResultString( compiledQuery.Segments );

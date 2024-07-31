@@ -8,13 +8,14 @@ Hyperbee.Json is a high-performance JSON library for .NET, providing robust supp
 - **Low Memory Allocations:** Designed to minimize memory usage.
 - **Comprehensive JSON Support:** Supports JSONPath, JsonPointer, JsonPatch, and JsonDiff.
 - **Conformance:** Adheres to the JSONPath Specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html), JSONPointer [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901.html), and JsonPatch [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html).
-- **Supports `JsonElement` and `JsonNode`:** Works seamlessly with both JSON document types.
+- **Supports both `JsonElement` and `JsonNode`:** Works seamlessly with both JSON document types.
 
 ## JSONPath
 
 JSONPath is a query language for JSON, allowing you to navigate and extract data from JSON documents using a set of path expressions. Hyperbee.Json's JSONPath implementation is designed for optimal performance, ensuring low memory allocations and fast query execution. It fully conforms to [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html).
 
-[Read more about JSONPath](JsonPath.md)
+[Read more about JsonPath](jsonpath.md)
+[Read more about JsonPath syntax](jsonpath-syntax.md)
 
 ## JSONPointer
 
@@ -26,13 +27,13 @@ JSONPointer is a syntax for identifying a specific value within a JSON document.
 
 JSONPatch is a format for describing changes to a JSON document. It allows you to apply partial modifications to JSON data efficiently. Hyperbee.Json supports JsonPatch as defined in [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html), ensuring compatibility and reliability.
 
-[Documentation for JsonPatch coming soon]
+[Read more about JsonPatch](jsonpatch.md)
 
 ## JSONDiff
 
 JSONDiff allows you to compute the difference between two JSON documents, which is useful for versioning and synchronization. Hyperbee.Json's implementation is optimized for performance and low memory usage, adhering to the standards set in [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html).
 
-[Documentation for JSONDiff coming soon]
+[Read more about JsonDiff](jsonpatch.md)
 
 ## Getting Started
 

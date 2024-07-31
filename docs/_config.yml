@@ -1,0 +1,9 @@
+title: Hyperbee Json
+description: Documentation for Hyperbee Json.
+remote_theme: pmarsceill/just-the-docs
+
+# Optional configuration
+search_enabled: true
+aux_links:
+  "GitHub Repository":
+    - "//github.com/Stillpoint-Software/hyperbee.json"

@@ -39,7 +39,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{13CB9B41-0462-4812-8B13-0BFD17F2BC18}"
 	ProjectSection(SolutionItems) = preProject
 		docs\ADDITIONAL-CLASSES.md = docs\ADDITIONAL-CLASSES.md
+		docs\index.md = docs\index.md
 		docs\JSONPATH-SYNTAX.md = docs\JSONPATH-SYNTAX.md
+		docs\_config.yml = docs\_config.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperbee.Json.Cts", "test\Hyperbee.Json.Cts\Hyperbee.Json.Cts.csproj", "{CC1D3E7F-E6F1-432B-B4D1-9402AED24119}"

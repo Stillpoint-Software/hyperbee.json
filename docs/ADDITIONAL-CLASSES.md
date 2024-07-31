@@ -1,3 +1,9 @@
+---
+layout: default
+title: Additional Classes
+nav_order: 3
+---
+
 ## Additional Classes
 
 In addition to JSONPath, a few additional classes are provided to support pointer-style

@@ -6,5 +6,5 @@ aux_links:
   "GitHub Repository":
     - "//github.com/Stillpoint-Software/hyperbee.json"
 
-logo: "/assets/icon.png"
+# logo: "/assets/icon.png"
 search_enabled: true # Enable search

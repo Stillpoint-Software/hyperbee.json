@@ -1,8 +1,8 @@
 title: Hyperbee Json
 description: Documentation for Hyperbee Json.
 remote_theme: pmarsceill/just-the-docs
-baseurl: /hyperbee.json
-url: https://stillpoint-software.github.io
+baseurl: "/hyperbee.json" 
+url: "https://stillpoint-software.github.io"
 
 aux_links:
   "GitHub Repository":

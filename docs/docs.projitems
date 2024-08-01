@@ -18,5 +18,6 @@
     <None Include="$(MSBuildThisFileDirectory)jsonpath\overview.md" />
     <None Include="$(MSBuildThisFileDirectory)jsonpath\syntax.md" />
     <None Include="$(MSBuildThisFileDirectory)jsonpointer.md" />
+    <None Include="$(MSBuildThisFileDirectory)_config.yml" />
   </ItemGroup>
 </Project>

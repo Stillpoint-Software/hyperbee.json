@@ -10,7 +10,7 @@ aux_links:
 
 footer_content: |
   <footer class="site-footer">
-    <p>&copy; <span id="copyright-year"></span> <a href='https://www.stillpointsoftware.net/'>Stillpoint Software</a>. All rights reserved.</p>
+    <span>&copy; <span id="copyright-year"></span> <a href='https://www.stillpointsoftware.net/'>Stillpoint Software</a>.</span>
     <script>
       document.getElementById("copyright-year").textContent = new Date().getFullYear();
     </script>

@@ -15,9 +15,13 @@ branches:
     skip: false
   - label : critical
     prefix: hotfix/
-    name: master
-    prTarget: master
+    name: main
+    prTarget: main
     skip: false
+  - label : documentation
+    prefix: doc/
+    name: main
+    prTarget: main
   - label : '*'
     skip: true
 

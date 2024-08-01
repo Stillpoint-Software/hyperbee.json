@@ -12,8 +12,10 @@
     <None Include="$(MSBuildThisFileDirectory)additional-classes.md" />
     <None Include="$(MSBuildThisFileDirectory)index.md" />
     <None Include="$(MSBuildThisFileDirectory)jsonpatch.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpath\comparison.md" />
     <None Include="$(MSBuildThisFileDirectory)jsonpath\functions.md" />
-    <None Include="$(MSBuildThisFileDirectory)jsonpath\index.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpath\jsonpath.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpath\overview.md" />
     <None Include="$(MSBuildThisFileDirectory)jsonpath\syntax.md" />
     <None Include="$(MSBuildThisFileDirectory)jsonpointer.md" />
   </ItemGroup>

@@ -13,7 +13,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Copyright>Stillpoint Software, Inc.</Copyright>
     <Title>Hyperbee Json</Title>
-    <Description>Hyperbee.Json is a high-performance JSON library for JsonElement and JsonNode, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff.</Description>
+    <Description>A high-performance JSON library for System.Text.Json JsonElement and JsonNode, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff.</Description>
     <RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>

@@ -8,6 +8,8 @@ aux_links:
   "GitHub Repository":
     - "//github.com/Stillpoint-Software/hyperbee.json"
 
+footer_content: "Copyright &copy; {{ "now" | date: "%Y" }} <a href="https://www.stillpointsoftware.net/">Stillpoint Software</a>"
+
 # logo: "/assets/icon.png"
 search_enabled: true # Enable search
 

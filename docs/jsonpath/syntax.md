@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Syntax
+parent: JsonPath
 nav_order: 2
 ---
 

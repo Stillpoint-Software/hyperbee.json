@@ -1,6 +1,7 @@
 ﻿---
 layout: default
 title: Functions
+parent: JsonPath
 nav_order: 3
 ---
 

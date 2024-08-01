@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
-using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Path.Filters.Parser;
 
 namespace Hyperbee.Json.Benchmark;
 

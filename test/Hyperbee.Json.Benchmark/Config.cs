@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
-using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Reports;
@@ -30,14 +29,18 @@ public class Config : ManualConfig
         // Add the custom exporter with specified visible columns
         AddExporter( new JsonPathMarkdownExporter
         {
-            VisibleColumns =
-            [
-                "Method",
-                "Mean",
-                "Error",
-                "StdDev",
-                "Allocated"
-            ]
+            ShowColumn = column =>
+            {
+                return column.OriginalColumn.ColumnName switch
+                {
+                    "Method" => true,
+                    "Mean" => true,
+                    "Error" => true,
+                    "StdDev" => true,
+                    "Allocated" => true,
+                    _ => false
+                };
+            }
         } );
 
         AddDiagnoser( MemoryDiagnoser.Default );
@@ -48,7 +51,7 @@ public class Config : ManualConfig
 
         // Set the artifacts path to a specific directory in the project
         var projectFolder = FindParentFolder( "Hyperbee.Json.Benchmark" );
-        ArtifactsPath = Path.Combine( projectFolder, "benchmark" );
+        ArtifactsPath = System.IO.Path.Combine( projectFolder, "benchmark" );
     }
 
     private static string FindParentFolder( string target )

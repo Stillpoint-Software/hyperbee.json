@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>fc3b0a95-4da0-43a0-a19d-624152bdf2f6</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>docs</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)additional-classes.md" />
+    <None Include="$(MSBuildThisFileDirectory)index.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpatch.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpath\functions.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpath\index.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpath\syntax.md" />
+    <None Include="$(MSBuildThisFileDirectory)jsonpointer.md" />
+  </ItemGroup>
+</Project>

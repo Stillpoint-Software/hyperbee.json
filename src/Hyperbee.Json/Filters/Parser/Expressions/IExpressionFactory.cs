@@ -1,9 +1,0 @@
-﻿using System.Linq.Expressions;
-using Hyperbee.Json.Descriptors;
-
-namespace Hyperbee.Json.Filters.Parser.Expressions;
-
-internal interface IExpressionFactory
-{
-    static abstract bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> descriptor );
-}

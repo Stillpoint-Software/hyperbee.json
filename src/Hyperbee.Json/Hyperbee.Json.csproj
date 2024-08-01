@@ -2,21 +2,21 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-	<IsPackable>true</IsPackable>
+    <IsPackable>true</IsPackable>
 
-	<Authors>Stillpoint Software, Inc.</Authors>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<PackageTags>json-path;jsonpath;query;path;json;rfc9535</PackageTags>
-	<PackageIcon>icon.png</PackageIcon>
-	<PackageProjectUrl>https://github.com/Stillpoint-Software/Hyperbee.Json/</PackageProjectUrl>
-	<TargetFrameworks>net8.0</TargetFrameworks>
-	<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	<Copyright>Stillpoint Software, Inc.</Copyright>
-	<Title>Hyperbee Json</Title>
-	<Description>JSONPath (RFC-9535) for System.Text.Json JsonElement, and JsonNode.</Description>
-	<RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
-	<PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>
+    <Authors>Stillpoint Software, Inc.</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>json-path;jsonpath;json-pointer;jsonpointer;json-patch;jsonpatch;query;path;patch;diff;json;rfc9535;rfc6901;rfc6902</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://stillpoint-software.github.io/hyperbee.json/</PackageProjectUrl>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Stillpoint Software, Inc.</Copyright>
+    <Title>Hyperbee Json</Title>
+    <Description>Hyperbee.Json is a high-performance JSON library for JsonElement and JsonNode, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff.</Description>
+    <RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>
 
   </PropertyGroup>
   <ItemGroup>

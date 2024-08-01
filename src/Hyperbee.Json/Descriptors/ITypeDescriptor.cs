@@ -1,10 +1,6 @@
-﻿using Hyperbee.Json.Filters;
-using Hyperbee.Json.Filters.Parser;
-using Hyperbee.Json.Filters.Values;
+﻿using Hyperbee.Json.Path.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
-
-public delegate ExtensionFunction FunctionActivator();
 
 public interface ITypeDescriptor
 {
@@ -13,15 +9,13 @@ public interface ITypeDescriptor
 
 public interface ITypeDescriptor<TNode> : ITypeDescriptor
 {
-    public IValueAccessor<TNode> Accessor { get; }
-    public IFilterRuntime<TNode> FilterRuntime { get; }
+    public IValueAccessor<TNode> ValueAccessor { get; }
 
-    public IValueTypeComparer Comparer { get; }
-    bool CanUsePointer { get; }
+    public INodeActions<TNode> NodeActions { get; }
 
-    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out IFilterRuntime<TNode> filterRuntime )
+    public void Deconstruct( out IValueAccessor<TNode> valueAccessor, out INodeActions<TNode> nodeActions )
     {
-        valueAccessor = Accessor;
-        filterRuntime = FilterRuntime;
+        valueAccessor = ValueAccessor;
+        nodeActions = NodeActions;
     }
 }

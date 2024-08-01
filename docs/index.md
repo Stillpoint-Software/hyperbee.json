@@ -1,3 +1,9 @@
+---
+layout: default
+title: Hyperbee Json
+nav_order: 1
+---
+
 # Welcome to Hyperbee.Json
 
 Hyperbee.Json is a high-performance JSON library for .NET, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff. 

@@ -1,4 +1,9 @@
-﻿
+﻿---
+layout: default
+title: Functions
+nav_order: 3
+---
+
 # JSONPath Functions
 
 JsonPath expressions support basic method calls.

@@ -1,3 +1,9 @@
+---
+layout: default
+title: JsonPointer
+nav_order: 3
+---
+
 # Hyperbee JsonPointer
 
 Hyperbee JsonPointer provides a simple and efficient way to navigate JSON documents using pointer syntax, as defined in [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901.html). It supports both `JsonElement` and `JsonNode`, making it a versatile tool for JSON manipulation in .NET.

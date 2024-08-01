@@ -1,3 +1,9 @@
+---
+layout: default
+title: JsonPatch
+nav_order: 2
+---
+
 # Hyperbee JsonPatch
 
 Hyperbee JsonPatch is a high-performance library for applying JSON patches to JSON documents, as defined in [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html). It supports both `JsonElement` and `JsonNode`, allowing for efficient and flexible modifications of JSON data.

@@ -1,4 +1,10 @@
 ﻿
+---
+layout: default
+title: JsonPath
+nav_order: 1
+---
+
 # Hyperbee JsonPath
 
 Hyperbee JsonPath is a high-performance JSONPath parser for .NET, that supports both `JsonElement` and `JsonNode`.  

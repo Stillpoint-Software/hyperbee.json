@@ -1,6 +1,8 @@
-﻿using Hyperbee.Json.Filters.Parser;
+﻿using Hyperbee.Json.Path.Filters.Parser;
 
 namespace Hyperbee.Json.Descriptors;
+
+public delegate ExtensionFunction FunctionActivator();
 
 public sealed class FunctionRegistry
 {

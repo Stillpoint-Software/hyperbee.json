@@ -2,21 +2,21 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-	<IsPackable>true</IsPackable>
+    <IsPackable>true</IsPackable>
 
-	<Authors>Stillpoint Software, Inc.</Authors>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<PackageTags>json-path;jsonpath;query;path;json;rfc9535</PackageTags>
-	<PackageIcon>icon.png</PackageIcon>
-	<PackageProjectUrl>https://github.com/Stillpoint-Software/Hyperbee.Json/</PackageProjectUrl>
-	<TargetFrameworks>net8.0</TargetFrameworks>
-	<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	<Copyright>Stillpoint Software, Inc.</Copyright>
-	<Title>Hyperbee Json</Title>
-	<Description>JSON Path (RFC 9535) implementation for System.Text.Json JsonElement, and JsonNode.</Description>
-	<RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
-	<PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>
+    <Authors>Stillpoint Software, Inc.</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>json-path;jsonpath;json-pointer;jsonpointer;json-patch;jsonpatch;query;path;patch;diff;json;rfc9535;rfc6901;rfc6902</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://stillpoint-software.github.io/hyperbee.json/</PackageProjectUrl>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Stillpoint Software, Inc.</Copyright>
+    <Title>Hyperbee Json</Title>
+    <Description>A high-performance JSON library for System.Text.Json JsonElement and JsonNode, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff.</Description>
+    <RepositoryUrl>https://github.com/Stillpoint-Software/Hyperbee.Json</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/Stillpoint-Software/Hyperbee.Json/releases/latest</PackageReleaseNotes>
 
   </PropertyGroup>
   <ItemGroup>
@@ -34,7 +34,7 @@
 
   <ItemGroup>
     <None Include="..\..\assets\icon.png" Pack="true" Visible="false" PackagePath="/" />
-    <None Include="..\..\README.md" Pack="true" Visible="true" PackagePath="/" />
+    <None Include="..\..\README.md" Pack="true" Visible="true" PackagePath="/" Link="README.md" />
     <None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="/" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Extensions;
-using Hyperbee.Json.Filters.Values;
+using Hyperbee.Json.Path.Filters.Values;
 
 namespace Hyperbee.Json.Descriptors.Node;
 

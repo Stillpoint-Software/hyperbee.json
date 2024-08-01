@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
-using Hyperbee.Json.Filters.Parser;
+using Hyperbee.Json.Path.Filters.Parser;
 
 namespace Hyperbee.Json.Benchmark;
 
@@ -11,13 +11,13 @@ public class FilterExpressionParserEvaluator
     public string Filter;
 
     [Benchmark]
-    public void JsonPathFilterParser_JsonElement()
+    public void FilterParser_JsonElement()
     {
         FilterParser<JsonElement>.Parse( Filter );
     }
 
     [Benchmark]
-    public void JsonPathFilterParser_JsonNode()
+    public void FilterParser_JsonNode()
     {
         FilterParser<JsonNode>.Parse( Filter );
     }

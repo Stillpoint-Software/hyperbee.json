@@ -69,11 +69,13 @@ public class JsonPathParseAndSelectEvaluator
     {
         const string First = " `First()`";
 
-        return Filter.EndsWith( First ) ? (Filter[..^First.Length], true) : (Filter, false);
+        return Filter.EndsWith( First )
+            ? (Filter[..^First.Length], true)
+            : (Filter, false);
     }
 
     [Benchmark]
-    public void JsonPath_Hyperbee_JsonElement()
+    public void Hyperbee_JsonElement()
     {
         var (filter, first) = GetFilter();
 
@@ -86,7 +88,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_Hyperbee_JsonNode()
+    public void Hyperbee_JsonNode()
     {
         var (filter, first) = GetFilter();
 
@@ -99,7 +101,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_Newtonsoft_JObject()
+    public void Newtonsoft_JObject()
     {
         var (filter, first) = GetFilter();
 
@@ -112,7 +114,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_JsonEverything_JsonNode()
+    public void JsonEverything_JsonNode()
     {
         var (filter, first) = GetFilter();
 
@@ -126,7 +128,7 @@ public class JsonPathParseAndSelectEvaluator
     }
 
     [Benchmark]
-    public void JsonPath_JsonCons_JsonElement()
+    public void JsonCons_JsonElement()
     {
         var (filter, first) = GetFilter();
 

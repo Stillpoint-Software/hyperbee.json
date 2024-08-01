@@ -1,5 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Core;
+using Hyperbee.Json.Path;
+using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Extensions;
 
@@ -36,7 +39,7 @@ public static class JsonPathSelectExtensions
 
         yield break;
 
-        void NodeProcessor( in JsonElement parent, in JsonElement value, string key, in JsonPathSegment segment )
+        void NodeProcessor( in JsonElement parent, in JsonElement value, string key, in JsonSegment segment )
         {
             pathBuilder.InsertItem( parent, value, key ); // seed the path builder with the parent and value
         }

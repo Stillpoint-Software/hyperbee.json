@@ -8,7 +8,13 @@ aux_links:
   "GitHub Repository":
     - "//github.com/Stillpoint-Software/hyperbee.json"
 
-footer_content: "Copyright &copy; {{ 'now' | date: '%Y' }} <a href='https://www.stillpointsoftware.net/'>Stillpoint Software</a>"
+footer_content: |
+  <footer class="site-footer">
+    <p>&copy; <span id="copyright-year"></span> <a href='https://www.stillpointsoftware.net/'>Stillpoint Software</a>. All rights reserved.</p>
+    <script>
+      document.getElementById("copyright-year").textContent = new Date().getFullYear();
+    </script>
+  </footer>
 
 # logo: "/assets/icon.png"
 search_enabled: true # Enable search

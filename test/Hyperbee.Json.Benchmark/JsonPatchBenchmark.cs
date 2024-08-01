@@ -58,7 +58,7 @@ public class JsonPatchBenchmark
     [Benchmark]
     public void Hyperbee_JsonElement()
     {
-        _patchElement.Apply( _elementSource );
+        _patchElement.Apply( _elementSource, out _ );
     }
 
     [Benchmark]

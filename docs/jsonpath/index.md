@@ -6,7 +6,7 @@ The library is designed to be fast and extensible, allowing support for other JS
 
 ## Features
 
-- **High Performance:** Optimized for performance and efficiency.
+- **High Performance:** Optimized for performance and low memory allocations.
 - **Supports:** `JsonElement` and `JsonNode`.
 - **Extensible:** Easily extended to support additional JSON document types and functions.
 - **`IEnumerable` Results:** Deferred execution queries with `IEnumerable`.
@@ -63,87 +63,6 @@ var root = JsonNode.Parse(json);
 var result = JsonPath.Select(root, "$.store.book[0].category");
 
 Console.WriteLine(result.First()); // Output: "fiction"
-```
-
-## JSONPath Overview
-
-JSONPath operates on JSON documents:
-
-* The special symbol `$` is used to reference the root JSON node. 
-* The special symbol `@` is used to reference the current JSON node. 
-* Queries can use dot-notation: `$.store.book[0].title`, or bracket-notation: `$['store']['book'][0]['title']` 
-* Filters may be used to conditionally include results: `$.store.book[?(@.price < 10)]`
-
-### JSONPath Syntax
-
-| JSONPath                                     | Description                                                
-|:---------------------------------------------|:-----------------------------------------------------------
-| `$`                                          | Root JSON node                                    
-| `@`                                          | Current JSON node                                 
-| `.<name>`, `.'<name>'`, or `."<name>"`       | Object member dot operator
-| `[<name>]`, or `['<name>']`, or `["<name>"]` | Object member subscript operator
-| `[<index]`                                   | Array access operator
-| `[,]`                                        | Union operator
-| `[start:end:step]`                           | Array slice operator
-| `*`, or `[*]`                                | Wildcard 
-| `..`                                         | Recursive descent  
-| `?<expr>`                                    | Filter selector
-
-
-### JSONPath Functions
-
-JsonPath expressions support basic method calls.
-
-| Method     | Description                                            | Example                                                
-|------------|--------------------------------------------------------|------------------------------------------------
-| `length()` | Returns the length of an array or string.              | `$.store.book[?(length(@.title) > 5)]`                
-| `count()`  | Returns the count of matching elements.                | `$.store.book[?(count(@.authors) > 1)]`               
-| `match()`  | Returns true if a string matches a regular expression. | `$.store.book[?(match(@.title,'.*Century.*'))]`   
-| `search()` | Searches for a string within another string.           | `$.store.book[?(search(@.title,'Sword'))]`             
-| `value()`  | Accesses the value of a key in the current object.     | `$.store.book[?(value(@.price) < 10)]`                
-
-### JSONPath Extended Syntax
-
-The library extends the JSONPath expression syntax to support additional features.
-
-| Operators           | Description                                   | Example                                                
-|---------------------|-----------------------------------------------|------------------------------------------------
-| `+` `-` `*` `\` `%` | Basic math operators.                         | `$[?(@.a + @.b == 3)]`                
-| `in`                | Tests is a value is in a set.                 | `$[?@.value in ['a', 'b', 'c'] ]`               
-
-
-### JSONPath Custom Functions
-
-You can extend the supported function set by registering your own functions.
-
-**Example:** Implement a `JsonNode` Path Function:
-
-**Step 1:** Create a custom function that returns the path of a `JsonNode`.
-
-```csharp
-public class PathNodeFunction() : ExtensionFunction( PathMethod, CompareConstraint.MustCompare )
-{
-    public const string Name = "path";
-    private static readonly MethodInfo PathMethod = GetMethod<PathNodeFunction>( nameof( Path ) );
-
-    private static ScalarValue<string> Path( IValueType argument )
-    {
-        return argument.TryGetNode<JsonNode>( out var node ) ? node?.GetPath() : null;
-    }
-}
-```
-
-**Step 2:** Register your custom function.
-
-```csharp
-JsonTypeDescriptorRegistry.GetDescriptor<JsonNode>().Functions
-    .Register( PathNodeFunction.Name, () => new PathNodeFunction() );
-```
-
-**Step 3:** Use your custom function in a JSONPath query.
-
-```csharp
-var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" );
 ```
 
 ## Why Choose Hyperbee.Json?

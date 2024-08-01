@@ -3,7 +3,41 @@
 JSONPath is a query language for JSON that allows you to extract specific values from JSON documents. 
 This page outlines the syntax and operators supported by `Hyperbee.Json`.
 
-## Basic Syntax and Operators
+## JSONPath Overview
+
+JSONPath operates on JSON documents:
+
+* The special symbol `$` is used to reference the root JSON node. 
+* The special symbol `@` is used to reference the current JSON node. 
+* Queries can use dot-notation: `$.store.book[0].title`, or bracket-notation: `$['store']['book'][0]['title']` 
+* Filters may be used to conditionally include results: `$.store.book[?(@.price < 10)]`
+
+### JSONPath Syntax
+
+| JSONPath                                     | Description                                                
+|:---------------------------------------------|:-----------------------------------------------------------
+| `$`                                          | Root JSON node                                    
+| `@`                                          | Current JSON node                                 
+| `.<name>`, `.'<name>'`, or `."<name>"`       | Object member dot operator
+| `[<name>]`, or `['<name>']`, or `["<name>"]` | Object member subscript operator
+| `[<index]`                                   | Array access operator
+| `[,]`                                        | Union operator
+| `[start:end:step]`                           | Array slice operator
+| `*`, or `[*]`                                | Wildcard 
+| `..`                                         | Recursive descent  
+| `?<expr>`                                    | Filter selector
+
+### JSONPath Extended Syntax
+
+The library extends the JSONPath expression syntax to support additional features.
+
+| Operators           | Description                                   | Example                                                
+|---------------------|-----------------------------------------------|------------------------------------------------
+| `+` `-` `*` `\` `%` | Basic math operators.                         | `$[?(@.a + @.b == 3)]`                
+| `in`                | Tests is a value is in a set.                 | `$[?@.value in ['a', 'b', 'c'] ]`               
+
+
+## JSONPath Operators
 
 ### Root Node
 

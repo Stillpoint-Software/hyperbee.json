@@ -41,13 +41,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{13CB9B41-0
 		docs\additional-classes.md = docs\additional-classes.md
 		docs\index.md = docs\index.md
 		docs\jsonpatch.md = docs\jsonpatch.md
-		docs\jsonpath-syntax.md = docs\jsonpath-syntax.md
-		docs\jsonpath.md = docs\jsonpath.md
 		docs\jsonpointer.md = docs\jsonpointer.md
 		docs\_config.yml = docs\_config.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperbee.Json.Cts", "test\Hyperbee.Json.Cts\Hyperbee.Json.Cts.csproj", "{CC1D3E7F-E6F1-432B-B4D1-9402AED24119}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jsonpath", "jsonpath", "{00A75C3B-DD9B-4B74-BF94-72B890CD2810}"
+	ProjectSection(SolutionItems) = preProject
+		docs\jsonpath\index.md = docs\jsonpath\index.md
+		docs\jsonpath\functions.md = docs\jsonpath\functions.md
+		docs\jsonpath\syntax.md = docs\jsonpath\syntax.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +87,7 @@ Global
 		{45C24D4B-4A0B-4FF1-AC66-38374D2455E9} = {F9B24CD9-E06B-4834-84CB-8C29E5F10BE0}
 		{13CB9B41-0462-4812-8B13-0BFD17F2BC18} = {870D9301-BE3D-44EA-BF9C-FCC2E87FE4CD}
 		{CC1D3E7F-E6F1-432B-B4D1-9402AED24119} = {F9B24CD9-E06B-4834-84CB-8C29E5F10BE0}
+		{00A75C3B-DD9B-4B74-BF94-72B890CD2810} = {13CB9B41-0462-4812-8B13-0BFD17F2BC18}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32874F5B-B467-4F28-A8E2-82C2536FB228}

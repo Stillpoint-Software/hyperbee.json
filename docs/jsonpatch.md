@@ -91,7 +91,9 @@ var patch = new JsonPatch(
 );
 ```
 
-Or by using JsonDiff to generate a patch from two JSON documents.
+### JsonDiff
+
+JsonPatch `PatchOperation` can also be generated from the difference between two JSON documents.
 
 ```csharp
 var source = JsonNode.Parse(

@@ -32,11 +32,10 @@ var json = """
 }
 """;
 
-var root = JsonDocument.Parse(json);
-var pointer = JsonPointer.Parse("/store/book/0/category");
-var value = pointer.Evaluate(root);
+var document = JsonDocument.Parse(json);
+var value = JsonPathPointer<JsonElement>.FromPointer(document.RootElement, "/store/book/0/category")
 
-Console.WriteLine(value); // Output: "fiction"
+Console.WriteLine(value.GetString()); // Output: "fiction"
 ```
 
 ### Using JsonNode
@@ -55,19 +54,15 @@ var json = """
 }
 """;
 
-var root = JsonNode.Parse(json);
-var pointer = JsonPointer.Parse("/store/book/1/category");
-var value = pointer.Evaluate(root);
+var node = JsonNode.Parse(json);
+var value = JsonPointer<JsonNode>.FromPointer(node, "/store/book/1/category")
 
-Console.WriteLine(value); // Output: "science"
+Console.WriteLine(value.GetValue<string>()); // Output: "science"
 ```
 
-## Why Choose Hyperbee.JsonPointer?
+## Why Choose Hyperbee JsonPointer?
 
 - **Fast and Efficient:** Designed for high performance and low memory usage.
 - **Versatile:** Works seamlessly with both `JsonElement` and `JsonNode`.
 - **Standards Compliant:** Adheres strictly to RFC 6901 for JSON Pointer.
 
-## Additional Documentation
-
-Additional documentation can be found in the project's `/docs` folder.

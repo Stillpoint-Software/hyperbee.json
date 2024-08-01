@@ -23,27 +23,29 @@ You can use JsonPatch to apply a series of operations to a JSON document.
 ```csharp
 var json = """
 { 
-  "store": { 
+    "store": { 
     "book": [
-      { "category": "fiction" }, 
-      { "category": "science" } 
+        { "category": "fiction" }, 
+        { "category": "science" } 
     ] 
-  } 
+    } 
 }
 """;
 
 var patch = """
 [
-  { "op": "add", "path": "/store/book/0/title", "value": "New Book" },
-  { "op": "remove", "path": "/store/book/1" }
+    { "op": "add", "path": "/store/book/0/title", "value": "New Book" },
+    { "op": "remove", "path": "/store/book/1" }
 ]
 """;
 
-var root = JsonDocument.Parse(json);
-var patchDoc = JsonDocument.Parse(patch);
-JsonPatch.Apply(root, patchDoc);
+var document = JsonDocument.Parse( json );
+var jsonPath = JsonSerializer.Deserialize<JsonPatch>( patch );
 
-Console.WriteLine(root.RootElement.GetProperty("store").GetProperty("book")[0].GetProperty("title")); // Output: "New Book"
+jsonPath.Apply( document.RootElement, out var node );  // Apply updates a JsonNode (since elements cannot be modified)
+
+var value = JsonPathPointer<JsonNode>.FromPointer( node, "/store/book/0/title" );
+Console.WriteLine( value ); // Output: "New Book"
 ```
 
 ### Using JsonNode
@@ -53,35 +55,68 @@ JsonPatch also supports JsonNode for patch operations.
 ```csharp
 var json = """
 { 
-  "store": { 
+    "store": { 
     "book": [
-      { "category": "fiction" }, 
-      { "category": "science" } 
+        { "category": "fiction" }, 
+        { "category": "science" } 
     ] 
-  } 
+    } 
 }
 """;
 
 var patch = """
 [
-  { "op": "replace", "path": "/store/book/0/category", "value": "non-fiction" },
-  { "op": "remove", "path": "/store/book/1" }
+    { "op": "add", "path": "/store/book/0/title", "value": "New Book" },
+    { "op": "remove", "path": "/store/book/1" }
 ]
 """;
 
-var root = JsonNode.Parse(json);
-var patchDoc = JsonNode.Parse(patch);
-JsonPatch.Apply(root, patchDoc);
+var node = JsonNode.Parse( json );
+var jsonPath = JsonSerializer.Deserialize<JsonPatch>( patch );
 
-Console.WriteLine(root["store"]["book"][0]["category"]); // Output: "non-fiction"
+jsonPath.Apply( node ); // Apply modifies the JsonNode in place (does rollback changes if an error occurs)
+
+var value = JsonPathPointer<JsonNode>.FromPointer( node, "/store/book/0/title" );
+Console.WriteLine( value ); // Output: "New Book"
 ```
 
-## Why Choose Hyperbee.JsonPatch?
+### JsonPatch Operations
+
+JsonPatch can also be created manually using `PatchOperation` objects.
+
+```csharp
+var patch = new JsonPatch(
+    new PatchOperation( PatchOperationType.Add, "/store/book/0/title", From: null, "New Book" ),
+    new PatchOperation( PatchOperationType.Remove, "/store/book/1", From: null, Value: null ),
+);
+```
+
+Or by using JsonDiff to generate a patch from two JSON documents.
+
+```csharp
+var source = JsonNode.Parse(
+"""
+    {
+        "first": "John"
+    }
+""" );
+
+var target = JsonNode.Parse(
+"""
+    {
+        "first": "John",
+        "last": "Doe"
+    }
+""" );
+
+var patchOperations = JsonDiff<JsonNode>.Diff( source, target );
+
+var patch = JsonSerializer.Serialize( patchOperations );
+Console.WriteLine( patch ); // Output: [{"op":"add","path":"/last","value":"Doe"}]
+```
+
+## Why Choose Hyperbee JsonPatch?
 
 - **Fast and Efficient:** Designed for high performance and low memory usage.
 - **Versatile:** Works seamlessly with both `JsonElement` and `JsonNode`.
 - **Standards Compliant:** Adheres strictly to RFC 6902 for JSON Patch.
-
-## Additional Documentation
-
-Additional documentation can be found in the project's `/docs` folder.

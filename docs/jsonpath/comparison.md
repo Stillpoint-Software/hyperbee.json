@@ -1,102 +1,9 @@
 ﻿---
 layout: default
-title: Overview
+title: Comparison
 parent: JsonPath
-nav_order: 1
+nav_order: 4
 ---
-
-# Hyperbee JsonPath
-
-Hyperbee JsonPath is a high-performance JSONPath parser for `System.Text.Json`, that supports both `JsonElement` and `JsonNode`.
-The library is designed to be fast and extensible, allowing support for other JSON document types and functions.
-
-## Why Choose Hyperbee JsonPath?
-
-Hyperbee is fast, lightweight, fully  RFC-9535 conforming, that supports **both** `JsonElement` and `JsonNode`.
-
-- High Performance, low allocating.
-- Supports **both** `JsonElement`, and `JsonNode`.
-- Deferred execution queries with `IEnumerable`.
-- Enhanced JsonPath syntax.
-- Extendable to support additional JSON document types.
-- RFC conforming JSONPath implementation.
-
-## JSONPath RFC
-
-Hyperbee.Json conforms to the RFC-9535, and aims to support the [JSONPath consensus](https://cburgmer.github.io/json-path-comparison) 
-when the RFC is unopinionated. When the RFC is unopinionated, and where the consensus is ambiguous or not aligned with our 
-performance and usability goals, we may deviate. Our goal is to provide a robust and performant library while strengthening our alignment with the RFC and the community.
-
-## Usage
-
-### Selecting Elements
-
-```csharp
-
-var json = """
-{ 
-  "store": { 
-    "book": [
-      { "category": "fiction" }, 
-      { "category": "science" } 
-    ] 
-  } 
-}
-""";
-
-var root = JsonDocument.Parse(json);
-var result = JsonPath.Select(root, "$.store.book[*].category");
-
-foreach (var item in result)
-{
-    Console.WriteLine(item); // Output: "fiction" and "science"
-}
-```
-
-### Selecting Nodes
-
-```csharp
-
-var json = """
-{ 
-  "store": { 
-    "book": [
-      { "category": "fiction" }, 
-      { "category": "science" } 
-    ] 
-  } 
-}
-""";
-
-var root = JsonNode.Parse(json);
-var result = JsonPath.Select(root, "$.store.book[0].category");
-
-Console.WriteLine(result.First()); // Output: "fiction"
-```
-
-### Selecting Elements with Path
-
-```csharp
-
-var json = """
-{ 
-  "store": { 
-    "book": [
-      { "category": "fiction" }, 
-      { "category": "science" } 
-    ] 
-  } 
-}
-""";
-
-var root = JsonDocument.Parse(json);
-var (element, path) = JsonPath.SelectPath(root, "$.store.book[*].category").First();
-
-Console.WriteLine(element); // Output: "fiction" 
-Console.WriteLine(path);    // Output: "$.store.book[0].category"
-
-```
-
 
 ## Comparison with Other Libraries
 
@@ -215,7 +122,3 @@ Here is a performance comparison of various queries on the standard book store d
  | JsonCons_JsonElement     |   3.229 μs |   0.0681 μs |  0.0037 μs |    3.21 KB
  | JsonEverything_JsonNode  |   4.612 μs |   2.0037 μs |  0.1098 μs |    5.96 KB
  | Newtonsoft_JObject       |   9.627 μs |   1.1498 μs |  0.0630 μs |   14.56 KB
-
-## Additional Documentation
-
-Additional documentation for [JsonPath syntax can be found here](jsonpath-syntax).

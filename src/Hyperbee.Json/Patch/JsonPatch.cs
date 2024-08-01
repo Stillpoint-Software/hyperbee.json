@@ -22,7 +22,11 @@ public class JsonPatch : IEnumerable<PatchOperation>
 
     public void Apply( JsonNode node ) => Apply( node, _operations );
 
-    public void Apply( JsonElement element ) => Apply( element.ConvertToNode(), _operations );
+    public void Apply( JsonElement element, out JsonNode node )
+    {
+        node = element.ConvertToNode();
+        Apply( node, _operations );
+    }
 
     public static void Apply( JsonNode node, List<PatchOperation> patches )
     {

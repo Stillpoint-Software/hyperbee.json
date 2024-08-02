@@ -45,9 +45,9 @@ Hyperbee.Json's implementation is optimized for performance and low memory usage
 
 ## Getting Started
 
-To get started with Hyperbee.Json, refer to the documentation for detailed instructions and examples. Install the library via NuGet:
+To get started with Hyperbee.Json, refer to the [documentation](https://stillpoint-software.github.io/hyperbee.json) for detailed instructions and examples. 
 
-Install via NuGet:
+You can intall the library via NuGet:
 
 ```bash
 dotnet add package Hyperbee.Json

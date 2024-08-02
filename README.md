@@ -1,6 +1,6 @@
-# Welcome to Hyperbee.Json
+# Welcome to Hyperbee Json
 
-Hyperbee.Json is a high-performance JSON library for .NET, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff. 
+Hyperbee Json is a high-performance JSON library for .NET, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff. 
 This library is optimized for speed and low memory allocations, and it adheres to relevant RFCs to ensure reliable and predictable behavior.
 
 Unlike other libraries that support only `JsonElement` or `JsonNode`, Hyperbee.Json supports **both** types, and can be easily extended to 
@@ -45,9 +45,9 @@ Hyperbee.Json's implementation is optimized for performance and low memory usage
 
 ## Getting Started
 
-To get started with Hyperbee.Json, refer to the documentation for detailed instructions and examples. Install the library via NuGet:
+To get started with Hyperbee.Json, refer to the [documentation](https://stillpoint-software.github.io/hyperbee.json) for detailed instructions and examples. 
 
-Install via NuGet:
+You can intall the library via NuGet:
 
 ```bash
 dotnet add package Hyperbee.Json
@@ -55,7 +55,7 @@ dotnet add package Hyperbee.Json
 
 ## Benchmarks
 
-Here is a performance comparison of various queries on the standard book store document.
+Here is a performance comparison of various JSONPath queries on the standard book store document.
 
 ```json
 {
@@ -138,10 +138,11 @@ Here is a performance comparison of various queries on the standard book store d
 Hyperbee.Json is built upon the great work of several open-source projects. Special thanks to:
 
 - System.Text.Json team for their work on the `System.Text.Json` library.
-- Stefan Goessner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
+- Stefan Gössner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - Atif Aziz's C# port of Goessner's JSONPath library [.NET JSONPath](https://github.com/atifaziz/JSONPath).  
-- Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).
 - [JSONPath Compliance Test Suite Team](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite).
+- Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).
+- [Just The Docs](https://github.com/just-the-docs/just-the-docs) for the documentation theme.
 
 ## Contributing
 

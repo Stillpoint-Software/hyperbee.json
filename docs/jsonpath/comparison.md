@@ -7,7 +7,19 @@ nav_order: 4
 
 ## Comparison with Other Libraries
 
-There are other excellent libraries .NET JsonPath.
+There are other excellent .NET JsonPath libraries, some with excellent communities. Hyperbee is focused on
+conformance with the RFC, performance, and on supporting **both** `JsonElement` and `JsonNode`. We are very 
+interested in growing our community, and invite participation if you have an idea to share, or an improvement to make.
+
+## Hyperbee JsonPath
+
+- **Pros:**
+  - High Performance, low allocating.
+  - Supports **both** `JsonElement`, and `JsonNode`.
+  - Deferred execution queries with `IEnumerable`.
+  - Enhanced JsonPath syntax.
+  - Easy to extend.
+
 
 ### [JsonPath.Net](https://docs.json-everything.net/path/basics/) Json-Everything
 

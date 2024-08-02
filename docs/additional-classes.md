@@ -9,29 +9,38 @@ nav_order: 99
 In addition to JSONPath, a few additional classes are provided to support pointer-style
 property diving, element comparisons, and dynamic property access.
 
-### Property Diving
+### JsonNodeFactory
 
-Property diving acts **similarly** to JSON Pointer; it expects an absolute path that returns a single element.
+The JsonNodeFactory efficiently converts a `JsonElement` to a `JsonNode` with minimal memory allocation. This
+method performs substantially better than the common serialize deserialize, or parse raw string techniques.
+
+| Class                      | Description
+|:---------------------------|:-----------
+| `JsonNodeFactory`          | Efficiently convert a `JsonElement` to a `JsonNode`
+
+
+### JsonPath Pointer
+
+JsonPathPointer acts **similarly** to JSON Pointer; it expects an absolute path that returns a single element.
 Unlike JSON Pointer, property diving notation expects normalized JSON Path notation. 
 
-| Method                             | Description
+| Class                              | Description
 |:-----------------------------------|:-----------
-| `JsonElement.FromJsonPathPointer`  | Dives for properties using absolute locations like `$.store.book[2].author`
+| `JsonPathPointer<JsonElement>`     | Dives for properties using absolute locations like `$.store.book[2].author`
 
 The syntax supports absolute (normalized) paths; dotted notation, quoted names, and simple bracketed array accessors only.
 The intention is to return a single element by literal path.
 
 Json path style wildcard '*', '..', and '[a,b]' multi-result selector notations and filters are **not** supported.
 
-
 ### JsonElement Path
 
 Unlike `JsonNode`, `JsonElement` does not have a `Path` property. `JsonPathBuilder` will find the path
 for a given `JsonElement`.
 
-| Method                     | Description
+| Class                      | Description
 |:---------------------------|:-----------
-| `JsonPathBuilder.GetPath`  | Returns the JsonPath location string for a given element
+| `JsonPathBuilder`          | Returns the JsonPath location string for a given element
 
 ### Equality Helpers
 

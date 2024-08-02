@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
+using Hyperbee.Json.Core;
 using Hyperbee.Json.Dynamic;
 using Hyperbee.Json.Patch;
 using Microsoft.AspNetCore.JsonPatch;
@@ -26,6 +27,8 @@ public class JsonPatchBenchmark
     private JsonElement _elementSource;
     private dynamic _dynamicSource;
 
+    private JsonNode _nodeElementSource;
+
     private JsonPatch _patchNode;
     private JsonPatch _patchElement;
     private JsonEverything.JsonPatch _everythingPath;
@@ -38,6 +41,8 @@ public class JsonPatchBenchmark
         _nodeEverythingSource = JsonNode.Parse( Source );
         _elementSource = JsonDocument.Parse( Source ).RootElement;
         _dynamicSource = JsonDynamicHelper.ConvertToDynamic( JsonNode.Parse( Source ) );
+
+        _nodeElementSource = JsonNodeFactory.Create( _elementSource );
 
         _patchNode = JsonSerializer.Deserialize<JsonPatch>( Operations );
         _patchElement = JsonSerializer.Deserialize<JsonPatch>( Operations );
@@ -58,7 +63,7 @@ public class JsonPatchBenchmark
     [Benchmark]
     public void Hyperbee_JsonElement()
     {
-        _patchElement.Apply( _elementSource, out _ );
+        _patchElement.Apply( _nodeElementSource ); // Test a JsonNode backed by a JsonElement
     }
 
     [Benchmark]

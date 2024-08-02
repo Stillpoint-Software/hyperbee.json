@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Hyperbee.Json.Extensions;
+using Hyperbee.Json.Core;
 using Hyperbee.Json.Pointer;
 using Hyperbee.Json.Query;
 
@@ -22,10 +22,12 @@ public class JsonPatch : IEnumerable<PatchOperation>
 
     public void Apply( JsonNode node ) => Apply( node, _operations );
 
-    public void Apply( JsonElement element, out JsonNode node )
+    public JsonNode Apply( JsonElement element )
     {
-        node = element.ConvertToNode();
+        var node = JsonNodeFactory.Create( element );
         Apply( node, _operations );
+
+        return node;
     }
 
     public static void Apply( JsonNode node, List<PatchOperation> patches )

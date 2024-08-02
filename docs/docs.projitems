@@ -20,4 +20,7 @@
     <None Include="$(MSBuildThisFileDirectory)jsonpointer.md" />
     <None Include="$(MSBuildThisFileDirectory)_config.yml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)_includes\nav_footer_custom.html" />
+  </ItemGroup>
 </Project>

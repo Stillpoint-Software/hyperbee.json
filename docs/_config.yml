@@ -16,8 +16,6 @@ footer_content: |
     </script>
   </div>
 
-nav_footer_custom: "Hyperbee Json"
-
 # logo: "/assets/icon.png"
 search_enabled: true # Enable search
 

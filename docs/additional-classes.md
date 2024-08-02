@@ -9,6 +9,16 @@ nav_order: 99
 In addition to JSONPath, a few additional classes are provided to support pointer-style
 property diving, element comparisons, and dynamic property access.
 
+### JsonNodeFactory
+
+The JsonNodeFactory efficiently converts a `JsonElement` to a `JsonNode` with minimal memory allocation. This
+method performs substantially better than the common serialize deserialize, or parse raw string techniques.
+
+| Class                      | Description
+|:---------------------------|:-----------
+| `JsonNodeFactory`          | Efficiently convert a `JsonElement` to a `JsonNode`
+
+
 ### JsonPath Pointer
 
 JsonPathPointer acts **similarly** to JSON Pointer; it expects an absolute path that returns a single element.

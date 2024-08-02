@@ -64,7 +64,7 @@ dotnet add package Hyperbee.Json
 Hyperbee.Json is built upon the great work of several open-source projects. Special thanks to:
 
 - System.Text.Json team for their work on the `System.Text.Json` library.
-- Stefan Gössner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
+- Stefan Gossner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - Atif Aziz's C# port of Goessner's JSONPath library [.NET JSONPath](https://github.com/atifaziz/JSONPath).  
 - [JSONPath Compliance Test Suite Team](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite).
 - Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).

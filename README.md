@@ -1,6 +1,6 @@
-# Welcome to Hyperbee.Json
+# Welcome to Hyperbee Json
 
-Hyperbee.Json is a high-performance JSON library for .NET, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff. 
+Hyperbee Json is a high-performance JSON library for .NET, providing robust support for JSONPath, JsonPointer, JsonPatch, and JsonDiff. 
 This library is optimized for speed and low memory allocations, and it adheres to relevant RFCs to ensure reliable and predictable behavior.
 
 Unlike other libraries that support only `JsonElement` or `JsonNode`, Hyperbee.Json supports **both** types, and can be easily extended to 
@@ -55,7 +55,7 @@ dotnet add package Hyperbee.Json
 
 ## Benchmarks
 
-Here is a performance comparison of various queries on the standard book store document.
+Here is a performance comparison of various JSONPath queries on the standard book store document.
 
 ```json
 {

@@ -138,10 +138,11 @@ Here is a performance comparison of various JSONPath queries on the standard boo
 Hyperbee.Json is built upon the great work of several open-source projects. Special thanks to:
 
 - System.Text.Json team for their work on the `System.Text.Json` library.
-- Stefan Goessner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
+- Stefan Gössner for the original [JSONPath implementation](https://goessner.net/articles/JsonPath/).
 - Atif Aziz's C# port of Goessner's JSONPath library [.NET JSONPath](https://github.com/atifaziz/JSONPath).  
-- Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).
 - [JSONPath Compliance Test Suite Team](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite).
+- Christoph Burgmer [JSONPath consensus effort](https://cburgmer.github.io/json-path-comparison).
+- [Just The Docs](https://github.com/just-the-docs/just-the-docs) for the documentation theme.
 
 ## Contributing
 

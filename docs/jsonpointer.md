@@ -6,13 +6,15 @@ nav_order: 3
 
 # Hyperbee JsonPointer
 
-Hyperbee JsonPointer provides a simple and efficient way to navigate JSON documents using pointer syntax, as defined in [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901.html). It supports both `JsonElement` and `JsonNode`, making it a versatile tool for JSON manipulation in .NET.
+Hyperbee JsonPointer provides a simple and efficient way to navigate JSON documents using pointer syntax, as defined in [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901.html).
+It supports both `JsonElement` and `JsonNode`, making it a versatile tool for JSON manipulation in .NET.
 
 ## Features
 
 - **High Performance:** Optimized for speed and efficiency.
-- **Supports:** `JsonElement` and `JsonNode`.
-- **RFC Conformance:** Fully adheres to RFC 6901 for reliable behavior.
+- **Low Memory Allocations:** Designed to minimize memory usage.
+- **Conformance:** Fully adheres to RFC 6901 for JSON Pointer.
+- **Supports both `JsonElement` and `JsonNode`:** Works seamlessly with both JSON document types.
 
 ## Usage
 
@@ -59,10 +61,3 @@ var value = JsonPointer<JsonNode>.FromPointer(node, "/store/book/1/category")
 
 Console.WriteLine(value.GetValue<string>()); // Output: "science"
 ```
-
-## Why Choose Hyperbee JsonPointer?
-
-- **Fast and Efficient:** Designed for high performance and low memory usage.
-- **Versatile:** Works seamlessly with both `JsonElement` and `JsonNode`.
-- **Standards Compliant:** Adheres strictly to RFC 6901 for JSON Pointer.
-

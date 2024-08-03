@@ -6,13 +6,15 @@ nav_order: 2
 
 # Hyperbee JsonPatch
 
-Hyperbee JsonPatch is a high-performance library for applying JSON patches to JSON documents, as defined in [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html). It supports both `JsonElement` and `JsonNode`, allowing for efficient and flexible modifications of JSON data.
+Hyperbee JsonPatch is a high-performance library for applying JSON patches to JSON documents, as defined in [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html).
+It supports both `JsonElement` and `JsonNode`, allowing for efficient and flexible modifications of JSON data.
 
 ## Features
 
-- **High Performance:** Optimized for speed and low memory allocations.
-- **Supports:** `JsonElement` and `JsonNode`.
-- **RFC Conformance:** Fully adheres to RFC 6902 for reliable behavior.
+- **High Performance:** Optimized for speed and efficiency.
+- **Low Memory Allocations:** Designed to minimize memory usage.
+- **Conformance:** Fully adheres to RFC 6902 for JSON Patch.
+- **Supports both `JsonElement` and `JsonNode`:** Works seamlessly with both JSON document types.
 
 ## Usage
 
@@ -40,9 +42,9 @@ var patch = """
 """;
 
 var document = JsonDocument.Parse( json );
-var jsonPath = JsonSerializer.Deserialize<JsonPatch>( patch );
+var jsonPatch = JsonSerializer.Deserialize<JsonPatch>( patch );
 
-jsonPath.Apply( document.RootElement, out var node );  // Apply updates a JsonNode (since elements cannot be modified)
+jsonPatch.Apply( document.RootElement, out var node );  // Apply updates a JsonNode (since elements cannot be modified)
 
 var value = JsonPathPointer<JsonNode>.FromPointer( node, "/store/book/0/title" );
 Console.WriteLine( value ); // Output: "New Book"
@@ -72,9 +74,9 @@ var patch = """
 """;
 
 var node = JsonNode.Parse( json );
-var jsonPath = JsonSerializer.Deserialize<JsonPatch>( patch );
+var jsonPatch = JsonSerializer.Deserialize<JsonPatch>( patch );
 
-jsonPath.Apply( node ); // Apply modifies the JsonNode in place (does rollback changes if an error occurs)
+jsonPatch.Apply( node ); // Apply modifies the JsonNode in place (does rollback changes if an error occurs)
 
 var value = JsonPathPointer<JsonNode>.FromPointer( node, "/store/book/0/title" );
 Console.WriteLine( value ); // Output: "New Book"
@@ -117,8 +119,3 @@ var patch = JsonSerializer.Serialize( patchOperations );
 Console.WriteLine( patch ); // Output: [{"op":"add","path":"/last","value":"Doe"}]
 ```
 
-## Why Choose Hyperbee JsonPatch?
-
-- **Fast and Efficient:** Designed for high performance and low memory usage.
-- **Versatile:** Works seamlessly with both `JsonElement` and `JsonNode`.
-- **Standards Compliant:** Adheres strictly to RFC 6902 for JSON Patch.

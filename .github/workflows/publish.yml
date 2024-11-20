@@ -8,7 +8,7 @@ on:
 env:
   BRANCH_NAME: ${{ github.event.release.target_commitish }}
   SOLUTION_NAME: ${{ vars.SOLUTION_NAME }}
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '9.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   BUILD_CONFIGURATION: ''
   VERSION_SUFFIX: ''

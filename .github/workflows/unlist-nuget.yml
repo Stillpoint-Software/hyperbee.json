@@ -1,0 +1,26 @@
+name: Unlist NuGet
+
+on:
+  workflow_dispatch:
+  # release:
+  #   types: [deleted]
+
+env:
+  BRANCH_NAME: ${{ github.event.release.target_commitish }}
+  PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+    
+jobs:
+  publish:
+    name: unlist on nuget
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Unlist
+    - name: Unlist Deleted Tag
+      uses: darenm/unlist-nuget@v1
+      with:
+        NUGET_PACKAGE: ${{ env.PROJECT_NAME }} # Full Package ID
+        VERSION_REGEX: ${{ github.event.release.tag_name }} # Regex pattern to match version
+        NUGET_KEY: ${{ secrets.NUGET_API_KEY }} # nuget.org API key

@@ -116,10 +116,10 @@ public static class JsonPath<TNode>
 
             var (parent, value, key, segmentNext, flags) = args;
 
-    ProcessArgs:
-            // call node processor if it exists and the `key` is not null.
-            // the key is null when a descent has re-pushed the descent target.
-            // this should be safe to skip; we will see its values later.
+ProcessArgs:
+// call node processor if it exists and the `key` is not null.
+// the key is null when a descent has re-pushed the descent target.
+// this should be safe to skip; we will see its values later.
 
             if ( key != null )
                 processor?.Invoke( parent, value, key, segmentNext );

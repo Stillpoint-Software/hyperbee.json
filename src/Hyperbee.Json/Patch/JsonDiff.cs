@@ -140,7 +140,7 @@ public static class JsonDiff<TNode>
 
         try
         {
-            CalculateLevenshteinMatrix( matrix, source, target );
+            CalculateLevenshteinMatrix( ref matrix, source, target );
 
             while ( row > 0 || col > 0 )
             {
@@ -177,7 +177,7 @@ public static class JsonDiff<TNode>
                         else
                         {
                             // We already check if these were values when calculating the matrix,
-                            // so we know this are objects or arrays, and we need further processing.
+                            // so we know this is an object or array, and we need further processing.
                             stack.Push( new DiffOperation( source[row - 1], target[col - 1], path ) );
                         }
 
@@ -201,7 +201,7 @@ public static class JsonDiff<TNode>
         operations.Add( new PatchOperation { Operation = PatchOperationType.Replace, Path = operation.Path, Value = operation.Target } );
     }
 
-    private static void CalculateLevenshteinMatrix( Matrix matrix, TNode[] source, TNode[] target )
+    private static void CalculateLevenshteinMatrix( ref Matrix matrix, TNode[] source, TNode[] target )
     {
         var accessor = Descriptor.ValueAccessor;
 

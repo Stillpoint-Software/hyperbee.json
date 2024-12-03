@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -416,13 +416,11 @@ public class JsonPatch : IEnumerable<PatchOperation>
 
     private static JsonNode PatchValue( PatchOperation patch )
     {
-        if ( patch.Value is null )
-            throw new JsonPatchException( "The 'value' property was missing." );
-
         return patch.Value switch
         {
-            JsonNode node when node.Parent == null => node,
-            JsonNode node => node.DeepClone(),
+            null => null,
+            JsonNode node when node.Parent != null => node.DeepClone(),
+            JsonNode node => node,
             _ => JsonValue.Create( patch.Value )
         };
     }

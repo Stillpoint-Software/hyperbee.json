@@ -5,6 +5,7 @@
     <IsPackable>true</IsPackable>
 
     <Authors>Stillpoint Software, Inc.</Authors>
+    <PackageId>Hyperbee.Json</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>json-path;jsonpath;json-pointer;jsonpointer;json-patch;jsonpatch;query;path;patch;diff;json;rfc9535;rfc6901;rfc6902</PackageTags>
     <PackageIcon>icon.png</PackageIcon>

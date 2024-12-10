@@ -4,7 +4,7 @@
     -->
 	<Target Name="PushPackage" AfterTargets="Pack" 
 	        Condition="'$(PushAfterPack)'=='true' AND '$(IsPackable)'=='true'">
-		<Exec Command="dotnet nuget push $(SolutionDir)output/$(TargetName).$(PackageVersion).nupkg $(PackageSourceParam) $(PackageApiKeyParam)"></Exec>
+		<Exec Command="dotnet nuget push $(SolutionDir)output/$(PackageId).$(PackageVersion).nupkg $(PackageSourceParam) $(PackageApiKeyParam)"></Exec>
 	</Target>
 
 	<!--

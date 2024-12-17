@@ -22,7 +22,7 @@ JSONPath operates on JSON documents:
 ### JSONPath Syntax
 
 | JSONPath                                     | Description                                                
-|:---------------------------------------------|:-----------------------------------------------------------
+|:---------------------------------------------|:-------------------------------------------
 | `$`                                          | Root JSON node                                    
 | `@`                                          | Current JSON node                                 
 | `.<name>`, `.'<name>'`, or `."<name>"`       | Object member dot operator
@@ -38,10 +38,10 @@ JSONPath operates on JSON documents:
 
 The library extends the JSONPath expression syntax to support additional features.
 
-| Operators           | Description                                   | Example                                                
-|---------------------|-----------------------------------------------|------------------------------------------------
-| `+` `-` `*` `\` `%` | Basic math operators.                         | `$[?(@.a + @.b == 3)]`                
-| `in`                | Tests is a value is in a set.                 | `$[?@.value in ['a', 'b', 'c'] ]`               
+| Operators           | Description                     | Example                                                
+|---------------------|---------------------------------|----------------------------------
+| `+` `-` `*` `\` `%` | Basic math operators.           | `$[?(@.a + @.b == 3)]`                
+| `in`                | Tests is a value is in a set.   | `$[?@.value in ['a', 'b', 'c'] ]`               
 
 
 ## JSONPath Operators

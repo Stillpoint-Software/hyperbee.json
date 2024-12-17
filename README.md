@@ -32,7 +32,7 @@ choice for pinpointing exact values. Hyperbee.Json's JsonPointer implementation 
 ## JSONPatch
 
 JSONPatch is a format for describing changes to a JSON document. It allows you to apply partial modifications to JSON data efficiently. 
-Hyperbee.Json supports JsonPatch as defined in [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html), ensuring compatibility and reliability.
+Hyperbee.Json supports JsonPatch as defined in [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902.html).
 
 [Read more about JsonPatch](https://stillpoint-software.github.io/hyperbee.json/jsonpatch.html)
 

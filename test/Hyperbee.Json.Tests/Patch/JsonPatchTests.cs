@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Hyperbee.Json.Patch;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -883,6 +882,25 @@ public class JsonPatchTests
         patch.Apply( source );
 
         Assert.AreEqual( "Mark", source!["first"]!.GetValue<string>() );
+    }
+
+    [TestMethod]
+    public void Replace_WhenValueProperty_WithNull()
+    {
+        var source = JsonNode.Parse(
+            """
+            {
+                "first": "John"
+            }
+            """ );
+
+        var patch = new JsonPatch(
+            new PatchOperation( PatchOperationType.Replace, "/first", null, null )
+        );
+
+        patch.Apply( source );
+
+        Assert.AreEqual( null, source!["first"] );
     }
 
     [TestMethod]

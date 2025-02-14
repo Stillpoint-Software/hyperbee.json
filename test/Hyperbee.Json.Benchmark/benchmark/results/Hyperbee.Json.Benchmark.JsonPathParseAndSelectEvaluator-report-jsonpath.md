@@ -1,46 +1,46 @@
 ```
 
-BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3958/23H2/2023Update/SunValley3)
-Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
-.NET SDK 8.0.302
-  [Host]   : .NET 8.0.6 (8.0.624.26715), X64 RyuJIT AVX2
-  ShortRun : .NET 8.0.6 (8.0.624.26715), X64 RyuJIT AVX2
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.3037)
+12th Gen Intel Core i9-12900HK, 1 CPU, 20 logical and 14 physical cores
+.NET SDK 9.0.103
+  [Host]   : .NET 9.0.2 (9.0.225.6610), X64 RyuJIT AVX2 [AttachedDebugger]
+  ShortRun : .NET 9.0.2 (9.0.225.6610), X64 RyuJIT AVX2
 
 
- | Method                   |       Mean |       Error |     StdDev |  Allocated
- | :----------------------- | ---------: | ----------: | ---------: | ---------:
+ | Method                   |       Mean |      Error |     StdDev |  Allocated
+ | :----------------------- | ---------: | ---------: | ---------: | ---------:
  | `$..* First()`
- | Hyperbee_JsonElement     |   3.075 μs |   0.0128 μs |  0.0007 μs |     3.5 KB
- | Hyperbee_JsonNode        |   3.183 μs |   2.5776 μs |  0.1413 μs |    3.07 KB
- | JsonEverything_JsonNode  |   3.206 μs |   3.7096 μs |  0.2033 μs |    3.53 KB
- | JsonCons_JsonElement     |   6.136 μs |   0.7476 μs |  0.0410 μs |    8.48 KB
- | Newtonsoft_JObject       |   8.829 μs |  10.1411 μs |  0.5559 μs |   14.22 KB
- |                          |            |             |            |           
+ | Hyperbee_JsonElement     |   1.867 μs |  0.6072 μs |  0.0333 μs |     3.5 KB
+ | Hyperbee_JsonNode        |   1.916 μs |  0.2202 μs |  0.0121 μs |    3.11 KB
+ | JsonEverything_JsonNode  |   2.097 μs |  0.7484 μs |  0.0410 μs |    3.49 KB
+ | JsonCons_JsonElement     |   3.498 μs |  0.8161 μs |  0.0447 μs |    8.48 KB
+ | Newtonsoft_JObject       |   5.734 μs |  1.1777 μs |  0.0646 μs |   14.22 KB
+ |                          |            |            |            |           
  | `$..*`
- | JsonCons_JsonElement     |   5.595 μs |   0.8702 μs |  0.0477 μs |    8.45 KB
- | Hyperbee_JsonElement     |   7.152 μs |   5.2088 μs |  0.2855 μs |    9.09 KB
- | Hyperbee_JsonNode        |   9.769 μs |   9.4033 μs |  0.5154 μs |   10.86 KB
- | Newtonsoft_JObject       |   9.780 μs |   4.8754 μs |  0.2672 μs |   14.86 KB
- | JsonEverything_JsonNode  |  22.743 μs |   2.0588 μs |  0.1129 μs |   36.81 KB
- |                          |            |             |            |           
+ | JsonCons_JsonElement     |   3.525 μs |  1.0092 μs |  0.0553 μs |    8.45 KB
+ | Hyperbee_JsonElement     |   4.288 μs |  0.4672 μs |  0.0256 μs |    8.38 KB
+ | Hyperbee_JsonNode        |   5.744 μs |  0.8133 μs |  0.0446 μs |   11.22 KB
+ | Newtonsoft_JObject       |   7.111 μs |  1.1213 μs |  0.0615 μs |   14.43 KB
+ | JsonEverything_JsonNode  |  18.571 μs |  5.4711 μs |  0.2999 μs |    34.2 KB
+ |                          |            |            |            |           
  | `$..price`
- | Hyperbee_JsonElement     |   4.433 μs |   0.7724 μs |  0.0423 μs |    4.34 KB
- | JsonCons_JsonElement     |   4.894 μs |   2.9680 μs |  0.1627 μs |    5.65 KB
- | Hyperbee_JsonNode        |   7.421 μs |   0.4506 μs |  0.0247 μs |    7.63 KB
- | Newtonsoft_JObject       |  12.818 μs |  37.7544 μs |  2.0694 μs |    14.4 KB
- | JsonEverything_JsonNode  |  16.584 μs |  16.7456 μs |  0.9179 μs |   27.63 KB
- |                          |            |             |            |           
+ | Hyperbee_JsonElement     |   2.599 μs |  0.2500 μs |  0.0137 μs |    4.11 KB
+ | JsonCons_JsonElement     |   2.962 μs |  0.1946 μs |  0.0107 μs |    5.65 KB
+ | Hyperbee_JsonNode        |   4.107 μs |  0.8757 μs |  0.0480 μs |    8.22 KB
+ | Newtonsoft_JObject       |   6.653 μs |  1.2770 μs |  0.0700 μs |   14.26 KB
+ | JsonEverything_JsonNode  |  13.430 μs |  4.4075 μs |  0.2416 μs |   26.46 KB
+ |                          |            |            |            |           
  | `$.store.book[?(@.price == 8.99)]`
- | Hyperbee_JsonElement     |   4.164 μs |   3.7708 μs |  0.2067 μs |     5.4 KB
- | JsonCons_JsonElement     |   4.910 μs |   2.4579 μs |  0.1347 μs |    5.05 KB
- | Hyperbee_JsonNode        |   7.098 μs |   0.4756 μs |  0.0261 μs |    8.24 KB
- | Newtonsoft_JObject       |  10.036 μs |  11.8552 μs |  0.6498 μs |   15.84 KB
- | JsonEverything_JsonNode  |  11.373 μs |   3.3498 μs |  0.1836 μs |   15.85 KB
- |                          |            |             |            |           
+ | Hyperbee_JsonElement     |   2.778 μs |  0.3989 μs |  0.0219 μs |    5.41 KB
+ | JsonCons_JsonElement     |   3.282 μs |  0.5416 μs |  0.0297 μs |    5.05 KB
+ | Hyperbee_JsonNode        |   4.279 μs |  0.4826 μs |  0.0265 μs |    8.95 KB
+ | Newtonsoft_JObject       |   5.986 μs |  0.7627 μs |  0.0418 μs |   15.78 KB
+ | JsonEverything_JsonNode  |   7.135 μs |  1.1539 μs |  0.0632 μs |    15.5 KB
+ |                          |            |            |            |           
  | `$.store.book[0]`
- | Hyperbee_JsonElement     |   2.682 μs |   1.8565 μs |  0.1018 μs |    2.27 KB
- | JsonCons_JsonElement     |   3.043 μs |   2.6136 μs |  0.1433 μs |    3.21 KB
- | Hyperbee_JsonNode        |   3.229 μs |   1.4402 μs |  0.0789 μs |    2.79 KB
- | JsonEverything_JsonNode  |   4.894 μs |   3.0709 μs |  0.1683 μs |    5.96 KB
- | Newtonsoft_JObject       |   9.111 μs |   8.1704 μs |  0.4478 μs |   14.56 KB
+ | Hyperbee_JsonElement     |   1.623 μs |  0.3592 μs |  0.0197 μs |    2.27 KB
+ | Hyperbee_JsonNode        |   1.925 μs |  0.1748 μs |  0.0096 μs |    2.86 KB
+ | JsonCons_JsonElement     |   1.937 μs |  0.1595 μs |  0.0087 μs |    3.21 KB
+ | JsonEverything_JsonNode  |   3.095 μs |  0.4032 μs |  0.0221 μs |    5.71 KB
+ | Newtonsoft_JObject       |   5.690 μs |  1.3949 μs |  0.0765 μs |   14.51 KB
 ```

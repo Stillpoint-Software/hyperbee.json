@@ -1,19 +1,16 @@
 ```
 
-BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3958/23H2/2023Update/SunValley3)
-Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
-.NET SDK 8.0.302
-  [Host]   : .NET 8.0.6 (8.0.624.26715), X64 RyuJIT AVX2
-  ShortRun : .NET 8.0.6 (8.0.624.26715), X64 RyuJIT AVX2
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.3037)
+12th Gen Intel Core i9-12900HK, 1 CPU, 20 logical and 14 physical cores
+.NET SDK 9.0.103
+  [Host]   : .NET 9.0.2 (9.0.225.6610), X64 RyuJIT AVX2 [AttachedDebugger]
+  ShortRun : .NET 9.0.2 (9.0.225.6610), X64 RyuJIT AVX2
 
 
- | Method                   |      Mean |      Error |    StdDev |  Allocated
- | :----------------------- | --------: | ---------: | --------: | ---------:
- | Hyperbee_JsonNode        |  292.4 ns |   69.37 ns |   3.80 ns |      584 B
- | Hyperbee_JsonElement     |  295.2 ns |   32.43 ns |   1.78 ns |      584 B
- | JsonEverything_JsonNode  |  506.5 ns |  565.41 ns |  30.99 ns |      728 B
- | AspNetCore_JsonNode      |        NA |         NA |        NA |         NA
-
-Benchmarks with issues:
-  JsonPatchBenchmark.AspNetCore_JsonNode: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [Source={"name":"John","age":30,"city":"New York"}, Operations=[{ "op":"replace", "path":"/city", "value":"LA" }]]
+ | Method                   |      Mean |      Error |   StdDev |  Allocated
+ | :----------------------- | --------: | ---------: | -------: | ---------:
+ | Hyperbee_JsonNode        |  139.2 ns |   26.87 ns |  1.47 ns |      520 B
+ | Hyperbee_JsonElement     |  145.1 ns |   26.35 ns |  1.44 ns |      520 B
+ | JsonEverything_JsonNode  |  232.5 ns |  116.18 ns |  6.37 ns |      968 B
+ | AspNetCore_JsonNode      |  441.0 ns |  173.80 ns |  9.53 ns |     1024 B
 ```

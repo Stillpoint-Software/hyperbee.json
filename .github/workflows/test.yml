@@ -14,6 +14,10 @@ on:
     - main
     - develop
 
+permissions:
+  contents: read
+  actions: read
+
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   SOLUTION_NAME: ${{ vars.SOLUTION_NAME }}

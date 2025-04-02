@@ -13,6 +13,9 @@ on:
     branches:
     - main
     - develop
+- 
+permissions:
+    contents: write
 
 env:
   DOTNET_VERSION: '9.0.x'

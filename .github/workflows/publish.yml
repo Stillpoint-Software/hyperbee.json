@@ -14,6 +14,11 @@ env:
   BUILD_CONFIGURATION: ''
   VERSION_SUFFIX: ''
 
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
 jobs:
   build-publish:
     runs-on: ubuntu-latest

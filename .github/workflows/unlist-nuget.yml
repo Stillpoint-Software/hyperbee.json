@@ -8,7 +8,10 @@ on:
 env:
   BRANCH_NAME: ${{ github.event.release.target_commitish }}
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
-    
+
+permissions:
+  contents: write
+
 jobs:
   publish:
     name: unlist on nuget

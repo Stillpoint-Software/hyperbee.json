@@ -13,6 +13,10 @@ on:
         required: true
         default: 'patch'
 
+permissions:
+    contents: write
+    actions: read
+
 env:
   ALLOW_UPDATES: ${{ startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/') }}
 

@@ -93,7 +93,7 @@ public class JsonPathSelectEvaluator
         Consume( result );
     }
 
-    [Benchmark( Description = "Hyperbee.JsonNode")]
+    [Benchmark( Description = "Hyperbee.JsonNode" )]
     public void Hyperbee_JsonNode()
     {
         var result = _node.Select( Filter );

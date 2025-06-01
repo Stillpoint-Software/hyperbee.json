@@ -33,19 +33,19 @@ public class JsonSegment : IEnumerable<JsonSegment>
     }
 
     // singular is true when the selector resolves to one and only one element
-    public bool IsSingular 
+    public bool IsSingular
     {
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        get; 
-    } 
+        get;
+    }
 
-    public JsonSegment Next 
+    public JsonSegment Next
     {
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         get;
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        set; 
+        set;
     }
 
     public SelectorDescriptor[] Selectors
@@ -54,9 +54,9 @@ public class JsonSegment : IEnumerable<JsonSegment>
         get => _selectors ?? [];
     }
 
-    private JsonSegment() 
-    { 
-        IsSingular = false; 
+    private JsonSegment()
+    {
+        IsSingular = false;
     }
 
     public JsonSegment( JsonSegment next, string selector, SelectorKind kind )
@@ -69,10 +69,10 @@ public class JsonSegment : IEnumerable<JsonSegment>
     public JsonSegment( SelectorDescriptor[] selectors )
     {
         _selectors = selectors;
-    
+
         IsSingular = SetIsSingular();
     }
-    
+
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public JsonSegment Prepend( string selector, SelectorKind kind )
     {

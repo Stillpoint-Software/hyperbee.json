@@ -43,36 +43,36 @@ internal class NodeActions : INodeActions<JsonNode>
         switch ( value )
         {
             case JsonArray jsonArray:
-            {
-                var length = jsonArray.Count;
-                results = new List<JsonNode>( length ); 
-
-                for ( var index = 0; index < length; index++ )
                 {
-                    var child = value[index];
+                    var length = jsonArray.Count;
+                    results = new List<JsonNode>( length );
 
-                    if ( complexTypesOnly && child is not (JsonArray or JsonObject) )
-                        continue;
+                    for ( var index = 0; index < length; index++ )
+                    {
+                        var child = value[index];
 
-                    results.Add( child );
+                        if ( complexTypesOnly && child is not (JsonArray or JsonObject) )
+                            continue;
+
+                        results.Add( child );
+                    }
+
+                    return reverse ? results.EnumerateReverse() : results;
                 }
-
-                return reverse ? results.EnumerateReverse() : results;
-            }
             case JsonObject jsonObject:
-            {
-                results = new List<JsonNode>( 8 );
-
-                foreach ( var child in jsonObject )
                 {
-                    if ( complexTypesOnly && child.Value is not (JsonArray or JsonObject) )
-                        continue;
+                    results = new List<JsonNode>( 8 );
 
-                    results.Add( child.Value );
+                    foreach ( var child in jsonObject )
+                    {
+                        if ( complexTypesOnly && child.Value is not (JsonArray or JsonObject) )
+                            continue;
+
+                        results.Add( child.Value );
+                    }
+
+                    return reverse ? results.EnumerateReverse() : results;
                 }
-
-                return reverse ? results.EnumerateReverse() : results;
-            }
         }
 
         return [];
@@ -94,7 +94,7 @@ internal class NodeActions : INodeActions<JsonNode>
             case JsonArray jsonArray:
                 {
                     var length = jsonArray.Count;
-                    results = new List<(JsonNode, string)>( length ); 
+                    results = new List<(JsonNode, string)>( length );
 
                     for ( var index = 0; index < length; index++ )
                     {

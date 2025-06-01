@@ -24,25 +24,25 @@ public class JsonPathParseAndSelectEvaluator
         "$.store.book[*].author",
         "$.store.book[?(@.price < 10)].title",
         "$.store.bicycle.color",
-        "$.store.book[*]", 
-        "$.store..price", 
-        "$..author", 
-        "$.store.book[?(@.price > 10 && @.price < 20)]", 
-        "$.store.book[?(@.category == 'fiction')]", 
+        "$.store.book[*]",
+        "$.store..price",
+        "$..author",
+        "$.store.book[?(@.price > 10 && @.price < 20)]",
+        "$.store.book[?(@.category == 'fiction')]",
         "$.store.book[-1:]",
-        "$.store.book[:2]", 
+        "$.store.book[:2]",
         "$..book[0,1]",
-        "$..*", 
-        "$..['bicycle','price']", 
-        "$..[?(@.price < 10)]", 
-        "$.store.book[?(@.author && @.title)]", 
-        "$.store.*" 
+        "$..*",
+        "$..['bicycle','price']",
+        "$..[?(@.price < 10)]",
+        "$.store.book[?(@.author && @.title)]",
+        "$.store.*"
     )]
     public string Filter;
 
     public string Document;
 
-    public Consumer _consumer = new ();
+    public Consumer _consumer = new();
 
     [GlobalSetup]
     public void Setup()

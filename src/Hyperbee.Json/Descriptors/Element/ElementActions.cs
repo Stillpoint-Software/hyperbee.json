@@ -47,36 +47,36 @@ internal class ElementActions : INodeActions<JsonElement>
         switch ( value.ValueKind )
         {
             case JsonValueKind.Array:
-            {
-                var length = value.GetArrayLength();
-                results = new List<JsonElement>( length ); 
-
-                for ( var index = 0; index < length; index++ )
                 {
-                    var child = value[index];
+                    var length = value.GetArrayLength();
+                    results = new List<JsonElement>( length );
 
-                    if ( complexTypesOnly && child.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
-                        continue;
+                    for ( var index = 0; index < length; index++ )
+                    {
+                        var child = value[index];
 
-                    results.Add( child );
+                        if ( complexTypesOnly && child.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
+                            continue;
+
+                        results.Add( child );
+                    }
+
+                    return reverse ? results.EnumerateReverse() : results;
                 }
-
-                return reverse ? results.EnumerateReverse() : results;
-            }
             case JsonValueKind.Object:
-            {
-                results = new List<JsonElement>( 8 );
-
-                foreach ( var child in value.EnumerateObject() )
                 {
-                    if ( complexTypesOnly && child.Value.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
-                        continue;
+                    results = new List<JsonElement>( 8 );
 
-                    results.Add( child.Value );
+                    foreach ( var child in value.EnumerateObject() )
+                    {
+                        if ( complexTypesOnly && child.Value.ValueKind is not (JsonValueKind.Array or JsonValueKind.Object) )
+                            continue;
+
+                        results.Add( child.Value );
+                    }
+
+                    return reverse ? results.EnumerateReverse() : results;
                 }
-
-                return reverse ? results.EnumerateReverse() : results;
-            }
         }
 
         return [];
@@ -114,7 +114,7 @@ internal class ElementActions : INodeActions<JsonElement>
                 }
             case JsonValueKind.Object:
                 {
-                    results = new List<(JsonElement, string)>( 8 ); 
+                    results = new List<(JsonElement, string)>( 8 );
 
                     foreach ( var child in value.EnumerateObject() )
                     {

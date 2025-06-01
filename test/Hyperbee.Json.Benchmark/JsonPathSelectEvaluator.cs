@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
 using Hyperbee.Json.Extensions;
 using Newtonsoft.Json.Linq;
 
@@ -27,8 +28,9 @@ public class JsonPathSelectEvaluator
 
     public JsonNode _node;
     public JsonElement _element;
-
     private JObject _jObject;
+
+    private readonly Consumer _consumer = new();
 
     [GlobalSetup]
     public void Setup()
@@ -74,26 +76,34 @@ public class JsonPathSelectEvaluator
         """;
 
         _jObject = JObject.Parse( document );
-
         _node = JsonNode.Parse( document )!;
         _element = JsonDocument.Parse( document ).RootElement;
     }
 
-    [Benchmark]
+    private void Consume<T>( IEnumerable<T> items )
+    {
+        foreach ( var item in items )
+            _consumer.Consume( item );
+    }
+
+    [Benchmark( Description = "Hyperbee.JsonElement" )]
     public void Hyperbee_JsonElement()
     {
-        var _ = _element.Select( Filter ).ToArray();
+        var result = _element.Select( Filter );
+        Consume( result );
     }
 
-    [Benchmark]
+    [Benchmark( Description = "Hyperbee.JsonNode")]
     public void Hyperbee_JsonNode()
     {
-        var _ = _node.Select( Filter ).ToArray();
+        var result = _node.Select( Filter );
+        Consume( result );
     }
 
-    [Benchmark]
+    [Benchmark( Description = "Newtonsoft.JObject" )]
     public void Newtonsoft_JObject()
     {
-        var _ = _jObject.SelectTokens( Filter ).ToArray();
+        var result = _jObject.SelectTokens( Filter );
+        Consume( result );
     }
 }

@@ -205,7 +205,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     public void AllMembersOfJsonStructure( string query, Type sourceType )
     {
         var source = GetDocumentAdapter( sourceType );
-        var matches = source.Select( query );
+        var matches = source.Select( query ).ToArray();
         var expected = new[]
         {
             source.FromJsonPathPointer( "$.store" ),

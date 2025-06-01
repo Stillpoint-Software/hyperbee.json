@@ -44,6 +44,7 @@ internal class JsonExpressionFactory : IExpressionFactory
     private static void ConvertToDoubleQuotes( ref Span<byte> buffer, int length )
     {
         var insideString = false;
+
         for ( var i = 0; i < length; i++ )
         {
             if ( buffer[i] == (byte) '\"' )

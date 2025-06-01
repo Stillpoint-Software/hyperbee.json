@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Hyperbee.Json.Query;
 
@@ -9,6 +10,7 @@ public record SelectorDescriptor
     public SelectorKind SelectorKind { get; internal set; }
     public string Value { get; init; }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public void Deconstruct( out string value, out SelectorKind selectorKind )
     {
         value = Value;
@@ -17,36 +19,61 @@ public record SelectorDescriptor
 }
 
 [DebuggerTypeProxy( typeof( SegmentDebugView ) )]
-[DebuggerDisplay( "First = ({Selectors?[0]}), IsSingular = {IsSingular}, Count = {Selectors?.Length}" )]
+[DebuggerDisplay( "First = {Selectors.Length == 0 ? null : Selectors[0].Value}, IsSingular = {IsSingular}, Count = {Selectors.Length}" )]
 public class JsonSegment : IEnumerable<JsonSegment>
 {
     internal static readonly JsonSegment Final = new(); // special end node
 
-    public bool IsFinal => Next == null;
+    private readonly SelectorDescriptor[] _selectors;
 
-    public bool IsSingular { get; } // singular is true when the selector resolves to one and only one element
+    public bool IsFinal
+    {
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        get => Next == null;
+    }
 
-    public JsonSegment Next { get; set; }
-    public SelectorDescriptor[] Selectors { get; init; }
+    // singular is true when the selector resolves to one and only one element
+    public bool IsSingular 
+    {
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        get; 
+    } 
 
-    private JsonSegment() { }
+    public JsonSegment Next 
+    {
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        get;
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        set; 
+    }
+
+    public SelectorDescriptor[] Selectors
+    {
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        get => _selectors ?? [];
+    }
+
+    private JsonSegment() 
+    { 
+        IsSingular = false; 
+    }
 
     public JsonSegment( JsonSegment next, string selector, SelectorKind kind )
     {
         Next = next;
-        Selectors =
-        [
-            new SelectorDescriptor { SelectorKind = kind, Value = selector }
-        ];
+        _selectors = [new SelectorDescriptor { SelectorKind = kind, Value = selector }];
         IsSingular = SetIsSingular();
     }
 
     public JsonSegment( SelectorDescriptor[] selectors )
     {
-        Selectors = selectors;
+        _selectors = selectors;
+    
         IsSingular = SetIsSingular();
     }
-
+    
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public JsonSegment Prepend( string selector, SelectorKind kind )
     {
         return new JsonSegment( this, selector, kind );
@@ -54,6 +81,7 @@ public class JsonSegment : IEnumerable<JsonSegment>
 
     public bool IsNormalized
     {
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         get
         {
             var current = this;
@@ -70,6 +98,7 @@ public class JsonSegment : IEnumerable<JsonSegment>
         }
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     private bool SetIsSingular()
     {
         // the segment is singular, when there is only one selector
@@ -81,6 +110,7 @@ public class JsonSegment : IEnumerable<JsonSegment>
         return (Selectors[0].SelectorKind & SelectorKind.Singular) == SelectorKind.Singular;
     }
 
+    [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public void Deconstruct( out bool singular, out SelectorDescriptor[] selectors )
     {
         singular = IsSingular;

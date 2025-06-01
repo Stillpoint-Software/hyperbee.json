@@ -32,6 +32,7 @@
 
 #endregion
 
+using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
@@ -84,6 +85,43 @@ public static class JsonPath<TNode>
         return EnumerateMatches( value, root, compiledQuery, processor );
     }
 
+    private static IEnumerable<TNode> EnumerateAllDescendants( TNode node, NodeProcessorDelegate<TNode> processor )
+    {
+        var kind = Descriptor.ValueAccessor.GetNodeKind( node );
+        
+        if ( kind != NodeKind.Object && kind != NodeKind.Array )
+        {
+            yield return node;
+            yield break;
+        }
+
+        var stack = new Stack<TNode>( 8 );
+        var current = node;
+
+        do
+        {
+            // ..
+            foreach ( var child in Descriptor.NodeActions.GetChildren( current, ChildEnumerationOptions.Reverse | ChildEnumerationOptions.ComplexTypesOnly ) )
+                stack.Push( child );
+
+            // *
+            if ( processor == null )
+            {
+                foreach ( var child in Descriptor.NodeActions.GetChildren( current, ChildEnumerationOptions.None ) )
+                    yield return child;
+            }
+            else
+            {
+                foreach ( var (child, key) in Descriptor.NodeActions.GetChildrenWithName( current, ChildEnumerationOptions.None ) )
+                {
+                    processor.Invoke( current, child, key, default ); 
+                    yield return child;
+                }
+            }
+
+        } while ( stack.TryPop( out current ) );
+    }
+
     private static IEnumerable<TNode> EnumerateMatches( in TNode value, in TNode root, JsonQuery compiledQuery, NodeProcessorDelegate<TNode> processor = null )
     {
         if ( string.IsNullOrWhiteSpace( compiledQuery.Query ) ) // invalid per the RFC ABNF
@@ -91,6 +129,9 @@ public static class JsonPath<TNode>
 
         if ( compiledQuery.Query == "$" || compiledQuery.Query == "@" ) // quick out for everything
             return [value];
+
+        if ( compiledQuery.Query == "$..*" ) // Fast path for $..*
+            return EnumerateAllDescendants( value, processor );
 
         var segmentNext = compiledQuery.Segments.Next; // The first segment is always the root; skip it
 
@@ -107,7 +148,7 @@ public static class JsonPath<TNode>
 
     private static IEnumerable<TNode> EnumerateMatches( TNode root, NodeArgs args, NodeProcessorDelegate<TNode> processor = null )
     {
-        var stack = new NodeArgsStack();
+        using var stack = new NodeArgsStack( 32 );
         var accessor = Descriptor.ValueAccessor;
 
         do
@@ -116,10 +157,10 @@ public static class JsonPath<TNode>
 
             var (parent, value, key, segmentNext, flags) = args;
 
-ProcessArgs:
-// call node processor if it exists and the `key` is not null.
-// the key is null when a descent has re-pushed the descent target.
-// this should be safe to skip; we will see its values later.
+            ProcessArgs:
+            // call node processor if it exists and the `key` is not null.
+            // the key is null when a descent has re-pushed the descent target.
+            // this should be safe to skip; we will see its values later.
 
             if ( key != null )
                 processor?.Invoke( parent, value, key, segmentNext );
@@ -136,7 +177,9 @@ ProcessArgs:
             // reference to the next segment in the list
 
             var segmentCurrent = segmentNext; // get current segment
-            var (selector, selectorKind) = segmentCurrent.Selectors[0]; // first selector in segment
+            
+            var selectors = segmentCurrent.Selectors;
+            var (selector, selectorKind) = selectors[0];
 
             segmentNext = segmentNext.Next;
 
@@ -168,9 +211,8 @@ ProcessArgs:
                     // optimization: avoid immediate push pop
                     //
                     // replaces stack.Push( value, childValue, selector, segmentNext );
-                    DeconstructValues( out parent, out value, out key, out segmentNext, out flags,
-                        (value, childValue, selector, segmentNext, NodeFlags.Default)
-                    );
+
+                    (parent, value, key, segmentNext, flags) = (value, childValue, selector, segmentNext, NodeFlags.Default);
                     goto ProcessArgs;
                 }
 
@@ -179,168 +221,156 @@ ProcessArgs:
 
             // group selector
 
-            var selectorCount = segmentCurrent.Selectors.Length;
+            var selectorCount = selectors.Length;
 
             for ( var i = 0; i < selectorCount; i++ ) // using 'for' for performance
             {
                 if ( i > 0 ) // we already have the first selector
-                    (selector, selectorKind) = segmentCurrent.Selectors[i];
+                    (selector, selectorKind) = selectors[i];
 
                 switch ( selectorKind )
                 {
                     // descendant
                     case SelectorKind.Descendant:
-                        {
-                            var children = Descriptor.NodeActions.GetChildren( value, complexTypesOnly: true );
-                            stack.PushMany( value, children, segmentCurrent, NodeFlags.AfterDescent );
+                    {
+                        var children = Descriptor.NodeActions.GetChildrenWithName( value, ChildEnumerationOptions.Reverse | ChildEnumerationOptions.ComplexTypesOnly );
+                        stack.PushMany( value, children, segmentCurrent, NodeFlags.AfterDescent );
 
-                            // Union Processing After Descent: If a union operator immediately follows a
-                            // descendant operator, the union should only process simple values. This is
-                            // to prevent duplication of complex objects that would result from both the
-                            // current node and the union processing the same items.
+                        // Union Processing After Descent: If a union operator immediately follows a
+                        // descendant operator, the union should only process simple values. This is
+                        // to prevent duplication of complex objects that would result from both the
+                        // current node and the union processing the same items.
 
-                            // optimization: avoid immediate push pop
-                            //
-                            // this is safe because descendant only ever has one selector.
-                            // replaces stack.Push( value, childValue, selector, segmentNext );
-                            DeconstructValues( out parent, out value, out key, out segmentNext, out flags, // process the current value
-                                (parent, value, null, segmentNext, NodeFlags.AfterDescent)
-                            );
-                            goto ProcessArgs;
-                        }
+                        // optimization: avoid immediate push pop
+                        //
+                        // this is safe because descendant only ever has one selector.
+                        // replaces stack.Push( value, childValue, selector, segmentNext );
+
+                        (parent, value, key, segmentNext, flags) = (parent, value, null, segmentNext, NodeFlags.AfterDescent); // process the current value
+                        goto ProcessArgs;
+                    }
 
                     // wildcard
                     case SelectorKind.Wildcard:
+                    {
+                        var childKind = GetSelectorKind( nodeKind );
+
+                        foreach ( var (childValue, childKey) in Descriptor.NodeActions.GetChildrenWithName( value, ChildEnumerationOptions.Reverse ) )
                         {
-                            var childKind = GetSelectorKind( nodeKind );
-
-                            foreach ( var (childValue, childKey) in Descriptor.NodeActions.GetChildren( value ) )
+                            // optimization: quicker return for final 
+                            //
+                            // the parser will work without this check, but we would be forcing it
+                            // to push and pop values onto the stack that we know will not be used.
+                            if ( segmentNext.IsFinal )
                             {
-                                // optimization: quicker return for final 
-                                //
-                                // the parser will work without this check, but we would be forcing it
-                                // to push and pop values onto the stack that we know will not be used.
-                                if ( segmentNext.IsFinal )
-                                {
-                                    // we could just yield here, but we can't because we want to preserve
-                                    // the order of the results as per the RFC. so we push the current
-                                    // value onto the stack without prepending the childKey or childKind
-                                    // to set up for an immediate return on the next iteration.
-                                    stack.Push( value, childValue, childKey, segmentNext );
-                                    continue;
-                                }
-
-                                stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                                // if we didn't care about RFC order, we could just yield here. to
+                                // order of the results as per the RFC we need to push the current
+                                // value onto the stack without prepending the childKey or childKind
+                                // to set up for an immediate return on the next iteration.
+                                stack.Push( value, childValue, childKey, segmentNext );
+                                continue;
                             }
 
-                            continue;
+                            stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                         }
+
+                        continue;
+                    }
 
                     // [?exp]
                     case SelectorKind.Filter:
+                    {
+                        var childKind = GetSelectorKind( nodeKind );
+
+                        foreach ( var (childValue, childKey) in Descriptor.NodeActions.GetChildrenWithName( value, ChildEnumerationOptions.Reverse ) )
                         {
-                            var childKind = GetSelectorKind( nodeKind );
+                            if ( !FilterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
+                                continue;
 
-                            foreach ( var (childValue, childKey) in Descriptor.NodeActions.GetChildren( value ) )
+                            // optimization: quicker return for tail values
+                            if ( segmentNext.IsFinal )
                             {
-                                if ( !FilterRuntime.Evaluate( selector[1..], childValue, root ) ) // remove the leading '?' character
-                                    continue;
-
-                                // optimization: quicker return for tail values
-                                if ( segmentNext.IsFinal )
-                                {
-                                    // yielding would not preserve the order of the results as per the RFC.
-                                    stack.Push( value, childValue, childKey, segmentNext );
-                                    continue;
-                                }
-
-                                stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
+                                // yielding would not preserve the order of the results as per the RFC.
+                                stack.Push( value, childValue, childKey, segmentNext );
+                                continue;
                             }
 
-                            continue;
+                            stack.Push( parent, value, childKey, segmentNext.Prepend( childKey, childKind ) ); // (Name | Index)
                         }
+
+                        continue;
+                    }
 
                     // Array: [#,#,...] 
                     case SelectorKind.Index:
-                        {
-                            if ( nodeKind != NodeKind.Array )
-                                continue;
-
-                            if ( accessor.TryGetIndexAt( value, int.Parse( selector ), out var childValue ) )
-                            {
-                                stack.Push( value, childValue, selector, segmentNext );
-                            }
-
+                    {
+                        if ( nodeKind != NodeKind.Array )
                             continue;
+
+                        if ( accessor.TryGetIndexAt( value, int.Parse( selector ), out var childValue ) )
+                        {
+                            stack.Push( value, childValue, selector, segmentNext );
                         }
+
+                        continue;
+                    }
 
                     // Array: [start:end:step] Python slice syntax
                     case SelectorKind.Slice:
-                        {
-                            if ( nodeKind != NodeKind.Array )
-                                continue;
-
-                            var (upper, lower, step) = GetSliceRange( accessor, value, selector );
-
-                            for ( var index = lower; step > 0 ? index < upper : index > upper; index += step )
-                            {
-                                var childValue = accessor.IndexAt( value, index );
-                                stack.Push( value, childValue, index, segmentNext );
-                            }
-
+                    {
+                        if ( nodeKind != NodeKind.Array )
                             continue;
+
+                        var (upper, lower, step) = GetSliceRange( accessor, value, selector );
+
+                        for ( var index = lower; step > 0 ? index < upper : index > upper; index += step )
+                        {
+                            var childValue = accessor.IndexAt( value, index );
+                            stack.Push( value, childValue, index, segmentNext );
                         }
+
+                        continue;
+                    }
 
                     // Array: [name1,name2,...] Names over array
                     case SelectorKind.Name when nodeKind == NodeKind.Array:
+                    {
+                        var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
+                        var length = accessor.GetArrayLength( value );
+
+                        for ( var index = length - 1; index >= 0; index-- )
                         {
-                            var indexSegment = segmentNext.Prepend( selector, SelectorKind.Name );
-                            var length = accessor.GetArrayLength( value );
+                            var childValue = accessor.IndexAt( value, index );
 
-                            for ( var index = length - 1; index >= 0; index-- )
-                            {
-                                var childValue = accessor.IndexAt( value, index );
+                            if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
+                                continue;
 
-                                if ( flags == NodeFlags.AfterDescent && accessor.GetNodeKind( childValue ) != NodeKind.Value )
-                                    continue;
-
-                                stack.Push( value, childValue, index, indexSegment );
-                            }
-
-                            continue;
+                            stack.Push( value, childValue, index, indexSegment );
                         }
+
+                        continue;
+                    }
 
                     // Object: [name1,name2,...] Names over object
                     case SelectorKind.Name when nodeKind == NodeKind.Object:
+                    {
+                        if ( accessor.TryGetProperty( value, selector, out var childValue ) )
                         {
-                            if ( accessor.TryGetProperty( value, selector, out var childValue ) )
-                            {
-                                stack.Push( value, childValue, selector, segmentNext );
-                            }
-
-                            continue;
+                            stack.Push( value, childValue, selector, segmentNext );
                         }
+
+                        continue;
+                    }
 
                     default:
-                        {
-                            throw new NotSupportedException( $"Unsupported {nameof( SelectorKind )}." );
-                        }
+                    {
+                        throw new NotSupportedException( $"Unsupported {nameof(SelectorKind)}." );
+                    }
 
                 } // end switch
             } // end for group selector
 
         } while ( stack.TryPop( out args ) );
-    }
-
-    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    private static void DeconstructValues( out TNode parent, out TNode value, out string key, out JsonSegment segmentNext, out NodeFlags flags,
-        (TNode Parent, TNode Value, string Key, JsonSegment SegmentNext, NodeFlags Flags) values )
-    {
-        parent = values.Parent;
-        value = values.Value;
-        key = values.Key;
-        segmentNext = values.SegmentNext;
-        flags = values.Flags;
     }
 
     private static bool TryGetChild( IValueAccessor<TNode> accessor, in TNode value, NodeKind nodeKind, string childSelector, SelectorKind selectorKind, out TNode childValue )
@@ -384,43 +414,145 @@ ProcessArgs:
         {
             NodeKind.Object => SelectorKind.Name,
             NodeKind.Array => SelectorKind.Index,
-            _ => throw new ArgumentOutOfRangeException( nameof( nodeKind ), nodeKind, $"{nameof( NodeKind )} must be an object or an array." )
+            _ => throw new ArgumentOutOfRangeException( nameof(nodeKind), nodeKind, $"{nameof(NodeKind)} must be an object or an array." )
         };
     }
 
-    [DebuggerDisplay( "Parent = {Parent}, Value = {Value}, {Segment}" )]
-    private readonly record struct NodeArgs( TNode Parent, TNode Value, string Key, JsonSegment Segment, NodeFlags Flags );
+    private readonly record struct NodeArgs( in TNode Parent, in TNode Value, string Key, JsonSegment Segment, NodeFlags Flags );
 
-    [DebuggerDisplay( "{_stack}" )]
-    private sealed class NodeArgsStack( int capacity = 8 )
+    [DebuggerDisplay( "{_array}" )]
+    private sealed class NodeArgsStack : IDisposable
     {
         [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
-        private readonly Stack<NodeArgs> _stack = new( capacity );
+        private NodeArgs[] _array;
+        private int _count;
+        private bool _disposed;
 
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public void Push( in TNode parent, in TNode value, string key, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
+        public NodeArgsStack(int capacity = 16)
         {
-            _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
+            _array = ArrayPool<NodeArgs>.Shared.Rent(capacity);
+            _count = 0;
+            _disposed = false;
         }
 
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public void Push( in TNode parent, in TNode value, int index, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Push(in TNode parent, in TNode value, string key, in JsonSegment segment, NodeFlags flags = NodeFlags.Default)
         {
-            _stack.Push( new NodeArgs( parent, value, IndexHelper.GetIndexString( index ), segment, flags ) );
+            EnsureNotDisposed();
+
+            if (_count == _array.Length)
+                Grow();
+
+            _array[_count++] = new NodeArgs(parent, value, key, segment, flags);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Push(in TNode parent, in TNode value, int index, in JsonSegment segment, NodeFlags flags = NodeFlags.Default)
+        {
+            Push(parent, value, IndexHelper.GetIndexString(index), segment, flags);
         }
 
         public void PushMany( in TNode parent, in IEnumerable<(TNode Value, string Key)> items, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
         {
+            EnsureNotDisposed();
+
             foreach ( var (value, key) in items )
+                Push( parent, value, key, segment, flags );
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryPop( out NodeArgs args )
+        {
+            EnsureNotDisposed();
+
+            if ( _count == 0 )
             {
-                _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
+                args = default;
+                return false;
             }
+
+            var i = --_count;
+            
+            args = _array[i];
+            //_array[i] = default; // clear entry
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Grow()
+        {
+            int newSize = _array.Length * 2;
+            var newArray = ArrayPool<NodeArgs>.Shared.Rent(newSize);
+            Array.Copy(_array, newArray, _array.Length);
+            ArrayPool<NodeArgs>.Shared.Return(_array, clearArray: true);
+            _array = newArray;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void EnsureCapacity(int min)
+        {
+            if ( _array.Length >= min )
+                return;
+
+            var newSize = Math.Max(_array.Length * 2, min);
+            var newArray = ArrayPool<NodeArgs>.Shared.Rent(newSize);
+            Array.Copy(_array, newArray, _array.Length);
+            ArrayPool<NodeArgs>.Shared.Return(_array, clearArray: true);
+            _array = newArray;
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public bool TryPop( out NodeArgs args )
+        private void EnsureNotDisposed()
         {
-            return _stack.TryPop( out args );
+            if ( !_disposed )
+                return;
+
+            throw new ObjectDisposedException(nameof(NodeArgsStack));
+        }
+
+        public void Dispose()
+        {
+            if ( _disposed )
+                return;
+
+            ArrayPool<NodeArgs>.Shared.Return(_array, clearArray: true);
+            _array = null;
+            _disposed = true;
         }
     }
+
+    //private sealed class NodeArgsStack( int capacity = 8 )
+    //{
+    //    [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
+    //    private readonly Stack<NodeArgs> _stack = new(capacity);
+
+    //    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    //    public void Push( in TNode parent, in TNode value, string key, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
+    //    {
+    //        _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
+    //    }
+
+    //    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    //    public void Push( in TNode parent, in TNode value, int index, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
+    //    {
+    //        _stack.Push( new NodeArgs( parent, value, IndexHelper.GetIndexString( index ), segment, flags ) );
+    //    }
+
+    //    public void PushMany( in TNode parent, in IEnumerable<(TNode Value, string Key)> items, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
+    //    {
+    //        foreach ( var (value, key) in items )
+    //        {
+    //            _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
+    //        }
+    //    }
+
+    //    [MethodImpl( MethodImplOptions.AggressiveInlining )]
+    //    public bool TryPop( out NodeArgs args )
+    //    {
+    //        return _stack.TryPop( out args );
+    //    }
+    //}
 }
+
+

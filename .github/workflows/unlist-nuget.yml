@@ -24,7 +24,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
+  
+    - name: Debug version input
+      run: echo "Version to unlist: ${{ github.event.release.tag_name || github.event.inputs.version }}"
+    
     # Unlist
     - name: Unlist Deleted Tag
       uses: darenm/unlist-nuget@v1

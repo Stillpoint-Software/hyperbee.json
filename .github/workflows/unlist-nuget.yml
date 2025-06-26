@@ -25,5 +25,5 @@ jobs:
       uses: darenm/unlist-nuget@v1
       with:
         NUGET_PACKAGE: ${{ env.PROJECT_NAME }} # Full Package ID
-        VERSION_REGEX: ${{ github.event.release.tag_name }} # Regex pattern to match version
+        VERSION_REGEX: ${{ github.event.release.tag_name || github.event.inputs.version }}
         NUGET_KEY: ${{ secrets.NUGET_API_KEY }} # nuget.org API key

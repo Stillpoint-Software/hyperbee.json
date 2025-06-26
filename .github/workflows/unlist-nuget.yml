@@ -2,6 +2,11 @@ name: Unlist NuGet
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to unlist'
+        required: true
+        type: string
   # release:
   #   types: [deleted]
 
@@ -19,11 +24,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
+  
+    - name: Debug version input
+      run: echo "Version to unlist: ${{ github.event.release.tag_name || github.event.inputs.version }}"
+    
     # Unlist
     - name: Unlist Deleted Tag
       uses: darenm/unlist-nuget@v1
       with:
         NUGET_PACKAGE: ${{ env.PROJECT_NAME }} # Full Package ID
-        VERSION_REGEX: ${{ github.event.release.tag_name }} # Regex pattern to match version
+        VERSION_REGEX: ${{ github.event.release.tag_name || github.event.inputs.version }}
         NUGET_KEY: ${{ secrets.NUGET_API_KEY }} # nuget.org API key

@@ -11,5 +11,6 @@ public interface INodeActions<TNode>
 
     public bool DeepEquals( TNode left, TNode right );
 
-    public IEnumerable<(TNode Value, string Key)> GetChildren( in TNode value, bool complexTypesOnly = false );
+    public IEnumerable<(TNode Value, string Key)> GetChildrenWithName( in TNode value, ChildEnumerationOptions options );
+    public IEnumerable<TNode> GetChildren( TNode value, ChildEnumerationOptions options );
 }

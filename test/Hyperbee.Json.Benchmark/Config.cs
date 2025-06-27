@@ -24,7 +24,7 @@ public class Config : ManualConfig
         );
 
         // Customize the summary style to prevent truncation
-        WithSummaryStyle( SummaryStyle.Default.WithMaxParameterColumnWidth( 50 ) );
+        WithSummaryStyle( SummaryStyle.Default.WithMaxParameterColumnWidth( 100 ) );
 
         // Add the custom exporter with specified visible columns
         AddExporter( new JsonPathMarkdownExporter

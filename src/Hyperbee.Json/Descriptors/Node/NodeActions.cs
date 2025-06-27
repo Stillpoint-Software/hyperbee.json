@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Extensions;
 using Hyperbee.Json.Path;
 using Hyperbee.Json.Pointer;
 using Hyperbee.Json.Query;
@@ -28,18 +29,23 @@ internal class NodeActions : INodeActions<JsonNode>
     public bool DeepEquals( JsonNode left, JsonNode right ) =>
         JsonNode.DeepEquals( left, right );
 
-    public IEnumerable<(JsonNode Value, string Key)> GetChildren( in JsonNode value, bool complexTypesOnly = false )
+    public IEnumerable<JsonNode> GetChildren( JsonNode value, ChildEnumerationOptions options )
     {
+        bool complexTypesOnly = options.HasFlag( ChildEnumerationOptions.ComplexTypesOnly );
+        bool reverse = options.HasFlag( ChildEnumerationOptions.Reverse );
+
         // allocating is faster than using yield return and less memory intensive.
-        // using stack results in fewer overall allocations than calling reverse,
-        // which internally allocates, and then discards, a new array.
+        // using a collection results in fewer overall allocations than calling
+        // LINQ reverse, which internally allocates, and then discards, a new array.
+
+        List<JsonNode> results;
 
         switch ( value )
         {
             case JsonArray jsonArray:
                 {
                     var length = jsonArray.Count;
-                    var results = new Stack<(JsonNode, string)>( length ); // stack will reverse items
+                    results = new List<JsonNode>( length );
 
                     for ( var index = 0; index < length; index++ )
                     {
@@ -48,24 +54,73 @@ internal class NodeActions : INodeActions<JsonNode>
                         if ( complexTypesOnly && child is not (JsonArray or JsonObject) )
                             continue;
 
-                        results.Push( (child, IndexHelper.GetIndexString( index )) );
+                        results.Add( child );
                     }
 
-                    return results;
+                    return reverse ? results.EnumerateReverse() : results;
                 }
             case JsonObject jsonObject:
                 {
-                    var results = new Stack<(JsonNode, string)>(); // stack will reverse items
+                    results = new List<JsonNode>( 8 );
 
                     foreach ( var child in jsonObject )
                     {
                         if ( complexTypesOnly && child.Value is not (JsonArray or JsonObject) )
                             continue;
 
-                        results.Push( (child.Value, child.Key) );
+                        results.Add( child.Value );
                     }
 
-                    return results;
+                    return reverse ? results.EnumerateReverse() : results;
+                }
+        }
+
+        return [];
+    }
+
+    public IEnumerable<(JsonNode Value, string Key)> GetChildrenWithName( in JsonNode value, ChildEnumerationOptions options )
+    {
+        bool complexTypesOnly = options.HasFlag( ChildEnumerationOptions.ComplexTypesOnly );
+        bool reverse = options.HasFlag( ChildEnumerationOptions.Reverse );
+
+        // allocating is faster than using yield return and less memory intensive.
+        // using a collection results in fewer overall allocations than calling
+        // LINQ reverse, which internally allocates, and then discards, a new array.
+
+        List<(JsonNode, string)> results;
+
+        switch ( value )
+        {
+            case JsonArray jsonArray:
+                {
+                    var length = jsonArray.Count;
+                    results = new List<(JsonNode, string)>( length );
+
+                    for ( var index = 0; index < length; index++ )
+                    {
+                        var child = value[index];
+
+                        if ( complexTypesOnly && child is not (JsonArray or JsonObject) )
+                            continue;
+
+                        results.Add( (child, IndexHelper.GetIndexString( index )) );
+                    }
+
+                    return reverse ? results.EnumerateReverse() : results;
+                }
+            case JsonObject jsonObject:
+                {
+                    results = new List<(JsonNode, string)>( 8 );
+
+                    foreach ( var child in jsonObject )
+                    {
+                        if ( complexTypesOnly && child.Value is not (JsonArray or JsonObject) )
+                            continue;
+
+                        results.Add( (child.Value, child.Key) );
+                    }
+
+                    return reverse ? results.EnumerateReverse() : results;
                 }
         }
 

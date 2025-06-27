@@ -95,7 +95,6 @@ Here is a performance comparison of various JSONPath queries on the standard boo
   }
 }
 ```
-
 | Method                  | Mean      | Error     | StdDev    | Gen0   | Gen1   | Allocated |
 |------------------------ |----------:|----------:|----------:|-------:|-------:|----------:|
 |`$..[?(@.price < 10)]`  
@@ -113,7 +112,7 @@ Here is a performance comparison of various JSONPath queries on the standard boo
 | Hyperbee.JsonNode       |  5.181 us | 1.8016 us | 0.0988 us | 0.7477 | 0.0076 |   9.23 KB |
 | Newtonsoft.JObject      |  7.823 us | 0.8017 us | 0.0439 us | 1.1749 | 0.0458 |  14.55 KB |
 | JsonEverything.JsonNode | 16.753 us | 1.5507 us | 0.0850 us | 2.3193 | 0.0610 |   28.5 KB |
-|         
+|                         |           |           |           |        |        |           |
 |`$..`                    |           |           |           |        |        |           |
 | JsonCraft.JsonElement   |  2.497 us | 0.0903 us | 0.0049 us | 0.2327 |      - |   2.88 KB |
 | Hyperbee.JsonElement    |  3.299 us | 0.8178 us | 0.0448 us | 0.5302 | 0.0038 |   6.51 KB |

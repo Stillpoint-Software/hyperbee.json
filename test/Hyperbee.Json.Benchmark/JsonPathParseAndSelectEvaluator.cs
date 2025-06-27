@@ -12,13 +12,6 @@ namespace Hyperbee.Json.Benchmark;
 
 public class JsonPathParseAndSelectEvaluator
 {
-    //[Params(
-    //    "$.store.book[0]",
-    //    "$.store.book[?(@.price == 8.99)]",
-    //    "$..price",
-    //    "$..* ::First()",
-    //    "$..*"
-    //)]
     [Params(
         "$.store.book[0].title",
         "$.store.book[*].author",
@@ -36,11 +29,23 @@ public class JsonPathParseAndSelectEvaluator
         "$..['bicycle','price']",
         "$..[?(@.price < 10)]",
         "$.store.book[?(@.author && @.title)]",
-        "$.store.*"
+        "$.store.*",
+        "$",
+        "$.store.book[0]",
+        "$..book[0]",
+        "$.store.book[0,1]",
+        "$.store.book['category','author']",
+        "$..book[?@.isbn]",
+        "$.store.book[?@.price == 8.99]",
+        "$..book[?@.price == 8.99 && @.category == 'fiction']"
     )]
     public string Filter;
 
     public string Document;
+    public JsonNode _node;
+    public JsonElement _element;
+    private JObject _jObject;
+
 
     public Consumer _consumer = new();
 
@@ -86,6 +91,11 @@ public class JsonPathParseAndSelectEvaluator
               }
             }
             """;
+
+
+        _jObject = JObject.Parse( Document );
+        _node = JsonNode.Parse( Document )!;
+        _element = JsonDocument.Parse( Document ).RootElement;
     }
 
     public (string, bool) GetFilter()
@@ -116,51 +126,51 @@ public class JsonPathParseAndSelectEvaluator
         Consume( select, first );
     }
 
-    //[Benchmark( Description = "Hyperbee.JsonNode" )]
-    //public void Hyperbee_JsonNode()
-    //{
-    //    var (filter, first) = GetFilter();
+    [Benchmark( Description = "Hyperbee.JsonNode" )]
+    public void Hyperbee_JsonNode()
+    {
+        var (filter, first) = GetFilter();
 
-    //    var node = JsonNode.Parse( Document )!;
-    //    var select = node.Select( filter );
+        var node = JsonNode.Parse( Document )!;
+        var select = node.Select( filter );
 
-    //    Consume( select, first );
-    //}
+        Consume( select, first );
+    }
 
-    //[Benchmark( Description = "Newtonsoft.JObject" )]
-    //public void Newtonsoft_JObject()
-    //{
-    //    var (filter, first) = GetFilter();
+    [Benchmark( Description = "Newtonsoft.JObject" )]
+    public void Newtonsoft_JObject()
+    {
+        var (filter, first) = GetFilter();
 
-    //    var jObject = JObject.Parse( Document );
-    //    var select = jObject.SelectTokens( filter );
+        var jObject = JObject.Parse( Document );
+        var select = jObject.SelectTokens( filter );
 
-    //    Consume( select, first );
-    //}
+        Consume( select, first );
+    }
 
-    //[Benchmark( Description = "JsonEverything.JsonNode" )]
-    //public void JsonEverything_JsonNode()
-    //{
-    //    var (filter, first) = GetFilter();
+    [Benchmark( Description = "JsonEverything.JsonNode" )]
+    public void JsonEverything_JsonNode()
+    {
+        var (filter, first) = GetFilter();
 
-    //    var path = JsonEverything.JsonPath.Parse( filter );
-    //    var node = JsonNode.Parse( Document )!;
-    //    var select = path.Evaluate( node ).Matches!;
+        var path = JsonEverything.JsonPath.Parse( filter );
+        var node = JsonNode.Parse( Document )!;
+        var select = path.Evaluate( node ).Matches!;
 
-    //    Consume( select, first );
-    //}
+        Consume( select, first );
+    }
 
-    //[Benchmark( Description = "JsonCons.JsonElement" )]
-    //public void JsonCons_JsonElement()
-    //{
-    //    var (filter, first) = GetFilter();
+    [Benchmark( Description = "JsonCons.JsonElement" )]
+    public void JsonCons_JsonElement()
+    {
+        var (filter, first) = GetFilter();
 
-    //    var path = JsonSelector.Parse( filter )!;
-    //    var element = JsonDocument.Parse( Document ).RootElement;
-    //    var select = path.Select( element );
+        var path = JsonSelector.Parse( filter )!;
+        var element = JsonDocument.Parse( Document ).RootElement;
+        var select = path.Select( element );
 
-    //    Consume( select, first );
-    //}
+        Consume( select, first );
+    }
 
     [Benchmark( Description = "JsonCraft.JsonElement" )]
     public void JsonCraft_JsonElement()

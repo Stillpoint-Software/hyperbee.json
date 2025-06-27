@@ -1,16 +1,16 @@
 ```
 
-BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.4061)
-Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
-.NET SDK 9.0.203
-  [Host]   : .NET 9.0.4 (9.0.425.16305), X64 RyuJIT AVX2
-  ShortRun : .NET 9.0.4 (9.0.425.16305), X64 RyuJIT AVX2
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.4351)
+12th Gen Intel Core i9-12900HK, 1 CPU, 20 logical and 14 physical cores
+.NET SDK 9.0.301
+  [Host]   : .NET 9.0.6 (9.0.625.26613), X64 RyuJIT AVX2 [AttachedDebugger]
+  ShortRun : .NET 9.0.6 (9.0.625.26613), X64 RyuJIT AVX2
 
 
- | Method                   |      Mean |      Error |    StdDev |  Allocated
- | :----------------------- | --------: | ---------: | --------: | ---------:
- | Hyperbee_JsonElement     |  240.7 ns |   95.55 ns |   5.24 ns |      616 B
- | Hyperbee_JsonNode        |  265.3 ns |  430.49 ns |  23.60 ns |      616 B
- | JsonEverything_JsonNode  |  444.3 ns |  246.87 ns |  13.53 ns |      968 B
- | AspNetCore_JsonNode      |  743.4 ns |  801.29 ns |  43.92 ns |     1024 B
+ | Method                   |      Mean |      Error |   StdDev |  Allocated
+ | :----------------------- | --------: | ---------: | -------: | ---------:
+ | Hyperbee_JsonNode        |  172.9 ns |   44.86 ns |  2.46 ns |      520 B
+ | Hyperbee_JsonElement     |  178.8 ns |   76.47 ns |  4.19 ns |      520 B
+ | JsonEverything_JsonNode  |  289.7 ns |  108.59 ns |  5.95 ns |      968 B
+ | AspNetCore_JsonNode      |  516.7 ns |   44.74 ns |  2.45 ns |     1024 B
 ```

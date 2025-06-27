@@ -106,7 +106,7 @@ Here is a performance comparison of various JSONPath queries on the standard boo
 | Newtonsoft.JObject      | 12.153 us | 2.4881 us | 0.1364 us | 2.1057 | 0.0763 |  25.86 KB |
 | JsonEverything.JsonNode | 23.541 us | 1.3946 us | 0.0764 us | 3.9063 | 0.1221 |  48.15 KB |
 |                         |           |           |           |        |        |           |
-| `$..['bicycle','price']`   
+|`$..['bicycle','price']`   
 | JsonCraft.JsonElement   |  3.136 us | 0.2760 us | 0.0151 us | 0.3242 |      - |   4.01 KB |
 | Hyperbee.JsonElement    |  3.578 us | 0.4623 us | 0.0253 us | 0.4349 | 0.0038 |   5.37 KB |
 | JsonCons.JsonElement    |  3.948 us | 0.6099 us | 0.0334 us | 0.5798 |      - |   7.18 KB |
@@ -114,7 +114,7 @@ Here is a performance comparison of various JSONPath queries on the standard boo
 | Newtonsoft.JObject      |  7.823 us | 0.8017 us | 0.0439 us | 1.1749 | 0.0458 |  14.55 KB |
 | JsonEverything.JsonNode | 16.753 us | 1.5507 us | 0.0850 us | 2.3193 | 0.0610 |   28.5 KB |
 |         
-| ` $..*`                |           |           |           |        |        |           |
+|`$..*`                   |           |           |           |        |        |           |
 | JsonCraft.JsonElement   |  2.497 us | 0.0903 us | 0.0049 us | 0.2327 |      - |   2.88 KB |
 | Hyperbee.JsonElement    |  3.299 us | 0.8178 us | 0.0448 us | 0.5302 | 0.0038 |   6.51 KB |
 | JsonCons.JsonElement    |  4.176 us | 0.5887 us | 0.0323 us | 0.6866 |      - |   8.49 KB |

@@ -114,7 +114,7 @@ Here is a performance comparison of various JSONPath queries on the standard boo
 | Newtonsoft.JObject      |  7.823 us | 0.8017 us | 0.0439 us | 1.1749 | 0.0458 |  14.55 KB |
 | JsonEverything.JsonNode | 16.753 us | 1.5507 us | 0.0850 us | 2.3193 | 0.0610 |   28.5 KB |
 |         
-|`$..*`                   |           |           |           |        |        |           |
+|`$..`                    |           |           |           |        |        |           |
 | JsonCraft.JsonElement   |  2.497 us | 0.0903 us | 0.0049 us | 0.2327 |      - |   2.88 KB |
 | Hyperbee.JsonElement    |  3.299 us | 0.8178 us | 0.0448 us | 0.5302 | 0.0038 |   6.51 KB |
 | JsonCons.JsonElement    |  4.176 us | 0.5887 us | 0.0323 us | 0.6866 |      - |   8.49 KB |

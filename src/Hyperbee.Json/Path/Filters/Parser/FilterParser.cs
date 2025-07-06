@@ -453,7 +453,11 @@ public class FilterParser<TNode> : FilterParser
         if ( state.IsArgument )
             return;
 
-        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() )
+        // Only throw if this function (which must be compared) is left as a standalone expression
+        // at the end of the filter. This ensures that filters like [?(length(@.title))] are rejected,
+        // but [?(length(@.title) > 10)] are allowed. We defer this check until EndOfBuffer to allow
+        // the function to be merged with a comparison operator if present.
+        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() && state.EndOfBuffer )
             throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
 
         if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustNotCompare ) && item.Operator.IsComparison() )

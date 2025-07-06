@@ -6,7 +6,7 @@ using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Validators;
 
-namespace Hyperbee.Json.Benchmark;
+namespace Hyperbee.Json.Benchmark.Helpers;
 
 public class Config : ManualConfig
 {

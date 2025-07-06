@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
@@ -10,34 +10,60 @@ using JsonEverything = Json.Path;
 namespace Hyperbee.Json.Benchmark;
 
 
-public class JsonPathParseAndSelectEvaluator
+public class JsonPathBenchmark
 {
+    /*
     [Params(
-        "$.store.book[0].title",
-        "$.store.book[*].author",
-        "$.store.book[?(@.price < 10)].title",
-        "$.store.bicycle.color",
-        "$.store.book[*]",
-        "$.store..price",
-        "$..author",
-        "$.store.book[?(@.price > 10 && @.price < 20)]",
-        "$.store.book[?(@.category == 'fiction')]",
-        "$.store.book[-1:]",
-        "$.store.book[:2]",
-        "$..book[0,1]",
-        "$..*",
-        "$..['bicycle','price']",
-        "$..[?(@.price < 10)]",
-        "$.store.book[?(@.author && @.title)]",
+|      | `$..* First()`
+       | `$..*`
+       | `$..price`
+       | `$.store.book[?(@.price == 8.99)]`
+       | `$.store.book[0]`
+    )]
+    */
+
+    [Params(
+        // Root and Wildcard
+        "$",                        
         "$.store.*",
-        "$",
-        "$.store.book[0]",
-        "$..book[0]",
-        "$.store.book[0,1]",
-        "$.store.book['category','author']",
-        "$..book[?@.isbn]",
-        "$.store.book[?@.price == 8.99]",
-        "$..book[?@.price == 8.99 && @.category == 'fiction']"
+        "$.store.* #First()",   // Test Enumerable.First()
+
+        // Property and Index Access
+        "$.store.book[0]",          
+        "$.store.book[0].title",    
+        "$.store.book[*]",          
+        "$.store.book[*].author",   
+        "$.store.book['category','author']", 
+
+        // Recursive Descent
+        "$.store..price",           
+        "$..author",                
+        "$..*",                     
+        "$..['bicycle','price']",   
+        "$..book[0,1]",             
+        "$..book[?@.isbn]",         
+
+        // Filters
+        "$.store.book[?(@.price < 10)].title",                      
+        "$.store.book[?(@.price > 10 && @.price < 20)]",            
+        "$.store.book[?(@.category == 'fiction')]",                 
+        "$.store.book[?(@.author && @.title)]",                     
+        "$.store.book[?(@.price == 8.99)]",                         
+        "$..[?(@.price < 10)]",                                     
+        "$..book[?@.price == 8.99 && @.category == 'fiction']",     
+        "$.store.book[?(@.price < 10 || @.category == 'fiction')]", 
+        "$.store.book[?(!@.isbn)]",                                 
+        "$.store.book[?(length(@.title) > 10)]",                    
+                  
+
+        // Array Slices and Unions
+        "$.store.book[-1:]",        
+        "$.store.book[0,1]",        
+        "$.store.book[:2]",         
+        "$.store.book[0:3:2]",      
+
+        // Property Access (Direct)
+        "$.store.bicycle.color"    
     )]
     public string Filter;
 
@@ -100,7 +126,7 @@ public class JsonPathParseAndSelectEvaluator
 
     public (string, bool) GetFilter()
     {
-        const string First = " ::First()";
+        const string First = " #First()";
 
         return Filter.EndsWith( First )
             ? (Filter[..^First.Length], true)
@@ -126,7 +152,7 @@ public class JsonPathParseAndSelectEvaluator
         Consume( select, first );
     }
 
-    [Benchmark( Description = "Hyperbee.JsonNode" )]
+    //[Benchmark( Description = "Hyperbee.JsonNode" )]
     public void Hyperbee_JsonNode()
     {
         var (filter, first) = GetFilter();
@@ -137,7 +163,7 @@ public class JsonPathParseAndSelectEvaluator
         Consume( select, first );
     }
 
-    [Benchmark( Description = "Newtonsoft.JObject" )]
+    //[Benchmark( Description = "Newtonsoft.JObject" )]
     public void Newtonsoft_JObject()
     {
         var (filter, first) = GetFilter();
@@ -148,7 +174,7 @@ public class JsonPathParseAndSelectEvaluator
         Consume( select, first );
     }
 
-    [Benchmark( Description = "JsonEverything.JsonNode" )]
+    //[Benchmark( Description = "JsonEverything.JsonNode" )]
     public void JsonEverything_JsonNode()
     {
         var (filter, first) = GetFilter();
@@ -160,7 +186,7 @@ public class JsonPathParseAndSelectEvaluator
         Consume( select, first );
     }
 
-    [Benchmark( Description = "JsonCons.JsonElement" )]
+    //[Benchmark( Description = "JsonCons.JsonElement" )]
     public void JsonCons_JsonElement()
     {
         var (filter, first) = GetFilter();
@@ -168,17 +194,6 @@ public class JsonPathParseAndSelectEvaluator
         var path = JsonSelector.Parse( filter )!;
         var element = JsonDocument.Parse( Document ).RootElement;
         var select = path.Select( element );
-
-        Consume( select, first );
-    }
-
-    [Benchmark( Description = "JsonCraft.JsonElement" )]
-    public void JsonCraft_JsonElement()
-    {
-        var (filter, first) = GetFilter();
-
-        var element = JsonDocument.Parse( Document ).RootElement;
-        var select = JsonCraft.JsonPath.JsonExtensions.SelectElements( element, filter );
 
         Consume( select, first );
     }

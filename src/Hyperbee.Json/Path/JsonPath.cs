@@ -45,6 +45,8 @@ using Hyperbee.Json.Query;
 
 namespace Hyperbee.Json.Path;
 
+#pragma warning disable CS1717
+
 internal static class IndexHelper
 {
     private const int LookupLength = 64;
@@ -158,9 +160,9 @@ public static class JsonPath<TNode>
             var (parent, value, key, segmentNext, flags) = args;
 
 ProcessArgs:
-// call node processor if it exists and the `key` is not null.
-// the key is null when a descent has re-pushed the descent target.
-// this should be safe to skip; we will see its values later.
+            // call node processor if it exists and the `key` is not null.
+            // the key is null when a descent has re-pushed the descent target.
+            // this should be safe to skip; we will see its values later.
 
             if ( key != null )
                 processor?.Invoke( parent, value, key, segmentNext );
@@ -521,38 +523,6 @@ ProcessArgs:
             _disposed = true;
         }
     }
-
-    //private sealed class NodeArgsStack( int capacity = 8 )
-    //{
-    //    [DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
-    //    private readonly Stack<NodeArgs> _stack = new(capacity);
-
-    //    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    //    public void Push( in TNode parent, in TNode value, string key, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
-    //    {
-    //        _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
-    //    }
-
-    //    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    //    public void Push( in TNode parent, in TNode value, int index, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
-    //    {
-    //        _stack.Push( new NodeArgs( parent, value, IndexHelper.GetIndexString( index ), segment, flags ) );
-    //    }
-
-    //    public void PushMany( in TNode parent, in IEnumerable<(TNode Value, string Key)> items, in JsonSegment segment, NodeFlags flags = NodeFlags.Default )
-    //    {
-    //        foreach ( var (value, key) in items )
-    //        {
-    //            _stack.Push( new NodeArgs( parent, value, key, segment, flags ) );
-    //        }
-    //    }
-
-    //    [MethodImpl( MethodImplOptions.AggressiveInlining )]
-    //    public bool TryPop( out NodeArgs args )
-    //    {
-    //        return _stack.TryPop( out args );
-    //    }
-    //}
 }
 
 

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
@@ -24,46 +24,46 @@ public class JsonPathBenchmark
 
     [Params(
         // Root and Wildcard
-        "$",                        
+        "$",
         "$.store.*",
         "$.store.* #First()",   // Test Enumerable.First()
 
         // Property and Index Access
-        "$.store.book[0]",          
-        "$.store.book[0].title",    
-        "$.store.book[*]",          
-        "$.store.book[*].author",   
-        "$.store.book['category','author']", 
+        "$.store.book[0]",
+        "$.store.book[0].title",
+        "$.store.book[*]",
+        "$.store.book[*].author",
+        "$.store.book['category','author']",
 
         // Recursive Descent
-        "$.store..price",           
-        "$..author",                
-        "$..*",                     
-        "$..['bicycle','price']",   
-        "$..book[0,1]",             
-        "$..book[?@.isbn]",         
+        "$.store..price",
+        "$..author",
+        "$..*",
+        "$..['bicycle','price']",
+        "$..book[0,1]",
+        "$..book[?@.isbn]",
 
         // Filters
-        "$.store.book[?(@.price < 10)].title",                      
-        "$.store.book[?(@.price > 10 && @.price < 20)]",            
-        "$.store.book[?(@.category == 'fiction')]",                 
-        "$.store.book[?(@.author && @.title)]",                     
-        "$.store.book[?(@.price == 8.99)]",                         
-        "$..[?(@.price < 10)]",                                     
-        "$..book[?@.price == 8.99 && @.category == 'fiction']",     
-        "$.store.book[?(@.price < 10 || @.category == 'fiction')]", 
-        "$.store.book[?(!@.isbn)]",                                 
-        "$.store.book[?(length(@.title) > 10)]",                    
-                  
+        "$.store.book[?(@.price < 10)].title",
+        "$.store.book[?(@.price > 10 && @.price < 20)]",
+        "$.store.book[?(@.category == 'fiction')]",
+        "$.store.book[?(@.author && @.title)]",
+        "$.store.book[?(@.price == 8.99)]",
+        "$..[?(@.price < 10)]",
+        "$..book[?@.price == 8.99 && @.category == 'fiction']",
+        "$.store.book[?(@.price < 10 || @.category == 'fiction')]",
+        "$.store.book[?(!@.isbn)]",
+        "$.store.book[?(length(@.title) > 10)]",
+
 
         // Array Slices and Unions
-        "$.store.book[-1:]",        
-        "$.store.book[0,1]",        
-        "$.store.book[:2]",         
-        "$.store.book[0:3:2]",      
+        "$.store.book[-1:]",
+        "$.store.book[0,1]",
+        "$.store.book[:2]",
+        "$.store.book[0:3:2]",
 
         // Property Access (Direct)
-        "$.store.bicycle.color"    
+        "$.store.bicycle.color"
     )]
     public string Filter;
 

@@ -123,8 +123,8 @@ public class FilterParserTests : JsonTestBase
     }
 
     [DataTestMethod]
-    [DataRow( "$.store.book[?(length(@.title) > 10)].title", "Sayings of the Century", typeof(JsonElement) )]
-    [DataRow( "$.store.book[?(length(@.title) > 10)].title", "Sayings of the Century", typeof(JsonNode) )]
+    [DataRow( "$.store.book[?(length(@.title) > 10)].title", "Sayings of the Century", typeof( JsonElement ) )]
+    [DataRow( "$.store.book[?(length(@.title) > 10)].title", "Sayings of the Century", typeof( JsonNode ) )]
     public void ReturnExpectedResult_WhenUsingExpressionEvaluator( string filter, string expected, Type sourceType )
     {
         // arrange & act

@@ -63,7 +63,6 @@ public class FilterParser<TNode> : FilterParser
         {
             MoveNext( ref state );
             items.Enqueue( GetExprItem( ref state ) ); // may cause recursion
-
         } while ( state.IsParsing );
 
         // check for paren mismatch
@@ -153,9 +152,7 @@ public class FilterParser<TNode> : FilterParser
     private static void MoveNextOperator( ref ParserState state ) // move to the next operator
     {
         if ( state.Operator.IsLogical() || state.Operator.IsComparison() || state.Operator.IsMath() )
-        {
             return;
-        }
 
         if ( !state.IsParsing )
         {
@@ -174,6 +171,7 @@ public class FilterParser<TNode> : FilterParser
 
     private static void NextCharacter( ref ParserState state, int start, out char nextChar, ref char? quoteChar )
     {
+        // Read next character
         nextChar = state.Buffer[state.Pos++];
 
         // Handle escape characters within quotes
@@ -453,11 +451,7 @@ public class FilterParser<TNode> : FilterParser
         if ( state.IsArgument )
             return;
 
-        // Only throw if this function (which must be compared) is left as a standalone expression
-        // at the end of the filter. This ensures that filters like [?(length(@.title))] are rejected,
-        // but [?(length(@.title) > 10)] are allowed. We defer this check until EndOfBuffer to allow
-        // the function to be merged with a comparison operator if present.
-        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() && state.EndOfBuffer )
+        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
 
         if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustNotCompare ) && item.Operator.IsComparison() )

@@ -9,7 +9,7 @@ namespace Hyperbee.Json.Cts.Tests;
 [TestClass]
 public class CtsIndexSelectorTest
 {
-    [DataTestMethod( @"first element (1)" )]
+    [TestMethod( @"first element (1)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_first_element_1( Type documentType )
@@ -34,7 +34,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"second element (2)" )]
+    [TestMethod( @"second element (2)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_second_element_2( Type documentType )
@@ -59,7 +59,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"out of bound (3)" )]
+    [TestMethod( @"out of bound (3)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_out_of_bound_3( Type documentType )
@@ -82,7 +82,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"overflowing index (4)" )]
+    [TestMethod( @"overflowing index (4)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_overflowing_index_4( Type documentType )
@@ -93,7 +93,7 @@ public class CtsIndexSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"not actually an index, overflowing index leads into general text (5)" )]
+    [TestMethod( @"not actually an index, overflowing index leads into general text (5)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_not_actually_an_index__overflowing_index_leads_into_general_text_5( Type documentType )
@@ -104,7 +104,7 @@ public class CtsIndexSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"negative (6)" )]
+    [TestMethod( @"negative (6)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_6( Type documentType )
@@ -129,7 +129,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"more negative (7)" )]
+    [TestMethod( @"more negative (7)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_more_negative_7( Type documentType )
@@ -154,7 +154,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative out of bound (8)" )]
+    [TestMethod( @"negative out of bound (8)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_out_of_bound_8( Type documentType )
@@ -177,7 +177,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"on object (9)" )]
+    [TestMethod( @"on object (9)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_on_object_9( Type documentType )
@@ -199,7 +199,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"leading 0 (10)" )]
+    [TestMethod( @"leading 0 (10)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_leading_0_10( Type documentType )
@@ -210,7 +210,7 @@ public class CtsIndexSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"leading -0 (11)" )]
+    [TestMethod( @"leading -0 (11)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_leading__0_11( Type documentType )

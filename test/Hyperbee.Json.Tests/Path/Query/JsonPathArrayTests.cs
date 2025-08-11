@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathArrayTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[1:3]", typeof( JsonDocument ) )]
     [DataRow( "$[1:3]", typeof( JsonNode ) )]
     public void ArraySlice( string query, Type sourceType )
@@ -38,7 +38,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:5]", typeof( JsonDocument ) )]
     [DataRow( "$[0:5]", typeof( JsonNode ) )]
     public void ArraySliceOnExactMatch( string query, Type sourceType )
@@ -69,7 +69,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[7:10]", typeof( JsonDocument ) )]
     [DataRow( "$[7:10]", typeof( JsonNode ) )]
     public void ArraySliceOnNonOverlappingArray( string query, Type sourceType )
@@ -93,7 +93,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[1:3]", typeof( JsonDocument ) )]
     [DataRow( "$[1:3]", typeof( JsonNode ) )]
     public void ArraySliceOnObject( string query, Type sourceType )
@@ -118,7 +118,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[1:10]", typeof( JsonDocument ) )]
     [DataRow( "$[1:10]", typeof( JsonNode ) )]
     public void ArraySliceOnPartiallyOverlappingArray( string query, Type sourceType )
@@ -144,7 +144,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[2:113667776004]", typeof( JsonDocument ) )]
     [DataRow( "$[2:113667776004]", typeof( JsonNode ) )]
     public void ArraySliceWithLargeNumberForEnd( string query, Type sourceType )
@@ -173,7 +173,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[2:-113667776004:-1]", typeof( JsonDocument ) )]
     [DataRow( "$[2:-113667776004:-1]", typeof( JsonNode ) )]
     public void ArraySliceWithLargeNumberForEndAndNegativeStep( string query, Type sourceType )
@@ -203,7 +203,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-113667776004:2]", typeof( JsonDocument ) )]
     [DataRow( "$[-113667776004:2]", typeof( JsonNode ) )]
     public void ArraySliceWithLargeNumberForStart( string query, Type sourceType )
@@ -231,7 +231,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[113667776004:2:-1]", typeof( JsonDocument ) )]
     [DataRow( "$[113667776004:2:-1]", typeof( JsonNode ) )]
     public void ArraySliceWithLargeNumberForStartAndNegativeStep( string query, Type sourceType )
@@ -260,7 +260,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-4:-5]", typeof( JsonDocument ) )]
     [DataRow( "$[-4:-5]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStartAndEndAndRangeOfNegative1( string query, Type sourceType )
@@ -285,7 +285,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-4:-4]", typeof( JsonDocument ) )]
     [DataRow( "$[-4:-4]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStartAndEndAndRangeOf0( string query, Type sourceType )
@@ -310,7 +310,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-4:-3]", typeof( JsonDocument ) )]
     [DataRow( "$[-4:-3]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStartAndEndAndRangeOf1( string query, Type sourceType )
@@ -340,7 +340,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-4:1]", typeof( JsonDocument ) )]
     [DataRow( "$[-4:1]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStartAndPositiveEndAndRangeOfNegative1( string query, Type sourceType )
@@ -365,7 +365,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-4:2]", typeof( JsonDocument ) )]
     [DataRow( "$[-4:2]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStartAndPositiveEndAndRangeOf0( string query, Type sourceType )
@@ -390,7 +390,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-4:3]", typeof( JsonDocument ) )]
     [DataRow( "$[-4:3]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStartAndPositiveEndAndRangeOf1( string query, Type sourceType )
@@ -418,7 +418,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[3:0:-2]", typeof( JsonDocument ) )]
     [DataRow( "$[3:0:-2]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStep( string query, Type sourceType )
@@ -447,7 +447,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:3:-2]", typeof( JsonDocument ) )]
     [DataRow( "$[0:3:-2]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStepAndStartGreaterThanEnd( string query, Type sourceType )
@@ -472,7 +472,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[7:3:-1]", typeof( JsonDocument ) )]
     [DataRow( "$[7:3:-1]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStepOnPartiallyOverlappingArray( string query, Type sourceType )
@@ -500,7 +500,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[::-2]", typeof( JsonDocument ) )]
     [DataRow( "$[::-2]", typeof( JsonNode ) )]
     public void ArraySliceWithNegativeStepOnly( string query, Type sourceType )
@@ -530,7 +530,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[1:]", typeof( JsonDocument ) )]
     [DataRow( "$[1:]", typeof( JsonNode ) )]
     public void ArraySliceWithOpenEnd( string query, Type sourceType )
@@ -560,7 +560,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[3::-1]", typeof( JsonDocument ) )]
     [DataRow( "$[3::-1]", typeof( JsonNode ) )]
     public void ArraySliceWithOpenEndAndNegativeStep( string query, Type sourceType )
@@ -591,7 +591,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[:2]", typeof( JsonDocument ) )]
     [DataRow( "$[:2]", typeof( JsonNode ) )]
     public void ArraySliceWithOpenStart( string query, Type sourceType )
@@ -619,7 +619,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[::]", typeof( JsonDocument ) )]
     [DataRow( "$[::]", typeof( JsonNode ) )]
     public void ArraySliceWithOpenStartAndEndAndStepEmpty( string query, Type sourceType )
@@ -644,7 +644,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[:]", typeof( JsonDocument ) )]
     [DataRow( "$[:]", typeof( JsonNode ) )]
     public void ArraySliceWithOpenStartAndEndOnObject( string query, Type sourceType )
@@ -665,7 +665,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[:2:-1]", typeof( JsonDocument ) )]
     [DataRow( "$[:2:-1]", typeof( JsonNode ) )]
     public void ArraySliceWithOpenStartAndNegativeStep( string query, Type sourceType )
@@ -694,7 +694,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[3:-4]", typeof( JsonDocument ) )]
     [DataRow( "$[3:-4]", typeof( JsonNode ) )]
     public void ArraySliceWithPositiveStartAndNegativeEndAndRangeOfNegative1( string query, Type sourceType )
@@ -719,7 +719,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[3:-3]", typeof( JsonDocument ) )]
     [DataRow( "$[3:-3]", typeof( JsonNode ) )]
     public void ArraySliceWithPositiveStartAndNegativeEndAndRangeOf0( string query, Type sourceType )
@@ -744,7 +744,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[3:-2]", typeof( JsonDocument ) )]
     [DataRow( "$[3:-2]", typeof( JsonNode ) )]
     public void ArraySliceWithPositiveStartAndNegativeEndAndRangeOf1( string query, Type sourceType )
@@ -772,7 +772,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[2:1]", typeof( JsonDocument ) )]
     [DataRow( "$[2:1]", typeof( JsonNode ) )]
     public void ArraySliceWithRangeOfNegative1( string query, Type sourceType )
@@ -795,7 +795,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:0]", typeof( JsonDocument ) )]
     [DataRow( "$[0:0]", typeof( JsonNode ) )]
     public void ArraySliceWithRangeOf0( string query, Type sourceType )
@@ -816,7 +816,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:1]", typeof( JsonDocument ) )]
     [DataRow( "$[0:1]", typeof( JsonNode ) )]
     public void ArraySliceWithRangeOf1( string query, Type sourceType )
@@ -840,7 +840,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-1:]", typeof( JsonDocument ) )]
     [DataRow( "$[-1:]", typeof( JsonNode ) )]
     public void ArraySliceWithStartNegative1AndOpenEnd( string query, Type sourceType )
@@ -865,7 +865,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-2:]", typeof( JsonDocument ) )]
     [DataRow( "$[-2:]", typeof( JsonNode ) )]
     public void ArraySliceWithStartMinus2AndOpenEnd( string query, Type sourceType )
@@ -891,7 +891,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-4:]", typeof( JsonDocument ) )]
     [DataRow( "$[-4:]", typeof( JsonNode ) )]
     public void ArraySliceWithStartLargeNegativeNumberAndOpenEndOnShortArray( string query, Type sourceType )
@@ -918,7 +918,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:3:2]", typeof( JsonDocument ) )]
     [DataRow( "$[0:3:2]", typeof( JsonNode ) )]
     public void ArraySliceWithStep( string query, Type sourceType )
@@ -946,7 +946,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:3:0]", typeof( JsonDocument ) )]
     [DataRow( "$[0:3:0]", typeof( JsonNode ) )]
     public void ArraySliceWithStep0( string query, Type sourceType )
@@ -971,7 +971,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:3:1]", typeof( JsonDocument ) )]
     [DataRow( "$[0:3:1]", typeof( JsonNode ) )]
     public void ArraySliceWithStep1( string query, Type sourceType )
@@ -1000,7 +1000,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:4:2]", typeof( JsonDocument ) )]
     [DataRow( "$[0:4:2]", typeof( JsonNode ) )]
     public void ArraySliceWithStepButEndNotAligned( string query, Type sourceType )
@@ -1028,7 +1028,7 @@ public class JsonPathArrayTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[1:3:]", typeof( JsonDocument ) )]
     [DataRow( "$[1:3:]", typeof( JsonNode ) )]
     public void ArraySliceWithStepEmpty( string query, Type sourceType )

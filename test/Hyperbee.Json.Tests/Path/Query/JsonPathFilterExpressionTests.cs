@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathFilterExpressionTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.key)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key)]", typeof( JsonNode ) )]
     [DataRow( "$[? @.key]", typeof( JsonDocument ) )]
@@ -32,7 +32,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.key)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key)]", typeof( JsonNode ) )]
     public void FilterExpressionWithTruthyProperty( string query, Type sourceType )
@@ -54,7 +54,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.key<42)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key<42)]", typeof( JsonNode ) )]
     [DataRow( "$[?@.key < 42]", typeof( JsonDocument ) )]
@@ -84,7 +84,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonDocument ) )]
     [DataRow( "$..*[?(@.id>2)]", typeof( JsonNode ) )]
     public void FilterExpressionAfterDoNotationWithWildcardAfterRecursiveDecent( string query, Type sourceType )
@@ -140,7 +140,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.a && (@.b || @.c))]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.a && (@.b || @.c))]", typeof( JsonNode ) )]
     public void FilterExpressionWithDifferentGroupedOperators( string query, Type sourceType )
@@ -189,7 +189,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
     }
 
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.a && @.b || @.c)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.a && @.b || @.c)]", typeof( JsonNode ) )]
     public void FilterExpressionWithDifferentUngroupedOperators( string query, Type sourceType )
@@ -239,7 +239,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.d == [\"v1\", \"v2\"])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.d == [\"v1\", \"v2\"])]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsArray( string query, Type sourceType )
@@ -309,10 +309,9 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@[0:1]==[1])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@[0:1]==[1])]", typeof( JsonNode ) )]
-    [ExpectedException( typeof( NotSupportedException ) )]
     public void FilterExpressionWithEqualsArrayForSliceWithRange1( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED
@@ -329,13 +328,12 @@ public class JsonPathFilterExpressionTests : JsonTestBase
             """;
 
         var source = GetDocumentAdapter( sourceType, json );
-        _ = source.Select( query ).ToArray();
+        Assert.ThrowsExactly<NotSupportedException>( () => _ = source.Select( query ).ToArray() );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.*==[1,2])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.*==[1,2])]", typeof( JsonNode ) )]
-    [ExpectedException( typeof( NotSupportedException ) )]
     public void FilterExpressionWithEqualsArrayForDotNotationWithStart( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED
@@ -356,10 +354,10 @@ public class JsonPathFilterExpressionTests : JsonTestBase
 
         var source = GetDocumentAdapter( sourceType, json );
 
-        _ = source.Select( query ).ToArray();
+        Assert.ThrowsExactly<NotSupportedException>( () => _ = source.Select( query ).ToArray() );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.d==[\"v1\",\"v2\"] || (@.d == true))]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.d==[\"v1\",\"v2\"] || (@.d == true))]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsArrayOrEqualsTrue( string query, Type sourceType )
@@ -384,7 +382,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?((@.key<44)==false)]", typeof( JsonDocument ) )]
     [DataRow( "$[?((@.key<44)==false)]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsBooleanExpressionValue( string query, Type sourceType )
@@ -409,7 +407,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.key==false)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key==false)]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsFalse( string query, Type sourceType )
@@ -467,7 +465,7 @@ public class JsonPathFilterExpressionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.key==null)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key==null)]", typeof( JsonNode ) )]
     public void FilterExpressionWithEqualsNull( string query, Type sourceType )

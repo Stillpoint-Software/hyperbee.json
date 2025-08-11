@@ -8,7 +8,7 @@ namespace Hyperbee.Json.Tests.Query
     [TestClass]
     public class JsonQueryParserRfc9535Tests
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow( "$", "[$ => singular]" )]
         [DataRow( "$.two.some", "[$ => singular][two => singular][some => singular]" )]
         [DataRow( "$.thing[1:2:3]", "[$ => singular][thing => singular][1:2:3 => group]" )]
@@ -67,7 +67,7 @@ namespace Hyperbee.Json.Tests.Query
             // act & assert
             const string jsonPath = "$[*].bookmarks[ ? (@.page == 45)]^^^";
 
-            Assert.ThrowsException<NotSupportedException>( () =>
+            Assert.ThrowsExactly<NotSupportedException>( () =>
             {
                 JsonQueryParser.Parse( jsonPath );
             } );

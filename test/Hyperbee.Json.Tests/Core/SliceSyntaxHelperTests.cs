@@ -36,10 +36,9 @@ namespace Hyperbee.Json.Tests.Core
         }
 
         [TestMethod]
-        [ExpectedException( typeof( InvalidOperationException ) )]
         public void TestInvalidSliceExpression()
         {
-            SliceSyntaxHelper.ParseExpression( "1:2:3:4".AsSpan(), 10 );
+            Assert.ThrowsExactly<InvalidOperationException>( () => SliceSyntaxHelper.ParseExpression( "1:2:3:4".AsSpan(), 10 ) );
         }
 
         [TestMethod]

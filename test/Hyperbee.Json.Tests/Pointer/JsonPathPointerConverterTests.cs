@@ -7,7 +7,7 @@ namespace Hyperbee.Json.Tests.Pointer;
 [TestClass]
 public class JsonPathPointerConverterTests
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['store'].book[0].title", "#/store/book/0/title", true )]
     [DataRow( "$['store'].book[0].title", "/store/book/0/title", false )]
     [DataRow( "$.store.book[0].title", "#/store/book/0/title", true )]
@@ -42,7 +42,7 @@ public class JsonPathPointerConverterTests
         Assert.AreEqual( expected, jsonPointer );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "/store/book/0/title", "$.store.book[0].title" )]
     [DataRow( "#/store/book/0/title", "$.store.book[0].title" )]
     [DataRow( "/", "$" )]

@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathRootOnScalarTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$", typeof( JsonDocument ) )]
     [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalar( string query, Type sourceType )
@@ -30,7 +30,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetInt32( matches.First() ) == 42 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$", typeof( JsonDocument ) )]
     [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalarFalse( string query, Type sourceType )
@@ -48,7 +48,7 @@ public class JsonPathRootOnScalarTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetBoolean( matches.First() ) == false );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$", typeof( JsonDocument ) )]
     [DataRow( "$", typeof( JsonNode ) )]
     public void RootOnScalarTrue( string query, Type sourceType )

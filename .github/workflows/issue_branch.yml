@@ -1,0 +1,35 @@
+name: Create Issue Branch
+
+on:
+  issues:
+    types: [opened, assigned]        # “immediate” / “auto” modes
+  issue_comment:
+    types: [created]                 # ChatOps mode
+  pull_request:
+    types: [opened, closed]          # PR-related features
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      branch_name: ${{ steps.set_branch.outputs.branch_name }}
+    steps:
+      - name: Determine target branch
+        id: set_branch
+        run: echo "branch_name=${BRANCH}" >> "$GITHUB_OUTPUT"
+        env:
+          BRANCH: >-
+            ${{ github.event_name == 'pull_request' &&
+                github.event.pull_request.base.ref ||
+                'main' }}
+
+  create-issue-branch-main:
+    needs: discover
+    if: ${{ needs.discover.result == 'success' }}
+    uses: Stillpoint-Software/shared-workflows/.github/workflows/issue_branch.yml@main
+    secrets: inherit

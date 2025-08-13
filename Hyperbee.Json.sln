@@ -5,8 +5,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{870D9301-BE3D-44EA-BF9C-FCC2E87FE4CD}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
-		solution-helper.psm1 = solution-helper.psm1
+		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperbee.Json", "src\Hyperbee.Json\Hyperbee.Json.csproj", "{4586A069-FB8A-4D87-9D0C-D0960447B8B0}"
@@ -21,15 +20,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1FA7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4DBDB7F5-3F66-4572-80B5-3322449C77A4}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\create-release.yml = .github\workflows\create-release.yml
 		.github\workflows\deploy-gh-pages.yml = .github\workflows\deploy-gh-pages.yml
+		.github\workflows\crete_test_report.yml = .github\workflows\crete_test_report.yml
+		.github\workflows\create_release.yml = .github\workflows\create_release.yml
 		.github\workflows\format.yml = .github\workflows\format.yml
-		.github\workflows\issue-branch.yml = .github\workflows\issue-branch.yml
-		.github\workflows\publish.yml = .github\workflows\publish.yml
-		.github\workflows\test-report.yml = .github\workflows\test-report.yml
-		.github\workflows\test.yml = .github\workflows\test.yml
-		.github\workflows\unlist-nuget.yml = .github\workflows\unlist-nuget.yml
-		.github\workflows\update-version.yml = .github\workflows\update-version.yml
+		.github\workflows\issue_branch.yml = .github\workflows\issue_branch.yml
+		.github\workflows\pack_publish.yml = .github\workflows\pack_publish.yml
+		.github\workflows\run_tests.yml = .github\workflows\run_tests.yml
+		.github\workflows\unlist_package.yml = .github\workflows\unlist_package.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperbee.Json.Tests", "test\Hyperbee.Json.Tests\Hyperbee.Json.Tests.csproj", "{97886205-1467-4EE6-B3DA-496CA3D086E4}"

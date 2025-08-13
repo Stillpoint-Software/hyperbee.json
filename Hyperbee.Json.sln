@@ -21,7 +21,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4DBDB7F5-3F66-4572-80B5-3322449C77A4}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\deploy-gh-pages.yml = .github\workflows\deploy-gh-pages.yml
-		.github\workflows\crete_test_report.yml = .github\workflows\crete_test_report.yml
+		.github\workflows\create_test_report.yml = .github\workflows\create_test_report.yml
 		.github\workflows\create_release.yml = .github\workflows\create_release.yml
 		.github\workflows\format.yml = .github\workflows\format.yml
 		.github\workflows\issue_branch.yml = .github\workflows\issue_branch.yml

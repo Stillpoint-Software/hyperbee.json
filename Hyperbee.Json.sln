@@ -5,6 +5,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{870D9301-BE3D-44EA-BF9C-FCC2E87FE4CD}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		LICENSE = LICENSE
+		README.md = README.md
 		version.json = version.json
 	EndProjectSection
 EndProject
@@ -20,9 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1FA7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4DBDB7F5-3F66-4572-80B5-3322449C77A4}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\deploy-gh-pages.yml = .github\workflows\deploy-gh-pages.yml
-		.github\workflows\create_test_report.yml = .github\workflows\create_test_report.yml
 		.github\workflows\create_release.yml = .github\workflows\create_release.yml
+		.github\workflows\create_test_report.yml = .github\workflows\create_test_report.yml
+		.github\workflows\deploy-gh-pages.yml = .github\workflows\deploy-gh-pages.yml
 		.github\workflows\format.yml = .github\workflows\format.yml
 		.github\workflows\issue_branch.yml = .github\workflows\issue_branch.yml
 		.github\workflows\pack_publish.yml = .github\workflows\pack_publish.yml

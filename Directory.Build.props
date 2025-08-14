@@ -1,26 +1,48 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Solution version numbers -->
-  <PropertyGroup>
-    <MajorVersion>3</MajorVersion>
-    <MinorVersion>0</MinorVersion>
-    <PatchVersion>6</PatchVersion>
-  </PropertyGroup>
-  <!-- Disable automatic package publishing -->
-  <PropertyGroup>
-    <PublishPackage>false</PublishPackage>
-  </PropertyGroup>
-  <!-- SourceLink -->
-  <PropertyGroup>
-    <!-- Enable deterministic build for nuget package -->
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
+<Project>
+  <!-- Shared package refs -->
   <ItemGroup>
+    <!-- NBGV drives versions; PrivateAssets=all keeps it out of consumers -->
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.8.38-alpha" PrivateAssets="all" />
+
+    <!-- SourceLink for GitHub -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
+  </ItemGroup>
+
+  <!-- SourceLink / build hygiene -->
+  <PropertyGroup>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Deterministic>true</Deterministic>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <!-- Package metadata applied only to packable projects -->
+  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIcon>assets/icon.png</PackageIcon>
+    <PackageReleaseNotes>https://github.com/Stillpoint-Software/PostgresTest/releases/latest</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/Stillpoint-Software/PostgresTest</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/Stillpoint-Software/PostgresTest</PackageProjectUrl>
+  </PropertyGroup>
+
+  <!-- Pull README & LICENSE into the package root -->
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <None Include="$(MSBuildThisFileDirectory)README.md"
+          Pack="true"
+          PackagePath="\"
+    Link="README.md" />
+
+    <None Include="$(MSBuildThisFileDirectory)LICENSE"
+          Pack="true"
+          PackagePath="\"
+    Link="LICENSE" />
   </ItemGroup>
 </Project>

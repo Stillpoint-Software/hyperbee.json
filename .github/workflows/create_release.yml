@@ -1,0 +1,74 @@
+﻿name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: |
+          How to set the version:
+          - explicit: set to a specific value (e.g., 1.3-alpha)
+          - bump: bump major/minor/patch from current SimpleVersion and apply optional prerelease
+          - auto: policy-based (develop->next minor -alpha; hotfix/*->next patch -alpha; main/vX.Y->stable)
+        type: choice
+        options: [auto, bump, explicit]
+        default: auto
+      version:
+        description: "When mode=explicit: exact version (e.g., 1.3-alpha, 1.2.3, 1.4.0-rc)"
+        type: string
+        default: ""
+      increment:
+        description: "When mode=bump: major | minor | patch"
+        type: choice
+        options: [major, minor, patch]
+        default: patch
+      prerelease:
+        description: "When mode=bump: prerelease suffix WITHOUT leading dash (e.g., alpha, beta, rc). Leave blank for stable."
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+run-name: "Create Release · ${{ inputs.mode }} · ${{ github.ref_name }}"
+
+jobs:
+  validate-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check conditional requirements
+        run: |
+          set -euo pipefail
+          MODE='${{ inputs.mode }}'
+          VERSION='${{ inputs.version }}'
+          INCR='${{ inputs.increment }}'
+          if [[ "$MODE" == "explicit" && -z "$VERSION" ]]; then
+            echo "❌ mode=explicit requires 'version' (e.g., 1.3-alpha)."; exit 1
+          fi
+          if [[ "$MODE" == "bump" && -z "$INCR" ]]; then
+            echo "❌ mode=bump requires 'increment' (major|minor|patch)."; exit 1
+          fi
+          echo "✅ inputs look good."
+
+  set-version:
+    needs: validate-inputs
+    uses: Stillpoint-Software/shared-workflows/.github/workflows/set_version.yml@main
+    with:
+      target_branch: ${{ github.ref_name }}
+      mode:         ${{ inputs.mode }}
+      version:      ${{ inputs.version }}
+      increment:    ${{ inputs.increment }}
+      prerelease:   ${{ inputs.prerelease }}
+    secrets: inherit
+
+  create-release:
+    needs: set-version
+    uses: Stillpoint-Software/shared-workflows/.github/workflows/prepare_release.yml@main
+    with:
+      target_branch: ${{ github.ref_name }}
+      tag:          ${{ needs.set-version.outputs.tag }}
+      prerelease:   ${{ needs.set-version.outputs.new_prerelease }}
+      draft:        true
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

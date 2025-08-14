@@ -26,9 +26,8 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-
+    <PackageIcon>assets/icon.png</PackageIcon>
     <PackageReleaseNotes>https://github.com/Stillpoint-Software/PostgresTest/releases/latest</PackageReleaseNotes>
-
     <RepositoryUrl>https://github.com/Stillpoint-Software/PostgresTest</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Stillpoint-Software/PostgresTest</PackageProjectUrl>

@@ -78,7 +78,7 @@ public class JsonDynamicTests : JsonTestBase
     {
         var jobject = JsonSerializer.Deserialize<dynamic>( ReadJsonString(), SerializerOptions );
 
-        Assert.ThrowsException<ArgumentOutOfRangeException>( () =>
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>( () =>
         {
             _ = jobject.store.book[10];
         } );

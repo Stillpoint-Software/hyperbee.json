@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Parser;
 [TestClass]
 public class NodeTypeComparerTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( true, true, true )]
     [DataRow( false, false, true )]
     [DataRow( false, true, false )]
@@ -36,7 +36,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( true, true, true )]
     [DataRow( false, false, true )]
     [DataRow( false, true, false )]
@@ -59,7 +59,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( """{ "value": 1 }""", 99F, false )]
     [DataRow( """{ "value": 99 }""", 99F, true )]
     [DataRow( """{ "value": "hello" }""", "world", false )]
@@ -79,7 +79,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( """[1,2,3]""", 2F, true )]
     [DataRow( """["hello","hi","world" ]""", "hi", true )]
     [DataRow( """[1,2,3]""", 99F, false )]
@@ -98,7 +98,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( 2F, """[1,2,3]""", true )]
     [DataRow( "hi", """["hello","hi","world" ]""", true )]
     [DataRow( 99F, """[1,2,3]""", false )]

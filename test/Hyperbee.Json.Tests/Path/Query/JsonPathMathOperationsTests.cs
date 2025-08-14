@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathMathOperationsTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.value + 1 == 43)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.value + 1 == 43)]", typeof( JsonNode ) )]
     [DataRow( "$[?(@.value - 1 == 41)]", typeof( JsonDocument ) )]
@@ -42,7 +42,7 @@ public class JsonPathMathOperationsTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.a + @.b == 3)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.a + @.b == 3)]", typeof( JsonNode ) )]
     [DataRow( "$[?(@.a - @.b == -1)]", typeof( JsonDocument ) )]
@@ -73,7 +73,7 @@ public class JsonPathMathOperationsTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.array[0] + @.array[1] == 3)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.array[0] + @.array[1] == 3)]", typeof( JsonNode ) )]
     [DataRow( "$[?(@.array[2] - @.array[1] == 1)]", typeof( JsonDocument ) )]

@@ -7,7 +7,7 @@ namespace Hyperbee.Json.Tests.Pointer;
 [TestClass]
 public class JsonPointerTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "/message", "The operation was successful" )]
     [DataRow( "/status", 200 )]
     [DataRow( "/timestamp/$date", "2021-07-24T20:14:06.613Z" )]

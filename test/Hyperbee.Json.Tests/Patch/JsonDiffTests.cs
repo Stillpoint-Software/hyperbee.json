@@ -11,7 +11,7 @@ namespace Hyperbee.Json.Tests.Patch;
 [TestClass]
 public class JsonDiffTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Add_WhenTargetHasAdditionalProperty( Type sourceType )
@@ -39,7 +39,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( "Doe", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Add_WhenTargetArrayHasMoreItems( Type sourceType )
@@ -66,7 +66,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( "B", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Remove_WhenTargetIsMissingProperty( Type sourceType )
@@ -94,7 +94,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.IsNull( results[0].Value );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Remove_WhenTargetArrayHasLessItems( Type sourceType )
@@ -121,7 +121,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.IsNull( results[0].Value );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Replace_WhenTargetPropertyUpdated( Type sourceType )
@@ -148,7 +148,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( "Mark", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Replace_WhenTargetArrayItemsAreDifferent( Type sourceType )
@@ -175,7 +175,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( "C", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Replace_WhenComplexTargetArrayHasDifferentValues( Type sourceType )
@@ -222,7 +222,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( 2, Unwrap( results[1].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void MultipleOperations_WhenTargetHasMultipleUpdates( Type sourceType )
@@ -263,7 +263,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.IsTrue( results.Length == 8 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void EscapePath_WhenJsonHasPropertyNames( Type sourceType )

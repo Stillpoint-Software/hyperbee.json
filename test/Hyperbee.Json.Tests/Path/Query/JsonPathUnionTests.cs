@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathUnionTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0,0]", typeof( JsonDocument ) )]
     [DataRow( "$[0,0]", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromArray( string query, Type sourceType )
@@ -34,7 +34,7 @@ public class JsonPathUnionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['a','a']", typeof( JsonDocument ) )]
     [DataRow( "$['a','a']", typeof( JsonNode ) )]
     public void UnionWithDuplicationFromObject( string query, Type sourceType )
@@ -58,7 +58,7 @@ public class JsonPathUnionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.key<3),?(@.key>6)]", typeof( JsonNode ) )]
     [DataRow( "$[?@.key<3,?@.key>6]", typeof( JsonDocument ) )]
@@ -95,7 +95,7 @@ public class JsonPathUnionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['key','another']", typeof( JsonDocument ) )]
     [DataRow( "$['key','another']", typeof( JsonNode ) )]
     public void UnionWithKeys( string query, Type sourceType )
@@ -120,7 +120,7 @@ public class JsonPathUnionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['key','another','thing1']", typeof( JsonDocument ) )]
     [DataRow( "$['key','another','thing1']", typeof( JsonNode ) )]
     public void UnionWithMultipleKeys( string query, Type sourceType )
@@ -147,7 +147,7 @@ public class JsonPathUnionTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..['c','d']", typeof( JsonDocument ) )]
     [DataRow( "$..['c','d']", typeof( JsonNode ) )]
     public void UnionWithKeysAfterRecursiveDescent( string query, Type sourceType )

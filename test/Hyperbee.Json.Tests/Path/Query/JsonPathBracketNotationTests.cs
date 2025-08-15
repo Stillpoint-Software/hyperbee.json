@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathBracketNotationTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['key']", typeof( JsonDocument ) )]
     [DataRow( "$['key']", typeof( JsonNode ) )]
     public void BracketNotation( string query, Type sourceType )
@@ -33,7 +33,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..[0]", typeof( JsonDocument ) )]
     [DataRow( "$..[0]", typeof( JsonNode ) )]
     public void BracketNotationAfterRecursiveDescent( string query, Type sourceType )
@@ -80,7 +80,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['missing']", typeof( JsonDocument ) )]
     [DataRow( "$['missing']", typeof( JsonNode ) )]
     public void BracketNotationOnObjectWithoutKey( string query, Type sourceType )
@@ -100,7 +100,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['ü']", typeof( JsonDocument ) )]
     [DataRow( "$['ü']", typeof( JsonNode ) )]
     public void BracketNotationWithNFCPathOnNFDKey( string query, Type sourceType )
@@ -120,7 +120,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['two.some']", typeof( JsonDocument ) )]
     [DataRow( "$['two.some']", typeof( JsonNode ) )]
     public void BracketNotationWithDot( string query, Type sourceType )
@@ -147,7 +147,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "42" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[\"key\"]", typeof( JsonDocument ) )]
     [DataRow( "$[\"key\"]", typeof( JsonNode ) )]
     public void BracketNotationWithDoubleQuotes( string query, Type sourceType )
@@ -166,7 +166,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[]", typeof( JsonDocument ) )]
     [DataRow( "$[]", typeof( JsonNode ) )]
     public void BracketNotationWithEmptyPath( string query, Type sourceType )
@@ -182,13 +182,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         }, "Invalid bracket expression syntax. Bracket expression cannot be empty." );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['']", typeof( JsonDocument ) )]
     [DataRow( "$['']", typeof( JsonNode ) )]
     public void BracketNotationWithEmptyString( string query, Type sourceType )
@@ -209,7 +209,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[\"\"]", typeof( JsonDocument ) )]
     [DataRow( "$[\"\"]", typeof( JsonNode ) )]
     public void BracketNotationWithEmptyStringDoubleQuoted( string query, Type sourceType )
@@ -230,7 +230,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-2]", typeof( JsonDocument ) )]
     [DataRow( "$[-2]", typeof( JsonNode ) )]
     public void BracketNotationWithNegativeNumberOnShortArray( string query, Type sourceType )
@@ -249,7 +249,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( matches.Count == 0 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[2]", typeof( JsonDocument ) )]
     [DataRow( "$[2]", typeof( JsonNode ) )]
     public void BracketNotationWithNumber( string query, Type sourceType )
@@ -273,7 +273,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "third" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-1]", typeof( JsonDocument ) )]
     [DataRow( "$[-1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberNegative1( string query, Type sourceType )
@@ -295,7 +295,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "third" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[-1]", typeof( JsonDocument ) )]
     [DataRow( "$[-1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberNegative1OnEmptyArray( string query, Type sourceType )
@@ -311,7 +311,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0]", typeof( JsonDocument ) )]
     [DataRow( "$[0]", typeof( JsonNode ) )]
     public void BracketNotationWithNumber0( string query, Type sourceType )
@@ -335,7 +335,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "first" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.*[1]", typeof( JsonDocument ) )]
     [DataRow( "$.*[1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberAfterDotNotationWithWildcardOnNestedArraysWithDifferentLength( string query, Type sourceType )
@@ -359,7 +359,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0]", typeof( JsonDocument ) )]
     [DataRow( "$[0]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberOnObject( string query, Type sourceType )
@@ -379,7 +379,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[1]", typeof( JsonDocument ) )]
     [DataRow( "$[1]", typeof( JsonNode ) )]
     public void BracketNotationWithNumberOnShortArray( string query, Type sourceType )
@@ -399,7 +399,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[':']", typeof( JsonDocument ) )]
     [DataRow( "$[':']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedArraySliceLiteral( string query, Type sourceType )
@@ -420,7 +420,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[']']", typeof( JsonDocument ) )]
     [DataRow( "$[']']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedClosingBracketLiteral( string query, Type sourceType )
@@ -440,7 +440,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['@']", typeof( JsonDocument ) )]
     [DataRow( "$['@']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedCurrentObjectLiteral( string query, Type sourceType )
@@ -461,7 +461,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['.']", typeof( JsonDocument ) )]
     [DataRow( "$['.']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedDotLiteral( string query, Type sourceType )
@@ -485,7 +485,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['.*']", typeof( JsonDocument ) )]
     [DataRow( "$['.*']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedDotWildcard( string query, Type sourceType )
@@ -510,7 +510,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( @"$['\\']", typeof( JsonDocument ) )]
     [DataRow( @"$['\\']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedEscapedBackslash( string query, Type sourceType )
@@ -534,7 +534,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['\\'']", typeof( JsonDocument ) )]
     [DataRow( "$['\\'']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedEscapedSingleQuote( string query, Type sourceType )
@@ -555,7 +555,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['0']", typeof( JsonDocument ) )]
     [DataRow( "$['0']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedNumberOnObject( string query, Type sourceType )
@@ -578,7 +578,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['$']", typeof( JsonDocument ) )]
     [DataRow( "$['$']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedRootLiteral( string query, Type sourceType )
@@ -602,7 +602,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( """$[':@."$,*\'\\']""", typeof( JsonDocument ) )]
     [DataRow( """$[':@."$,*\'\\']""", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedSpecialCharactersCombined( string query, Type sourceType )
@@ -623,7 +623,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['single'quote']", typeof( JsonDocument ) )]
     [DataRow( "$['single'quote']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedStringAndUnescapedSingleQuote( string query, Type sourceType )
@@ -637,13 +637,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         } );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[',']", typeof( JsonDocument ) )]
     [DataRow( "$[',']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedUnionLiteral( string query, Type sourceType )
@@ -667,7 +667,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['*']", typeof( JsonDocument ) )]
     [DataRow( "$['*']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedWildcardLiteral( string query, Type sourceType )
@@ -691,7 +691,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['*']", typeof( JsonDocument ) )]
     [DataRow( "$['*']", typeof( JsonNode ) )]
     public void BracketNotationWithQuotedWildcardLiteralOnObjectWithoutKey( string query, Type sourceType )
@@ -711,7 +711,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[ 'a' ]", typeof( JsonDocument ) )]
     [DataRow( "$[ 'a' ]", typeof( JsonNode ) )]
     public void BracketNotationWithSpaces( string query, Type sourceType )
@@ -742,7 +742,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['ni.*']", typeof( JsonDocument ) )]
     [DataRow( "$['ni.*']", typeof( JsonNode ) )]
     public void BracketNotationWithStringIncludingDotWildcard( string query, Type sourceType )
@@ -767,7 +767,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['two'.'some']", typeof( JsonDocument ) )]
     [DataRow( "$['two'.'some']", typeof( JsonNode ) )]
     public void BracketNotationWithTwoLiteralsSeparatedByDot( string query, Type sourceType )
@@ -789,13 +789,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         } );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[two.some]", typeof( JsonDocument ) )]
     [DataRow( "$[two.some]", typeof( JsonNode ) )]
     public void BracketNotationWithTwoLiteralsSeparatedByDotWithoutQuotes( string query, Type sourceType )
@@ -816,13 +816,13 @@ public class JsonPathBracketNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         } );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[0:2][*]", typeof( JsonDocument ) )]
     [DataRow( "$[0:2][*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardAfterArraySlice( string query, Type sourceType )
@@ -854,7 +854,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[3] ) == "b" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[*].bar[*]", typeof( JsonDocument ) )]
     [DataRow( "$[*].bar[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardAfterDotNotationAfterBracketNotationWithWildcard( string query, Type sourceType )
@@ -879,7 +879,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..[*]", typeof( JsonDocument ) )]
     [DataRow( "$..[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardAfterRecursiveDescent( string query, Type sourceType )
@@ -918,7 +918,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetInt32( matches[5] ) == 1 );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[*]", typeof( JsonDocument ) )]
     [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnArray( string query, Type sourceType )
@@ -949,7 +949,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[*]", typeof( JsonDocument ) )]
     [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnEmptyArray( string query, Type sourceType )
@@ -965,7 +965,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[*]", typeof( JsonDocument ) )]
     [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnEmptyObject( string query, Type sourceType )
@@ -981,7 +981,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[*]", typeof( JsonDocument ) )]
     [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnNullValueArray( string query, Type sourceType )
@@ -1008,7 +1008,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[*]", typeof( JsonDocument ) )]
     [DataRow( "$[*]", typeof( JsonNode ) )]
     public void BracketNotationWithWildcardOnObject( string query, Type sourceType )
@@ -1040,7 +1040,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[key]", typeof( JsonDocument ) )]
     [DataRow( "$[key]", typeof( JsonNode ) )]
     public void BracketNotationWithoutQuotes( string query, Type sourceType )
@@ -1054,7 +1054,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         } );

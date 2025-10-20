@@ -19,7 +19,7 @@
     <PackageReference Include="JsonCraft.JsonPath" Version="1.0.0" />
     <PackageReference Include="JsonPatch.Net" Version="3.3.0" />
     <PackageReference Include="JsonPath.Net" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

@@ -3,13 +3,14 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Cts.TestSupport;
+using AssertExtensions = Hyperbee.Json.Cts.TestSupport.AssertExtensions;
 
 namespace Hyperbee.Json.Cts.Tests;
 
 [TestClass]
 public class CtsFunctionsTest
 {
-    [TestMethod( @"count, count function (1)" )]
+    [TestMethod( DisplayName = @"count, count function (1)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__count_function_1( Type documentType )
@@ -61,7 +62,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"count, single-node arg (2)" )]
+    [TestMethod( DisplayName = @"count, single-node arg (2)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__single_node_arg_2( Type documentType )
@@ -99,7 +100,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"count, multiple-selector arg (3)" )]
+    [TestMethod( DisplayName = @"count, multiple-selector arg (3)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__multiple_selector_arg_3( Type documentType )
@@ -148,7 +149,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"count, non-query arg, number (4)" )]
+    [TestMethod( DisplayName = @"count, non-query arg, number (4)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__non_query_arg__number_4( Type documentType )
@@ -159,7 +160,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"count, non-query arg, string (5)" )]
+    [TestMethod( DisplayName = @"count, non-query arg, string (5)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__non_query_arg__string_5( Type documentType )
@@ -170,7 +171,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"count, non-query arg, true (6)" )]
+    [TestMethod( DisplayName = @"count, non-query arg, true (6)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__non_query_arg__true_6( Type documentType )
@@ -181,7 +182,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"count, non-query arg, false (7)" )]
+    [TestMethod( DisplayName = @"count, non-query arg, false (7)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__non_query_arg__false_7( Type documentType )
@@ -192,7 +193,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"count, non-query arg, null (8)" )]
+    [TestMethod( DisplayName = @"count, non-query arg, null (8)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__non_query_arg__null_8( Type documentType )
@@ -203,7 +204,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"count, result must be compared (9)" )]
+    [TestMethod( DisplayName = @"count, result must be compared (9)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__result_must_be_compared_9( Type documentType )
@@ -214,7 +215,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"count, no params (10)" )]
+    [TestMethod( DisplayName = @"count, no params (10)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__no_params_10( Type documentType )
@@ -225,7 +226,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"count, too many params (11)" )]
+    [TestMethod( DisplayName = @"count, too many params (11)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_count__too_many_params_11( Type documentType )
@@ -236,7 +237,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"length, string data (12)" )]
+    [TestMethod( DisplayName = @"length, string data (12)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__string_data_12( Type documentType )
@@ -267,7 +268,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, string data, unicode (13)" )]
+    [TestMethod( DisplayName = @"length, string data, unicode (13)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__string_data__unicode_13( Type documentType )
@@ -301,7 +302,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, array data (14)" )]
+    [TestMethod( DisplayName = @"length, array data (14)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__array_data_14( Type documentType )
@@ -342,7 +343,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, missing data (15)" )]
+    [TestMethod( DisplayName = @"length, missing data (15)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__missing_data_15( Type documentType )
@@ -366,7 +367,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, number arg (16)" )]
+    [TestMethod( DisplayName = @"length, number arg (16)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__number_arg_16( Type documentType )
@@ -390,7 +391,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, true arg (17)" )]
+    [TestMethod( DisplayName = @"length, true arg (17)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__true_arg_17( Type documentType )
@@ -414,7 +415,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, false arg (18)" )]
+    [TestMethod( DisplayName = @"length, false arg (18)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__false_arg_18( Type documentType )
@@ -438,7 +439,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, null arg (19)" )]
+    [TestMethod( DisplayName = @"length, null arg (19)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__null_arg_19( Type documentType )
@@ -462,7 +463,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, result must be compared (20)" )]
+    [TestMethod( DisplayName = @"length, result must be compared (20)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__result_must_be_compared_20( Type documentType )
@@ -473,7 +474,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"length, no params (21)" )]
+    [TestMethod( DisplayName = @"length, no params (21)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__no_params_21( Type documentType )
@@ -484,7 +485,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"length, too many params (22)" )]
+    [TestMethod( DisplayName = @"length, too many params (22)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__too_many_params_22( Type documentType )
@@ -495,7 +496,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"length, non-singular query arg (23)" )]
+    [TestMethod( DisplayName = @"length, non-singular query arg (23)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__non_singular_query_arg_23( Type documentType )
@@ -506,7 +507,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"length, arg is a function expression (24)" )]
+    [TestMethod( DisplayName = @"length, arg is a function expression (24)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__arg_is_a_function_expression_24( Type documentType )
@@ -540,7 +541,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"length, arg is special nothing (25)" )]
+    [TestMethod( DisplayName = @"length, arg is special nothing (25)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_length__arg_is_special_nothing_25( Type documentType )
@@ -574,7 +575,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, found match (26)" )]
+    [TestMethod( DisplayName = @"match, found match (26)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__found_match_26( Type documentType )
@@ -602,7 +603,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, double quotes (27)" )]
+    [TestMethod( DisplayName = @"match, double quotes (27)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__double_quotes_27( Type documentType )
@@ -630,7 +631,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, regex from the document (28)" )]
+    [TestMethod( DisplayName = @"match, regex from the document (28)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__regex_from_the_document_28( Type documentType )
@@ -665,7 +666,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, don't select match (29)" )]
+    [TestMethod( DisplayName = @"match, don't select match (29)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__don_t_select_match_29( Type documentType )
@@ -689,7 +690,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, not a match (30)" )]
+    [TestMethod( DisplayName = @"match, not a match (30)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__not_a_match_30( Type documentType )
@@ -713,7 +714,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, select non-match (31)" )]
+    [TestMethod( DisplayName = @"match, select non-match (31)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__select_non_match_31( Type documentType )
@@ -741,7 +742,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, non-string first arg (32)" )]
+    [TestMethod( DisplayName = @"match, non-string first arg (32)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__non_string_first_arg_32( Type documentType )
@@ -765,7 +766,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, non-string second arg (33)" )]
+    [TestMethod( DisplayName = @"match, non-string second arg (33)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__non_string_second_arg_33( Type documentType )
@@ -789,7 +790,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, filter, match function, unicode char class, uppercase (34)" )]
+    [TestMethod( DisplayName = @"match, filter, match function, unicode char class, uppercase (34)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__filter__match_function__unicode_char_class__uppercase_34( Type documentType )
@@ -819,7 +820,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, filter, match function, unicode char class negated, uppercase (35)" )]
+    [TestMethod( DisplayName = @"match, filter, match function, unicode char class negated, uppercase (35)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__filter__match_function__unicode_char_class_negated__uppercase_35( Type documentType )
@@ -849,7 +850,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, filter, match function, unicode, surrogate pair (36)" )]
+    [TestMethod( DisplayName = @"match, filter, match function, unicode, surrogate pair (36)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__filter__match_function__unicode__surrogate_pair_36( Type documentType )
@@ -878,7 +879,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, dot matcher on \u2028 (37)" )]
+    [TestMethod( DisplayName = @"match, dot matcher on \u2028 (37)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__dot_matcher_on__u2028_37( Type documentType )
@@ -907,7 +908,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, dot matcher on \u2029 (38)" )]
+    [TestMethod( DisplayName = @"match, dot matcher on \u2029 (38)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__dot_matcher_on__u2029_38( Type documentType )
@@ -936,7 +937,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, result cannot be compared (39)" )]
+    [TestMethod( DisplayName = @"match, result cannot be compared (39)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__result_cannot_be_compared_39( Type documentType )
@@ -947,7 +948,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"match, too few params (40)" )]
+    [TestMethod( DisplayName = @"match, too few params (40)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__too_few_params_40( Type documentType )
@@ -958,7 +959,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"match, too many params (41)" )]
+    [TestMethod( DisplayName = @"match, too many params (41)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__too_many_params_41( Type documentType )
@@ -969,7 +970,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"match, arg is a function expression (42)" )]
+    [TestMethod( DisplayName = @"match, arg is a function expression (42)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__arg_is_a_function_expression_42( Type documentType )
@@ -1003,7 +1004,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, dot in character class (43)" )]
+    [TestMethod( DisplayName = @"match, dot in character class (43)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__dot_in_character_class_43( Type documentType )
@@ -1030,7 +1031,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, escaped dot (44)" )]
+    [TestMethod( DisplayName = @"match, escaped dot (44)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__escaped_dot_44( Type documentType )
@@ -1056,7 +1057,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, escaped backslash before dot (45)" )]
+    [TestMethod( DisplayName = @"match, escaped backslash before dot (45)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__escaped_backslash_before_dot_45( Type documentType )
@@ -1083,7 +1084,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, escaped left square bracket (46)" )]
+    [TestMethod( DisplayName = @"match, escaped left square bracket (46)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__escaped_left_square_bracket_46( Type documentType )
@@ -1109,7 +1110,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, escaped right square bracket (47)" )]
+    [TestMethod( DisplayName = @"match, escaped right square bracket (47)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__escaped_right_square_bracket_47( Type documentType )
@@ -1137,7 +1138,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, explicit caret (48)" )]
+    [TestMethod( DisplayName = @"match, explicit caret (48)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__explicit_caret_48( Type documentType )
@@ -1165,7 +1166,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"match, explicit dollar (49)" )]
+    [TestMethod( DisplayName = @"match, explicit dollar (49)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_match__explicit_dollar_49( Type documentType )
@@ -1192,7 +1193,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, at the end (50)" )]
+    [TestMethod( DisplayName = @"search, at the end (50)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__at_the_end_50( Type documentType )
@@ -1220,7 +1221,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, double quotes (51)" )]
+    [TestMethod( DisplayName = @"search, double quotes (51)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__double_quotes_51( Type documentType )
@@ -1248,7 +1249,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, at the start (52)" )]
+    [TestMethod( DisplayName = @"search, at the start (52)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__at_the_start_52( Type documentType )
@@ -1276,7 +1277,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, in the middle (53)" )]
+    [TestMethod( DisplayName = @"search, in the middle (53)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__in_the_middle_53( Type documentType )
@@ -1304,7 +1305,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, regex from the document (54)" )]
+    [TestMethod( DisplayName = @"search, regex from the document (54)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__regex_from_the_document_54( Type documentType )
@@ -1341,7 +1342,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, don't select match (55)" )]
+    [TestMethod( DisplayName = @"search, don't select match (55)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__don_t_select_match_55( Type documentType )
@@ -1365,7 +1366,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, not a match (56)" )]
+    [TestMethod( DisplayName = @"search, not a match (56)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__not_a_match_56( Type documentType )
@@ -1389,7 +1390,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, select non-match (57)" )]
+    [TestMethod( DisplayName = @"search, select non-match (57)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__select_non_match_57( Type documentType )
@@ -1417,7 +1418,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, non-string first arg (58)" )]
+    [TestMethod( DisplayName = @"search, non-string first arg (58)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__non_string_first_arg_58( Type documentType )
@@ -1441,7 +1442,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, non-string second arg (59)" )]
+    [TestMethod( DisplayName = @"search, non-string second arg (59)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__non_string_second_arg_59( Type documentType )
@@ -1465,7 +1466,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, filter, search function, unicode char class, uppercase (60)" )]
+    [TestMethod( DisplayName = @"search, filter, search function, unicode char class, uppercase (60)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__filter__search_function__unicode_char_class__uppercase_60( Type documentType )
@@ -1496,7 +1497,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, filter, search function, unicode char class negated, uppercase (61)" )]
+    [TestMethod( DisplayName = @"search, filter, search function, unicode char class negated, uppercase (61)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__filter__search_function__unicode_char_class_negated__uppercase_61( Type documentType )
@@ -1526,7 +1527,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, filter, search function, unicode, surrogate pair (62)" )]
+    [TestMethod( DisplayName = @"search, filter, search function, unicode, surrogate pair (62)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__filter__search_function__unicode__surrogate_pair_62( Type documentType )
@@ -1555,7 +1556,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, dot matcher on \u2028 (63)" )]
+    [TestMethod( DisplayName = @"search, dot matcher on \u2028 (63)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__dot_matcher_on__u2028_63( Type documentType )
@@ -1586,7 +1587,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, dot matcher on \u2029 (64)" )]
+    [TestMethod( DisplayName = @"search, dot matcher on \u2029 (64)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__dot_matcher_on__u2029_64( Type documentType )
@@ -1617,7 +1618,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, result cannot be compared (65)" )]
+    [TestMethod( DisplayName = @"search, result cannot be compared (65)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__result_cannot_be_compared_65( Type documentType )
@@ -1628,7 +1629,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"search, too few params (66)" )]
+    [TestMethod( DisplayName = @"search, too few params (66)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__too_few_params_66( Type documentType )
@@ -1639,7 +1640,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"search, too many params (67)" )]
+    [TestMethod( DisplayName = @"search, too many params (67)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__too_many_params_67( Type documentType )
@@ -1650,7 +1651,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"search, arg is a function expression (68)" )]
+    [TestMethod( DisplayName = @"search, arg is a function expression (68)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__arg_is_a_function_expression_68( Type documentType )
@@ -1687,7 +1688,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, dot in character class (69)" )]
+    [TestMethod( DisplayName = @"search, dot in character class (69)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__dot_in_character_class_69( Type documentType )
@@ -1714,7 +1715,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, escaped dot (70)" )]
+    [TestMethod( DisplayName = @"search, escaped dot (70)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__escaped_dot_70( Type documentType )
@@ -1740,7 +1741,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, escaped backslash before dot (71)" )]
+    [TestMethod( DisplayName = @"search, escaped backslash before dot (71)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__escaped_backslash_before_dot_71( Type documentType )
@@ -1767,7 +1768,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, escaped left square bracket (72)" )]
+    [TestMethod( DisplayName = @"search, escaped left square bracket (72)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__escaped_left_square_bracket_72( Type documentType )
@@ -1793,7 +1794,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"search, escaped right square bracket (73)" )]
+    [TestMethod( DisplayName = @"search, escaped right square bracket (73)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_search__escaped_right_square_bracket_73( Type documentType )
@@ -1821,7 +1822,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"value, single-value nodelist (74)" )]
+    [TestMethod( DisplayName = @"value, single-value nodelist (74)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_value__single_value_nodelist_74( Type documentType )
@@ -1862,7 +1863,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"value, multi-value nodelist (75)" )]
+    [TestMethod( DisplayName = @"value, multi-value nodelist (75)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_value__multi_value_nodelist_75( Type documentType )
@@ -1891,7 +1892,7 @@ public class CtsFunctionsTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"value, too few params (76)" )]
+    [TestMethod( DisplayName = @"value, too few params (76)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_value__too_few_params_76( Type documentType )
@@ -1902,7 +1903,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"value, too many params (77)" )]
+    [TestMethod( DisplayName = @"value, too many params (77)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_value__too_many_params_77( Type documentType )
@@ -1913,7 +1914,7 @@ public class CtsFunctionsTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"value, result must be compared (78)" )]
+    [TestMethod( DisplayName = @"value, result must be compared (78)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_value__result_must_be_compared_78( Type documentType )

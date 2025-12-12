@@ -885,7 +885,7 @@ public class JsonPatchTests
 
         patch.Apply( source );
 
-        Assert.AreEqual( null, source!["first"] );
+        Assert.IsNull( source!["first"] );
     }
 
     [TestMethod]

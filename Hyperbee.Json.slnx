@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="version.json" />
+    <Project Path="docs/docs.shproj" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/">
+    <File Path=".github/dependabot.yml" />
+    <File Path=".github/issue-branch.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/create_release.yml" />
+    <File Path=".github/workflows/create_test_report.yml" />
+    <File Path=".github/workflows/deploy-gh-pages.yml" />
+    <File Path=".github/workflows/format.yml" />
+    <File Path=".github/workflows/issue_branch.yml" />
+    <File Path=".github/workflows/pack_publish.yml" />
+    <File Path=".github/workflows/run_tests.yml" />
+    <File Path=".github/workflows/unlist_package.yml" />
+  </Folder>
+  <Folder Name="/Solution Tests/">
+    <Project Path="test/Hyperbee.Json.Benchmark/Hyperbee.Json.Benchmark.csproj" />
+    <Project Path="test/Hyperbee.Json.Cts/Hyperbee.Json.Cts.csproj" />
+    <Project Path="test/Hyperbee.Json.Tests/Hyperbee.Json.Tests.csproj" />
+  </Folder>
+  <Project Path="src/Hyperbee.Json/Hyperbee.Json.csproj" />
+</Solution>

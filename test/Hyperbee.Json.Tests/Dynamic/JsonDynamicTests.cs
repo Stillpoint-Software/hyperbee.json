@@ -46,7 +46,7 @@ public class JsonDynamicTests : JsonTestBase
         Assert.IsTrue( jobject.store.bicycle.color == "red" );
         Assert.IsTrue( jobject.store.thing == Thing.ThatThing );
         Assert.IsNotNull( output );
-        Assert.IsTrue( output.Contains( "ThatThing" ) );
+        Assert.Contains( "ThatThing", output );
     }
 
     [TestMethod]

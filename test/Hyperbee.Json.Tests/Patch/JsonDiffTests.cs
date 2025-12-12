@@ -33,7 +33,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/last", results[0].Path );
         Assert.AreEqual( "Doe", Unwrap( results[0].Value ) );
@@ -60,7 +60,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.AreEqual( "B", Unwrap( results[0].Value ) );
@@ -88,7 +88,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Remove, results[0].Operation );
         Assert.AreEqual( "/last", results[0].Path );
         Assert.IsNull( results[0].Value );
@@ -115,7 +115,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Remove, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.IsNull( results[0].Value );
@@ -142,7 +142,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Replace, results[0].Operation );
         Assert.AreEqual( "/first", results[0].Path );
         Assert.AreEqual( "Mark", Unwrap( results[0].Value ) );
@@ -169,7 +169,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Replace, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.AreEqual( "C", Unwrap( results[0].Value ) );
@@ -212,7 +212,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 2 );
+        Assert.HasCount( 2, results );
 
         Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/categories/2", results[0].Path );
@@ -260,7 +260,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target ).ToArray();
 
-        Assert.IsTrue( results.Length == 8 );
+        Assert.HasCount( 8, results );
     }
 
     [TestMethod]
@@ -292,7 +292,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target ).ToArray();
 
-        Assert.IsTrue( results.Length == 10 );
+        Assert.HasCount( 10, results );
 
         Assert.AreEqual( "/foo", results[0].Path );
         Assert.AreEqual( "/", results[1].Path );
@@ -329,7 +329,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = JsonDiff<JsonElement>.Diff( source, target ).ToArray();
 
-        Assert.IsTrue( results.Length == 8 );
+        Assert.HasCount( 8, results );
     }
 
     [TestMethod]

@@ -27,6 +27,6 @@ public class JsonPathBuilderTests : JsonTestBase
         var builder = new JsonPathBuilder( source );
         var result = builder.GetPath( target );
 
-        Assert.AreEqual( result, expected );
+        Assert.AreEqual( expected, result );
     }
 }

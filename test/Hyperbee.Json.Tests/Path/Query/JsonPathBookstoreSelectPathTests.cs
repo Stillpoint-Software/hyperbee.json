@@ -93,7 +93,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
 
         var expected = PathNodePair( source, "$.store.book[2]" );
 
-        Assert.IsTrue( match.Count == 1 );
+        Assert.HasCount( 1, match );
         Assert.AreEqual( expected.Node, match[0].Node );
         Assert.AreEqual( expected.Path, match[0].Path );
     }

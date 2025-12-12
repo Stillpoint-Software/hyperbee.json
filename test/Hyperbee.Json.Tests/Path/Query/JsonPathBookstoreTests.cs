@@ -105,7 +105,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         var match = source.Select( query ).ToList();
         var expected = source.FromJsonPathPointer( "$.store.book[2]" );
 
-        Assert.IsTrue( match.Count == 1 );
+        Assert.HasCount( 1, match );
         Assert.AreEqual( expected, match[0] );
     }
 

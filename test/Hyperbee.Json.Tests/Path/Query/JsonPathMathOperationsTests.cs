@@ -38,7 +38,7 @@ public class JsonPathMathOperationsTests : JsonTestBase
         };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( 1, matches.Count );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -69,7 +69,7 @@ public class JsonPathMathOperationsTests : JsonTestBase
         };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( 1, matches.Count );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -99,7 +99,7 @@ public class JsonPathMathOperationsTests : JsonTestBase
         };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( 1, matches.Count );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 }

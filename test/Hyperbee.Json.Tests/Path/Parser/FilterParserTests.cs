@@ -184,7 +184,7 @@ public class FilterParserTests : JsonTestBase
     [DataRow( "badMethod(1)", typeof( JsonElement ) )]
     public void FailToParse_WhenUsingInvalidFilters( string filter, Type sourceType )
     {
-        AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => GetExpression( filter, sourceType ) );
+        TestSupport.AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => GetExpression( filter, sourceType ) );
     }
 
     // Helper methods

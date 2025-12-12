@@ -143,7 +143,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "42" );
     }
 
@@ -162,7 +162,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
@@ -205,7 +205,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
@@ -226,7 +226,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
@@ -246,7 +246,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 0 );
+        Assert.IsEmpty( matches );
     }
 
     [TestMethod]
@@ -269,7 +269,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "third" );
     }
 
@@ -291,7 +291,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "third" );
     }
 
@@ -331,7 +331,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "first" );
     }
 
@@ -416,7 +416,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
@@ -436,7 +436,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 
@@ -457,7 +457,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
@@ -551,7 +551,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
@@ -619,7 +619,7 @@ public class JsonPathBracketNotationTests : JsonTestBase
 
         var matches = source.Select( query ).ToList();
 
-        Assert.IsTrue( matches.Count == 1 );
+        Assert.HasCount( 1, matches );
         Assert.IsTrue( TestHelper.GetInt32( matches[0] ) == 42 );
     }
 

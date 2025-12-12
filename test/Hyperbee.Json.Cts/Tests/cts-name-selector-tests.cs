@@ -3,13 +3,14 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Cts.TestSupport;
+using AssertExtensions = Hyperbee.Json.Cts.TestSupport.AssertExtensions;
 
 namespace Hyperbee.Json.Cts.Tests;
 
 [TestClass]
 public class CtsNameSelectorTest
 {
-    [TestMethod( @"double quotes (1)" )]
+    [TestMethod( DisplayName = @"double quotes (1)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes_1( Type documentType )
@@ -34,7 +35,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, absent data (2)" )]
+    [TestMethod( DisplayName = @"double quotes, absent data (2)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__absent_data_2( Type documentType )
@@ -57,7 +58,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, array data (3)" )]
+    [TestMethod( DisplayName = @"double quotes, array data (3)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__array_data_3( Type documentType )
@@ -80,7 +81,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, embedded U+0000 (4)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0000 (4)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0000_4( Type documentType )
@@ -91,7 +92,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0001 (5)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0001 (5)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0001_5( Type documentType )
@@ -102,7 +103,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0002 (6)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0002 (6)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0002_6( Type documentType )
@@ -113,7 +114,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0003 (7)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0003 (7)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0003_7( Type documentType )
@@ -124,7 +125,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0004 (8)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0004 (8)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0004_8( Type documentType )
@@ -135,7 +136,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0005 (9)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0005 (9)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0005_9( Type documentType )
@@ -146,7 +147,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0006 (10)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0006 (10)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0006_10( Type documentType )
@@ -157,7 +158,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0007 (11)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0007 (11)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0007_11( Type documentType )
@@ -168,7 +169,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0008 (12)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0008 (12)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0008_12( Type documentType )
@@ -179,7 +180,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0009 (13)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0009 (13)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0009_13( Type documentType )
@@ -190,7 +191,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+000A (14)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+000A (14)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_000A_14( Type documentType )
@@ -201,7 +202,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+000B (15)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+000B (15)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_000B_15( Type documentType )
@@ -212,7 +213,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+000C (16)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+000C (16)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_000C_16( Type documentType )
@@ -223,7 +224,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+000D (17)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+000D (17)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_000D_17( Type documentType )
@@ -234,7 +235,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+000E (18)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+000E (18)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_000E_18( Type documentType )
@@ -245,7 +246,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+000F (19)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+000F (19)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_000F_19( Type documentType )
@@ -256,7 +257,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0010 (20)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0010 (20)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0010_20( Type documentType )
@@ -267,7 +268,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0011 (21)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0011 (21)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0011_21( Type documentType )
@@ -278,7 +279,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0012 (22)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0012 (22)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0012_22( Type documentType )
@@ -289,7 +290,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0013 (23)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0013 (23)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0013_23( Type documentType )
@@ -300,7 +301,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0014 (24)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0014 (24)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0014_24( Type documentType )
@@ -311,7 +312,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0015 (25)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0015 (25)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0015_25( Type documentType )
@@ -322,7 +323,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0016 (26)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0016 (26)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0016_26( Type documentType )
@@ -333,7 +334,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0017 (27)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0017 (27)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0017_27( Type documentType )
@@ -344,7 +345,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0018 (28)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0018 (28)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0018_28( Type documentType )
@@ -355,7 +356,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0019 (29)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0019 (29)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0019_29( Type documentType )
@@ -366,7 +367,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+001A (30)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+001A (30)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_001A_30( Type documentType )
@@ -377,7 +378,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+001B (31)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+001B (31)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_001B_31( Type documentType )
@@ -388,7 +389,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+001C (32)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+001C (32)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_001C_32( Type documentType )
@@ -399,7 +400,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+001D (33)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+001D (33)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_001D_33( Type documentType )
@@ -410,7 +411,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+001E (34)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+001E (34)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_001E_34( Type documentType )
@@ -421,7 +422,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+001F (35)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+001F (35)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_001F_35( Type documentType )
@@ -432,7 +433,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded U+0020 (36)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded U+0020 (36)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_U_0020_36( Type documentType )
@@ -456,7 +457,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped double quote (37)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped double quote (37)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_double_quote_37( Type documentType )
@@ -480,7 +481,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped reverse solidus (38)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped reverse solidus (38)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_reverse_solidus_38( Type documentType )
@@ -504,7 +505,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped solidus (39)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped solidus (39)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_solidus_39( Type documentType )
@@ -528,7 +529,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped backspace (40)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped backspace (40)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_backspace_40( Type documentType )
@@ -552,7 +553,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped form feed (41)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped form feed (41)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_form_feed_41( Type documentType )
@@ -576,7 +577,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped line feed (42)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped line feed (42)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_line_feed_42( Type documentType )
@@ -600,7 +601,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped carriage return (43)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped carriage return (43)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_carriage_return_43( Type documentType )
@@ -624,7 +625,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped tab (44)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped tab (44)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped_tab_44( Type documentType )
@@ -648,7 +649,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped ☺, upper case hex (45)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped ☺, upper case hex (45)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped____upper_case_hex_45( Type documentType )
@@ -672,7 +673,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, escaped ☺, lower case hex (46)" )]
+    [TestMethod( DisplayName = @"double quotes, escaped ☺, lower case hex (46)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__escaped____lower_case_hex_46( Type documentType )
@@ -696,7 +697,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, surrogate pair 𝄞 (47)" )]
+    [TestMethod( DisplayName = @"double quotes, surrogate pair 𝄞 (47)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__surrogate_pair____47( Type documentType )
@@ -720,7 +721,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, surrogate pair 😀 (48)" )]
+    [TestMethod( DisplayName = @"double quotes, surrogate pair 😀 (48)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__surrogate_pair____48( Type documentType )
@@ -744,7 +745,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"double quotes, invalid escaped single quote (49)" )]
+    [TestMethod( DisplayName = @"double quotes, invalid escaped single quote (49)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__invalid_escaped_single_quote_49( Type documentType )
@@ -755,7 +756,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, embedded double quote (50)" )]
+    [TestMethod( DisplayName = @"double quotes, embedded double quote (50)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__embedded_double_quote_50( Type documentType )
@@ -766,7 +767,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, incomplete escape (51)" )]
+    [TestMethod( DisplayName = @"double quotes, incomplete escape (51)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__incomplete_escape_51( Type documentType )
@@ -777,7 +778,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes (52)" )]
+    [TestMethod( DisplayName = @"single quotes (52)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes_52( Type documentType )
@@ -802,7 +803,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, absent data (53)" )]
+    [TestMethod( DisplayName = @"single quotes, absent data (53)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__absent_data_53( Type documentType )
@@ -825,7 +826,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, array data (54)" )]
+    [TestMethod( DisplayName = @"single quotes, array data (54)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__array_data_54( Type documentType )
@@ -848,7 +849,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, embedded U+0000 (55)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0000 (55)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0000_55( Type documentType )
@@ -859,7 +860,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0001 (56)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0001 (56)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0001_56( Type documentType )
@@ -870,7 +871,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0002 (57)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0002 (57)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0002_57( Type documentType )
@@ -881,7 +882,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0003 (58)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0003 (58)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0003_58( Type documentType )
@@ -892,7 +893,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0004 (59)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0004 (59)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0004_59( Type documentType )
@@ -903,7 +904,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0005 (60)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0005 (60)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0005_60( Type documentType )
@@ -914,7 +915,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0006 (61)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0006 (61)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0006_61( Type documentType )
@@ -925,7 +926,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0007 (62)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0007 (62)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0007_62( Type documentType )
@@ -936,7 +937,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0008 (63)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0008 (63)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0008_63( Type documentType )
@@ -947,7 +948,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0009 (64)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0009 (64)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0009_64( Type documentType )
@@ -958,7 +959,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+000A (65)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+000A (65)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_000A_65( Type documentType )
@@ -969,7 +970,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+000B (66)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+000B (66)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_000B_66( Type documentType )
@@ -980,7 +981,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+000C (67)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+000C (67)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_000C_67( Type documentType )
@@ -991,7 +992,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+000D (68)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+000D (68)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_000D_68( Type documentType )
@@ -1002,7 +1003,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+000E (69)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+000E (69)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_000E_69( Type documentType )
@@ -1013,7 +1014,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+000F (70)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+000F (70)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_000F_70( Type documentType )
@@ -1024,7 +1025,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0010 (71)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0010 (71)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0010_71( Type documentType )
@@ -1035,7 +1036,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0011 (72)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0011 (72)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0011_72( Type documentType )
@@ -1046,7 +1047,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0012 (73)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0012 (73)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0012_73( Type documentType )
@@ -1057,7 +1058,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0013 (74)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0013 (74)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0013_74( Type documentType )
@@ -1068,7 +1069,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0014 (75)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0014 (75)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0014_75( Type documentType )
@@ -1079,7 +1080,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0015 (76)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0015 (76)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0015_76( Type documentType )
@@ -1090,7 +1091,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0016 (77)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0016 (77)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0016_77( Type documentType )
@@ -1101,7 +1102,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0017 (78)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0017 (78)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0017_78( Type documentType )
@@ -1112,7 +1113,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0018 (79)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0018 (79)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0018_79( Type documentType )
@@ -1123,7 +1124,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0019 (80)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0019 (80)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0019_80( Type documentType )
@@ -1134,7 +1135,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+001A (81)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+001A (81)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_001A_81( Type documentType )
@@ -1145,7 +1146,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+001B (82)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+001B (82)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_001B_82( Type documentType )
@@ -1156,7 +1157,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+001C (83)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+001C (83)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_001C_83( Type documentType )
@@ -1167,7 +1168,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+001D (84)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+001D (84)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_001D_84( Type documentType )
@@ -1178,7 +1179,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+001E (85)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+001E (85)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_001E_85( Type documentType )
@@ -1189,7 +1190,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+001F (86)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+001F (86)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_001F_86( Type documentType )
@@ -1200,7 +1201,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded U+0020 (87)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded U+0020 (87)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_U_0020_87( Type documentType )
@@ -1224,7 +1225,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped single quote (88)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped single quote (88)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_single_quote_88( Type documentType )
@@ -1248,7 +1249,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped reverse solidus (89)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped reverse solidus (89)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_reverse_solidus_89( Type documentType )
@@ -1272,7 +1273,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped solidus (90)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped solidus (90)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_solidus_90( Type documentType )
@@ -1296,7 +1297,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped backspace (91)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped backspace (91)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_backspace_91( Type documentType )
@@ -1320,7 +1321,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped form feed (92)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped form feed (92)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_form_feed_92( Type documentType )
@@ -1344,7 +1345,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped line feed (93)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped line feed (93)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_line_feed_93( Type documentType )
@@ -1368,7 +1369,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped carriage return (94)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped carriage return (94)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_carriage_return_94( Type documentType )
@@ -1392,7 +1393,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped tab (95)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped tab (95)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped_tab_95( Type documentType )
@@ -1416,7 +1417,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped ☺, upper case hex (96)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped ☺, upper case hex (96)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped____upper_case_hex_96( Type documentType )
@@ -1440,7 +1441,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, escaped ☺, lower case hex (97)" )]
+    [TestMethod( DisplayName = @"single quotes, escaped ☺, lower case hex (97)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__escaped____lower_case_hex_97( Type documentType )
@@ -1464,7 +1465,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, surrogate pair 𝄞 (98)" )]
+    [TestMethod( DisplayName = @"single quotes, surrogate pair 𝄞 (98)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__surrogate_pair____98( Type documentType )
@@ -1488,7 +1489,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, surrogate pair 😀 (99)" )]
+    [TestMethod( DisplayName = @"single quotes, surrogate pair 😀 (99)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__surrogate_pair____99( Type documentType )
@@ -1512,7 +1513,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, invalid escaped double quote (100)" )]
+    [TestMethod( DisplayName = @"single quotes, invalid escaped double quote (100)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__invalid_escaped_double_quote_100( Type documentType )
@@ -1523,7 +1524,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, embedded single quote (101)" )]
+    [TestMethod( DisplayName = @"single quotes, embedded single quote (101)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__embedded_single_quote_101( Type documentType )
@@ -1534,7 +1535,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"single quotes, incomplete escape (102)" )]
+    [TestMethod( DisplayName = @"single quotes, incomplete escape (102)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__incomplete_escape_102( Type documentType )
@@ -1545,7 +1546,7 @@ public class CtsNameSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"double quotes, empty (103)" )]
+    [TestMethod( DisplayName = @"double quotes, empty (103)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_double_quotes__empty_103( Type documentType )
@@ -1571,7 +1572,7 @@ public class CtsNameSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"single quotes, empty (104)" )]
+    [TestMethod( DisplayName = @"single quotes, empty (104)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_single_quotes__empty_104( Type documentType )

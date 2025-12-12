@@ -3,13 +3,14 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Cts.TestSupport;
+using AssertExtensions = Hyperbee.Json.Cts.TestSupport.AssertExtensions;
 
 namespace Hyperbee.Json.Cts.Tests;
 
 [TestClass]
 public class CtsWhitespaceTest
 {
-    [TestMethod( @"filter, space between question mark and expression (1)" )]
+    [TestMethod( DisplayName = @"filter, space between question mark and expression (1)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__space_between_question_mark_and_expression_1( Type documentType )
@@ -43,7 +44,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, newline between question mark and expression (2)" )]
+    [TestMethod( DisplayName = @"filter, newline between question mark and expression (2)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__newline_between_question_mark_and_expression_2( Type documentType )
@@ -77,7 +78,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, tab between question mark and expression (3)" )]
+    [TestMethod( DisplayName = @"filter, tab between question mark and expression (3)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__tab_between_question_mark_and_expression_3( Type documentType )
@@ -111,7 +112,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, return between question mark and expression (4)" )]
+    [TestMethod( DisplayName = @"filter, return between question mark and expression (4)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__return_between_question_mark_and_expression_4( Type documentType )
@@ -145,7 +146,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, space between question mark and parenthesized expression (5)" )]
+    [TestMethod( DisplayName = @"filter, space between question mark and parenthesized expression (5)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__space_between_question_mark_and_parenthesized_expression_5( Type documentType )
@@ -179,7 +180,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, newline between question mark and parenthesized expression (6)" )]
+    [TestMethod( DisplayName = @"filter, newline between question mark and parenthesized expression (6)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__newline_between_question_mark_and_parenthesized_expression_6( Type documentType )
@@ -213,7 +214,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, tab between question mark and parenthesized expression (7)" )]
+    [TestMethod( DisplayName = @"filter, tab between question mark and parenthesized expression (7)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__tab_between_question_mark_and_parenthesized_expression_7( Type documentType )
@@ -247,7 +248,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, return between question mark and parenthesized expression (8)" )]
+    [TestMethod( DisplayName = @"filter, return between question mark and parenthesized expression (8)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__return_between_question_mark_and_parenthesized_expression_8( Type documentType )
@@ -281,7 +282,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, space between parenthesized expression and bracket (9)" )]
+    [TestMethod( DisplayName = @"filter, space between parenthesized expression and bracket (9)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__space_between_parenthesized_expression_and_bracket_9( Type documentType )
@@ -315,7 +316,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, newline between parenthesized expression and bracket (10)" )]
+    [TestMethod( DisplayName = @"filter, newline between parenthesized expression and bracket (10)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__newline_between_parenthesized_expression_and_bracket_10( Type documentType )
@@ -349,7 +350,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, tab between parenthesized expression and bracket (11)" )]
+    [TestMethod( DisplayName = @"filter, tab between parenthesized expression and bracket (11)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__tab_between_parenthesized_expression_and_bracket_11( Type documentType )
@@ -383,7 +384,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, return between parenthesized expression and bracket (12)" )]
+    [TestMethod( DisplayName = @"filter, return between parenthesized expression and bracket (12)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__return_between_parenthesized_expression_and_bracket_12( Type documentType )
@@ -417,7 +418,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, space between bracket and question mark (13)" )]
+    [TestMethod( DisplayName = @"filter, space between bracket and question mark (13)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__space_between_bracket_and_question_mark_13( Type documentType )
@@ -451,7 +452,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, newline between bracket and question mark (14)" )]
+    [TestMethod( DisplayName = @"filter, newline between bracket and question mark (14)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__newline_between_bracket_and_question_mark_14( Type documentType )
@@ -485,7 +486,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, tab between bracket and question mark (15)" )]
+    [TestMethod( DisplayName = @"filter, tab between bracket and question mark (15)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__tab_between_bracket_and_question_mark_15( Type documentType )
@@ -519,7 +520,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"filter, return between bracket and question mark (16)" )]
+    [TestMethod( DisplayName = @"filter, return between bracket and question mark (16)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_filter__return_between_bracket_and_question_mark_16( Type documentType )
@@ -553,7 +554,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, space between function name and parenthesis (17)" )]
+    [TestMethod( DisplayName = @"functions, space between function name and parenthesis (17)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__space_between_function_name_and_parenthesis_17( Type documentType )
@@ -564,7 +565,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"functions, newline between function name and parenthesis (18)" )]
+    [TestMethod( DisplayName = @"functions, newline between function name and parenthesis (18)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__newline_between_function_name_and_parenthesis_18( Type documentType )
@@ -575,7 +576,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"functions, tab between function name and parenthesis (19)" )]
+    [TestMethod( DisplayName = @"functions, tab between function name and parenthesis (19)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__tab_between_function_name_and_parenthesis_19( Type documentType )
@@ -586,7 +587,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"functions, return between function name and parenthesis (20)" )]
+    [TestMethod( DisplayName = @"functions, return between function name and parenthesis (20)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__return_between_function_name_and_parenthesis_20( Type documentType )
@@ -597,7 +598,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"functions, space between parenthesis and arg (21)" )]
+    [TestMethod( DisplayName = @"functions, space between parenthesis and arg (21)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__space_between_parenthesis_and_arg_21( Type documentType )
@@ -635,7 +636,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, newline between parenthesis and arg (22)" )]
+    [TestMethod( DisplayName = @"functions, newline between parenthesis and arg (22)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__newline_between_parenthesis_and_arg_22( Type documentType )
@@ -673,7 +674,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, tab between parenthesis and arg (23)" )]
+    [TestMethod( DisplayName = @"functions, tab between parenthesis and arg (23)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__tab_between_parenthesis_and_arg_23( Type documentType )
@@ -711,7 +712,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, return between parenthesis and arg (24)" )]
+    [TestMethod( DisplayName = @"functions, return between parenthesis and arg (24)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__return_between_parenthesis_and_arg_24( Type documentType )
@@ -749,7 +750,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, space between arg and comma (25)" )]
+    [TestMethod( DisplayName = @"functions, space between arg and comma (25)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__space_between_arg_and_comma_25( Type documentType )
@@ -774,7 +775,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, newline between arg and comma (26)" )]
+    [TestMethod( DisplayName = @"functions, newline between arg and comma (26)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__newline_between_arg_and_comma_26( Type documentType )
@@ -799,7 +800,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, tab between arg and comma (27)" )]
+    [TestMethod( DisplayName = @"functions, tab between arg and comma (27)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__tab_between_arg_and_comma_27( Type documentType )
@@ -824,7 +825,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, return between arg and comma (28)" )]
+    [TestMethod( DisplayName = @"functions, return between arg and comma (28)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__return_between_arg_and_comma_28( Type documentType )
@@ -849,7 +850,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, space between comma and arg (29)" )]
+    [TestMethod( DisplayName = @"functions, space between comma and arg (29)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__space_between_comma_and_arg_29( Type documentType )
@@ -874,7 +875,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, newline between comma and arg (30)" )]
+    [TestMethod( DisplayName = @"functions, newline between comma and arg (30)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__newline_between_comma_and_arg_30( Type documentType )
@@ -899,7 +900,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, tab between comma and arg (31)" )]
+    [TestMethod( DisplayName = @"functions, tab between comma and arg (31)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__tab_between_comma_and_arg_31( Type documentType )
@@ -924,7 +925,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, return between comma and arg (32)" )]
+    [TestMethod( DisplayName = @"functions, return between comma and arg (32)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__return_between_comma_and_arg_32( Type documentType )
@@ -949,7 +950,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, space between arg and parenthesis (33)" )]
+    [TestMethod( DisplayName = @"functions, space between arg and parenthesis (33)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__space_between_arg_and_parenthesis_33( Type documentType )
@@ -987,7 +988,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, newline between arg and parenthesis (34)" )]
+    [TestMethod( DisplayName = @"functions, newline between arg and parenthesis (34)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__newline_between_arg_and_parenthesis_34( Type documentType )
@@ -1025,7 +1026,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, tab between arg and parenthesis (35)" )]
+    [TestMethod( DisplayName = @"functions, tab between arg and parenthesis (35)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__tab_between_arg_and_parenthesis_35( Type documentType )
@@ -1063,7 +1064,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, return between arg and parenthesis (36)" )]
+    [TestMethod( DisplayName = @"functions, return between arg and parenthesis (36)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__return_between_arg_and_parenthesis_36( Type documentType )
@@ -1101,7 +1102,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, spaces in a relative singular selector (37)" )]
+    [TestMethod( DisplayName = @"functions, spaces in a relative singular selector (37)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__spaces_in_a_relative_singular_selector_37( Type documentType )
@@ -1134,7 +1135,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, newlines in a relative singular selector (38)" )]
+    [TestMethod( DisplayName = @"functions, newlines in a relative singular selector (38)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__newlines_in_a_relative_singular_selector_38( Type documentType )
@@ -1167,7 +1168,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, tabs in a relative singular selector (39)" )]
+    [TestMethod( DisplayName = @"functions, tabs in a relative singular selector (39)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__tabs_in_a_relative_singular_selector_39( Type documentType )
@@ -1200,7 +1201,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, returns in a relative singular selector (40)" )]
+    [TestMethod( DisplayName = @"functions, returns in a relative singular selector (40)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__returns_in_a_relative_singular_selector_40( Type documentType )
@@ -1233,7 +1234,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, spaces in an absolute singular selector (41)" )]
+    [TestMethod( DisplayName = @"functions, spaces in an absolute singular selector (41)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__spaces_in_an_absolute_singular_selector_41( Type documentType )
@@ -1260,7 +1261,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, newlines in an absolute singular selector (42)" )]
+    [TestMethod( DisplayName = @"functions, newlines in an absolute singular selector (42)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__newlines_in_an_absolute_singular_selector_42( Type documentType )
@@ -1287,7 +1288,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, tabs in an absolute singular selector (43)" )]
+    [TestMethod( DisplayName = @"functions, tabs in an absolute singular selector (43)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__tabs_in_an_absolute_singular_selector_43( Type documentType )
@@ -1314,7 +1315,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"functions, returns in an absolute singular selector (44)" )]
+    [TestMethod( DisplayName = @"functions, returns in an absolute singular selector (44)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_functions__returns_in_an_absolute_singular_selector_44( Type documentType )
@@ -1341,7 +1342,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before || (45)" )]
+    [TestMethod( DisplayName = @"operators, space before || (45)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before____45( Type documentType )
@@ -1378,7 +1379,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before || (46)" )]
+    [TestMethod( DisplayName = @"operators, newline before || (46)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before____46( Type documentType )
@@ -1415,7 +1416,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before || (47)" )]
+    [TestMethod( DisplayName = @"operators, tab before || (47)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before____47( Type documentType )
@@ -1452,7 +1453,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before || (48)" )]
+    [TestMethod( DisplayName = @"operators, return before || (48)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before____48( Type documentType )
@@ -1489,7 +1490,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after || (49)" )]
+    [TestMethod( DisplayName = @"operators, space after || (49)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after____49( Type documentType )
@@ -1526,7 +1527,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after || (50)" )]
+    [TestMethod( DisplayName = @"operators, newline after || (50)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after____50( Type documentType )
@@ -1563,7 +1564,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after || (51)" )]
+    [TestMethod( DisplayName = @"operators, tab after || (51)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after____51( Type documentType )
@@ -1600,7 +1601,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after || (52)" )]
+    [TestMethod( DisplayName = @"operators, return after || (52)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after____52( Type documentType )
@@ -1637,7 +1638,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before && (53)" )]
+    [TestMethod( DisplayName = @"operators, space before && (53)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before____53( Type documentType )
@@ -1673,7 +1674,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before && (54)" )]
+    [TestMethod( DisplayName = @"operators, newline before && (54)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before____54( Type documentType )
@@ -1709,7 +1710,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before && (55)" )]
+    [TestMethod( DisplayName = @"operators, tab before && (55)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before____55( Type documentType )
@@ -1745,7 +1746,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before && (56)" )]
+    [TestMethod( DisplayName = @"operators, return before && (56)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before____56( Type documentType )
@@ -1781,7 +1782,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after && (57)" )]
+    [TestMethod( DisplayName = @"operators, space after && (57)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after____57( Type documentType )
@@ -1817,7 +1818,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after && (58)" )]
+    [TestMethod( DisplayName = @"operators, newline after && (58)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after____58( Type documentType )
@@ -1853,7 +1854,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after && (59)" )]
+    [TestMethod( DisplayName = @"operators, tab after && (59)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after____59( Type documentType )
@@ -1889,7 +1890,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after && (60)" )]
+    [TestMethod( DisplayName = @"operators, return after && (60)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after____60( Type documentType )
@@ -1925,7 +1926,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before == (61)" )]
+    [TestMethod( DisplayName = @"operators, space before == (61)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before____61( Type documentType )
@@ -1959,7 +1960,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before == (62)" )]
+    [TestMethod( DisplayName = @"operators, newline before == (62)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before____62( Type documentType )
@@ -1993,7 +1994,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before == (63)" )]
+    [TestMethod( DisplayName = @"operators, tab before == (63)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before____63( Type documentType )
@@ -2027,7 +2028,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before == (64)" )]
+    [TestMethod( DisplayName = @"operators, return before == (64)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before____64( Type documentType )
@@ -2061,7 +2062,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after == (65)" )]
+    [TestMethod( DisplayName = @"operators, space after == (65)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after____65( Type documentType )
@@ -2095,7 +2096,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after == (66)" )]
+    [TestMethod( DisplayName = @"operators, newline after == (66)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after____66( Type documentType )
@@ -2129,7 +2130,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after == (67)" )]
+    [TestMethod( DisplayName = @"operators, tab after == (67)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after____67( Type documentType )
@@ -2163,7 +2164,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after == (68)" )]
+    [TestMethod( DisplayName = @"operators, return after == (68)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after____68( Type documentType )
@@ -2197,7 +2198,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before != (69)" )]
+    [TestMethod( DisplayName = @"operators, space before != (69)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before____69( Type documentType )
@@ -2231,7 +2232,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before != (70)" )]
+    [TestMethod( DisplayName = @"operators, newline before != (70)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before____70( Type documentType )
@@ -2265,7 +2266,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before != (71)" )]
+    [TestMethod( DisplayName = @"operators, tab before != (71)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before____71( Type documentType )
@@ -2299,7 +2300,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before != (72)" )]
+    [TestMethod( DisplayName = @"operators, return before != (72)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before____72( Type documentType )
@@ -2333,7 +2334,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after != (73)" )]
+    [TestMethod( DisplayName = @"operators, space after != (73)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after____73( Type documentType )
@@ -2367,7 +2368,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after != (74)" )]
+    [TestMethod( DisplayName = @"operators, newline after != (74)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after____74( Type documentType )
@@ -2401,7 +2402,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after != (75)" )]
+    [TestMethod( DisplayName = @"operators, tab after != (75)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after____75( Type documentType )
@@ -2435,7 +2436,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after != (76)" )]
+    [TestMethod( DisplayName = @"operators, return after != (76)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after____76( Type documentType )
@@ -2469,7 +2470,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before < (77)" )]
+    [TestMethod( DisplayName = @"operators, space before < (77)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before___77( Type documentType )
@@ -2503,7 +2504,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before < (78)" )]
+    [TestMethod( DisplayName = @"operators, newline before < (78)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before___78( Type documentType )
@@ -2537,7 +2538,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before < (79)" )]
+    [TestMethod( DisplayName = @"operators, tab before < (79)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before___79( Type documentType )
@@ -2571,7 +2572,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before < (80)" )]
+    [TestMethod( DisplayName = @"operators, return before < (80)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before___80( Type documentType )
@@ -2605,7 +2606,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after < (81)" )]
+    [TestMethod( DisplayName = @"operators, space after < (81)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after___81( Type documentType )
@@ -2639,7 +2640,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after < (82)" )]
+    [TestMethod( DisplayName = @"operators, newline after < (82)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after___82( Type documentType )
@@ -2673,7 +2674,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after < (83)" )]
+    [TestMethod( DisplayName = @"operators, tab after < (83)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after___83( Type documentType )
@@ -2707,7 +2708,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after < (84)" )]
+    [TestMethod( DisplayName = @"operators, return after < (84)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after___84( Type documentType )
@@ -2741,7 +2742,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before > (85)" )]
+    [TestMethod( DisplayName = @"operators, space before > (85)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before___85( Type documentType )
@@ -2775,7 +2776,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before > (86)" )]
+    [TestMethod( DisplayName = @"operators, newline before > (86)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before___86( Type documentType )
@@ -2809,7 +2810,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before > (87)" )]
+    [TestMethod( DisplayName = @"operators, tab before > (87)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before___87( Type documentType )
@@ -2843,7 +2844,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before > (88)" )]
+    [TestMethod( DisplayName = @"operators, return before > (88)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before___88( Type documentType )
@@ -2877,7 +2878,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after > (89)" )]
+    [TestMethod( DisplayName = @"operators, space after > (89)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after___89( Type documentType )
@@ -2911,7 +2912,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after > (90)" )]
+    [TestMethod( DisplayName = @"operators, newline after > (90)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after___90( Type documentType )
@@ -2945,7 +2946,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after > (91)" )]
+    [TestMethod( DisplayName = @"operators, tab after > (91)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after___91( Type documentType )
@@ -2979,7 +2980,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after > (92)" )]
+    [TestMethod( DisplayName = @"operators, return after > (92)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after___92( Type documentType )
@@ -3013,7 +3014,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before <= (93)" )]
+    [TestMethod( DisplayName = @"operators, space before <= (93)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before____93( Type documentType )
@@ -3055,7 +3056,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before <= (94)" )]
+    [TestMethod( DisplayName = @"operators, newline before <= (94)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before____94( Type documentType )
@@ -3097,7 +3098,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before <= (95)" )]
+    [TestMethod( DisplayName = @"operators, tab before <= (95)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before____95( Type documentType )
@@ -3139,7 +3140,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before <= (96)" )]
+    [TestMethod( DisplayName = @"operators, return before <= (96)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before____96( Type documentType )
@@ -3181,7 +3182,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after <= (97)" )]
+    [TestMethod( DisplayName = @"operators, space after <= (97)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after____97( Type documentType )
@@ -3223,7 +3224,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after <= (98)" )]
+    [TestMethod( DisplayName = @"operators, newline after <= (98)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after____98( Type documentType )
@@ -3265,7 +3266,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after <= (99)" )]
+    [TestMethod( DisplayName = @"operators, tab after <= (99)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after____99( Type documentType )
@@ -3307,7 +3308,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after <= (100)" )]
+    [TestMethod( DisplayName = @"operators, return after <= (100)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after____100( Type documentType )
@@ -3349,7 +3350,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space before >= (101)" )]
+    [TestMethod( DisplayName = @"operators, space before >= (101)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_before____101( Type documentType )
@@ -3391,7 +3392,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline before >= (102)" )]
+    [TestMethod( DisplayName = @"operators, newline before >= (102)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_before____102( Type documentType )
@@ -3433,7 +3434,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab before >= (103)" )]
+    [TestMethod( DisplayName = @"operators, tab before >= (103)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_before____103( Type documentType )
@@ -3475,7 +3476,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return before >= (104)" )]
+    [TestMethod( DisplayName = @"operators, return before >= (104)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_before____104( Type documentType )
@@ -3517,7 +3518,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space after >= (105)" )]
+    [TestMethod( DisplayName = @"operators, space after >= (105)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_after____105( Type documentType )
@@ -3559,7 +3560,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline after >= (106)" )]
+    [TestMethod( DisplayName = @"operators, newline after >= (106)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_after____106( Type documentType )
@@ -3601,7 +3602,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab after >= (107)" )]
+    [TestMethod( DisplayName = @"operators, tab after >= (107)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_after____107( Type documentType )
@@ -3643,7 +3644,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return after >= (108)" )]
+    [TestMethod( DisplayName = @"operators, return after >= (108)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_after____108( Type documentType )
@@ -3685,7 +3686,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space between logical not and test expression (109)" )]
+    [TestMethod( DisplayName = @"operators, space between logical not and test expression (109)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_between_logical_not_and_test_expression_109( Type documentType )
@@ -3721,7 +3722,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline between logical not and test expression (110)" )]
+    [TestMethod( DisplayName = @"operators, newline between logical not and test expression (110)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_between_logical_not_and_test_expression_110( Type documentType )
@@ -3757,7 +3758,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab between logical not and test expression (111)" )]
+    [TestMethod( DisplayName = @"operators, tab between logical not and test expression (111)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_between_logical_not_and_test_expression_111( Type documentType )
@@ -3793,7 +3794,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return between logical not and test expression (112)" )]
+    [TestMethod( DisplayName = @"operators, return between logical not and test expression (112)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_between_logical_not_and_test_expression_112( Type documentType )
@@ -3829,7 +3830,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, space between logical not and parenthesized expression (113)" )]
+    [TestMethod( DisplayName = @"operators, space between logical not and parenthesized expression (113)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__space_between_logical_not_and_parenthesized_expression_113( Type documentType )
@@ -3871,7 +3872,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, newline between logical not and parenthesized expression (114)" )]
+    [TestMethod( DisplayName = @"operators, newline between logical not and parenthesized expression (114)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__newline_between_logical_not_and_parenthesized_expression_114( Type documentType )
@@ -3913,7 +3914,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, tab between logical not and parenthesized expression (115)" )]
+    [TestMethod( DisplayName = @"operators, tab between logical not and parenthesized expression (115)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__tab_between_logical_not_and_parenthesized_expression_115( Type documentType )
@@ -3955,7 +3956,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"operators, return between logical not and parenthesized expression (116)" )]
+    [TestMethod( DisplayName = @"operators, return between logical not and parenthesized expression (116)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_operators__return_between_logical_not_and_parenthesized_expression_116( Type documentType )
@@ -3997,7 +3998,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, space between root and bracket (117)" )]
+    [TestMethod( DisplayName = @"selectors, space between root and bracket (117)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_root_and_bracket_117( Type documentType )
@@ -4021,7 +4022,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, newline between root and bracket (118)" )]
+    [TestMethod( DisplayName = @"selectors, newline between root and bracket (118)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_root_and_bracket_118( Type documentType )
@@ -4045,7 +4046,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, tab between root and bracket (119)" )]
+    [TestMethod( DisplayName = @"selectors, tab between root and bracket (119)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_root_and_bracket_119( Type documentType )
@@ -4069,7 +4070,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, return between root and bracket (120)" )]
+    [TestMethod( DisplayName = @"selectors, return between root and bracket (120)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_root_and_bracket_120( Type documentType )
@@ -4093,7 +4094,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, space between bracket and bracket (121)" )]
+    [TestMethod( DisplayName = @"selectors, space between bracket and bracket (121)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_bracket_and_bracket_121( Type documentType )
@@ -4119,7 +4120,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, newline between root and bracket (122)" )]
+    [TestMethod( DisplayName = @"selectors, newline between root and bracket (122)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_root_and_bracket_122( Type documentType )
@@ -4145,7 +4146,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, tab between root and bracket (123)" )]
+    [TestMethod( DisplayName = @"selectors, tab between root and bracket (123)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_root_and_bracket_123( Type documentType )
@@ -4171,7 +4172,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, return between root and bracket (124)" )]
+    [TestMethod( DisplayName = @"selectors, return between root and bracket (124)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_root_and_bracket_124( Type documentType )
@@ -4197,7 +4198,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, space between root and dot (125)" )]
+    [TestMethod( DisplayName = @"selectors, space between root and dot (125)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_root_and_dot_125( Type documentType )
@@ -4221,7 +4222,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, newline between root and dot (126)" )]
+    [TestMethod( DisplayName = @"selectors, newline between root and dot (126)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_root_and_dot_126( Type documentType )
@@ -4245,7 +4246,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, tab between root and dot (127)" )]
+    [TestMethod( DisplayName = @"selectors, tab between root and dot (127)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_root_and_dot_127( Type documentType )
@@ -4269,7 +4270,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, return between root and dot (128)" )]
+    [TestMethod( DisplayName = @"selectors, return between root and dot (128)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_root_and_dot_128( Type documentType )
@@ -4293,7 +4294,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, space between dot and name (129)" )]
+    [TestMethod( DisplayName = @"selectors, space between dot and name (129)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_dot_and_name_129( Type documentType )
@@ -4304,7 +4305,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, newline between dot and name (130)" )]
+    [TestMethod( DisplayName = @"selectors, newline between dot and name (130)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_dot_and_name_130( Type documentType )
@@ -4315,7 +4316,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, tab between dot and name (131)" )]
+    [TestMethod( DisplayName = @"selectors, tab between dot and name (131)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_dot_and_name_131( Type documentType )
@@ -4326,7 +4327,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, return between dot and name (132)" )]
+    [TestMethod( DisplayName = @"selectors, return between dot and name (132)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_dot_and_name_132( Type documentType )
@@ -4337,7 +4338,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, space between recursive descent and name (133)" )]
+    [TestMethod( DisplayName = @"selectors, space between recursive descent and name (133)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_recursive_descent_and_name_133( Type documentType )
@@ -4348,7 +4349,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, newline between recursive descent and name (134)" )]
+    [TestMethod( DisplayName = @"selectors, newline between recursive descent and name (134)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_recursive_descent_and_name_134( Type documentType )
@@ -4359,7 +4360,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, tab between recursive descent and name (135)" )]
+    [TestMethod( DisplayName = @"selectors, tab between recursive descent and name (135)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_recursive_descent_and_name_135( Type documentType )
@@ -4370,7 +4371,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, return between recursive descent and name (136)" )]
+    [TestMethod( DisplayName = @"selectors, return between recursive descent and name (136)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_recursive_descent_and_name_136( Type documentType )
@@ -4381,7 +4382,7 @@ public class CtsWhitespaceTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"selectors, space between bracket and selector (137)" )]
+    [TestMethod( DisplayName = @"selectors, space between bracket and selector (137)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_bracket_and_selector_137( Type documentType )
@@ -4405,7 +4406,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, newline between bracket and selector (138)" )]
+    [TestMethod( DisplayName = @"selectors, newline between bracket and selector (138)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_bracket_and_selector_138( Type documentType )
@@ -4429,7 +4430,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, tab between bracket and selector (139)" )]
+    [TestMethod( DisplayName = @"selectors, tab between bracket and selector (139)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_bracket_and_selector_139( Type documentType )
@@ -4453,7 +4454,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, return between bracket and selector (140)" )]
+    [TestMethod( DisplayName = @"selectors, return between bracket and selector (140)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_bracket_and_selector_140( Type documentType )
@@ -4477,7 +4478,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, space between selector and bracket (141)" )]
+    [TestMethod( DisplayName = @"selectors, space between selector and bracket (141)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_selector_and_bracket_141( Type documentType )
@@ -4501,7 +4502,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, newline between selector and bracket (142)" )]
+    [TestMethod( DisplayName = @"selectors, newline between selector and bracket (142)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_selector_and_bracket_142( Type documentType )
@@ -4525,7 +4526,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, tab between selector and bracket (143)" )]
+    [TestMethod( DisplayName = @"selectors, tab between selector and bracket (143)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_selector_and_bracket_143( Type documentType )
@@ -4549,7 +4550,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, return between selector and bracket (144)" )]
+    [TestMethod( DisplayName = @"selectors, return between selector and bracket (144)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_selector_and_bracket_144( Type documentType )
@@ -4573,7 +4574,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, space between selector and comma (145)" )]
+    [TestMethod( DisplayName = @"selectors, space between selector and comma (145)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_selector_and_comma_145( Type documentType )
@@ -4599,7 +4600,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, newline between selector and comma (146)" )]
+    [TestMethod( DisplayName = @"selectors, newline between selector and comma (146)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_selector_and_comma_146( Type documentType )
@@ -4625,7 +4626,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, tab between selector and comma (147)" )]
+    [TestMethod( DisplayName = @"selectors, tab between selector and comma (147)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_selector_and_comma_147( Type documentType )
@@ -4651,7 +4652,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, return between selector and comma (148)" )]
+    [TestMethod( DisplayName = @"selectors, return between selector and comma (148)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_selector_and_comma_148( Type documentType )
@@ -4677,7 +4678,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, space between comma and selector (149)" )]
+    [TestMethod( DisplayName = @"selectors, space between comma and selector (149)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__space_between_comma_and_selector_149( Type documentType )
@@ -4703,7 +4704,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, newline between comma and selector (150)" )]
+    [TestMethod( DisplayName = @"selectors, newline between comma and selector (150)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__newline_between_comma_and_selector_150( Type documentType )
@@ -4729,7 +4730,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, tab between comma and selector (151)" )]
+    [TestMethod( DisplayName = @"selectors, tab between comma and selector (151)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__tab_between_comma_and_selector_151( Type documentType )
@@ -4755,7 +4756,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"selectors, return between comma and selector (152)" )]
+    [TestMethod( DisplayName = @"selectors, return between comma and selector (152)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_selectors__return_between_comma_and_selector_152( Type documentType )
@@ -4781,7 +4782,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, space between start and colon (153)" )]
+    [TestMethod( DisplayName = @"slice, space between start and colon (153)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__space_between_start_and_colon_153( Type documentType )
@@ -4811,7 +4812,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, newline between start and colon (154)" )]
+    [TestMethod( DisplayName = @"slice, newline between start and colon (154)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__newline_between_start_and_colon_154( Type documentType )
@@ -4841,7 +4842,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, tab between start and colon (155)" )]
+    [TestMethod( DisplayName = @"slice, tab between start and colon (155)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__tab_between_start_and_colon_155( Type documentType )
@@ -4871,7 +4872,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, return between start and colon (156)" )]
+    [TestMethod( DisplayName = @"slice, return between start and colon (156)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__return_between_start_and_colon_156( Type documentType )
@@ -4901,7 +4902,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, space between colon and end (157)" )]
+    [TestMethod( DisplayName = @"slice, space between colon and end (157)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__space_between_colon_and_end_157( Type documentType )
@@ -4931,7 +4932,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, newline between colon and end (158)" )]
+    [TestMethod( DisplayName = @"slice, newline between colon and end (158)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__newline_between_colon_and_end_158( Type documentType )
@@ -4961,7 +4962,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, tab between colon and end (159)" )]
+    [TestMethod( DisplayName = @"slice, tab between colon and end (159)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__tab_between_colon_and_end_159( Type documentType )
@@ -4991,7 +4992,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, return between colon and end (160)" )]
+    [TestMethod( DisplayName = @"slice, return between colon and end (160)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__return_between_colon_and_end_160( Type documentType )
@@ -5021,7 +5022,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, space between end and colon (161)" )]
+    [TestMethod( DisplayName = @"slice, space between end and colon (161)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__space_between_end_and_colon_161( Type documentType )
@@ -5051,7 +5052,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, newline between end and colon (162)" )]
+    [TestMethod( DisplayName = @"slice, newline between end and colon (162)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__newline_between_end_and_colon_162( Type documentType )
@@ -5081,7 +5082,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, tab between end and colon (163)" )]
+    [TestMethod( DisplayName = @"slice, tab between end and colon (163)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__tab_between_end_and_colon_163( Type documentType )
@@ -5111,7 +5112,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, return between end and colon (164)" )]
+    [TestMethod( DisplayName = @"slice, return between end and colon (164)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__return_between_end_and_colon_164( Type documentType )
@@ -5141,7 +5142,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, space between colon and step (165)" )]
+    [TestMethod( DisplayName = @"slice, space between colon and step (165)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__space_between_colon_and_step_165( Type documentType )
@@ -5171,7 +5172,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, newline between colon and step (166)" )]
+    [TestMethod( DisplayName = @"slice, newline between colon and step (166)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__newline_between_colon_and_step_166( Type documentType )
@@ -5201,7 +5202,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, tab between colon and step (167)" )]
+    [TestMethod( DisplayName = @"slice, tab between colon and step (167)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__tab_between_colon_and_step_167( Type documentType )
@@ -5231,7 +5232,7 @@ public class CtsWhitespaceTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"slice, return between colon and step (168)" )]
+    [TestMethod( DisplayName = @"slice, return between colon and step (168)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice__return_between_colon_and_step_168( Type documentType )

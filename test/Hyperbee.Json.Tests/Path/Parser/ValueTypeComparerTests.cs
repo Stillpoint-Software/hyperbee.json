@@ -124,14 +124,14 @@ public class NodeTypeComparerTests : JsonTestBase
         var a = new NodeList<JsonNode>( [], true );
         var b = new ScalarValue<float>( 1F );
 
-        Assert.IsFalse( comparer.Compare( a, b, Operator.LessThan ) < 0 );
-        Assert.IsFalse( comparer.Compare( a, b, Operator.LessThanOrEqual ) <= 0 );
+        Assert.IsGreaterThanOrEqualTo( 0, comparer.Compare( a, b, Operator.LessThan ) );
+        Assert.IsGreaterThan( 0, comparer.Compare( a, b, Operator.LessThanOrEqual ) );
 
-        Assert.IsFalse( comparer.Compare( a, b, Operator.GreaterThan ) > 0 );
-        Assert.IsFalse( comparer.Compare( a, b, Operator.GreaterThanOrEqual ) >= 0 );
+        Assert.IsLessThanOrEqualTo( 0, comparer.Compare( a, b, Operator.GreaterThan ) );
+        Assert.IsLessThan( 0, comparer.Compare( a, b, Operator.GreaterThanOrEqual ) );
 
-        Assert.IsFalse( comparer.Compare( a, b, Operator.Equals ) == 0 );
-        Assert.IsTrue( comparer.Compare( a, b, Operator.NotEquals ) != 0 );
+        Assert.AreNotEqual( 0, comparer.Compare( a, b, Operator.Equals ) );
+        Assert.AreNotEqual( 0, comparer.Compare( a, b, Operator.NotEquals ) );
     }
 
     // Helper methods

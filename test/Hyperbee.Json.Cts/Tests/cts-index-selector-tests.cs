@@ -3,13 +3,14 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Cts.TestSupport;
+using AssertExtensions = Hyperbee.Json.Cts.TestSupport.AssertExtensions;
 
 namespace Hyperbee.Json.Cts.Tests;
 
 [TestClass]
 public class CtsIndexSelectorTest
 {
-    [TestMethod( @"first element (1)" )]
+    [TestMethod( DisplayName = @"first element (1)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_first_element_1( Type documentType )
@@ -34,7 +35,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"second element (2)" )]
+    [TestMethod( DisplayName = @"second element (2)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_second_element_2( Type documentType )
@@ -59,7 +60,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"out of bound (3)" )]
+    [TestMethod( DisplayName = @"out of bound (3)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_out_of_bound_3( Type documentType )
@@ -82,7 +83,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"overflowing index (4)" )]
+    [TestMethod( DisplayName = @"overflowing index (4)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_overflowing_index_4( Type documentType )
@@ -93,7 +94,7 @@ public class CtsIndexSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"not actually an index, overflowing index leads into general text (5)" )]
+    [TestMethod( DisplayName = @"not actually an index, overflowing index leads into general text (5)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_not_actually_an_index__overflowing_index_leads_into_general_text_5( Type documentType )
@@ -104,7 +105,7 @@ public class CtsIndexSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"negative (6)" )]
+    [TestMethod( DisplayName = @"negative (6)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_6( Type documentType )
@@ -129,7 +130,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"more negative (7)" )]
+    [TestMethod( DisplayName = @"more negative (7)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_more_negative_7( Type documentType )
@@ -154,7 +155,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"negative out of bound (8)" )]
+    [TestMethod( DisplayName = @"negative out of bound (8)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_out_of_bound_8( Type documentType )
@@ -177,7 +178,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"on object (9)" )]
+    [TestMethod( DisplayName = @"on object (9)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_on_object_9( Type documentType )
@@ -199,7 +200,7 @@ public class CtsIndexSelectorTest
         Assert.IsTrue( match );
     }
 
-    [TestMethod( @"leading 0 (10)" )]
+    [TestMethod( DisplayName = @"leading 0 (10)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_leading_0_10( Type documentType )
@@ -210,7 +211,7 @@ public class CtsIndexSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [TestMethod( @"leading -0 (11)" )]
+    [TestMethod( DisplayName = @"leading -0 (11)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_leading__0_11( Type documentType )

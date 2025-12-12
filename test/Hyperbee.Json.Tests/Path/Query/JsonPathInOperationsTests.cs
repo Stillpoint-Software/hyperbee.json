@@ -35,7 +35,7 @@ public class JsonPathInOperationsTests : JsonTestBase
         };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -60,7 +60,7 @@ public class JsonPathInOperationsTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( 0, matches.Count );
+        Assert.IsEmpty( matches );
     }
 
     [TestMethod]
@@ -85,7 +85,7 @@ public class JsonPathInOperationsTests : JsonTestBase
         var expected = new[] { source.FromJsonPathPointer( expect ) };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -115,7 +115,7 @@ public class JsonPathInOperationsTests : JsonTestBase
         };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
@@ -138,7 +138,7 @@ public class JsonPathInOperationsTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( 0, matches.Count );
+        Assert.IsEmpty( matches );
     }
 
     [TestMethod]
@@ -161,7 +161,7 @@ public class JsonPathInOperationsTests : JsonTestBase
         var expected = new[] { source.FromJsonPathPointer( "$[0]" ) };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 }

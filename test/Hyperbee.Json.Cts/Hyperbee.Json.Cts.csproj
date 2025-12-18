@@ -1,22 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.4">
+    <PackageReference Include="coverlet.collector">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
-    <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk"  />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="MSTest.TestAdapter"  />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,12 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.Scripting"  />
+    <PackageReference Update="Microsoft.SourceLink.GitHub">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
+    <PackageReference Update="Nerdbank.GitVersioning" />
   </ItemGroup>
 
 </Project>

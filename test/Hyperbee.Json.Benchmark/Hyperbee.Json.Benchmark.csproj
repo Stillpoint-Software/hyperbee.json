@@ -17,7 +17,7 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageReference Include="JsonCons.JsonPath" Version="1.1.0" />
     <PackageReference Include="JsonCraft.JsonPath" Version="1.0.0" />
-    <PackageReference Include="JsonPatch.Net" Version="4.0.0" />
+    <PackageReference Include="JsonPatch.Net" Version="4.0.1" />
     <PackageReference Include="JsonPath.Net" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />

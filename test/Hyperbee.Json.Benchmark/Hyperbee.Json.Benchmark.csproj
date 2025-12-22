@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -14,26 +12,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageReference Include="JsonCons.JsonPath" Version="1.1.0" />
-    <PackageReference Include="JsonCraft.JsonPath" Version="1.0.0" />
-    <PackageReference Include="JsonPatch.Net" Version="4.0.0" />
-    <PackageReference Include="JsonPath.Net" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="JsonCons.JsonPath" />
+    <PackageReference Include="JsonCraft.JsonPath" />
+    <PackageReference Include="JsonPatch.Net" />
+    <PackageReference Include="JsonPath.Net" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" />
+    <PackageReference Update="Nerdbank.GitVersioning" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Hyperbee.Json\Hyperbee.Json.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
-  </ItemGroup>
-
 </Project>

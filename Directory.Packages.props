@@ -20,12 +20,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="JsonCons.JsonPath" Version="1.1.0" />
-    <PackageVersion Include="JsonCraft.JsonPath" Version="1.0.0" />
-    <PackageVersion Include="JsonPatch.Net" Version="4.0.0" />
+    <PackageVersion Include="JsonPatch.Net" Version="4.0.1" />
     <PackageVersion Include="JsonPath.Net" Version="2.2.0" />
     <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <!-- Benchmarking -->
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageVersion Include="JsonCraft.JsonPath" Version="1.0.0" />
   </ItemGroup>
 </Project>

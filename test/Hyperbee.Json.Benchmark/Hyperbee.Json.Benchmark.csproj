@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net10.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -21,18 +19,11 @@
     <PackageReference Include="JsonPath.Net" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" />
     <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" />
+    <PackageReference Update="Nerdbank.GitVersioning" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Hyperbee.Json\Hyperbee.Json.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Update="Nerdbank.GitVersioning" />
-  </ItemGroup>
-
 </Project>

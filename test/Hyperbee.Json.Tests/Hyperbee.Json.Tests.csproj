@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <RootNamespace>Hyperbee.Json.Tests</RootNamespace>
   </PropertyGroup>
@@ -8,21 +7,18 @@
     <EmbeddedResource Include="TestSupport\Json\BookStore.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
-    <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
-    <PackageReference Include="YamlDotNet" Version="16.3.0" />
+    <PackageReference Include="BenchmarkDotNet"  />
+    <PackageReference Include="Microsoft.NET.Test.Sdk"  />
+    <PackageReference Include="MSTest.TestFramework"  />
+    <PackageReference Include="MSTest.TestAdapter"  />
+    <PackageReference Include="YamlDotNet"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Hyperbee.Json\Hyperbee.Json.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.Scripting" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub"/>
+    <PackageReference Update="Nerdbank.GitVersioning"  />
   </ItemGroup>
 </Project>

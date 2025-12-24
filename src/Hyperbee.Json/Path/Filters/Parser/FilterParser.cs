@@ -154,7 +154,22 @@ public class FilterParser<TNode> : FilterParser
         if ( state.Operator.IsLogical() || state.Operator.IsComparison() || state.Operator.IsMath() )
             return;
 
-        if ( !state.IsParsing )
+        // Determine if we should stop looking for an operator.
+        //
+        // When IsParsing is false (Previous == TerminalCharacter), we've hit a potential stopping point.
+        // However, ')' as a terminal character is ambiguous - it could be:
+        //   1. A function's closing paren: `length(@.x)` - should continue to find `> 10` in `(length(@.x) > 10)`
+        //   2. The outer expression's closing paren - should stop
+        //   3. A function argument's closing paren - should stop
+        //
+        // We return early (stop) when:
+        //   - TerminalCharacter is not ')' (e.g., ',' is unambiguous), OR
+        //   - ParenDepth == 0 (we're at the outermost level, so ')' closes the expression), OR
+        //   - IsArgument is true (we're parsing a function argument, so ')' is definitely ours)
+        //
+        // Otherwise, we fall through to the while loop to continue scanning for operators.
+
+        if ( !state.IsParsing && (state.TerminalCharacter != ArgClose || state.ParenDepth == 0 || state.IsArgument) )
         {
             state.Operator = Operator.NonOperator;
             return;

@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathBookstoreTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$", typeof( JsonDocument ) )]
     [DataRow( "$", typeof( JsonNode ) )]
     public void TheRootOfEverything( string query, Type sourceType )
@@ -25,7 +25,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.store.book[*].author", typeof( JsonDocument ) )]
     [DataRow( "$.store.book[*].author", typeof( JsonNode ) )]
     public void TheAuthorsOfAllBooksInTheStore( string query, Type sourceType )
@@ -43,7 +43,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..author", typeof( JsonDocument ) )]
     [DataRow( "$..author", typeof( JsonNode ) )]
     public void AllAuthors( string query, Type sourceType )
@@ -61,7 +61,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.store.*", typeof( JsonDocument ) )]
     [DataRow( "$.store.*", typeof( JsonNode ) )]
     public void AllThingsInStoreWhichAreSomeBooksAndOneRedBicycle( string query, Type sourceType )
@@ -77,7 +77,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.store..price", typeof( JsonDocument ) )]
     [DataRow( "$.store..price", typeof( JsonNode ) )]
     public void ThePriceOfEverythingInTheStore( string query, Type sourceType )
@@ -96,7 +96,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[2]", typeof( JsonDocument ) )]
     [DataRow( "$..book[2]", typeof( JsonNode ) )]
     public void TheThirdBook( string query, Type sourceType )
@@ -105,11 +105,11 @@ public class JsonPathBookstoreTests : JsonTestBase
         var match = source.Select( query ).ToList();
         var expected = source.FromJsonPathPointer( "$.store.book[2]" );
 
-        Assert.IsTrue( match.Count == 1 );
+        Assert.HasCount( 1, match );
         Assert.AreEqual( expected, match[0] );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[-1:]", typeof( JsonDocument ) )]
     [DataRow( "$..book[-1:]", typeof( JsonNode ) )]
     public void TheLastBookInOrder( string query, Type sourceType )
@@ -121,7 +121,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.AreEqual( expected, match );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[:2]", typeof( JsonDocument ) )]
     [DataRow( "$..book[0,1]", typeof( JsonDocument ) )]
     [DataRow( "$.store.book[0,1]", typeof( JsonDocument ) )]
@@ -141,7 +141,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book['category','author']", typeof( JsonDocument ) )]
     [DataRow( "$..book['category','author']", typeof( JsonNode ) )]
     public void TheCategoriesAndAuthorsOfAllBooks( string query, Type sourceType )
@@ -163,7 +163,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[?@.isbn]", typeof( JsonDocument ) )]
     [DataRow( "$..book[?@.isbn]", typeof( JsonNode ) )]
     [DataRow( "$..book[?(@.isbn)]", typeof( JsonDocument ) )]
@@ -181,7 +181,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[?(@.price<10)]", typeof( JsonDocument ) )]
     [DataRow( "$..book[?(@.price<10)]", typeof( JsonNode ) )]
     [DataRow( "$..book[?@.price<10]", typeof( JsonDocument ) )]
@@ -199,7 +199,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..*", typeof( JsonDocument ) )]
     [DataRow( "$..*", typeof( JsonNode ) )]
     public void AllMembersOfJsonStructure( string query, Type sourceType )
@@ -240,7 +240,7 @@ public class JsonPathBookstoreTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]", typeof( JsonDocument ) )]
     [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]", typeof( JsonNode ) )]
     [DataRow( @"$..book[?@.price == 8.99 && @.category == ""fiction""]", typeof( JsonDocument ) )]
@@ -255,7 +255,7 @@ public class JsonPathBookstoreTests : JsonTestBase
     }
 
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( @"$..book[?@.price == 8.99 && (@.category == ""fiction"")]", typeof( JsonDocument ) )]
     [DataRow( @"$..book[?@.price == 8.99 && (@.category == ""fiction"")]", typeof( JsonNode ) )]
     public void FilterWithUnevenParentheses( string query, Type sourceType )

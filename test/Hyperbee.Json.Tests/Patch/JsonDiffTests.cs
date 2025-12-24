@@ -11,7 +11,7 @@ namespace Hyperbee.Json.Tests.Patch;
 [TestClass]
 public class JsonDiffTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Add_WhenTargetHasAdditionalProperty( Type sourceType )
@@ -33,13 +33,13 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/last", results[0].Path );
         Assert.AreEqual( "Doe", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Add_WhenTargetArrayHasMoreItems( Type sourceType )
@@ -60,13 +60,13 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.AreEqual( "B", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Remove_WhenTargetIsMissingProperty( Type sourceType )
@@ -88,13 +88,13 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Remove, results[0].Operation );
         Assert.AreEqual( "/last", results[0].Path );
         Assert.IsNull( results[0].Value );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Remove_WhenTargetArrayHasLessItems( Type sourceType )
@@ -115,13 +115,13 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Remove, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.IsNull( results[0].Value );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Replace_WhenTargetPropertyUpdated( Type sourceType )
@@ -142,13 +142,13 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Replace, results[0].Operation );
         Assert.AreEqual( "/first", results[0].Path );
         Assert.AreEqual( "Mark", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Replace_WhenTargetArrayItemsAreDifferent( Type sourceType )
@@ -169,13 +169,13 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( PatchOperationType.Replace, results[0].Operation );
         Assert.AreEqual( "/categories/1", results[0].Path );
         Assert.AreEqual( "C", Unwrap( results[0].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void Replace_WhenComplexTargetArrayHasDifferentValues( Type sourceType )
@@ -212,7 +212,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target );
 
-        Assert.IsTrue( results.Length == 2 );
+        Assert.HasCount( 2, results );
 
         Assert.AreEqual( PatchOperationType.Add, results[0].Operation );
         Assert.AreEqual( "/categories/2", results[0].Path );
@@ -222,7 +222,7 @@ public class JsonDiffTests : JsonTestBase
         Assert.AreEqual( 2, Unwrap( results[1].Value ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void MultipleOperations_WhenTargetHasMultipleUpdates( Type sourceType )
@@ -260,10 +260,10 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target ).ToArray();
 
-        Assert.IsTrue( results.Length == 8 );
+        Assert.HasCount( 8, results );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( typeof( JsonDocument ) )]
     [DataRow( typeof( JsonNode ) )]
     public void EscapePath_WhenJsonHasPropertyNames( Type sourceType )
@@ -292,7 +292,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = Diff( sourceType, source, target ).ToArray();
 
-        Assert.IsTrue( results.Length == 10 );
+        Assert.HasCount( 10, results );
 
         Assert.AreEqual( "/foo", results[0].Path );
         Assert.AreEqual( "/", results[1].Path );
@@ -329,7 +329,7 @@ public class JsonDiffTests : JsonTestBase
 
         var results = JsonDiff<JsonElement>.Diff( source, target ).ToArray();
 
-        Assert.IsTrue( results.Length == 8 );
+        Assert.HasCount( 8, results );
     }
 
     [TestMethod]

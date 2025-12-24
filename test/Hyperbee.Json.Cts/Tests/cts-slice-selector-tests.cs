@@ -3,13 +3,14 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Cts.TestSupport;
+using AssertExtensions = Hyperbee.Json.Cts.TestSupport.AssertExtensions;
 
 namespace Hyperbee.Json.Cts.Tests;
 
 [TestClass]
 public class CtsSliceSelectorTest
 {
-    [DataTestMethod( @"slice selector (1)" )]
+    [TestMethod( DisplayName = @"slice selector (1)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice_selector_1( Type documentType )
@@ -43,7 +44,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"slice selector with step (2)" )]
+    [TestMethod( DisplayName = @"slice selector with step (2)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice_selector_with_step_2( Type documentType )
@@ -78,7 +79,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"slice selector with everything omitted, short form (3)" )]
+    [TestMethod( DisplayName = @"slice selector with everything omitted, short form (3)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice_selector_with_everything_omitted__short_form_3( Type documentType )
@@ -108,7 +109,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"slice selector with everything omitted, long form (4)" )]
+    [TestMethod( DisplayName = @"slice selector with everything omitted, long form (4)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice_selector_with_everything_omitted__long_form_4( Type documentType )
@@ -138,7 +139,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"slice selector with start omitted (5)" )]
+    [TestMethod( DisplayName = @"slice selector with start omitted (5)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice_selector_with_start_omitted_5( Type documentType )
@@ -172,7 +173,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"slice selector with start and end omitted (6)" )]
+    [TestMethod( DisplayName = @"slice selector with start and end omitted (6)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice_selector_with_start_and_end_omitted_6( Type documentType )
@@ -209,7 +210,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative step with default start and end (7)" )]
+    [TestMethod( DisplayName = @"negative step with default start and end (7)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_step_with_default_start_and_end_7( Type documentType )
@@ -239,7 +240,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative step with default start (8)" )]
+    [TestMethod( DisplayName = @"negative step with default start (8)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_step_with_default_start_8( Type documentType )
@@ -268,7 +269,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative step with default end (9)" )]
+    [TestMethod( DisplayName = @"negative step with default end (9)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_step_with_default_end_9( Type documentType )
@@ -297,7 +298,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"larger negative step (10)" )]
+    [TestMethod( DisplayName = @"larger negative step (10)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_larger_negative_step_10( Type documentType )
@@ -325,7 +326,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative range with default step (11)" )]
+    [TestMethod( DisplayName = @"negative range with default step (11)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_range_with_default_step_11( Type documentType )
@@ -356,7 +357,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative range with negative step (12)" )]
+    [TestMethod( DisplayName = @"negative range with negative step (12)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_range_with_negative_step_12( Type documentType )
@@ -390,7 +391,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative range with larger negative step (13)" )]
+    [TestMethod( DisplayName = @"negative range with larger negative step (13)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_range_with_larger_negative_step_13( Type documentType )
@@ -425,7 +426,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"larger negative range with larger negative step (14)" )]
+    [TestMethod( DisplayName = @"larger negative range with larger negative step (14)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_larger_negative_range_with_larger_negative_step_14( Type documentType )
@@ -460,7 +461,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative from, positive to (15)" )]
+    [TestMethod( DisplayName = @"negative from, positive to (15)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_from__positive_to_15( Type documentType )
@@ -494,7 +495,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative from (16)" )]
+    [TestMethod( DisplayName = @"negative from (16)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_from_16( Type documentType )
@@ -528,7 +529,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"positive from, negative to (17)" )]
+    [TestMethod( DisplayName = @"positive from, negative to (17)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_positive_from__negative_to_17( Type documentType )
@@ -568,7 +569,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative from, positive to, negative step (18)" )]
+    [TestMethod( DisplayName = @"negative from, positive to, negative step (18)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_from__positive_to__negative_step_18( Type documentType )
@@ -608,7 +609,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"positive from, negative to, negative step (19)" )]
+    [TestMethod( DisplayName = @"positive from, negative to, negative step (19)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_positive_from__negative_to__negative_step_19( Type documentType )
@@ -642,7 +643,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"too many colons (20)" )]
+    [TestMethod( DisplayName = @"too many colons (20)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_too_many_colons_20( Type documentType )
@@ -653,7 +654,7 @@ public class CtsSliceSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"non-integer array index (21)" )]
+    [TestMethod( DisplayName = @"non-integer array index (21)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_non_integer_array_index_21( Type documentType )
@@ -664,7 +665,7 @@ public class CtsSliceSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"zero step (22)" )]
+    [TestMethod( DisplayName = @"zero step (22)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_zero_step_22( Type documentType )
@@ -695,7 +696,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"empty range (23)" )]
+    [TestMethod( DisplayName = @"empty range (23)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_empty_range_23( Type documentType )
@@ -726,7 +727,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"slice selector with everything omitted with empty array (24)" )]
+    [TestMethod( DisplayName = @"slice selector with everything omitted with empty array (24)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_slice_selector_with_everything_omitted_with_empty_array_24( Type documentType )
@@ -746,7 +747,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"negative step with empty array (25)" )]
+    [TestMethod( DisplayName = @"negative step with empty array (25)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_negative_step_with_empty_array_25( Type documentType )
@@ -766,7 +767,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"maximal range with positive step (26)" )]
+    [TestMethod( DisplayName = @"maximal range with positive step (26)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_maximal_range_with_positive_step_26( Type documentType )
@@ -808,7 +809,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"maximal range with negative step (27)" )]
+    [TestMethod( DisplayName = @"maximal range with negative step (27)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_maximal_range_with_negative_step_27( Type documentType )
@@ -849,7 +850,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"excessively large to value (28)" )]
+    [TestMethod( DisplayName = @"excessively large to value (28)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_excessively_large_to_value_28( Type documentType )
@@ -889,7 +890,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"excessively small from value (29)" )]
+    [TestMethod( DisplayName = @"excessively small from value (29)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_excessively_small_from_value_29( Type documentType )
@@ -922,7 +923,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"excessively large from value with negative step (30)" )]
+    [TestMethod( DisplayName = @"excessively large from value with negative step (30)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_excessively_large_from_value_with_negative_step_30( Type documentType )
@@ -963,7 +964,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"excessively small to value with negative step (31)" )]
+    [TestMethod( DisplayName = @"excessively small to value with negative step (31)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_excessively_small_to_value_with_negative_step_31( Type documentType )
@@ -999,7 +1000,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"excessively large step (32)" )]
+    [TestMethod( DisplayName = @"excessively large step (32)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_excessively_large_step_32( Type documentType )
@@ -1032,7 +1033,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"excessively small step (33)" )]
+    [TestMethod( DisplayName = @"excessively small step (33)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_excessively_small_step_33( Type documentType )
@@ -1065,7 +1066,7 @@ public class CtsSliceSelectorTest
         Assert.IsTrue( match );
     }
 
-    [DataTestMethod( @"overflowing to value (34)" )]
+    [TestMethod( DisplayName = @"overflowing to value (34)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_overflowing_to_value_34( Type documentType )
@@ -1076,7 +1077,7 @@ public class CtsSliceSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"underflowing from value (35)" )]
+    [TestMethod( DisplayName = @"underflowing from value (35)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_underflowing_from_value_35( Type documentType )
@@ -1087,7 +1088,7 @@ public class CtsSliceSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"overflowing from value with negative step (36)" )]
+    [TestMethod( DisplayName = @"overflowing from value with negative step (36)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_overflowing_from_value_with_negative_step_36( Type documentType )
@@ -1098,7 +1099,7 @@ public class CtsSliceSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"underflowing to value with negative step (37)" )]
+    [TestMethod( DisplayName = @"underflowing to value with negative step (37)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_underflowing_to_value_with_negative_step_37( Type documentType )
@@ -1109,7 +1110,7 @@ public class CtsSliceSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"overflowing step (38)" )]
+    [TestMethod( DisplayName = @"overflowing step (38)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_overflowing_step_38( Type documentType )
@@ -1120,7 +1121,7 @@ public class CtsSliceSelectorTest
         AssertExtensions.ThrowsAny<NotSupportedException, ArgumentException>( () => { _ = document.Select( selector ).ToArray(); } );
     }
 
-    [DataTestMethod( @"underflowing step (39)" )]
+    [TestMethod( DisplayName = @"underflowing step (39)" )]
     [DataRow( typeof( JsonNode ) )]
     [DataRow( typeof( JsonElement ) )]
     public void Test_underflowing_step_39( Type documentType )

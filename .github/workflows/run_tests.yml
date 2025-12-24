@@ -1,23 +1,21 @@
-name: Format
+name: Run Tests
 
 on:
-  push:
+  workflow_run:
+    workflows: [Create Prerelease, Create Release]
+    types: [requested]
+    branches: [main, develop]        
   workflow_dispatch:
   pull_request:
     types: [opened, edited, synchronize, reopened]
     branches: [main, develop]
 
-  workflow_run:
-    workflows: [Create Prerelease, Create Release]
-    types: [requested]
- 
 permissions:
-  contents: write
-  pull-requests: write
-  actions: read                
+  contents: read
+  actions: read
 
 jobs:
-   discover:
+  discover:
     runs-on: ubuntu-latest
     outputs:
       branch_name: ${{ steps.set_branch.outputs.branch_name }}
@@ -40,12 +38,11 @@ jobs:
 
           echo "Detected branch: $CLEAN"
           echo "branch_name=$CLEAN" >> "$GITHUB_OUTPUT"
-          
-   format:
+
+  test:
     needs: discover
-    if: ${{ needs.discover.result == 'success' }}
-    uses: Stillpoint-Software/shared-workflows/.github/workflows/format.yml@main
+    uses: Stillpoint-Software/shared-workflows/.github/workflows/run_tests.yml@main
     with:
       branch: ${{ needs.discover.outputs.branch_name }}
+      solution_name: ${{ vars.SOLUTION_NAME }}
     secrets: inherit
-      

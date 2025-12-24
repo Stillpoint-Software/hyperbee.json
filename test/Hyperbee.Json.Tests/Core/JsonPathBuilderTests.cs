@@ -8,7 +8,7 @@ namespace Hyperbee.Json.Tests.Core;
 [TestClass]
 public class JsonPathBuilderTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$['store']['book'][0]['author']", "$.store.book[0].author" )]
     [DataRow( "$['store']['book'][1]['author']", "$.store.book[1].author" )]
     [DataRow( "$['store']['book'][2]['author']", "$.store.book[2].author" )]
@@ -27,6 +27,6 @@ public class JsonPathBuilderTests : JsonTestBase
         var builder = new JsonPathBuilder( source );
         var result = builder.GetPath( target );
 
-        Assert.AreEqual( result, expected );
+        Assert.AreEqual( expected, result );
     }
 }

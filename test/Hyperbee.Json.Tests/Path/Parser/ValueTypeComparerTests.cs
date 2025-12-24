@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Parser;
 [TestClass]
 public class NodeTypeComparerTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( true, true, true )]
     [DataRow( false, false, true )]
     [DataRow( false, true, false )]
@@ -36,7 +36,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( true, true, true )]
     [DataRow( false, false, true )]
     [DataRow( false, true, false )]
@@ -59,7 +59,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( """{ "value": 1 }""", 99F, false )]
     [DataRow( """{ "value": 99 }""", 99F, true )]
     [DataRow( """{ "value": "hello" }""", "world", false )]
@@ -79,7 +79,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( """[1,2,3]""", 2F, true )]
     [DataRow( """["hello","hi","world" ]""", "hi", true )]
     [DataRow( """[1,2,3]""", 99F, false )]
@@ -98,7 +98,7 @@ public class NodeTypeComparerTests : JsonTestBase
         Assert.AreEqual( areEqual, result );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( 2F, """[1,2,3]""", true )]
     [DataRow( "hi", """["hello","hi","world" ]""", true )]
     [DataRow( 99F, """[1,2,3]""", false )]
@@ -124,14 +124,14 @@ public class NodeTypeComparerTests : JsonTestBase
         var a = new NodeList<JsonNode>( [], true );
         var b = new ScalarValue<float>( 1F );
 
-        Assert.IsFalse( comparer.Compare( a, b, Operator.LessThan ) < 0 );
-        Assert.IsFalse( comparer.Compare( a, b, Operator.LessThanOrEqual ) <= 0 );
+        Assert.IsGreaterThanOrEqualTo( 0, comparer.Compare( a, b, Operator.LessThan ) );
+        Assert.IsGreaterThan( 0, comparer.Compare( a, b, Operator.LessThanOrEqual ) );
 
-        Assert.IsFalse( comparer.Compare( a, b, Operator.GreaterThan ) > 0 );
-        Assert.IsFalse( comparer.Compare( a, b, Operator.GreaterThanOrEqual ) >= 0 );
+        Assert.IsLessThanOrEqualTo( 0, comparer.Compare( a, b, Operator.GreaterThan ) );
+        Assert.IsLessThan( 0, comparer.Compare( a, b, Operator.GreaterThanOrEqual ) );
 
-        Assert.IsFalse( comparer.Compare( a, b, Operator.Equals ) == 0 );
-        Assert.IsTrue( comparer.Compare( a, b, Operator.NotEquals ) != 0 );
+        Assert.AreNotEqual( 0, comparer.Compare( a, b, Operator.Equals ) );
+        Assert.AreNotEqual( 0, comparer.Compare( a, b, Operator.NotEquals ) );
     }
 
     // Helper methods

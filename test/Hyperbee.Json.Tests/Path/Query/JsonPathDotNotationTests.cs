@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathDotNotationTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.[key]", typeof( JsonDocument ) )]
     [DataRow( "$.[key]", typeof( JsonNode ) )]
     public void DotBracketNotationWithoutQuotes( string query, Type sourceType )
@@ -29,13 +29,13 @@ public class JsonPathDotNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         } );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.", typeof( JsonDocument ) )]
     [DataRow( "$.", typeof( JsonNode ) )]
     public void DotBracketNotationWithEmptyPath( string query, Type sourceType )
@@ -49,13 +49,13 @@ public class JsonPathDotNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         } );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.屬性", typeof( JsonDocument ) )]
     [DataRow( "$.屬性", typeof( JsonNode ) )]
     public void DotNotationWithNonAsciiKey( string query, Type sourceType )
@@ -79,7 +79,7 @@ public class JsonPathDotNotationTests : JsonTestBase
         Assert.IsTrue( TestHelper.GetString( matches[0] ) == "value" );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$a", typeof( JsonDocument ) )]
     [DataRow( "$a", typeof( JsonNode ) )]
     public void DotNotationWithoutDot( string query, Type sourceType )
@@ -92,7 +92,7 @@ public class JsonPathDotNotationTests : JsonTestBase
         """;
         var source = GetDocumentAdapter( sourceType, json );
 
-        Assert.ThrowsException<NotSupportedException>( () =>
+        Assert.ThrowsExactly<NotSupportedException>( () =>
         {
             _ = source.Select( query ).ToList();
         } );

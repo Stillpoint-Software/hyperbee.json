@@ -10,10 +10,9 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathDescentTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..", typeof( JsonDocument ) )]
     [DataRow( "$..", typeof( JsonNode ) )]
-    [ExpectedException( typeof( NotSupportedException ) )]
     public void Descent( string query, Type sourceType )
     {
         // consensus: none
@@ -27,10 +26,10 @@ public class JsonPathDescentTests : JsonTestBase
 
         var source = GetDocumentAdapter( sourceType, json );
 
-        _ = source.Select( query ).ToList();
+        Assert.ThrowsExactly<NotSupportedException>( () => _ = source.Select( query ).ToList() );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..*", typeof( JsonDocument ) )]
     [DataRow( "$..*", typeof( JsonNode ) )]
     public void DescentOnNestedArrays( string query, Type sourceType )
@@ -56,10 +55,9 @@ public class JsonPathDescentTests : JsonTestBase
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.key..", typeof( JsonDocument ) )]
     [DataRow( "$.key..", typeof( JsonNode ) )]
-    [ExpectedException( typeof( NotSupportedException ) )]
     public void DescentAfterDotNotation( string query, Type sourceType )
     {
         // consensus: NOT_SUPPORTED
@@ -76,10 +74,10 @@ public class JsonPathDescentTests : JsonTestBase
 
         var source = GetDocumentAdapter( sourceType, json );
 
-        _ = source.Select( query ).ToList();
+        Assert.ThrowsExactly<NotSupportedException>( () => _ = source.Select( query ).ToList() );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..[1].key", typeof( JsonDocument ) )]
     [DataRow( "$..[1].key", typeof( JsonNode ) )]
     public void DotNotationAfterBracketNotationAfterDescent( string query, Type sourceType )

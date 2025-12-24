@@ -10,7 +10,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathInOperationsTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.value in [1, 42, 100])]", "$[0]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.value in [1, 42, 100])]", "$[0]", typeof( JsonNode ) )]
     [DataRow( "$[?(@.value in ['a', 'b', 'c'])]", "$[1]", typeof( JsonDocument ) )]
@@ -35,11 +35,11 @@ public class JsonPathInOperationsTests : JsonTestBase
         };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.values in [1, 2, 3])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.values in [1, 2, 3])]", typeof( JsonNode ) )]
     [DataRow( "$[?(@.values in ['x', 'y', 'z'])]", typeof( JsonDocument ) )]
@@ -60,10 +60,10 @@ public class JsonPathInOperationsTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( 0, matches.Count );
+        Assert.IsEmpty( matches );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.values in [1, [1,2,3], 3])]", "$[0]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.values in [1, [1,2,3], 3])]", "$[0]", typeof( JsonNode ) )]
     [DataRow( "$[?(@.values in ['x', ['x','y','z'], 'z'])]", "$[1]", typeof( JsonDocument ) )]
@@ -85,11 +85,11 @@ public class JsonPathInOperationsTests : JsonTestBase
         var expected = new[] { source.FromJsonPathPointer( expect ) };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.a in [1, 2, 3] && @.b in [4, 5, 6])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.a in [1, 2, 3] && @.b in [4, 5, 6])]", typeof( JsonNode ) )]
     public void InOperation_MultipleConditions( string query, Type sourceType )
@@ -115,11 +115,11 @@ public class JsonPathInOperationsTests : JsonTestBase
         };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.array in [1, 2, 3])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.array in [1, 2, 3])]", typeof( JsonNode ) )]
     public void InOperation_ArrayNotAnArrayElement( string query, Type sourceType )
@@ -138,10 +138,10 @@ public class JsonPathInOperationsTests : JsonTestBase
         var source = GetDocumentAdapter( sourceType, json );
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( 0, matches.Count );
+        Assert.IsEmpty( matches );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$[?(@.array in [1, [1,2], 3])]", typeof( JsonDocument ) )]
     [DataRow( "$[?(@.array in [1, [1,2], 3])]", typeof( JsonNode ) )]
     public void InOperation_ArrayIsArrayElement( string query, Type sourceType )
@@ -161,7 +161,7 @@ public class JsonPathInOperationsTests : JsonTestBase
         var expected = new[] { source.FromJsonPathPointer( "$[0]" ) };
 
         var matches = source.Select( query ).ToList();
-        Assert.AreEqual( expected.Length, matches.Count );
+        Assert.HasCount( expected.Length, matches );
         Assert.IsTrue( expected.SequenceEqual( matches ) );
     }
 }

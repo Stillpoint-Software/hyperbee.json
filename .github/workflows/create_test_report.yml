@@ -1,0 +1,39 @@
+name: Create Test Report
+
+on:
+  workflow_run:
+    workflows: ["Run Tests"]
+    types:     [completed]
+    branches:  [main, develop]
+
+permissions:
+  contents: read
+  actions:  read
+  checks:   write
+
+jobs:
+  discover-auto:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_run' }}
+    outputs:
+      branch_name: ${{ steps.meta.outputs.branch }}
+      sha:         ${{ steps.meta.outputs.sha }}
+      run_id:      ${{ steps.meta.outputs.run_id }}
+      conclusion:  ${{ steps.meta.outputs.conclusion }}
+    steps:
+      - id: meta
+        run: |
+          echo "branch=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
+          echo "sha=${{    github.event.workflow_run.head_sha    }}" >> "$GITHUB_OUTPUT"
+          echo "run_id=${{ github.event.workflow_run.id }}"          >> "$GITHUB_OUTPUT"
+          echo "conclusion=${{ github.event.workflow_run.conclusion }}" >> "$GITHUB_OUTPUT"
+
+  report-auto:
+    needs: discover-auto
+    if: ${{ needs.discover-auto.outputs.conclusion != 'skipped' }}
+    uses: Stillpoint-Software/shared-workflows/.github/workflows/test_report.yml@main
+    with:
+      test_run_id: ${{ needs.discover-auto.outputs.run_id }}
+      branch:      ${{ needs.discover-auto.outputs.branch_name }}
+      sha:         ${{ needs.discover-auto.outputs.sha }}
+    secrets: inherit

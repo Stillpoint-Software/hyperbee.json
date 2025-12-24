@@ -7,7 +7,7 @@ namespace Hyperbee.Json.Tests.Query;
 [TestClass]
 public class JsonQueryParserRfc6901Tests
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "/", "[/ => singular]" )]
     [DataRow( "/two/some", "[/ => singular][two => singular][some => singular]" )]
     [DataRow( "/thing/1:2:3", "[/ => singular][thing => singular][1:2:3 => singular]" )]

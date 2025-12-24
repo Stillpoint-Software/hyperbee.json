@@ -29,7 +29,7 @@ public class ExtensionFunctionTests : JsonTestBase
         var results = source.Select( "$..[?path(@) == '$.store.book[2].title']" ).ToList();
 
         // assert
-        Assert.IsTrue( results.Count == 1 );
+        Assert.HasCount( 1, results );
         Assert.AreEqual( "$.store.book[2].title", results[0].GetPath() );
     }
 

@@ -148,7 +148,6 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void AddFail_WhenValueArrayAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -162,11 +161,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/0", null, "b" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void AddFail_WhenValueArrayOutOfRange()
     {
         var source = JsonNode.Parse(
@@ -181,11 +179,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/2", null, "b" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void AddFail_WhenValueArrayInvalidIndex()
     {
         var source = JsonNode.Parse(
@@ -200,11 +197,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/categories/NaN", null, "b" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void AddFail_WhenValuePropertyAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -218,7 +214,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Add, "/job/title", null, "developer" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
@@ -388,7 +384,6 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void CopyFail_WhenFromPropertyToArrayOutOfRange()
     {
         var source = JsonNode.Parse(
@@ -407,11 +402,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/ideas/1", "/job", null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void CopyFail_WhenFromPropertyToArrayInvalidIndex()
     {
         var source = JsonNode.Parse(
@@ -430,11 +424,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/ideas/NaN", "/job", null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void CopyFail_WhenFromPropertyAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -448,7 +441,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Copy, "/title", "/job/title", null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
@@ -640,7 +633,6 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void MoveFail_WhenFromPropertyToArrayOutOfRange()
     {
         var source = JsonNode.Parse(
@@ -659,11 +651,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/ideas/1", "/job", null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void MoveFail_WhenFromPropertyToArrayInvalidIndex()
     {
         var source = JsonNode.Parse(
@@ -682,11 +673,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/ideas/NaN", "/job", null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void MoveFail_WhenFromPropertyAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -700,11 +690,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/title", "/job/title", null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void MoveFail_WhenFromPropertyIsChildOfSelf()
     {
         var source = JsonNode.Parse(
@@ -722,7 +711,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Move, "/job/sub", "/job", null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
@@ -792,7 +781,6 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void RemoveFail_WhenValueArrayAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -806,11 +794,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/categories/0", null, null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void RemoveFail_WhenValueArrayOutOfRange()
     {
         var source = JsonNode.Parse(
@@ -825,11 +812,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/categories/2", null, null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void RemoveFail_WhenValueArrayInvalidIndex()
     {
         var source = JsonNode.Parse(
@@ -844,11 +830,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/categories/NaN", null, null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void RemoveFail_WhenValuePropertyAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -862,7 +847,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Remove, "/job/title", null, null )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
@@ -900,7 +885,7 @@ public class JsonPatchTests
 
         patch.Apply( source );
 
-        Assert.AreEqual( null, source!["first"] );
+        Assert.IsNull( source!["first"] );
     }
 
     [TestMethod]
@@ -976,7 +961,6 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void ReplaceFail_WhenValueArrayAtEnd()
     {
         var source = JsonNode.Parse(
@@ -991,11 +975,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/-", null, "b" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void ReplaceFail_WhenValueArrayAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -1009,11 +992,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/0", null, "b" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void ReplaceFail_WhenValueArrayOutOfRange()
     {
         var source = JsonNode.Parse(
@@ -1028,11 +1010,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/2", null, "b" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void ReplaceFail_WhenValueArrayInvalidIndex()
     {
         var source = JsonNode.Parse(
@@ -1047,11 +1028,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/categories/NaN", null, "b" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void ReplaceFail_WhenValuePropertyAndMissingParent()
     {
         var source = JsonNode.Parse(
@@ -1065,7 +1045,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Replace, "/job/title", null, "developer" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
@@ -1138,7 +1118,6 @@ public class JsonPatchTests
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void TestFail_WhenValueObjectNotEqual()
     {
         var source = JsonNode.Parse(
@@ -1161,11 +1140,10 @@ public class JsonPatchTests
                                                                                        """ ) )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void TestFail_WhenValueArrayNotEqual()
     {
         var source = JsonNode.Parse(
@@ -1180,11 +1158,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/categories/0", null, "c" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void TestFail_WhenValueArrayOutOfRange()
     {
         var source = JsonNode.Parse(
@@ -1199,11 +1176,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/categories/1", null, "a" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void TestFail_WhenValueArrayInvalidIndex()
     {
         var source = JsonNode.Parse(
@@ -1218,11 +1194,10 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/categories/NaN", null, "a" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]
-    [ExpectedException( typeof( JsonPatchException ) )]
     public void TestFail_WhenValuePropertyNotEqual()
     {
         var source = JsonNode.Parse(
@@ -1236,7 +1211,7 @@ public class JsonPatchTests
             new PatchOperation( PatchOperationType.Test, "/first", null, "Mark" )
         );
 
-        patch.Apply( source );
+        Assert.ThrowsExactly<JsonPatchException>( () => patch.Apply( source ) );
     }
 
     [TestMethod]

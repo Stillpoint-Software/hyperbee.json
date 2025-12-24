@@ -9,7 +9,7 @@ namespace Hyperbee.Json.Tests.Path.Query;
 [TestClass]
 public class JsonPathBookstoreSelectPathTests : JsonTestBase
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.store.book[*].author" )]
     public void TheAuthorsOfAllBooksInTheStore( string query )
     {
@@ -28,7 +28,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..author" )]
     public void AllAuthors( string query )
     {
@@ -47,7 +47,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.store.*" )]
     public void AllThingsInStoreWhichAreSomeBooksAndOneRedBicycle( string query )
     {
@@ -64,7 +64,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$.store..price" )]
     public void ThePriceOfEverythingInTheStore( string query )
     {
@@ -84,7 +84,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[2]" )]
     public void TheThirdBook( string query )
     {
@@ -93,12 +93,12 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
 
         var expected = PathNodePair( source, "$.store.book[2]" );
 
-        Assert.IsTrue( match.Count == 1 );
+        Assert.HasCount( 1, match );
         Assert.AreEqual( expected.Node, match[0].Node );
         Assert.AreEqual( expected.Path, match[0].Path );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[-1:]" )]
     public void TheLastBookInOrder( string query )
     {
@@ -111,7 +111,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.AreEqual( expected.Path, match.Path );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[:2]" )]
     [DataRow( "$..book[0,1]" )]
     [DataRow( "$.store.book[0,1]" )]
@@ -130,7 +130,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book['category','author']" )]
     public void TheCategoriesAndAuthorsOfAllBooks( string query )
     {
@@ -153,7 +153,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[?@.isbn]" )]
     [DataRow( "$..book[?(@.isbn)]" )]
     public void FilterAllBooksWithIsbnNumber( string query )
@@ -171,7 +171,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..book[?(@.price<10)]" )]
     [DataRow( "$..book[?@.price<10]" )]
     public void FilterAllBooksCheaperThan10( string query )
@@ -189,7 +189,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( "$..*" )]
     public void AllMembersOfJsonStructure( string query )
     {
@@ -231,7 +231,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.IsTrue( expected.Select( e => e.Path ).SequenceEqual( matches.Select( x => x.Path ) ) );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( @"$..book[?(@.price == 8.99 && @.category == ""fiction"")]" )]
     [DataRow( @"$..book[?@.price == 8.99 && @.category == ""fiction""]" )]
     public void FilterAllBooksUsingLogicalAndInScript( string query )
@@ -245,7 +245,7 @@ public class JsonPathBookstoreSelectPathTests : JsonTestBase
         Assert.AreEqual( expected.Path, match.Path );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow( @"$..book[?@.price == 8.99 && (@.category == ""fiction"")]" )]
     public void FilterWithUnevenParentheses( string query )
     {

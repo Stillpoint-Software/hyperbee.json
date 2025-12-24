@@ -1,0 +1,32 @@
+name: Unlist NuGet Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_id:
+        description: "NuGet package ID (e.g., Hyperbee.xxx)"
+        required: true
+        type: string
+      package_version:
+        description: "Exact version (e.g., v1.2.1-alpha-ge4caaff67a)"
+        required: true
+        type: string
+      dry_run:
+        description: "If true, shows what would happen"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+run-name: "Unlist · ${{ inputs.package_id }} · ${{ inputs.package_nuget }}"
+
+jobs:
+  unlist:
+    uses: Stillpoint-Software/shared-workflows/.github/workflows/unlist-package.yml@main
+    secrets: inherit
+    with:
+      package_id:      ${{ inputs.package_id }}
+      package_version: ${{ inputs.package_version }}
+      dry_run:         ${{ inputs.dry_run }}

@@ -1,10 +1,10 @@
 ```
 
-BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.4351)
-12th Gen Intel Core i9-12900HK, 1 CPU, 20 logical and 14 physical cores
-.NET SDK 9.0.301
-  [Host]   : .NET 9.0.6 (9.0.625.26613), X64 RyuJIT AVX2 [AttachedDebugger]
-  ShortRun : .NET 9.0.6 (9.0.625.26613), X64 RyuJIT AVX2
+BenchmarkDotNet v0.15.8, Windows 11 (10.0.26200.7462/25H2/2025Update/HudsonValley2)
+12th Gen Intel Core i9-12900HK 2.50GHz, 1 CPU, 20 logical and 14 physical cores
+.NET SDK 10.0.101
+  [Host]   : .NET 10.0.1 (10.0.1, 10.0.125.57005), X64 RyuJIT x86-64-v3 [AttachedDebugger]
+  ShortRun : .NET 10.0.1 (10.0.1, 10.0.125.57005), X64 RyuJIT x86-64-v3
 
 
  | Method                    |  Mean |  Error

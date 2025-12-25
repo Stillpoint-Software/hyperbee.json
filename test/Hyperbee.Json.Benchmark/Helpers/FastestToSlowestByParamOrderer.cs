@@ -4,7 +4,7 @@ using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
-namespace Hyperbee.Json.Benchmark;
+namespace Hyperbee.Json.Benchmark.Helpers;
 
 public class FastestToSlowestByParamOrderer : IOrderer
 {

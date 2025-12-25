@@ -22,7 +22,7 @@ public abstract class ExtensionFunction
     internal Expression GetExpression<TNode>( ref ParserState state )
     {
         var arguments = new Expression[_argumentCount];
-        var expectNormalized = CompareConstraint.HasFlag( CompareConstraint.ExpectNormalized );
+        var expectNormalized = (CompareConstraint & CompareConstraint.ExpectNormalized) != 0;
 
         for ( var i = 0; i < _argumentCount; i++ )
         {

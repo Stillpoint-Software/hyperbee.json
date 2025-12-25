@@ -145,9 +145,7 @@ public class JsonPathBenchmark
     public void Hyperbee_JsonElement()
     {
         var (filter, first) = GetFilter();
-
-        var element = JsonDocument.Parse( Document ).RootElement;
-        var select = element.Select( filter );
+        var select = _element.Select( filter );
 
         Consume( select, first );
     }

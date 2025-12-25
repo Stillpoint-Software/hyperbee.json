@@ -451,25 +451,30 @@ public class FilterParser<TNode> : FilterParser
 
     private static void ThrowIfLiteralInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
     {
+        const CompareConstraint literalMustCompare = CompareConstraint.Literal | CompareConstraint.MustCompare;
+
         if ( state.IsArgument || left.Operator.IsMath() )
             return;
 
-        if ( left.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+        if ( (left.CompareConstraint & literalMustCompare) == literalMustCompare && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
 
-        if ( right != null && right.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+        if ( right != null && (right.CompareConstraint & literalMustCompare) == literalMustCompare && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
 
     private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
     {
+        const CompareConstraint functionMustCompare = CompareConstraint.Function | CompareConstraint.MustCompare;
+        const CompareConstraint functionMustNotCompare = CompareConstraint.Function | CompareConstraint.MustNotCompare;
+
         if ( state.IsArgument )
             return;
 
-        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() )
+        if ( (item.CompareConstraint & functionMustCompare) == functionMustCompare && !item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
 
-        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustNotCompare ) && item.Operator.IsComparison() )
+        if ( (item.CompareConstraint & functionMustNotCompare) == functionMustNotCompare && item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
     }
 

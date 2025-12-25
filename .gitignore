@@ -401,3 +401,4 @@ FodyWeavers.xsd
 .claude/
 claude.md
 **/claude-tasks.md
+**/baseline-benchmarks.md

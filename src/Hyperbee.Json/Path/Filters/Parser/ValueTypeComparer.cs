@@ -148,10 +148,14 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
 
         static bool Contains( IValueTypeComparer comparer, IValueAccessor<TNode> accessor, IValueType left, TNode rightNode )
         {
-            return EnumerateChildren( accessor, rightNode )
-                .Select( rightChild => GetComparand( accessor, rightChild ) )
-                .Select( comparand => comparer.Compare( left, comparand, Operator.Equals ) )
-                .Any( result => result == 0 );
+            foreach ( var rightChild in EnumerateChildren( accessor, rightNode ) )
+            {
+                var comparand = GetComparand( accessor, rightChild );
+                if ( comparer.Compare( left, comparand, Operator.Equals ) == 0 )
+                    return true;
+            }
+
+            return false;
         }
 
         static IValueType GetComparand( IValueAccessor<TNode> accessor, TNode childValue )
@@ -290,10 +294,10 @@ public class ValueTypeComparer<TNode> : IValueTypeComparer
         {
             nodeType = itemValue switch
             {
-                string itemString => Scalar.Value( itemString ),
-                bool itemBool => Scalar.Value( itemBool ),
-                float itemFloat => Scalar.Value( itemFloat ),
-                int itemInt => Scalar.Value( itemInt ),
+                string itemString => new ScalarValue<string>( itemString ),
+                bool itemBool => new ScalarValue<bool>( itemBool ),
+                float itemFloat => new ScalarValue<float>( itemFloat ),
+                int itemInt => new ScalarValue<int>( itemInt ),
                 null => Scalar.Null,
                 _ => throw new NotSupportedException( "Unsupported value type." )
             };

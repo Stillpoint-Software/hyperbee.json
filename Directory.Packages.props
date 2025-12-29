@@ -27,6 +27,6 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <!-- Benchmarking -->
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageVersion Include="JsonCraft.JsonPath" Version="1.0.0" />
+    <PackageVersion Include="JsonCraft.JsonPath" Version="1.1.0" />
   </ItemGroup>
 </Project>

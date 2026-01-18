@@ -22,10 +22,10 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>assets/icon.png</PackageIcon>
-    <PackageReleaseNotes>https://github.com/Stillpoint-Software/PostgresTest/releases/latest</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/Stillpoint-Software/PostgresTest</RepositoryUrl>
+    <PackageReleaseNotes>https://github.com/Stillpoint-Software/hyperbee.json/releases/latest</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/Stillpoint-Software/hyperbee.json</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/Stillpoint-Software/PostgresTest</PackageProjectUrl>
+    <PackageProjectUrl>https://stillpoint-software.github.io/hyperbee.json/</PackageProjectUrl>
   </PropertyGroup>
 
   <!-- Pull README & LICENSE into the package root -->
@@ -40,9 +40,15 @@
           PackagePath="\"
     Link="LICENSE" />
   </ItemGroup>
-  <!-- Global project properies -->
+  <!-- Global project properties - .NET 10 LTS First Strategy -->
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
-    <TargetFramework>net10.0</TargetFramework>
+    <!-- Primary target: .NET 10 (next LTS), with .NET 9 for current support, .NET 8 for compatibility -->
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <!-- Suppress common warnings -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <NoWarn>$(NoWarn);MSTEST0001</NoWarn>
   </PropertyGroup>
 </Project>

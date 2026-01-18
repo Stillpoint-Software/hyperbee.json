@@ -8,7 +8,7 @@ internal class FunctionExpressionFactory : IExpressionFactory
     public static bool TryGetExpression<TNode>( ref ParserState state, out Expression expression, out CompareConstraint compareConstraint, ITypeDescriptor<TNode> descriptor )
     {
         compareConstraint = CompareConstraint.None;
-        expression = null;
+        expression = null!;
 
         if ( state.Item.IsEmpty || !char.IsLetter( state.Item[0] ) )
         {

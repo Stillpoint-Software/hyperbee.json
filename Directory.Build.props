@@ -43,6 +43,6 @@
   <!-- Global project properies -->
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 </Project>

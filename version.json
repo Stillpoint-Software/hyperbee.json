@@ -3,7 +3,10 @@
   "version": "3.2-alpha",
   "publicReleaseRefSpec": [
     "^refs/heads/main$",
-    "^refs/heads/hotfix$",
+    "^refs/heads/hotfix\\/.+$",
     "^refs/heads/v\\d+\\.\\d+$"
-  ]
+  ],
+  "release": {
+    "firstUnstableTag": "alpha"
+  }
 }

@@ -172,6 +172,7 @@ public class JsonPathParseAndSelectEvaluator
         Consume( select, first );
     }
 
+#if NET9_0_OR_GREATER
     [Benchmark( Description = "JsonCraft.JsonElement" )]
     public void JsonCraft_JsonElement()
     {
@@ -182,4 +183,6 @@ public class JsonPathParseAndSelectEvaluator
 
         Consume( select, first );
     }
+#endif
+
 }

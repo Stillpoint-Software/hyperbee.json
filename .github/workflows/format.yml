@@ -8,7 +8,7 @@ on:
     branches: [main, develop]
 
   workflow_run:
-    workflows: [Create Prerelease, Create Release]
+    workflows: [Create Release]
     types: [requested]
  
 permissions:

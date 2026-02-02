@@ -23,7 +23,7 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="JsonCons.JsonPath" Version="1.1.0" />
-    <PackageVersion Include="JsonPatch.Net" Version="4.0.1" />
+    <PackageVersion Include="JsonPatch.Net" Version="5.0.0" />
     <PackageVersion Include="JsonPath.Net" Version="2.2.0" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Environments;
@@ -13,17 +13,18 @@ public class Config : ManualConfig
 {
     public Config()
     {
+
         AddJob( Job.ShortRun
-            .WithRuntime( CoreRuntime.Core90 )
-            .WithId( ".NET 8" ) );
+         .WithRuntime( CoreRuntime.Core90 )
+         .WithId( ".NET 8" ) );
 
         AddJob( Job.ShortRun
             .WithRuntime( CoreRuntime.Core90 )
             .WithId( ".NET 9" ) );
 
         AddJob( Job.ShortRun
-            .WithRuntime( CoreRuntime.Core10_0 )
-            .WithId( ".NET 10" ) );
+         .WithRuntime( CoreRuntime.Core10_0 )
+         .WithId( ".NET 10" ) );
 
         AddValidator( JitOptimizationsValidator.DontFailOnError );
         AddLogger( ConsoleLogger.Default );

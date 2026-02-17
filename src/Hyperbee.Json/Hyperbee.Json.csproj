@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 <PropertyGroup>
 <IsPackable>true</IsPackable>
 <Authors>Stillpoint Software, Inc.</Authors>
@@ -32,8 +32,7 @@
     <None Include="..\..\assets\icon.png" Pack="true" Visible="false" PackagePath="/" />
     <None Include="..\..\README.md" Pack="true" Visible="true" PackagePath="/" Link="README.md" />
     <None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="/" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" />
-    <PackageReference Include="Nerdbank.GitVersioning" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" />
+    <PackageReference Update="Nerdbank.GitVersioning" />
   </ItemGroup>
 </Project>

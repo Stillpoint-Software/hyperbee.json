@@ -1,12 +1,7 @@
 <Project>
-  <!-- Enable Central Package Management -->
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <!-- Suppress NuGet version constraint warnings -->
-    <NoWarn>$(NoWarn);NU1608</NoWarn>
   </PropertyGroup>
-
-  <!-- Common packages for all frameworks -->
   <ItemGroup>
     <!-- Core Application Dependencies -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.0.0" />
@@ -25,29 +20,28 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="JsonCons.JsonPath" Version="1.1.0" />
     <PackageVersion Include="JsonPatch.Net" Version="4.0.1" />
     <PackageVersion Include="JsonPath.Net" Version="2.2.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.1" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-    <!-- Benchmarking -->
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
   </ItemGroup>
 
-  <!-- .NET 8 specific packages (compatibility) -->
+  <!-- .NET 8.0 specific packages -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.23" />
   </ItemGroup>
 
-  <!-- .NET 9+ specific packages -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'net10.0'">
+  <!-- .NET 9.0 specific packages -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <PackageVersion Include="JsonCraft.JsonPath" Version="1.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.12" />
   </ItemGroup>
 
-  <!-- .NET 10 specific packages (primary target) -->
+  <!-- .NET 10.0 specific packages -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.2" />
     <PackageVersion Include="JsonCraft.JsonPath" Version="1.1.0" />
   </ItemGroup>
+
 </Project>

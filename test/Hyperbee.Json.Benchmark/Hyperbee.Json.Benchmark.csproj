@@ -1,8 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Override to single target for executables -->
-    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -16,13 +14,12 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="JsonCons.JsonPath" />
-    <PackageReference Include="JsonCraft.JsonPath"/>
     <PackageReference Include="JsonPatch.Net" />
     <PackageReference Include="JsonPath.Net" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" />
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" />
-    <PackageReference Update="Nerdbank.GitVersioning" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" />
+    <PackageReference Include="Nerdbank.GitVersioning" />
   </ItemGroup>
 
   <!-- JsonCraft.JsonPath is only available for .NET 9.0 and later -->

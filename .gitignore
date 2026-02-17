@@ -402,3 +402,4 @@ FodyWeavers.xsd
 claude.md
 **/claude-tasks.md
 **/baseline-benchmarks.md
+/nuget.config

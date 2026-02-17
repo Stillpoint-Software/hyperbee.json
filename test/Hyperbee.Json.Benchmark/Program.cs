@@ -1,5 +1,5 @@
 ﻿//NOTE: Should be run with `dotnet run -c release` in the project folder
 using BenchmarkDotNet.Running;
-using Hyperbee.Json.Benchmark;
+using Hyperbee.Json.Benchmark.Helpers;
 
 BenchmarkSwitcher.FromAssembly( typeof( Program ).Assembly ).Run( args, new Config() );

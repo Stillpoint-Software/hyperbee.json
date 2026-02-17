@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Reports;
 
-namespace Hyperbee.Json.Benchmark;
+namespace Hyperbee.Json.Benchmark.Helpers;
 
 // Custom exporter that groups tests by filter and displays only specified columns
 public class JsonPathMarkdownExporter : ExporterBase
@@ -27,7 +27,7 @@ public class JsonPathMarkdownExporter : ExporterBase
         }
 
         logger.WriteLine();
-        foreach ( string infoLine in summary.HostEnvironmentInfo.ToFormattedString() )
+        foreach ( var infoLine in summary.HostEnvironmentInfo.ToFormattedString() )
         {
             logger.WriteLineInfo( infoLine );
         }
@@ -80,7 +80,7 @@ public class JsonPathMarkdownExporter : ExporterBase
 
         PrintHeader( columns, logger );
 
-        int rowCounter = 0;
+        var rowCounter = 0;
 
         foreach ( var line in table.FullContent )
         {

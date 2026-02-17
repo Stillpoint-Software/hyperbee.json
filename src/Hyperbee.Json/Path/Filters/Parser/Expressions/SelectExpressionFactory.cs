@@ -15,7 +15,7 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         if ( item.IsEmpty || item[0] != '$' && item[0] != '@' )
         {
-            expression = null;
+            expression = null!;
             return false;
         }
 

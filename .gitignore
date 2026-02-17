@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Claude AI assistant files
+.claude/
+claude.md
+**/claude-tasks.md
+**/baseline-benchmarks.md

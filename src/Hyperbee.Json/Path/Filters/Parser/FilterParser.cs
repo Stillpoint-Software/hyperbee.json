@@ -63,7 +63,6 @@ public class FilterParser<TNode> : FilterParser
         {
             MoveNext( ref state );
             items.Enqueue( GetExprItem( ref state ) ); // may cause recursion
-
         } while ( state.IsParsing );
 
         // check for paren mismatch
@@ -153,11 +152,24 @@ public class FilterParser<TNode> : FilterParser
     private static void MoveNextOperator( ref ParserState state ) // move to the next operator
     {
         if ( state.Operator.IsLogical() || state.Operator.IsComparison() || state.Operator.IsMath() )
-        {
             return;
-        }
 
-        if ( !state.IsParsing )
+        // Determine if we should stop looking for an operator.
+        //
+        // When IsParsing is false (Previous == TerminalCharacter), we've hit a potential stopping point.
+        // However, ')' as a terminal character is ambiguous - it could be:
+        //   1. A function's closing paren: `length(@.x)` - should continue to find `> 10` in `(length(@.x) > 10)`
+        //   2. The outer expression's closing paren - should stop
+        //   3. A function argument's closing paren - should stop
+        //
+        // We return early (stop) when:
+        //   - TerminalCharacter is not ')' (e.g., ',' is unambiguous), OR
+        //   - ParenDepth == 0 (we're at the outermost level, so ')' closes the expression), OR
+        //   - IsArgument is true (we're parsing a function argument, so ')' is definitely ours)
+        //
+        // Otherwise, we fall through to the while loop to continue scanning for operators.
+
+        if ( !state.IsParsing && (state.TerminalCharacter != ArgClose || state.ParenDepth == 0 || state.IsArgument) )
         {
             state.Operator = Operator.NonOperator;
             return;
@@ -174,6 +186,7 @@ public class FilterParser<TNode> : FilterParser
 
     private static void NextCharacter( ref ParserState state, int start, out char nextChar, ref char? quoteChar )
     {
+        // Read next character
         nextChar = state.Buffer[state.Pos++];
 
         // Handle escape characters within quotes
@@ -438,25 +451,30 @@ public class FilterParser<TNode> : FilterParser
 
     private static void ThrowIfLiteralInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
     {
+        const CompareConstraint literalMustCompare = CompareConstraint.Literal | CompareConstraint.MustCompare;
+
         if ( state.IsArgument || left.Operator.IsMath() )
             return;
 
-        if ( left.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+        if ( (left.CompareConstraint & literalMustCompare) == literalMustCompare && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
 
-        if ( right != null && right.CompareConstraint.HasFlag( CompareConstraint.Literal | CompareConstraint.MustCompare ) && !left.Operator.IsComparison() )
+        if ( right != null && (right.CompareConstraint & literalMustCompare) == literalMustCompare && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
 
     private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
     {
+        const CompareConstraint functionMustCompare = CompareConstraint.Function | CompareConstraint.MustCompare;
+        const CompareConstraint functionMustNotCompare = CompareConstraint.Function | CompareConstraint.MustNotCompare;
+
         if ( state.IsArgument )
             return;
 
-        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustCompare ) && !item.Operator.IsComparison() )
+        if ( (item.CompareConstraint & functionMustCompare) == functionMustCompare && !item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must compare: {state.Buffer.ToString()}." );
 
-        if ( item.CompareConstraint.HasFlag( CompareConstraint.Function | CompareConstraint.MustNotCompare ) && item.Operator.IsComparison() )
+        if ( (item.CompareConstraint & functionMustNotCompare) == functionMustNotCompare && item.Operator.IsComparison() )
             throw new NotSupportedException( $"Function must not compare: {state.Buffer.ToString()}." );
     }
 

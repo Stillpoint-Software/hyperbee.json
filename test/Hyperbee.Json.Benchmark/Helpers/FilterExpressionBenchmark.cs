@@ -3,9 +3,9 @@ using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using Hyperbee.Json.Path.Filters.Parser;
 
-namespace Hyperbee.Json.Benchmark;
+namespace Hyperbee.Json.Benchmark.Helpers;
 
-public class FilterExpressionParserEvaluator
+public class FilterExpressionBenchmark
 {
     [Params( "(\"world\" == 'world') && (true || false)" )]
     public string Filter;

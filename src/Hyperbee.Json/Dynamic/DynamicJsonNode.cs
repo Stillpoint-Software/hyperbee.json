@@ -39,7 +39,7 @@ public class DynamicJsonNode : DynamicObject
             return true;
         }
 
-        result = null;
+        result = null!;
         return false;
     }
 
@@ -57,7 +57,7 @@ public class DynamicJsonNode : DynamicObject
                 result = new DynamicJsonNode( ref arrayValue );
                 return true;
             default:
-                result = null;
+                result = null!;
                 return false;
         }
     }
@@ -86,7 +86,7 @@ public class DynamicJsonNode : DynamicObject
             return true;
         }
 
-        result = null;
+        result = null!;
         return false;
     }
 

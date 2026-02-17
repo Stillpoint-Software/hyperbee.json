@@ -46,8 +46,9 @@ public enum Operator
 
 internal static class OperatorExtensions
 {
-    public static bool IsNonOperator( this Operator op ) => op.HasFlag( Operator.NonOperator );
-    public static bool IsComparison( this Operator op ) => op.HasFlag( Operator.Comparison );
-    public static bool IsLogical( this Operator op ) => op.HasFlag( Operator.Logical );
-    public static bool IsMath( this Operator op ) => op.HasFlag( Operator.Math );
+    // Use direct bitwise operations instead of HasFlag() to avoid boxing allocations
+    public static bool IsNonOperator( this Operator op ) => (op & Operator.NonOperator) != 0;
+    public static bool IsComparison( this Operator op ) => (op & Operator.Comparison) != 0;
+    public static bool IsLogical( this Operator op ) => (op & Operator.Logical) != 0;
+    public static bool IsMath( this Operator op ) => (op & Operator.Math) != 0;
 }

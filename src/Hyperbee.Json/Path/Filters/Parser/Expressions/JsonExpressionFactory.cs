@@ -14,7 +14,7 @@ internal class JsonExpressionFactory : IExpressionFactory
 
         if ( !TryParseNode( descriptor.NodeActions, state.Item, out var node ) )
         {
-            expression = null;
+            expression = null!;
             return false;
         }
 

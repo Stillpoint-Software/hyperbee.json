@@ -123,6 +123,22 @@ public class FilterParserTests : JsonTestBase
     }
 
     [TestMethod]
+    [DataRow( "$.store.book[?(length(@.title) > 10)].title", "Sayings of the Century", typeof( JsonElement ) )]
+    [DataRow( "$.store.book[?(length(@.title) > 10)].title", "Sayings of the Century", typeof( JsonNode ) )]
+    public void ReturnExpectedResult_WhenUsingExpressionEvaluator( string filter, string expected, Type sourceType )
+    {
+        // arrange & act
+        var document = GetDocumentAdapter( sourceType );
+
+        // act
+        var matches = document.Select( filter ).ToArray();
+        var result = TestHelper.GetString( matches[0] );
+
+        // assert
+        Assert.AreEqual( expected, result );
+    }
+
+    [TestMethod]
     [DataRow( "count(@.store.book) == 1", true, typeof( JsonElement ) )]
     [DataRow( "count(@.store.book.*) == 4", true, typeof( JsonElement ) )]
     [DataRow( "length(@.store.book) == 4", true, typeof( JsonElement ) )]

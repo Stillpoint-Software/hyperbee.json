@@ -43,7 +43,7 @@ public class DynamicJsonElement : DynamicObject
             return true;
         }
 
-        result = null;
+        result = null!;
         return false;
     }
 
@@ -60,7 +60,7 @@ public class DynamicJsonElement : DynamicObject
             }
         }
 
-        result = null;
+        result = null!;
         return false;
     }
 
@@ -74,7 +74,7 @@ public class DynamicJsonElement : DynamicObject
             return true;
         }
 
-        result = null;
+        result = null!;
         return false;
     }
 

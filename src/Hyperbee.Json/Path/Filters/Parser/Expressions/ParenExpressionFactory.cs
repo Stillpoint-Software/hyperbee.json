@@ -11,7 +11,7 @@ internal class ParenExpressionFactory : IExpressionFactory
 
         if ( state.Operator != Operator.OpenParen || !state.Item.IsEmpty )
         {
-            expression = null;
+            expression = null!;
             return false;
         }
 

@@ -18,8 +18,13 @@
     <PackageReference Include="JsonPath.Net" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" />
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" />
-    <PackageReference Update="Nerdbank.GitVersioning" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" />
+    <PackageReference Include="Nerdbank.GitVersioning" />
+  </ItemGroup>
+
+  <!-- JsonCraft.JsonPath is only available for .NET 9.0 and later -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'net8.0'">
+    <PackageReference Include="JsonCraft.JsonPath" />
   </ItemGroup>
 
   <!-- JsonCraft.JsonPath is only available for .NET 9.0 and later -->

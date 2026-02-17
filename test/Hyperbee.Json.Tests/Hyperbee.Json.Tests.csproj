@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-<PropertyGroup>
-  <!-- Inherits net10.0;net9.0;net8.0 from Directory.Build.props -->
-  <IsPackable>false</IsPackable>
-  <IsTestProject>true</IsTestProject>
-  <RootNamespace>Hyperbee.Json.Tests</RootNamespace>
-</PropertyGroup>
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Hyperbee.Json.Tests</RootNamespace>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestSupport\Json\BookStore.json" />
   </ItemGroup>

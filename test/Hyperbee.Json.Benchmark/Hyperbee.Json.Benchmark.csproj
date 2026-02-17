@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-<PropertyGroup>
-  <!-- Override to single target for executables -->
-  <TargetFramework>net10.0</TargetFramework>
-  <OutputType>Exe</OutputType>
-  <IsPackable>false</IsPackable>
-</PropertyGroup>
+  <PropertyGroup>
+    <!-- Override to single target for executables -->
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="benchmark\**" />
@@ -16,13 +16,18 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="JsonCons.JsonPath" />
-    <PackageReference Include="JsonCraft.JsonPath" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="JsonCraft.JsonPath"/>
     <PackageReference Include="JsonPatch.Net" />
     <PackageReference Include="JsonPath.Net" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" />
     <PackageReference Update="Nerdbank.GitVersioning" />
+  </ItemGroup>
+
+  <!-- JsonCraft.JsonPath is only available for .NET 9.0 and later -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'net8.0'">
+    <PackageReference Include="JsonCraft.JsonPath" />
   </ItemGroup>
 
   <ItemGroup>

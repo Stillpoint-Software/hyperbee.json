@@ -324,6 +324,3 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 
 # Help
  See [Todo](https://github.com/Stillpoint-Software/Hyperbee.Json/blob/main/docs/todo.md)
-
-[![Hyperbee.Json](https://github.com/Stillpoint-Software/Hyperbee.Json/blob/main/assets/hyperbee.svg?raw=true)](https://github.com/Stillpoint-Software/Hyperbee.Json)
-

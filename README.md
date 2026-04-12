@@ -319,7 +319,6 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 
 | Branch     | Action                                                                                                                                                                                                                      |
 |------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `develop`  | [![Build status](https://github.com/Stillpoint-Software/Hyperbee.Json/actions/workflows/pack_publish.yml/badge.svg?branch=develop)](https://github.com/Stillpoint-Software/Hyperbee.Json/actions/workflows/pack_publish.yml)  |
 | `main`     | [![Build status](https://github.com/Stillpoint-Software/Hyperbee.Json/actions/workflows/pack_publish.yml/badge.svg)](https://github.com/Stillpoint-Software/Hyperbee.Json/actions/workflows/pack_publish.yml)                 |
 
 # Help

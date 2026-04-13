@@ -35,4 +35,8 @@
     <PackageReference Update="Microsoft.SourceLink.GitHub" />
     <PackageReference Update="Nerdbank.GitVersioning" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hyperbee.Expressions.Compiler" />
+  </ItemGroup>
 </Project>

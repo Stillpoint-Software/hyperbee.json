@@ -15,7 +15,7 @@ internal class FunctionExpressionFactory : IExpressionFactory
             return false;
         }
 
-        if ( !descriptor.Functions.TryGetActivator( state.Item.ToString(), out var functionActivator ) )
+        if ( !descriptor.Functions.TryGetActivator( state.Item, out var functionActivator ) )
         {
             return false;
         }

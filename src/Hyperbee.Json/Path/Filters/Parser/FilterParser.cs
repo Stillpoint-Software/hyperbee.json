@@ -9,8 +9,10 @@
 
 #endregion
 
+using System.Buffers;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using Hyperbee.Expressions.Compiler;
 using Hyperbee.Json.Descriptors;
 using Hyperbee.Json.Path.Filters.Parser.Expressions;
 using Hyperbee.Json.Path.Filters.Values;
@@ -35,7 +37,8 @@ public class FilterParser<TNode> : FilterParser
     public static Func<FilterRuntimeContext<TNode>, bool> Compile( ReadOnlySpan<char> filter )
     {
         var expression = Parse( filter );
-        return Expression.Lambda<Func<FilterRuntimeContext<TNode>, bool>>( expression, RuntimeContextExpression ).Compile();
+        var lambda = Expression.Lambda<Func<FilterRuntimeContext<TNode>, bool>>( expression, RuntimeContextExpression );
+        return HyperbeeCompiler.Compile( lambda );
     }
 
     internal static Expression Parse( ReadOnlySpan<char> filter )
@@ -57,22 +60,39 @@ public class FilterParser<TNode> : FilterParser
             throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
 
         // parse the expression
-        var items = new Queue<ExprItem>();
+        var pool = ArrayPool<ExprItem>.Shared;
+        var items = pool.Rent( 8 );
+        var count = 0;
 
-        do
+        try
         {
-            MoveNext( ref state );
-            items.Enqueue( GetExprItem( ref state ) ); // may cause recursion
-        } while ( state.IsParsing );
+            do
+            {
+                MoveNext( ref state );
 
-        // check for paren mismatch
-        if ( state.EndOfBuffer && state.ParenDepth != 0 )
-            throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
+                if ( count == items.Length )
+                {
+                    var bigger = pool.Rent( items.Length * 2 );
+                    Array.Copy( items, bigger, count );
+                    pool.Return( items, clearArray: true );
+                    items = bigger;
+                }
 
-        // merge the expressions
-        var baseItem = items.Dequeue();
+                items[count++] = GetExprItem( ref state ); // may cause recursion
+            } while ( state.IsParsing );
 
-        return Merge( in state, baseItem, items );
+            // check for paren mismatch
+            if ( state.EndOfBuffer && state.ParenDepth != 0 )
+                throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
+
+            // merge the expressions
+            var head = 1;
+            return Merge( in state, ref items[0], items, count, ref head );
+        }
+        finally
+        {
+            pool.Return( items, clearArray: true );
+        }
     }
 
     private static ExprItem GetExprItem( ref ParserState state )
@@ -343,26 +363,26 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static Expression Merge( in ParserState state, ExprItem left, Queue<ExprItem> items, bool mergeOneOnly = false )
+    private static Expression Merge( in ParserState state, ref ExprItem left, ExprItem[] items, int count, ref int head, bool mergeOneOnly = false )
     {
-        if ( items.Count == 0 )
+        if ( head >= count )
         {
-            ThrowIfInvalidCompare( in state, left, null ); // single item, no recursion
+            ThrowIfInvalidCompare( in state, in left ); // single item, no recursion
         }
         else
         {
-            while ( items.Count > 0 )
+            while ( head < count )
             {
-                var right = items.Dequeue();
+                ref var right = ref items[head++];
 
-                while ( !CanMergeItems( left, right ) )
+                while ( !CanMergeItems( in left, in right ) )
                 {
-                    Merge( in state, right, items, mergeOneOnly: true ); // recursive call - right becomes left
+                    Merge( in state, ref right, items, count, ref head, mergeOneOnly: true ); // recursive call - right becomes left
                 }
 
-                ThrowIfInvalidCompare( in state, left, right );
+                ThrowIfInvalidCompare( in state, in left, in right );
 
-                MergeItems( left, right );
+                MergeItems( ref left, in right );
 
                 if ( mergeOneOnly )
                     return left.Expression;
@@ -372,7 +392,7 @@ public class FilterParser<TNode> : FilterParser
         return left.Expression;
 
         // Helper method to determine if two items can be merged
-        static bool CanMergeItems( ExprItem left, ExprItem right )
+        static bool CanMergeItems( in ExprItem left, in ExprItem right )
         {
             // "Not" can never be a right side operator
             return right.Operator != Operator.Not && GetPrecedence( left.Operator ) >= GetPrecedence( right.Operator );
@@ -403,31 +423,31 @@ public class FilterParser<TNode> : FilterParser
         }
     }
 
-    private static void MergeItems( ExprItem left, ExprItem right )
+    private static void MergeItems( ref ExprItem left, in ExprItem right )
     {
-        left.Expression = ConvertOrDefault( left.Expression, typeof( IValueType ) );
-        right.Expression = ConvertOrDefault( right.Expression, typeof( IValueType ) );
+        var leftExpr = ConvertOrDefault( left.Expression, typeof( IValueType ) );
+        var rightExpr = ConvertOrDefault( right.Expression, typeof( IValueType ) );
 
         left.Expression = left.Operator switch
         {
-            Operator.Equals => CompareExpression<TNode>.Equal( left.Expression, right.Expression ),
-            Operator.NotEquals => CompareExpression<TNode>.NotEqual( left.Expression, right.Expression ),
-            Operator.GreaterThan => CompareExpression<TNode>.GreaterThan( left.Expression, right.Expression ),
-            Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( left.Expression, right.Expression ),
-            Operator.LessThan => CompareExpression<TNode>.LessThan( left.Expression, right.Expression ),
-            Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( left.Expression, right.Expression ),
+            Operator.Equals => CompareExpression<TNode>.Equal( leftExpr, rightExpr ),
+            Operator.NotEquals => CompareExpression<TNode>.NotEqual( leftExpr, rightExpr ),
+            Operator.GreaterThan => CompareExpression<TNode>.GreaterThan( leftExpr, rightExpr ),
+            Operator.GreaterThanOrEqual => CompareExpression<TNode>.GreaterThanOrEqual( leftExpr, rightExpr ),
+            Operator.LessThan => CompareExpression<TNode>.LessThan( leftExpr, rightExpr ),
+            Operator.LessThanOrEqual => CompareExpression<TNode>.LessThanOrEqual( leftExpr, rightExpr ),
 
-            Operator.And => CompareExpression<TNode>.And( left.Expression, right.Expression ),
-            Operator.Or => CompareExpression<TNode>.Or( left.Expression, right.Expression ),
-            Operator.Not => CompareExpression<TNode>.Not( right.Expression ),
+            Operator.And => CompareExpression<TNode>.And( leftExpr, rightExpr ),
+            Operator.Or => CompareExpression<TNode>.Or( leftExpr, rightExpr ),
+            Operator.Not => CompareExpression<TNode>.Not( rightExpr ),
 
-            Operator.In => CompareExpression<TNode>.In( left.Expression, right.Expression ),
+            Operator.In => CompareExpression<TNode>.In( leftExpr, rightExpr ),
 
-            Operator.Add => MathExpression<TNode>.Add( left.Expression, right.Expression ),
-            Operator.Subtract => MathExpression<TNode>.Subtract( left.Expression, right.Expression ),
-            Operator.Multiply => MathExpression<TNode>.Multiply( left.Expression, right.Expression ),
-            Operator.Divide => MathExpression<TNode>.Divide( left.Expression, right.Expression ),
-            Operator.Modulus => MathExpression<TNode>.Modulus( left.Expression, right.Expression ),
+            Operator.Add => MathExpression<TNode>.Add( leftExpr, rightExpr ),
+            Operator.Subtract => MathExpression<TNode>.Subtract( leftExpr, rightExpr ),
+            Operator.Multiply => MathExpression<TNode>.Multiply( leftExpr, rightExpr ),
+            Operator.Divide => MathExpression<TNode>.Divide( leftExpr, rightExpr ),
+            Operator.Modulus => MathExpression<TNode>.Modulus( leftExpr, rightExpr ),
 
             _ => throw new InvalidOperationException( $"Invalid operator {left.Operator}." )
         };
@@ -443,13 +463,20 @@ public class FilterParser<TNode> : FilterParser
 
     // Throw helpers
 
-    private static void ThrowIfInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
+    private static void ThrowIfInvalidCompare( in ParserState state, in ExprItem left )
     {
-        ThrowIfLiteralInvalidCompare( in state, left, right );
-        ThrowIfFunctionInvalidCompare( in state, left );
+        ThrowIfLeftLiteralInvalidCompare( in state, in left );
+        ThrowIfFunctionInvalidCompare( in state, in left );
     }
 
-    private static void ThrowIfLiteralInvalidCompare( in ParserState state, ExprItem left, ExprItem right )
+    private static void ThrowIfInvalidCompare( in ParserState state, in ExprItem left, in ExprItem right )
+    {
+        ThrowIfLeftLiteralInvalidCompare( in state, in left );
+        ThrowIfRightLiteralInvalidCompare( in state, in left, in right );
+        ThrowIfFunctionInvalidCompare( in state, in left );
+    }
+
+    private static void ThrowIfLeftLiteralInvalidCompare( in ParserState state, in ExprItem left )
     {
         const CompareConstraint literalMustCompare = CompareConstraint.Literal | CompareConstraint.MustCompare;
 
@@ -458,12 +485,20 @@ public class FilterParser<TNode> : FilterParser
 
         if ( (left.CompareConstraint & literalMustCompare) == literalMustCompare && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
+    }
 
-        if ( right != null && (right.CompareConstraint & literalMustCompare) == literalMustCompare && !left.Operator.IsComparison() )
+    private static void ThrowIfRightLiteralInvalidCompare( in ParserState state, in ExprItem left, in ExprItem right )
+    {
+        const CompareConstraint literalMustCompare = CompareConstraint.Literal | CompareConstraint.MustCompare;
+
+        if ( state.IsArgument || left.Operator.IsMath() )
+            return;
+
+        if ( (right.CompareConstraint & literalMustCompare) == literalMustCompare && !left.Operator.IsComparison() )
             throw new NotSupportedException( $"Unsupported literal without comparison: {state.Buffer.ToString()}." );
     }
 
-    private static void ThrowIfFunctionInvalidCompare( in ParserState state, ExprItem item )
+    private static void ThrowIfFunctionInvalidCompare( in ParserState state, in ExprItem item )
     {
         const CompareConstraint functionMustCompare = CompareConstraint.Function | CompareConstraint.MustCompare;
         const CompareConstraint functionMustNotCompare = CompareConstraint.Function | CompareConstraint.MustNotCompare;
@@ -481,10 +516,10 @@ public class FilterParser<TNode> : FilterParser
     // ExprItem
 
     [DebuggerDisplay( "{CompareConstraint}, Operator = {Operator}" )]
-    private sealed class ExprItem( Expression expression, Operator op, CompareConstraint compareConstraint )
+    private struct ExprItem( Expression expression, Operator op, CompareConstraint compareConstraint )
     {
-        public CompareConstraint CompareConstraint { get; set; } = compareConstraint;
-        public Expression Expression { get; set; } = expression;
-        public Operator Operator { get; set; } = op;
+        public CompareConstraint CompareConstraint = compareConstraint;
+        public Expression Expression = expression;
+        public Operator Operator = op;
     }
 }

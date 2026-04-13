@@ -4,9 +4,10 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Core Application Dependencies -->
+    <PackageVersion Include="Hyperbee.Expressions.Compiler" Version="1.4.7" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.0.0" />
     <!-- Development Tools -->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.102">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>

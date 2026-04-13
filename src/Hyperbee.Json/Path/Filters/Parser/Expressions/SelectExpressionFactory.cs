@@ -31,22 +31,25 @@ internal class SelectExpressionFactory : IExpressionFactory
 
         public static MethodCallExpression GetExpression( ReadOnlySpan<char> item, bool allowDotWhitespace )
         {
-            return Expression.Call(
-                SelectMethod,
-                Expression.Constant( item.ToString() ),
-                Expression.Constant( allowDotWhitespace ),
-                FilterParser<TNode>.RuntimeContextExpression );
-        }
-
-        private static IValueType Select( string query, bool allowDotWhitespace, FilterRuntimeContext<TNode> runtimeContext )
-        {
+            // Pre-parse the embedded JSONPath query at compile time so the runtime
+            // call avoids per-evaluation dictionary lookups against JsonQueryParser.
+            var query = item.ToString();
             var options = allowDotWhitespace
                 ? JsonQueryParserOptions.Rfc9535AllowDotWhitespace
                 : JsonQueryParserOptions.Rfc9535;
-
             var compiledQuery = JsonQueryParser.Parse( query, options );
+            var fromRoot = query.Length > 0 && query[0] == '$';
 
-            var value = query[0] == '$'
+            return Expression.Call(
+                SelectMethod,
+                Expression.Constant( compiledQuery ),
+                Expression.Constant( fromRoot ),
+                FilterParser<TNode>.RuntimeContextExpression );
+        }
+
+        private static IValueType Select( JsonQuery compiledQuery, bool fromRoot, FilterRuntimeContext<TNode> runtimeContext )
+        {
+            var value = fromRoot
                 ? runtimeContext.Root
                 : runtimeContext.Current; // @
 

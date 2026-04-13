@@ -97,182 +97,184 @@ Here is a performance comparison of various JSONPath queries on the standard boo
 ```
 
 
-| Method                  |  Mean      | Error      | StdDev    | Gen0   | Gen1   | Allocated |
-|------------------------ | ----------:|-----------:|----------:|-------:|-------:|----------:|
-| `$..[?(@.price < 10)]`
-| Hyperbee.JsonElement    |   5.221 us |  0.8505 us | 0.0466 us | 1.2894 | 0.0076 |  15.84 KB |
-| JsonCons.JsonElement    |   5.518 us |  1.3367 us | 0.0733 us | 1.0376 | 0.0076 |  12.73 KB |
-| Hyperbee.JsonNode       |   5.915 us |  0.8714 us | 0.0478 us | 1.4954 | 0.0153 |  18.38 KB |
-| Newtonsoft.JObject      |   8.009 us |  1.7612 us | 0.0965 us | 2.1057 | 0.0763 |  25.86 KB |
-| JsonEverything.JsonNode |  17.850 us | 12.0238 us | 0.6591 us | 3.9063 | 0.1221 |  48.15 KB |
-|                         |            |            |           |        |        |           |
-| `$..['bicycle','price']`  
-| Hyperbee.JsonElement    |   2.701 us |  1.0824 us | 0.0593 us | 0.4158 |      - |   5.12 KB |
-| JsonCons.JsonElement    |   3.058 us |  0.3820 us | 0.0209 us | 0.5760 | 0.0038 |   7.09 KB |
-| Hyperbee.JsonNode       |   3.626 us |  1.3209 us | 0.0724 us | 0.7210 | 0.0114 |   8.84 KB |
-| Newtonsoft.JObject      |   4.990 us |  1.5961 us | 0.0875 us | 1.1826 | 0.0458 |  14.55 KB |
-| JsonEverything.JsonNode |  12.183 us |  2.7932 us | 0.1531 us | 2.3193 | 0.0610 |   28.5 KB |
-|                         |            |            |           |        |        |           |
-| `$..*` 
-| Hyperbee.JsonElement    |   2.390 us |  0.7132 us | 0.0391 us | 0.5226 | 0.0038 |   6.45 KB |
-| JsonCons.JsonElement    |   3.239 us |  0.8771 us | 0.0481 us | 0.6866 | 0.0038 |   8.45 KB |
-| Hyperbee.JsonNode       |   3.864 us |  2.6714 us | 0.1464 us | 0.7629 |      - |   9.54 KB |
-| Newtonsoft.JObject      |   4.864 us |  0.7073 us | 0.0388 us | 1.1520 | 0.0458 |  14.19 KB |
-| JsonEverything.JsonNode |  17.367 us | 10.7988 us | 0.5919 us | 2.7466 | 0.0610 |  33.97 KB |
-|                         |            |            |           |        |        |           |
-|`$..author`
-| Hyperbee.JsonElement    |   2.275 us |  0.5597 us | 0.0307 us | 0.4158 |      - |    5.1 KB |
-| JsonCons.JsonElement    |   2.572 us |  0.2856 us | 0.0157 us | 0.4463 | 0.0038 |   5.47 KB |
-| Hyperbee.JsonNode       |   3.226 us |  0.6372 us | 0.0349 us | 0.7019 |      - |   8.64 KB |
-| Newtonsoft.JObject      |   4.793 us |  3.7445 us | 0.2053 us | 1.1520 | 0.0381 |   14.2 KB |
-| JsonEverything.JsonNode |  11.786 us |  2.5761 us | 0.1412 us | 2.0752 |      - |   26.1 KB |
-|                         |            |            |           |        |        |           |
-| `$..book[?@.isbn]`
-| Hyperbee.JsonElement    |   2.814 us |  0.7079 us | 0.0388 us | 0.4997 | 0.0038 |   6.14 KB |
-| JsonCons.JsonElement    |   3.348 us |  0.4197 us | 0.0230 us | 0.5836 | 0.0038 |   7.16 KB |
-| Hyperbee.JsonNode       |   3.587 us |  1.1927 us | 0.0654 us | 0.7629 |      - |   9.64 KB |
-| JsonEverything.JsonNode |  12.860 us |  6.6350 us | 0.3637 us | 2.4414 | 0.0610 |  29.98 KB |
-| Newtonsoft.JObject      |         NA |         NA |        NA |     NA |     NA |        NA |
-|                         |            |            |           |        |        |           |
-| `$..book[?@.price == 8.99 && @.category == 'fiction']`
-| Hyperbee.JsonElement    |   3.599 us |  1.1407 us | 0.0625 us | 0.6752 | 0.0038 |   8.28 KB |
-| Hyperbee.JsonNode       |   4.593 us |  2.6977 us | 0.1479 us | 0.9460 |      - |  11.91 KB |
-| JsonCons.JsonElement    |   4.684 us |  3.2355 us | 0.1774 us | 0.6866 |      - |   8.48 KB |
-| JsonEverything.JsonNode |  17.000 us | 14.9488 us | 0.8194 us | 3.1738 |      - |  39.52 KB |
-| Newtonsoft.JObject      |         NA |         NA |        NA |     NA |     NA |        NA |
-|                         |            |            |           |        |        |           |
-| $..book[0,1] 
-| Hyperbee.JsonElement    |   2.316 us |  0.6324 us | 0.0347 us | 0.4158 |      - |    5.1 KB |
-| JsonCons.JsonElement    |   2.973 us |  3.2806 us | 0.1798 us | 0.4921 | 0.0038 |   6.06 KB |
-| Hyperbee.JsonNode       |   3.363 us |  2.4201 us | 0.1327 us | 0.7019 | 0.0038 |   8.64 KB |
-| Newtonsoft.JObject      |   4.709 us |  1.1244 us | 0.0616 us | 1.1749 | 0.0458 |  14.45 KB |
-| JsonEverything.JsonNode |  11.585 us |  1.1525 us | 0.0632 us | 2.1362 | 0.0610 |  26.41 KB |
-|                         |            |            |           |        |        |           |
-| `$..book[0]`
-| Hyperbee.JsonElement    |   2.417 us |  0.4037 us | 0.0221 us | 0.4158 |      - |    5.1 KB |
-| JsonCons.JsonElement    |   2.767 us |  1.0765 us | 0.0590 us | 0.4539 | 0.0038 |   5.59 KB |
-| Hyperbee.JsonNode       |   3.439 us |  2.6110 us | 0.1431 us | 0.7019 |      - |   8.64 KB |
-| Newtonsoft.JObject      |   4.730 us |  0.4614 us | 0.0253 us | 1.1673 | 0.0381 |  14.33 KB |
-| JsonEverything.JsonNode |  11.404 us |  1.6551 us | 0.0907 us | 2.0752 | 0.0610 |  26.02 KB |
-|                         |            |            |           |        |        |           |
-| `$.store..price`
-| Hyperbee.JsonElement    |   2.174 us |  0.2046 us | 0.0112 us | 0.3853 |      - |   4.73 KB |
-| JsonCons.JsonElement    |   2.657 us |  1.2199 us | 0.0669 us | 0.4539 |      - |   5.57 KB |
-| Hyperbee.JsonNode       |   3.219 us |  1.6130 us | 0.0884 us | 0.6828 |      - |   8.38 KB |
-| Newtonsoft.JObject      |   4.751 us |  0.3461 us | 0.0190 us | 1.1673 | 0.0381 |  14.34 KB |
-| JsonEverything.JsonNode |  12.312 us |  4.6283 us | 0.2537 us | 2.1362 | 0.0610 |  26.63 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.*`
-| Hyperbee.JsonElement    |   1.564 us |  0.4252 us | 0.0233 us | 0.2289 |      - |   2.81 KB |
-| JsonCons.JsonElement    |   1.699 us |  0.5680 us | 0.0311 us | 0.2651 |      - |   3.27 KB |
-| Hyperbee.JsonNode       |   1.762 us |  0.0234 us | 0.0013 us | 0.2365 | 0.0019 |    2.9 KB |
-| JsonEverything.JsonNode |   2.264 us |  0.3401 us | 0.0186 us | 0.3891 | 0.0038 |    4.8 KB |
-| Newtonsoft.JObject      |   4.142 us |  0.4524 us | 0.0248 us | 1.1749 | 0.0458 |  14.43 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.bicycle.color`
-| Hyperbee.JsonElement    |   1.415 us |  0.3898 us | 0.0214 us | 0.1755 |      - |   2.17 KB |
-| JsonCons.JsonElement    |   1.671 us |  0.2610 us | 0.0143 us | 0.2632 |      - |   3.23 KB |
-| Hyperbee.JsonNode       |   1.706 us |  0.4849 us | 0.0266 us | 0.2346 |      - |   2.88 KB |
-| JsonEverything.JsonNode |   2.629 us |  1.6792 us | 0.0920 us | 0.4654 | 0.0038 |   5.74 KB |
-| Newtonsoft.JObject      |   4.336 us |  1.2294 us | 0.0674 us | 1.1826 | 0.0381 |  14.49 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[-1:]`
-| Hyperbee.JsonElement    |   1.515 us |  0.3284 us | 0.0180 us | 0.1945 |      - |   2.41 KB |
-| JsonCons.JsonElement    |   1.813 us |  0.0749 us | 0.0041 us | 0.2861 | 0.0019 |   3.52 KB |
-| Hyperbee.JsonNode       |   1.821 us |  0.1880 us | 0.0103 us | 0.2422 |      - |   2.97 KB |
-| JsonEverything.JsonNode |   2.686 us |  0.5270 us | 0.0289 us | 0.4654 | 0.0038 |   5.72 KB |
-| Newtonsoft.JObject      |   4.390 us |  0.6167 us | 0.0338 us | 1.1826 | 0.0534 |  14.52 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[:2]`
-| Hyperbee.JsonElement    |   1.554 us |  1.0503 us | 0.0576 us | 0.1945 |      - |   2.41 KB |
-| JsonCons.JsonElement    |   1.867 us |  0.9304 us | 0.0510 us | 0.2880 |      - |   3.54 KB |
-| Hyperbee.JsonNode       |   1.869 us |  0.2955 us | 0.0162 us | 0.2289 |      - |   2.97 KB |
-| JsonEverything.JsonNode |   3.112 us |  1.4792 us | 0.0811 us | 0.4883 |      - |   6.02 KB |
-| Newtonsoft.JObject      |   4.344 us |  4.3641 us | 0.2392 us | 1.1826 | 0.0305 |  14.51 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[?(@.author && @.title)]`
-| Hyperbee.JsonElement    |   2.331 us |  0.8201 us | 0.0450 us | 0.3395 |      - |   4.18 KB |
-| JsonCons.JsonElement    |   2.776 us |  0.5326 us | 0.0292 us | 0.4539 | 0.0038 |   5.58 KB |
-| Hyperbee.JsonNode       |   3.377 us |  0.4035 us | 0.0221 us | 0.6561 | 0.0076 |   8.08 KB |
-| Newtonsoft.JObject      |   4.779 us |  2.3452 us | 0.1285 us | 1.3199 | 0.0458 |  16.18 KB |
-| JsonEverything.JsonNode |   6.403 us |  1.9211 us | 0.1053 us | 1.4648 | 0.0305 |  18.32 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[?(@.category == 'fiction')]`
-| Hyperbee.JsonElement    |   2.317 us |  0.2970 us | 0.0163 us | 0.3510 |      - |   4.34 KB |
-| JsonCons.JsonElement    |   2.643 us |  0.8319 us | 0.0456 us | 0.4082 | 0.0038 |   5.01 KB |
-| Hyperbee.JsonNode       |   3.393 us |  0.3912 us | 0.0214 us | 0.6561 |      - |    8.2 KB |
-| Newtonsoft.JObject      |   4.663 us |  1.3455 us | 0.0737 us | 1.2817 | 0.0458 |  15.74 KB |
-| JsonEverything.JsonNode |   6.502 us |  4.8220 us | 0.2643 us | 1.3428 | 0.0305 |  16.49 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[?(@.price < 10)].title` 
-| Hyperbee.JsonElement    |   2.379 us |  0.2508 us | 0.0137 us | 0.3548 |      - |   4.35 KB |
-| JsonCons.JsonElement    |   3.008 us |  1.7216 us | 0.0944 us | 0.4196 |      - |   5.18 KB |
-| Hyperbee.JsonNode       |   3.453 us |  0.6436 us | 0.0353 us | 0.6561 |      - |   8.09 KB |
-| Newtonsoft.JObject      |   4.762 us |  1.8678 us | 0.1024 us | 1.2894 | 0.0534 |  15.89 KB |
-| JsonEverything.JsonNode |   6.891 us |  1.2944 us | 0.0709 us | 1.4114 | 0.0381 |  17.38 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[?(@.price > 10 && @.price < 20)]`
-| Hyperbee.JsonElement    |   2.730 us |  0.9871 us | 0.0541 us | 0.4349 | 0.0038 |   5.37 KB |
-| JsonCons.JsonElement    |   3.726 us |  0.1036 us | 0.0057 us | 0.5074 | 0.0038 |   6.23 KB |
-| Hyperbee.JsonNode       |   4.091 us |  0.3535 us | 0.0194 us | 0.7324 |      - |   9.14 KB |
-| Newtonsoft.JObject      |   5.167 us |  2.3846 us | 0.1307 us | 1.3580 | 0.0534 |  16.69 KB |
-| JsonEverything.JsonNode |   8.309 us |  1.7991 us | 0.0986 us | 1.7700 |      - |  22.02 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[?@.price == 8.99]`
-| Hyperbee.JsonElement    |   2.249 us |  0.4713 us | 0.0258 us | 0.3357 |      - |   4.15 KB |
-| JsonCons.JsonElement    |   2.763 us |  1.0265 us | 0.0563 us | 0.4044 |      - |   4.97 KB |
-| Hyperbee.JsonNode       |   3.416 us |  2.2807 us | 0.1250 us | 0.6409 |      - |   7.89 KB |
-| JsonEverything.JsonNode |   6.221 us |  5.2637 us | 0.2885 us | 1.2512 | 0.0305 |  15.47 KB |
-| Newtonsoft.JObject      |         NA |         NA |        NA |     NA |     NA |        NA |
-|                         |            |            |           |        |        |           |
-| `$.store.book['category','author']`   
-| Hyperbee.JsonElement    |   1.931 us |  0.2480 us | 0.0136 us | 0.2117 |      - |   2.61 KB |
-| JsonCons.JsonElement    |   1.955 us |  0.6808 us | 0.0373 us | 0.2937 | 0.0019 |   3.61 KB |
-| JsonEverything.JsonNode |   2.794 us |  4.9383 us | 0.2707 us | 0.4272 |      - |   5.41 KB |
-| Hyperbee.JsonNode       |   2.973 us |  1.8205 us | 0.0998 us | 0.5188 |      - |   6.42 KB |
-| Newtonsoft.JObject      |   4.169 us |  1.0726 us | 0.0588 us | 1.2054 | 0.0534 |  14.85 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[*].author` 
-| Hyperbee.JsonElement    |   1.910 us |  0.2440 us | 0.0134 us | 0.2480 |      - |   3.05 KB |
-| JsonCons.JsonElement    |   1.972 us |  1.2539 us | 0.0687 us | 0.2861 |      - |   3.55 KB |
-| Hyperbee.JsonNode       |   2.945 us |  0.7789 us | 0.0427 us | 0.5569 | 0.0076 |   6.83 KB |
-| Newtonsoft.JObject      |   4.415 us |  1.5198 us | 0.0833 us | 1.1902 | 0.0534 |  14.64 KB |
-| JsonEverything.JsonNode |   5.322 us |  0.6684 us | 0.0366 us | 1.0071 |      - |  12.45 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[*]`  
-| Hyperbee.JsonElement    |   1.707 us |  0.3096 us | 0.0170 us | 0.2155 |      - |   2.65 KB |
-| JsonCons.JsonElement    |   1.725 us |  1.0244 us | 0.0562 us | 0.2728 |      - |   3.35 KB |
-| Hyperbee.JsonNode       |   1.948 us |  0.1280 us | 0.0070 us | 0.2575 |      - |   3.17 KB |
-| JsonEverything.JsonNode |   3.429 us |  3.3142 us | 0.1817 us | 0.5379 | 0.0038 |   6.61 KB |
-| Newtonsoft.JObject      |   4.222 us |  0.6171 us | 0.0338 us | 1.1826 | 0.0381 |  14.49 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[0,1]`
-| Hyperbee.JsonElement    |   1.542 us |  0.2708 us | 0.0148 us | 0.1945 |      - |   2.41 KB |
-| Hyperbee.JsonNode       |   1.862 us |  0.2584 us | 0.0142 us | 0.2403 |      - |   2.97 KB |
-| JsonCons.JsonElement    |   1.922 us |  0.6784 us | 0.0372 us | 0.3014 |      - |   3.73 KB |
-| JsonEverything.JsonNode |   3.016 us |  0.8618 us | 0.0472 us | 0.4883 |      - |   6.07 KB |
-| Newtonsoft.JObject      |   4.287 us |  1.0252 us | 0.0562 us | 1.1902 | 0.0534 |  14.59 KB |
-|                         |            |            |           |        |        |           |
-| `$.store.book[0].title` 
-| Hyperbee.JsonElement    |   1.457 us |  0.3260 us | 0.0179 us | 0.1755 |      - |   2.17 KB |
-| JsonCons.JsonElement    |   1.808 us |  0.5749 us | 0.0315 us | 0.2689 |      - |    3.3 KB |
-| Hyperbee.JsonNode       |   1.926 us |  0.6973 us | 0.0382 us | 0.2937 |      - |   3.63 KB |
-| JsonEverything.JsonNode |   3.203 us |  0.4522 us | 0.0248 us | 0.5951 |      - |   7.38 KB |
-| Newtonsoft.JObject      |   4.559 us |  3.8857 us | 0.2130 us | 1.1902 | 0.0458 |  14.62 KB |
-|                         |            |           |            |        |        |           | 
-| `$.store.book[0]`                                     
-| Hyperbee.JsonElement    |   1.349 us |  0.5027 us | 0.0276 us | 0.1755 |      - |   2.17 KB |
-| Hyperbee.JsonNode       |   1.657 us |  0.3633 us | 0.0199 us | 0.2327 |      - |   2.86 KB |
-| JsonCons.JsonElement    |   1.733 us |  0.3863 us | 0.0212 us | 0.2613 |      - |   3.21 KB |
-| JsonEverything.JsonNode |   2.670 us |  0.6862 us | 0.0376 us | 0.4616 | 0.0038 |   5.68 KB |
-| Newtonsoft.JObject      |   4.155 us |  1.3012 us | 0.0713 us | 1.1749 | 0.0381 |  14.48 KB |
-|                         |            |            |           |        |        |           |
-| `$`
-| Hyperbee.JsonElement    |   1.312 us |  0.2933 us | 0.0161 us | 0.1755 |      - |   2.17 KB |
-| Hyperbee.JsonNode       |   1.322 us |  0.3885 us | 0.0213 us | 0.1411 |      - |   1.75 KB |
-| JsonEverything.JsonNode |   1.361 us |  0.2123 us | 0.0116 us | 0.1526 |      - |   1.88 KB |
-| JsonCons.JsonElement    |   1.477 us |  0.6836 us | 0.0375 us | 0.2384 |      - |   2.94 KB |
-| Newtonsoft.JObject      |   3.864 us |  0.4926 us | 0.0270 us | 1.1368 | 0.0381 |  13.98 KB |
+> .NET 10, BenchmarkDotNet `ShortRun` on an Intel i9-9980HK. `NA` indicates the library does not support that RFC 9535 feature.
+
+| Method                  |          Mean |         Error |        StdDev | Allocated |
+|------------------------ |--------------:|--------------:|--------------:|----------:|
+| `$..[?(@.price < 10)]`  |               |               |               |           |
+| Hyperbee.JsonElement    |   6,589.72 ns |  13,724.37 ns |    752.279 ns |  13,408 B |
+| Hyperbee.JsonNode       |   9,511.05 ns |  14,918.98 ns |    817.759 ns |  18,112 B |
+| JsonCons.JsonElement    |   9,617.04 ns |   8,150.52 ns |    446.757 ns |  13,032 B |
+| Newtonsoft.JObject      |  13,136.51 ns |  10,565.73 ns |    579.143 ns |  26,480 B |
+| JsonEverything.JsonNode |  24,738.29 ns |  26,520.10 ns |  1,453.656 ns |  49,304 B |
+| `$..['bicycle','price']` |              |               |               |           |
+| Hyperbee.JsonElement    |   2,304.00 ns |   4,789.71 ns |    262.540 ns |   3,072 B |
+| JsonCons.JsonElement    |   5,411.72 ns |   2,044.44 ns |    112.063 ns |   7,304 B |
+| Hyperbee.JsonNode       |   5,959.43 ns |   6,388.91 ns |    350.197 ns |   9,056 B |
+| Newtonsoft.JObject      |   8,732.70 ns |   7,717.27 ns |    423.010 ns |  14,904 B |
+| JsonEverything.JsonNode |  16,081.80 ns |  32,632.20 ns |  1,788.681 ns |  29,184 B |
+| `$..*`                  |               |               |               |           |
+| Hyperbee.JsonElement    |   1,530.38 ns |     904.54 ns |     49.581 ns |   4,432 B |
+| JsonCons.JsonElement    |   5,529.29 ns |   5,095.25 ns |    279.288 ns |   8,648 B |
+| Hyperbee.JsonNode       |   6,375.70 ns |  13,107.14 ns |    718.447 ns |   9,768 B |
+| Newtonsoft.JObject      |   8,316.71 ns |  13,631.95 ns |    747.213 ns |  14,528 B |
+| JsonEverything.JsonNode |  17,290.19 ns |  11,706.56 ns |    641.676 ns |  34,784 B |
+| `$..author`             |               |               |               |           |
+| Hyperbee.JsonElement    |   1,624.67 ns |     304.86 ns |     16.711 ns |   3,056 B |
+| JsonCons.JsonElement    |   4,369.83 ns |   3,368.40 ns |    184.633 ns |   5,640 B |
+| Hyperbee.JsonNode       |   5,546.52 ns |   2,128.96 ns |    116.695 ns |   8,848 B |
+| Newtonsoft.JObject      |   8,346.02 ns |  12,029.11 ns |    659.356 ns |  14,544 B |
+| JsonEverything.JsonNode |  13,113.01 ns |   6,545.11 ns |    358.760 ns |  26,728 B |
+| `$..book[?@.isbn]`      |               |               |               |           |
+| Hyperbee.JsonElement    |   2,535.29 ns |   5,230.41 ns |    286.697 ns |   4,024 B |
+| JsonCons.JsonElement    |   5,479.99 ns |   5,162.81 ns |    282.991 ns |   7,336 B |
+| Hyperbee.JsonNode       |   6,270.33 ns |     952.73 ns |     52.222 ns |   9,776 B |
+| JsonEverything.JsonNode |  15,563.95 ns |  10,045.42 ns |    550.624 ns |  30,696 B |
+| Newtonsoft.JObject      |            NA |            NA |            NA |        NA |
+| `$..book[?@.price == 8.99 && @.category == 'fiction']` |  |            |               |           |
+| Hyperbee.JsonElement    |   3,454.45 ns |   2,551.12 ns |    139.835 ns |   6,120 B |
+| Hyperbee.JsonNode       |   7,541.74 ns |  10,405.88 ns |    570.381 ns |  12,000 B |
+| JsonCons.JsonElement    |   8,161.76 ns |   6,143.02 ns |    336.720 ns |   8,640 B |
+| JsonEverything.JsonNode |  22,294.77 ns |  27,986.15 ns |  1,534.016 ns |  40,472 B |
+| Newtonsoft.JObject      |            NA |            NA |            NA |        NA |
+| `$..book[0,1]`          |               |               |               |           |
+| Hyperbee.JsonElement    |   1,907.37 ns |   4,405.90 ns |    241.502 ns |   3,056 B |
+| JsonCons.JsonElement    |   5,556.87 ns |  13,635.13 ns |    747.387 ns |   6,248 B |
+| Hyperbee.JsonNode       |   6,020.31 ns |   4,143.39 ns |    227.113 ns |   8,848 B |
+| Newtonsoft.JObject      |   8,536.98 ns |   6,526.24 ns |    357.725 ns |  14,792 B |
+| JsonEverything.JsonNode |  13,979.45 ns |  19,281.48 ns |  1,056.883 ns |  27,048 B |
+| `$.store..price`        |               |               |               |           |
+| Hyperbee.JsonElement    |   1,369.37 ns |   1,313.98 ns |     72.024 ns |   2,680 B |
+| JsonCons.JsonElement    |   4,589.72 ns |   4,689.36 ns |    257.040 ns |   5,704 B |
+| Hyperbee.JsonNode       |   5,263.10 ns |   4,128.49 ns |    226.296 ns |   8,576 B |
+| Newtonsoft.JObject      |   8,093.64 ns |   2,103.71 ns |    115.311 ns |  14,680 B |
+| JsonEverything.JsonNode |  12,969.09 ns |  11,670.40 ns |    639.694 ns |  27,272 B |
+| `$.store.* #First()`    |               |               |               |           |
+| Hyperbee.JsonElement    |     423.70 ns |     346.12 ns |     18.972 ns |     752 B |
+| JsonCons.JsonElement    |   2,575.12 ns |     900.27 ns |     49.347 ns |   3,384 B |
+| Hyperbee.JsonNode       |   2,999.84 ns |   3,209.10 ns |    175.902 ns |   2,944 B |
+| JsonEverything.JsonNode |   3,612.82 ns |   4,544.38 ns |    249.093 ns |   4,648 B |
+| Newtonsoft.JObject      |   9,036.39 ns |  25,870.81 ns |  1,418.066 ns |  14,816 B |
+| `$.store.*`             |               |               |               |           |
+| Hyperbee.JsonElement    |     437.72 ns |     309.52 ns |     16.966 ns |     712 B |
+| JsonCons.JsonElement    |   2,932.44 ns |   3,752.08 ns |    205.664 ns |   3,344 B |
+| Hyperbee.JsonNode       |   3,011.14 ns |   3,030.26 ns |    166.099 ns |   2,968 B |
+| JsonEverything.JsonNode |   3,630.15 ns |   1,683.62 ns |     92.285 ns |   4,912 B |
+| Newtonsoft.JObject      |   7,320.97 ns |   4,230.57 ns |    231.892 ns |  14,776 B |
+| `$.store.bicycle.color` |               |               |               |           |
+| Hyperbee.JsonElement    |     167.21 ns |     121.79 ns |      6.676 ns |      80 B |
+| JsonCons.JsonElement    |   2,815.20 ns |   1,361.83 ns |     74.646 ns |   3,304 B |
+| Hyperbee.JsonNode       |   2,820.77 ns |   2,055.87 ns |    112.689 ns |   2,952 B |
+| JsonEverything.JsonNode |   4,157.10 ns |   4,348.01 ns |    238.329 ns |   5,880 B |
+| Newtonsoft.JObject      |   7,383.76 ns |  12,169.49 ns |    667.051 ns |  14,840 B |
+| `$.store.book[-1:]`     |               |               |               |           |
+| Hyperbee.JsonElement    |     343.95 ns |      50.68 ns |      2.778 ns |     296 B |
+| Hyperbee.JsonNode       |   2,970.09 ns |   1,506.62 ns |     82.583 ns |   3,040 B |
+| JsonCons.JsonElement    |   3,292.51 ns |   9,107.18 ns |    499.195 ns |   3,600 B |
+| JsonEverything.JsonNode |   4,538.91 ns |  10,360.90 ns |    567.916 ns |   5,856 B |
+| Newtonsoft.JObject      |   7,135.67 ns |   1,812.73 ns |     99.362 ns |  14,864 B |
+| `$.store.book[:2]`      |               |               |               |           |
+| Hyperbee.JsonElement    |     370.32 ns |     121.84 ns |      6.678 ns |     296 B |
+| JsonCons.JsonElement    |   3,038.17 ns |   3,501.46 ns |    191.927 ns |   3,624 B |
+| Hyperbee.JsonNode       |   3,140.74 ns |   1,032.27 ns |     56.582 ns |   3,040 B |
+| JsonEverything.JsonNode |   4,369.53 ns |   3,976.08 ns |    217.942 ns |   6,168 B |
+| Newtonsoft.JObject      |   7,437.74 ns |   1,115.70 ns |     61.155 ns |  14,856 B |
+| `$.store.book[?(!@.isbn)]` |            |               |               |           |
+| Hyperbee.JsonElement    |     958.88 ns |     496.08 ns |     27.192 ns |   1,264 B |
+| JsonCons.JsonElement    |   4,178.60 ns |   7,835.08 ns |    429.467 ns |   4,992 B |
+| Hyperbee.JsonNode       |   4,944.55 ns |   1,868.34 ns |    102.410 ns |   7,232 B |
+| JsonEverything.JsonNode |   7,989.53 ns |   8,356.64 ns |    458.056 ns |  13,288 B |
+| Newtonsoft.JObject      |            NA |            NA |            NA |        NA |
+| `$.store.book[?(@.author && @.title)]` |   |               |               |           |
+| Hyperbee.JsonElement    |   1,410.90 ns |     957.34 ns |     52.475 ns |   1,920 B |
+| JsonCons.JsonElement    |   4,748.35 ns |   7,493.38 ns |    410.738 ns |   5,712 B |
+| Hyperbee.JsonNode       |   5,390.33 ns |   4,810.77 ns |    263.694 ns |   8,016 B |
+| Newtonsoft.JObject      |   8,234.02 ns |   3,888.73 ns |    213.154 ns |  16,568 B |
+| JsonEverything.JsonNode |   9,568.68 ns |   6,937.42 ns |    380.263 ns |  18,760 B |
+| `$.store.book[?(@.category == 'fiction')]` |  |            |               |           |
+| Hyperbee.JsonElement    |   1,465.47 ns |     869.91 ns |     47.682 ns |   2,176 B |
+| JsonCons.JsonElement    |   4,028.25 ns |     620.64 ns |     34.020 ns |   5,128 B |
+| Hyperbee.JsonNode       |   5,794.61 ns |   8,453.28 ns |    463.353 ns |   8,240 B |
+| Newtonsoft.JObject      |   7,887.90 ns |   6,908.96 ns |    378.704 ns |  16,120 B |
+| JsonEverything.JsonNode |  10,979.35 ns |  23,237.47 ns |  1,273.724 ns |  16,888 B |
+| `$.store.book[?(@.price < 10 \|\| @.category == 'fiction')]` |  |        |               |           |
+| Hyperbee.JsonElement    |   2,129.32 ns |     786.36 ns |     43.103 ns |   3,328 B |
+| JsonCons.JsonElement    |   6,005.82 ns |   5,040.32 ns |    276.277 ns |   6,336 B |
+| Hyperbee.JsonNode       |   6,864.07 ns |  18,400.68 ns |  1,008.603 ns |   9,424 B |
+| Newtonsoft.JObject      |   8,303.30 ns |   5,123.69 ns |    280.847 ns |  17,080 B |
+| JsonEverything.JsonNode |  14,107.82 ns |  23,780.71 ns |  1,303.501 ns |  24,032 B |
+| `$.store.book[?(@.price < 10)].title` |    |               |               |           |
+| Hyperbee.JsonElement    |   1,535.42 ns |     802.38 ns |     43.981 ns |   2,192 B |
+| JsonCons.JsonElement    |   4,700.93 ns |   3,133.72 ns |    171.770 ns |   5,304 B |
+| Hyperbee.JsonNode       |   5,842.73 ns |   6,854.44 ns |    375.715 ns |   8,128 B |
+| Newtonsoft.JObject      |   7,890.74 ns |   2,902.39 ns |    159.090 ns |  16,272 B |
+| JsonEverything.JsonNode |  13,046.54 ns |  43,355.56 ns |  2,376.465 ns |  17,792 B |
+| `$.store.book[?(@.price == 8.99)]` |       |               |               |           |
+| Hyperbee.JsonElement    |   1,299.44 ns |     507.79 ns |     27.834 ns |   1,984 B |
+| JsonCons.JsonElement    |   4,567.67 ns |     592.57 ns |     32.481 ns |   5,176 B |
+| Hyperbee.JsonNode       |   5,711.16 ns |   6,198.26 ns |    339.748 ns |   7,920 B |
+| Newtonsoft.JObject      |   8,145.15 ns |   4,697.48 ns |    257.485 ns |  16,128 B |
+| JsonEverything.JsonNode |  11,231.53 ns |  31,597.52 ns |  1,731.967 ns |  15,840 B |
+| `$.store.book[?(@.price > 10 && @.price < 20)]` |  |       |               |           |
+| Hyperbee.JsonElement    |   2,045.34 ns |   1,340.62 ns |     73.484 ns |   3,136 B |
+| JsonCons.JsonElement    |   6,306.07 ns |   3,978.97 ns |    218.101 ns |   6,384 B |
+| Hyperbee.JsonNode       |   6,413.33 ns |   2,512.74 ns |    137.732 ns |   9,104 B |
+| Newtonsoft.JObject      |   8,905.79 ns |  15,385.03 ns |    843.305 ns |  17,088 B |
+| JsonEverything.JsonNode |  13,237.72 ns |  19,293.59 ns |  1,057.547 ns |  22,800 B |
+| `$.store.book[?(length(@.title) > 10)]` |  |               |               |           |
+| Hyperbee.JsonElement    |   1,260.51 ns |   1,058.61 ns |     58.026 ns |   1,960 B |
+| Hyperbee.JsonNode       |   6,070.88 ns |   6,545.07 ns |    358.757 ns |   8,024 B |
+| JsonCons.JsonElement    |   6,540.23 ns |   4,686.75 ns |    256.897 ns |   8,720 B |
+| JsonEverything.JsonNode |  13,521.50 ns |   5,069.92 ns |    277.899 ns |  19,984 B |
+| Newtonsoft.JObject      |            NA |            NA |            NA |        NA |
+| `$.store.book['category','author']` |      |               |               |           |
+| Hyperbee.JsonElement    |   1,058.06 ns |     153.34 ns |      8.405 ns |     504 B |
+| JsonCons.JsonElement    |   3,061.84 ns |     557.06 ns |     30.535 ns |   3,696 B |
+| JsonEverything.JsonNode |   3,790.12 ns |     294.78 ns |     16.158 ns |   5,536 B |
+| Hyperbee.JsonNode       |   4,973.44 ns |   2,966.40 ns |    162.598 ns |   6,576 B |
+| Newtonsoft.JObject      |   7,556.08 ns |   7,502.20 ns |    411.221 ns |  15,208 B |
+| `$.store.book[*].author` |              |               |               |           |
+| Hyperbee.JsonElement    |     951.62 ns |     871.96 ns |     47.795 ns |     960 B |
+| JsonCons.JsonElement    |   3,105.79 ns |     581.63 ns |     31.881 ns |   3,632 B |
+| Hyperbee.JsonNode       |   5,296.73 ns |   4,366.35 ns |    239.334 ns |   6,992 B |
+| JsonEverything.JsonNode |   7,448.66 ns |   9,304.40 ns |    510.006 ns |  12,752 B |
+| Newtonsoft.JObject      |   8,009.46 ns |  12,538.51 ns |    687.278 ns |  14,992 B |
+| `$.store.book[*]`       |               |               |               |           |
+| Hyperbee.JsonElement    |     517.63 ns |      84.36 ns |      4.624 ns |     544 B |
+| JsonCons.JsonElement    |   2,862.62 ns |     943.54 ns |     51.719 ns |   3,432 B |
+| Hyperbee.JsonNode       |   3,313.42 ns |   6,493.13 ns |    355.911 ns |   3,248 B |
+| JsonEverything.JsonNode |   4,318.65 ns |   1,033.19 ns |     56.633 ns |   6,768 B |
+| Newtonsoft.JObject      |   7,629.11 ns |  10,180.63 ns |    558.035 ns |  14,840 B |
+| `$.store.book[0,1]`     |               |               |               |           |
+| Hyperbee.JsonElement    |     422.06 ns |   1,219.38 ns |     66.838 ns |     296 B |
+| Hyperbee.JsonNode       |   2,946.07 ns |   2,157.91 ns |    118.282 ns |   3,040 B |
+| JsonCons.JsonElement    |   3,125.25 ns |   1,412.06 ns |     77.400 ns |   3,816 B |
+| JsonEverything.JsonNode |   4,583.33 ns |   8,253.72 ns |    452.414 ns |   6,216 B |
+| Newtonsoft.JObject      |   7,398.30 ns |   2,928.94 ns |    160.545 ns |  14,944 B |
+| `$.store.book[0:3:2]`   |               |               |               |           |
+| Hyperbee.JsonElement    |     425.82 ns |     533.81 ns |     29.260 ns |     296 B |
+| Hyperbee.JsonNode       |   3,170.87 ns |   4,319.07 ns |    236.743 ns |   3,040 B |
+| JsonCons.JsonElement    |   3,250.95 ns |   3,702.78 ns |    202.962 ns |   3,672 B |
+| JsonEverything.JsonNode |   4,544.01 ns |   1,791.86 ns |     98.218 ns |   6,168 B |
+| Newtonsoft.JObject      |   7,223.98 ns |     448.85 ns |     24.603 ns |  14,904 B |
+| `$.store.book[0].title` |               |               |               |           |
+| Hyperbee.JsonElement    |     213.07 ns |     222.27 ns |     12.183 ns |      80 B |
+| JsonCons.JsonElement    |   2,870.69 ns |     619.44 ns |     33.954 ns |   3,384 B |
+| Hyperbee.JsonNode       |   3,157.28 ns |   2,152.20 ns |    117.970 ns |   3,720 B |
+| JsonEverything.JsonNode |   5,104.60 ns |   2,695.82 ns |    147.767 ns |   7,552 B |
+| Newtonsoft.JObject      |   7,862.10 ns |   9,601.61 ns |    526.297 ns |  14,968 B |
+| `$.store.book[0]`       |               |               |               |           |
+| Hyperbee.JsonElement    |     171.25 ns |     332.05 ns |     18.201 ns |      80 B |
+| JsonCons.JsonElement    |   2,867.70 ns |   3,098.16 ns |    169.821 ns |   3,288 B |
+| Hyperbee.JsonNode       |   3,051.39 ns |   4,436.76 ns |    243.194 ns |   2,928 B |
+| JsonEverything.JsonNode |   3,961.99 ns |   1,245.96 ns |     68.295 ns |   5,816 B |
+| Newtonsoft.JObject      |   7,577.69 ns |   8,275.01 ns |    453.581 ns |  14,824 B |
+| `$`                     |               |               |               |           |
+| Hyperbee.JsonElement    |      29.76 ns |      10.00 ns |      0.548 ns |      56 B |
+| JsonEverything.JsonNode |   2,361.50 ns |   2,021.81 ns |    110.822 ns |   1,928 B |
+| Hyperbee.JsonNode       |   2,428.05 ns |   1,414.84 ns |     77.552 ns |   1,792 B |
+| JsonCons.JsonElement    |   2,747.57 ns |   4,158.88 ns |    227.962 ns |   3,008 B |
+| Newtonsoft.JObject      |   7,584.68 ns |  12,872.74 ns |    705.598 ns |  14,312 B |
 
 ## Credits
 

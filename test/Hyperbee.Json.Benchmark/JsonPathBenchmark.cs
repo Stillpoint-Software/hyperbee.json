@@ -196,17 +196,4 @@ public class JsonPathBenchmark
         Consume( select, first );
     }
 
-#if NET9_0_OR_GREATER
-    [Benchmark( Description = "JsonCraft.JsonElement" )]
-    public void JsonCraft_JsonElement()
-    {
-        var (filter, first) = GetFilter();
-
-        var element = JsonDocument.Parse( Document ).RootElement;
-        var select = JsonCraft.JsonPath.JsonExtensions.SelectElements( element, filter );
-
-        Consume( select, first );
-    }
-#endif
-
 }

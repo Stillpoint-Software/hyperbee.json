@@ -1,4 +1,4 @@
-﻿---
+---
 layout: default
 title: Overview
 parent: JsonPath

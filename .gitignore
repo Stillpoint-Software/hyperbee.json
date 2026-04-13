@@ -403,3 +403,12 @@ claude.md
 **/claude-tasks.md
 **/baseline-benchmarks.md
 /nuget.config
+
+# Jekyll / GitHub Pages local build
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+vendor/
+.bundle/
+docs/site/Gemfile.lock

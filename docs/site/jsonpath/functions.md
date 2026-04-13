@@ -1,4 +1,4 @@
-﻿---
+---
 layout: default
 title: Functions
 parent: JsonPath

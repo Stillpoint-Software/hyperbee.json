@@ -18,8 +18,6 @@
     <PackageReference Include="JsonPath.Net" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" />
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" />
-    <PackageReference Include="Nerdbank.GitVersioning" />
   </ItemGroup>
 
   <ItemGroup>

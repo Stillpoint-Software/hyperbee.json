@@ -17,9 +17,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Hyperbee.Json\Hyperbee.Json.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub"/>
-    <PackageReference Include="Nerdbank.GitVersioning"  />
-  </ItemGroup>
 </Project>

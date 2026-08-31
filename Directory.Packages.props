@@ -7,7 +7,7 @@
     <PackageVersion Include="Hyperbee.Expressions.Compiler" Version="1.5.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.3.0" />
     <!-- Development Tools -->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300">
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>

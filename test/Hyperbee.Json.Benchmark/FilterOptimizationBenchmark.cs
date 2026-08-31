@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using BenchmarkDotNet.Attributes;
 using Hyperbee.Json.Path.Filters;
 using Hyperbee.Json.Path.Filters.Parser;

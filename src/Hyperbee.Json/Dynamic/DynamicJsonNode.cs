@@ -1,6 +1,7 @@
-﻿using System.Dynamic;
+using System.Dynamic;
 using System.Numerics;
 using System.Text.Json.Nodes;
+using Hyperbee.Json.Shared;
 
 namespace Hyperbee.Json.Dynamic;
 
@@ -45,7 +46,7 @@ public class DynamicJsonNode : DynamicObject
 
     public override bool TryGetMember( GetMemberBinder binder, out object result )
     {
-        ArgumentNullException.ThrowIfNull( binder );
+        ThrowIf.Null( binder );
 
         switch ( Node )
         {
@@ -70,7 +71,7 @@ public class DynamicJsonNode : DynamicObject
 
     public override bool TrySetMember( SetMemberBinder binder, object value )
     {
-        ArgumentNullException.ThrowIfNull( binder );
+        ThrowIf.Null( binder );
 
         Node[binder.Name] = JsonValue.Create( value ); // this works with values, objects, and null
         return true;
@@ -78,7 +79,7 @@ public class DynamicJsonNode : DynamicObject
 
     public override bool TryInvokeMember( InvokeMemberBinder binder, object[] args, out object result )
     {
-        ArgumentNullException.ThrowIfNull( binder );
+        ThrowIf.Null( binder );
 
         if ( binder.Name.Equals( "path", StringComparison.OrdinalIgnoreCase ) )
         {
@@ -90,8 +91,17 @@ public class DynamicJsonNode : DynamicObject
         return false;
     }
 
+    // INumber<T> is dropped on netstandard2.1: generic math arrived with .NET 7 and
+    // System.Numerics.INumber is not in that contract. The body never calls an
+    // INumber member, and every caller passes int, long, short, byte or float, each of
+    // which satisfies the constraints that remain, so the looser constraint admits no
+    // type this method did not already handle.
     private static T GetNumber<T>( JsonNode value )
+#if NETSTANDARD
+        where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+#else
         where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>, INumber<T>
+#endif
     {
         var source = value.AsValue();
 

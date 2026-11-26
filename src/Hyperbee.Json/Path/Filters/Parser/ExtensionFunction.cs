@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using System.Reflection;
 using Hyperbee.Json.Path.Filters.Values;
 
@@ -36,7 +36,7 @@ public abstract class ExtensionFunction
             };
 
             if ( localState.EndOfBuffer )
-                throw new NotSupportedException( $"Invalid arguments for filter: \"{state.Buffer}\"." );
+                throw new NotSupportedException( $"Invalid arguments for filter: \"{state.Buffer.ToString()}\"." );
 
             var argument = FilterParser<TNode>.Parse( ref localState );
             arguments[i] = ArgumentExpression<TNode>( expectNormalized, argument );

@@ -1,11 +1,12 @@
-﻿
+using Hyperbee.Json.Shared;
+
 namespace Hyperbee.Json.Extensions;
 
 public static class EnumerableExtensions
 {
     public static T OneOrDefault<T>( this IEnumerable<T> source )
     {
-        ArgumentNullException.ThrowIfNull( source, nameof( source ) );
+        ThrowIf.Null( source, nameof( source ) );
 
         using var iterator = source.GetEnumerator();
 

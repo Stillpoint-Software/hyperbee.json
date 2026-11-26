@@ -1,7 +1,8 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Core;
 using Hyperbee.Json.Descriptors;
+using Hyperbee.Json.Shared;
 
 namespace Hyperbee.Json.Patch;
 
@@ -245,7 +246,7 @@ public static class JsonDiff<TNode>
         }
 
         if ( specialCharCount == 0 )
-            return string.Concat( initial, "/", path );
+            return StringEx.Concat( initial, "/", path );
 
         // Process special characters
 
@@ -284,7 +285,7 @@ public static class JsonDiff<TNode>
         if ( start < path.Length ) // Append remaining
             builder.Append( path[start..] );
 
-        var result = string.Concat( initial, "/", builder.AsSpan() );
+        var result = StringEx.Concat( initial, "/", builder.AsSpan() );
         builder.Dispose();
         return result;
     }

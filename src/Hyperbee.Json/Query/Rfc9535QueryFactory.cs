@@ -1,5 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
+using Hyperbee.Json.Shared;
 
 namespace Hyperbee.Json.Query;
 
@@ -610,7 +611,7 @@ internal static class Rfc9535QueryFactory
     private static void ThrowIfQuoted( ReadOnlySpan<char> value )
     {
         if ( IsQuoted( value ) )
-            throw new NotSupportedException( $"Quoted member names are not allowed in dot notation: {value}" );
+            throw new NotSupportedException( $"Quoted member names are not allowed in dot notation: {value.ToString()}" );
     }
 
     private static void ThrowIfInvalidUnquotedName( ReadOnlySpan<char> name )
@@ -698,7 +699,7 @@ internal static class Rfc9535QueryFactory
 
             for ( var i = 2; i < 6; i++ )
             {
-                if ( !char.IsAsciiHexDigit( span[i] ) )
+                if ( !CharEx.IsAsciiHexDigit( span[i] ) )
                     return false;
             }
 

@@ -42,4 +42,9 @@
   <ItemGroup>
     <PackageReference Include="Hyperbee.Expressions.Compiler" />
   </ItemGroup>
+
+  <!-- Shared internal helpers, compiled in so they stay off the public surface. -->
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\*.cs" LinkBase="Shared" />
+  </ItemGroup>
 </Project>

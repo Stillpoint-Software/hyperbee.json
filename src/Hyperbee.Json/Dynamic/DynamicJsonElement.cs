@@ -1,6 +1,7 @@
-﻿using System.Dynamic;
+using System.Dynamic;
 using System.Text.Json;
 using Hyperbee.Json.Core;
+using Hyperbee.Json.Shared;
 
 namespace Hyperbee.Json.Dynamic;
 
@@ -49,7 +50,7 @@ public class DynamicJsonElement : DynamicObject
 
     public override bool TryGetMember( GetMemberBinder binder, out object result )
     {
-        ArgumentNullException.ThrowIfNull( binder );
+        ThrowIf.Null( binder );
 
         if ( Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object )
         {
@@ -66,7 +67,7 @@ public class DynamicJsonElement : DynamicObject
 
     public override bool TryInvokeMember( InvokeMemberBinder binder, object[] args, out object result )
     {
-        ArgumentNullException.ThrowIfNull( binder );
+        ThrowIf.Null( binder );
 
         if ( binder.Name.Equals( "path", StringComparison.OrdinalIgnoreCase ) )
         {

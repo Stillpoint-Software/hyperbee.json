@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // This code is adapted from an algorithm published in MSDN Magazine, October 2015.
 // Original article: "A Split-and-Merge Expression Parser in C#" by Vassili Kaplan.
@@ -57,7 +57,7 @@ public class FilterParser<TNode> : FilterParser
     internal static Expression Parse( ref ParserState state ) // recursion entrypoint
     {
         if ( state.EndOfBuffer )
-            throw new NotSupportedException( $"Invalid filter: \"{state.Buffer}\"." );
+            throw new NotSupportedException( $"Invalid filter: \"{state.Buffer.ToString()}\"." );
 
         // parse the expression
         var pool = ArrayPool<ExprItem>.Shared;
@@ -83,7 +83,7 @@ public class FilterParser<TNode> : FilterParser
 
             // check for paren mismatch
             if ( state.EndOfBuffer && state.ParenDepth != 0 )
-                throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer}\"." );
+                throw new NotSupportedException( $"Unbalanced parenthesis in filter: \"{state.Buffer.ToString()}\"." );
 
             // merge the expressions
             var head = 1;

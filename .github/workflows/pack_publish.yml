@@ -25,12 +25,15 @@ jobs:
     with:
       branch: ${{ github.event.release.target_commitish }}
       solution_name: ${{ vars.SOLUTION_NAME }}
+      frameworks: '["net11.0", "net10.0"]'
   
   publish:
     needs: [set-config, tests]
     uses: Stillpoint-Software/shared-workflows/.github/workflows/pack_and_publish.yml@main
     with:
       build_configuration: ${{ needs.set-config.outputs.build_configuration }}
+      # A 10.0.x SDK, the shared default, cannot build the net11.0 target.
+      dotnet_version: '11.0.x'
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 

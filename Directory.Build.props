@@ -7,7 +7,6 @@
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub"/>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
   </ItemGroup>
 
   <!-- SourceLink / build hygiene -->
@@ -30,18 +29,6 @@
     <PackageProjectUrl>https://stillpoint-software.github.io/hyperbee.json/</PackageProjectUrl>
   </PropertyGroup>
 
-  <!-- Pull README & LICENSE into the package root -->
-  <ItemGroup Condition="'$(IsPackable)' == 'true'">
-    <None Include="$(MSBuildThisFileDirectory)README.md"
-          Pack="true"
-          PackagePath="\"
-    Link="README.md" />
-
-    <None Include="$(MSBuildThisFileDirectory)LICENSE"
-          Pack="true"
-          PackagePath="\"
-    Link="LICENSE" />
-  </ItemGroup>
   <!-- Global project properties - .NET 10 LTS First Strategy -->
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>

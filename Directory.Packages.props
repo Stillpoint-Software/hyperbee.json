@@ -4,28 +4,27 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Core Application Dependencies -->
-    <PackageVersion Include="Hyperbee.Expressions.Compiler" Version="1.5.1" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.3.0" />
+    <PackageVersion Include="Hyperbee.Expressions.Compiler" Version="1.6.0" />
     <!-- Development Tools -->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300">
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.94" />
     <!-- Testing Framework -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="4.2.3" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.2.3" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.5.3" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.5.3" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
-    <PackageVersion Include="coverlet.collector" Version="10.0.1">
+    <PackageVersion Include="coverlet.collector" Version="10.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="JsonCons.JsonPath" Version="1.1.0" />
-    <PackageVersion Include="JsonPatch.Net" Version="5.0.3" />
-    <PackageVersion Include="JsonPath.Net" Version="3.0.2" />
+    <PackageVersion Include="JsonPatch.Net" Version="5.1.0" />
+    <PackageVersion Include="JsonPath.Net" Version="3.1.0" />
   </ItemGroup>
 
   <!-- .NET 8.0 specific packages -->

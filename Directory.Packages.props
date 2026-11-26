@@ -5,6 +5,20 @@
   <ItemGroup>
     <!-- Core Application Dependencies -->
     <PackageVersion Include="Hyperbee.Expressions.Compiler" Version="1.6.0" />
+    <!--
+      netstandard2.1 support only; see the conditioned ItemGroup in
+      src/Hyperbee.Json/Hyperbee.Json.csproj. System.Text.Json and the C# runtime
+      binder are in box on net10.0/net11.0 and come from packages only on the
+      netstandard2.1 leg.
+
+      System.Text.Json is held at 8.0.x deliberately. The netstandard2.1 asset
+      exists to serve net8.0 and net9.0 consumers, and the 11.0.0 package declares
+      support for neither, so every such consumer would collect a support warning,
+      which defeats the point of offering the target. 8.0.x supports net8.0 upward
+      and still ships a netstandard2.0 asset.
+    -->
+    <PackageVersion Include="System.Text.Json" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <!-- Development Tools -->
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100">
       <PrivateAssets>all</PrivateAssets>
@@ -20,26 +34,19 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
+    <!-- Benchmark comparands -->
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="JsonCons.JsonPath" Version="1.1.0" />
     <PackageVersion Include="JsonPatch.Net" Version="5.1.0" />
     <PackageVersion Include="JsonPath.Net" Version="3.1.0" />
+    <!--
+      Microsoft.AspNetCore.JsonPatch ships one major per runtime and is used only by
+      the benchmark project, which targets net11.0 and net10.0. 11.0.0 is the floor
+      here; the net10.0 leg pins 10.0.15 with a VersionOverride in that csproj.
+      A per-TargetFramework condition cannot live in this file: it is imported by
+      Microsoft.Common.props, before TargetFramework exists in the outer build.
+    -->
+    <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="11.0.0" />
   </ItemGroup>
-
-  <!-- .NET 8.0 specific packages -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.28" />
-  </ItemGroup>
-
-  <!-- .NET 9.0 specific packages -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.17" />
-  </ItemGroup>
-
-  <!-- .NET 10.0 specific packages -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <PackageVersion Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.9" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      Pinned, not inherited: netstandard2.1 is a contract, not a runtime, so a
+      benchmark executable cannot target it.
+    -->
+    <TargetFrameworks>net11.0;net10.0</TargetFrameworks>
+  </PropertyGroup>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -22,5 +30,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Hyperbee.Json\Hyperbee.Json.csproj" />
+  </ItemGroup>
+
+  <!--
+    Microsoft.AspNetCore.JsonPatch ships one major per runtime: 11.0.0 has no
+    net10.0 asset, so the net10.0 leg takes the matching 10.x. This has to be a
+    VersionOverride here rather than a condition in Directory.Packages.props,
+    which is imported before TargetFramework exists.
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Update="Microsoft.AspNetCore.JsonPatch" VersionOverride="10.0.15" />
   </ItemGroup>
 </Project>

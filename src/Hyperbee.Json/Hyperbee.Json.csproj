@@ -43,6 +43,19 @@
     <PackageReference Include="Hyperbee.Expressions.Compiler" />
   </ItemGroup>
 
+  <!--
+    netstandard2.1 has neither System.Text.Json nor the C# runtime binder that
+    `dynamic` needs, so both come from packages on that leg only. Versions are
+    centrally pinned to 8.0.x; see the note in Directory.Packages.props.
+
+    The compiler-required attributes and the API shims live in
+    src/Shared/NetstandardShims.cs; see the note there on why not Polyfill.
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="System.Text.Json" />
+    <PackageReference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
   <!-- Shared internal helpers, compiled in so they stay off the public surface. -->
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)..\Shared\*.cs" LinkBase="Shared" />

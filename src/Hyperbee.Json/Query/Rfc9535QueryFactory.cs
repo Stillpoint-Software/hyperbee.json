@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
 using Hyperbee.Json.Shared;
 

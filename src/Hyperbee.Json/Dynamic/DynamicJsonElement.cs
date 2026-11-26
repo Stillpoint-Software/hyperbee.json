@@ -1,4 +1,4 @@
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Text.Json;
 using Hyperbee.Json.Core;
 using Hyperbee.Json.Shared;

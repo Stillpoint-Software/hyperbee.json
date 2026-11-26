@@ -53,6 +53,15 @@ You can intall the library via NuGet:
 dotnet add package Hyperbee.Json
 ```
 
+## Target frameworks
+
+`net11.0`, `net10.0`, `netstandard2.1`.
+
+`net8.0` and `net9.0` both reached end of support on 2026-11-10 and are no longer built
+directly. `netstandard2.1` takes their place, so a `net8.0` or `net9.0` project resolves
+that asset and keeps working. Building this repository requires the .NET 11 SDK; the
+older targeting packs come from NuGet, so one SDK covers every target.
+
 ## Benchmarks
 
 Here is a performance comparison of various JSONPath queries on the standard book store document.

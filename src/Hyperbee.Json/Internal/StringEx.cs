@@ -1,4 +1,4 @@
-﻿namespace Hyperbee.Json.Shared;
+﻿namespace Hyperbee.Json.Internal;
 
 /// <summary>
 /// String builders over spans that netstandard2.1 does not carry on <see cref="string"/>.

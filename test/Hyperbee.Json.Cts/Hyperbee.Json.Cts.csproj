@@ -38,7 +38,7 @@
     the matching net10.0/net11.0 build. netstandard2.1 is not a runtime and cannot host
     a test, so the tests still execute on net10.0 or net11.0; only the library under
     test changes. This is what exercises the #if NETSTANDARD branches and the shims in
-    src/Shared.
+    Internal/NetstandardShims.cs.
 
       dotnet test <project> -f net10.0 -p:UseNetstandardAsset=true
 

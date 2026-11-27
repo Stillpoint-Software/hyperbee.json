@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Hyperbee.Json.Core;
 using Hyperbee.Json.Descriptors;
-using Hyperbee.Json.Shared;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Patch;
 

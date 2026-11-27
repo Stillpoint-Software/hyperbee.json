@@ -48,16 +48,25 @@
     `dynamic` needs, so both come from packages on that leg only. Versions are
     centrally pinned to 8.0.x; see the note in Directory.Packages.props.
 
-    The compiler-required attributes and the API shims live in
-    src/Shared/NetstandardShims.cs; see the note there on why not Polyfill.
+    The API shims live in Internal/NetstandardShims.cs. The compiler-required
+    types come from PolySharp; see Directory.Build.props.
   -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.Text.Json" />
     <PackageReference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <!-- Shared internal helpers, compiled in so they stay off the public surface. -->
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\*.cs" LinkBase="Shared" />
+    <PackageReference Include="PolySharp" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    Internal helpers live in this project's Internal folder and compile like any
+    other source. NetstandardShims.cs is the exception: it is removed from every
+    target but netstandard2.1, the way dotnet/runtime conditions its polyfills.
+    The compiler-required types come from PolySharp; see Directory.Build.props.
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.1'">
+    <Compile Remove="Internal\NetstandardShims.cs" />
   </ItemGroup>
 </Project>

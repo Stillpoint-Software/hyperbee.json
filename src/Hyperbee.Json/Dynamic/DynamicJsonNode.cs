@@ -1,7 +1,7 @@
 using System.Dynamic;
 using System.Numerics;
 using System.Text.Json.Nodes;
-using Hyperbee.Json.Shared;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Dynamic;
 

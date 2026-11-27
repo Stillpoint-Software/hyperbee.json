@@ -1,4 +1,4 @@
-using Hyperbee.Json.Shared;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Extensions;
 

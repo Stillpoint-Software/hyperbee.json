@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Hyperbee.Json.Shared;
+namespace Hyperbee.Json.Internal;
 
 /// <summary>
 /// Guard helpers that forward to the framework throw helpers where they exist.

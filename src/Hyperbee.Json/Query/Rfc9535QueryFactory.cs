@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using Hyperbee.Json.Core;
-using Hyperbee.Json.Shared;
+using Hyperbee.Json.Internal;
 
 namespace Hyperbee.Json.Query;
 

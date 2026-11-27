@@ -4,7 +4,13 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Core Application Dependencies -->
-    <PackageVersion Include="Hyperbee.Expressions.Compiler" Version="1.6.0" />
+    <!--
+      Build-time only: PolySharp is a source generator. Every project references it
+      with PrivateAssets="all", so it never appears in this repository's package
+      dependencies. See Directory.Build.props for what it generates and why.
+    -->
+    <PackageVersion Include="PolySharp" Version="1.17.1" />
+    <PackageVersion Include="Hyperbee.Expressions.Compiler" Version="1.7.3" />
     <!--
       netstandard2.1 support only; see the conditioned ItemGroup in
       src/Hyperbee.Json/Hyperbee.Json.csproj. System.Text.Json and the C# runtime

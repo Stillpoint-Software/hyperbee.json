@@ -48,8 +48,7 @@ jobs:
     with:
       branch: ${{ needs.discover.outputs.branch_name }}
       solution_name: ${{ vars.SOLUTION_NAME }}
-      # Opt in, because the shared workflow still defaults to the retired
-      # [net8.0, net9.0, net10.0]. netstandard2.1 is absent on purpose: it is a
-      # contract, not a runtime, so no test can execute on it.
+      # Keep in step with <TargetFrameworks> in Directory.Build.props.
+      # netstandard2.1 is built but not tested: it has no test host.
       frameworks: '["net11.0", "net10.0"]'
     secrets: inherit

@@ -17,9 +17,8 @@
     <File Path=".github/workflows/deploy-gh-pages.yml" />
     <File Path=".github/workflows/format.yml" />
     <File Path=".github/workflows/issue_branch.yml" />
-    <File Path=".github/workflows/pack_publish.yml" />
+    <File Path=".github/workflows/manage_package.yml" />
     <File Path=".github/workflows/run_tests.yml" />
-    <File Path=".github/workflows/unlist_package.yml" />
   </Folder>
   <Folder Name="/Solution Tests/">
     <Project Path="test/Hyperbee.Json.Benchmark/Hyperbee.Json.Benchmark.csproj" />

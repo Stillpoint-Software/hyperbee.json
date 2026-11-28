@@ -1,8 +1,32 @@
-name: Pack and Publish
+name: Manage Package
 
 on:
   release:
     types: [published]
+
+  # Manual unlisting. It shares this file with publishing because the nuget.org
+  # Trusted Publishing policy for this repository names manage_package.yml, and a
+  # policy matches exactly one workflow file. One file keeps it to one policy per repo.
+  workflow_dispatch:
+    inputs:
+      package_id:
+        description: "NuGet package ID to unlist (e.g., Hyperbee.Json)"
+        required: true
+        type: string
+      package_version:
+        description: "Exact version to unlist (e.g., 1.2.3)"
+        required: true
+        type: string
+      dry_run:
+        description: "Sign in and stop before unlisting"
+        required: false
+        default: true
+        type: boolean
+
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch'
+      && format('Unlist · {0} · {1}', inputs.package_id, inputs.package_version)
+      || format('Pack and Publish · {0}', github.event.release.tag_name) }}
 
 permissions:
   contents: write
@@ -11,7 +35,10 @@ permissions:
   statuses: write
 
 jobs:
+  # The release path. Gating set-config skips tests and publish as well, because
+  # they need it; a manual run reaches only the unlist job.
   set-config:
+    if: github.event_name == 'release'
     uses: Stillpoint-Software/shared-workflows/.github/workflows/determine_build_configuration.yml@main
     with:
       trigger: release
@@ -65,8 +92,28 @@ jobs:
 
   result:
     needs: [publish, tests]
-    if: always()
+    if: always() && github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
        - run: echo "Tests result = ${{ needs.tests.result }}"
        - run: echo "Pack & Publish result = ${{ needs.publish.result }}"
+
+  # The manual path: unlist one version through Trusted Publishing. The policy must
+  # include the "Unlist or relist package versions" scope.
+  unlist:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      # The OIDC token is minted in this job, so it carries this repository and
+      # manage_package.yml, which is what the nuget.org policy matches.
+      id-token: write
+
+    steps:
+      - uses: Stillpoint-Software/shared-workflows/.github/actions/unlist-package@main
+        with:
+          package_id: ${{ inputs.package_id }}
+          package_version: ${{ inputs.package_version }}
+          dry_run: ${{ inputs.dry_run }}
+          nuget_user: ${{ secrets.NUGET_USER }}
